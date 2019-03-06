@@ -33,8 +33,8 @@ F_VOID_FUNC blacs_get_(Int *ConTxt, Int *what, Int *val)
    case SGET_MSGIDS:
       if (BI_COMM_WORLD == NULL) Cblacs_pinfo(val, &val[1]);
       iptr = &val[1];
-      ierr=MPI_Comm_get_attr(MPI_COMM_WORLD, MPI_TAG_UB, (BVOID **) &iptr,&flag);
-      val[0] = 3001;
+      ierr=MPI_Comm_get_attr(MPI_COMM_WORLD, MPI_TAG_UB, (BVOID **) &iptr,val);
+      val[0] = 0;
       val[1] = *iptr;
       break;
    case SGET_DEBUGLVL:
