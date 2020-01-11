@@ -6,7 +6,8 @@
 #define Int int
 #endif
 
-Int SL_Cgridreshape(Int ctxt, Int pstart, Int row_major_in, Int row_major_out, Int P, Int Q)
+Int SL_Cgridreshape(ctxt, pstart, row_major_in, row_major_out, P, Q)
+Int ctxt, pstart, row_major_in, row_major_out, P, Q;
 {
    Int Cblacs_pnum();
    Int nctxt, P0, Q0, Np, i, *g;
@@ -49,31 +50,29 @@ Int SL_Cgridreshape(Int ctxt, Int pstart, Int row_major_in, Int row_major_out, I
    return(nctxt);
 }
 
-Int sl_gridreshape_(Int *ctxt, Int *pstart, Int *row_major_in, Int *row_major_out, Int *P, Int *Q)
+Int sl_gridreshape_(ctxt, pstart, row_major_in, row_major_out, P, Q)
+Int *ctxt, *pstart, *row_major_in, *row_major_out, *P, *Q;
 {
    return( SL_Cgridreshape(*ctxt, *pstart, *row_major_in, *row_major_out,
                            *P, *Q) );
 }
 
-Int SL_GRIDRESHAPE(Int *ctxt, Int *pstart, Int *row_major_in, Int *row_major_out, Int *P, Int *Q)
+Int SL_GRIDRESHAPE(ctxt, pstart, row_major_in, row_major_out, P, Q)
+Int *ctxt, *pstart, *row_major_in, *row_major_out, *P, *Q;
 {
    return( SL_Cgridreshape(*ctxt, *pstart, *row_major_in, *row_major_out,
                            *P, *Q) );
 }
 
-Int sl_gridreshape__(Int *ctxt, Int *pstart, Int *row_major_in, Int *row_major_out, Int *P, Int *Q)
+Int sl_gridreshape__(ctxt, pstart, row_major_in, row_major_out, P, Q)
+Int *ctxt, *pstart, *row_major_in, *row_major_out, *P, *Q;
 {
    return( SL_Cgridreshape(*ctxt, *pstart, *row_major_in, *row_major_out,
                            *P, *Q) );
 }
 
-Int sl_gridreshape(Int *ctxt, Int *pstart, Int *row_major_in, Int *row_major_out, Int *P, Int *Q)
-{
-   return( SL_Cgridreshape(*ctxt, *pstart, *row_major_in, *row_major_out,
-                           *P, *Q) );
-}
-
-Int SL_GRIDRESHAPE_(Int *ctxt, Int *pstart, Int *row_major_in, Int *row_major_out, Int *P, Int *Q)
+Int sl_gridreshape(ctxt, pstart, row_major_in, row_major_out, P, Q)
+Int *ctxt, *pstart, *row_major_in, *row_major_out, *P, *Q;
 {
    return( SL_Cgridreshape(*ctxt, *pstart, *row_major_in, *row_major_out,
                            *P, *Q) );

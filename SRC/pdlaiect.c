@@ -57,7 +57,8 @@ void pdlasnbt_( Int *ieflag )
 */
    double x;
    Int         negone=-1, errornum;
-   UInt *ix; /* ..
+   unsigned Int *ix; 
+/* ..
 *  .. Executable Statements ..
 */
 
@@ -69,8 +70,7 @@ void pdlasnbt_( Int *ieflag )
       return;
    }
    x = (double) -1.0;
-   ix = (UInt *) &x;
-
+   ix = (unsigned Int *) &x;
    if(( *ix == 0xbff00000) && ( *(ix+1) == 0x0) ) 
    {
       *ieflag = 1;
@@ -251,7 +251,7 @@ void pdlachkieee_( Int *isieee, double *rmax, double *rmin )
 *  .. Local Scalars ..
 */
    double x, pinf, pzero, ninf, nzero;
-   Int         ieflag, *ix, sbit1=0, sbit2=0, negone=-1, errornum;
+   Int         ieflag, *ix, sbit1, sbit2, negone=-1, errornum;
 /* ..
 *  .. Executable Statements ..
 */

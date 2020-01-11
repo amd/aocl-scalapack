@@ -910,9 +910,6 @@ void           pdgemm_         ( F_CHAR_T,  F_CHAR_T,  Int *,
                                  Int *,     Int *,     double *,
                                  double *,  Int *,     Int *,
                                  Int * );
-void           pdgemmla_       ( F_CHAR_T,  F_CHAR_T,  Int *,
-                                 Int *,     Int *,     double *,
-                                 double *,  pd_panel * );
 void           pcgemm_         ( F_CHAR_T,  F_CHAR_T,  Int *,
                                  Int *,     Int *,     float *,
                                  float *,   Int *,     Int *,
@@ -1110,9 +1107,6 @@ void           pdtrsm_         ( F_CHAR_T,  F_CHAR_T,  F_CHAR_T,
                                  double *,  double *,  Int *,
                                  Int *,     Int *,     double *,
                                  Int *,     Int *,     Int * );
-void           pdtrsmla_       ( F_CHAR_T,  F_CHAR_T,  F_CHAR_T,
-                                 F_CHAR_T,  Int *,     Int *,
-                                 double *,  pd_panel * );
 void           pctrsm_         ( F_CHAR_T,  F_CHAR_T,  F_CHAR_T,
                                  F_CHAR_T,  Int *,     Int *,
                                  float *,   float *,   Int *,
@@ -1123,25 +1117,6 @@ void           pztrsm_         ( F_CHAR_T,  F_CHAR_T,  F_CHAR_T,
                                  double *,  double *,  Int *,
                                  Int *,     Int *,     double *,
                                  Int *,     Int *,     Int * );
-void           pdpanel_lcopy_  ( double *,  Int *,     Int *,
-                                 Int *,     Int *,
-                                 pd_panel * );
-void           pdpanel_lcast_  ( pd_panel *,
-                                 Int * );
-void           pdpanel_bcsiz_  ( double *,  Int *,     Int *,
-                                 Int *,     Int *,     Int *,
-                                 Int *,     Int *,     Int *,
-                                 pd_panel *,           Int *,
-                                 Int * );
-void           pdpanel_bpack_  ( pd_panel *,           Int * );
-void           pdpanel_bcast_  ( double *,  pd_panel *,
-                                 Int * );
-void           pdpanel_ucast_  ( double *,  Int *,     Int *,
-                                 Int *,     pd_panel * );
-void           pdpanel_bwait_  ( pd_panel * );
-void           pdpanel_bfree_  ( pd_panel * );
-void           pdpanel_pinit_  ( pd_panel *, Int * );
-void           pdpanel_pfree_  ( pd_panel * );
 #else
 
 void           PB_freebuf_     ();

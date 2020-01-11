@@ -15,6 +15,18 @@ void pzrot_( Int *n, complex16 X[], Int *ix, Int *jx, Int desc_X[], Int *incx, c
 *  Mark Fahey
 *  June 22, 2000
 */
+/*
+*  .. Scalar Arguments ..
+*/
+   Int         * incx, * incy, * ix, * iy, * jx, * jy, * n;
+   double      * c;
+   complex16   * s;
+/*
+*  ..
+*  .. Array Arguments ..
+*/
+   Int         desc_X[], desc_Y[];
+   complex16   X[], Y[];
 {
 /*
 *  Purpose

@@ -163,10 +163,6 @@ typedef void           (*GEBR2D_T)   ( Int,       char *,    char *,
 typedef void           (*GSUM2D_T)   ( Int,       char *,    char *,
                                        Int,       Int,       char *,
                                        Int,       Int,       Int );
-typedef  Int           (*GESR2D_T)   ( Int,       char *,    char *,
-                                       Int,       char *,    Int,
-                                       Int,       Int, 
-                                       void *,    void * );
 
 typedef F_VOID_FCT     (*MMADD_T)    ( Int  *,    Int  *,    char *,
                                        char *,    Int  *,    char *,

@@ -162,7 +162,9 @@ extern void Cpdtrmr2d();
 /* initblock: intialize the local part of a matrix with random data (well,
  * not very random) */
 static2 void
-initblock(double *block, Int m, Int n)
+initblock(block, m, n)
+  double *block;
+  Int   m, n;
 {
   double *pdata;
   Int   i;
@@ -220,7 +222,9 @@ va_dcl
   va_end(ap);
 }
 void 
-initforpvm(Int argc, char *argv[])
+initforpvm(argc, argv)
+  Int   argc;
+  char *argv[];
 {
   Int   pnum, nproc;
   Cblacs_pinfo(&pnum, &nproc);

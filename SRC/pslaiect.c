@@ -54,7 +54,7 @@ void pslasnbt_( Int *ieflag )
 */
    float x;
    Int         negone=-1, errornum;
-   UInt *ix;
+   unsigned Int *ix; 
 /* ..
 *  .. Executable Statements ..
 */
@@ -67,7 +67,7 @@ void pslasnbt_( Int *ieflag )
       return;
    }
    x = (float) -1.0;
-   ix = (UInt *) &x;
+   ix = (unsigned Int *) &x;
    if( *ix == 0xbff00000 )
    {
       *ieflag = 1;
@@ -179,7 +179,7 @@ void pslachkieee_( Int *isieee, float *rmax, float *rmin )
 *  .. Local Scalars ..
 */
    float x, pinf, pzero, ninf, nzero;
-   Int         ieflag, *ix, sbit1=0, sbit2=0, negone=-1, errornum;
+   Int         ieflag, *ix, sbit1, sbit2, negone=-1, errornum;
 /* ..
 *  .. Executable Statements ..
 */

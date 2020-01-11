@@ -110,7 +110,9 @@ extern void Cpsgemr2d();
 /************************************************************************/
 /* Set the memory space with the malloc function */
 void
-setmemory(float **adpointer, Int blocksize)
+setmemory(adpointer, blocksize)
+  float **adpointer;
+  Int   blocksize;
 {
   assert(blocksize >= 0);
   if (blocksize == 0) {

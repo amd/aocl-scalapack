@@ -100,8 +100,8 @@ endif(ENABLE_LARGE_MATRIX_TESTING)
 
 
 if (UNIX)
-   if ("${CMAKE_C_COMPILER_ID}" STREQUAL "GNU")
-      set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -ffixed-line-length-none -I ${SL_FRAMEWORK_INCLUDE_PATH}/" )
+   if ( "${CMAKE_Fortran_COMPILER}" MATCHES "ifort" )
+#   set( CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -fltconsistency -fp_port" )
    endif ()
    if ("${CMAKE_Fortran_COMPILER_ID}" STREQUAL "Flang")
       set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -ffixed-line-length-132 -I ${SL_FRAMEWORK_INCLUDE_PATH}/" )
@@ -184,6 +184,13 @@ else()
    UNSET(MPI_INCLUDE_PATH CACHE)
    message(FATAL_ERROR "--> MPI Library NOT FOUND -- please set MPI_BASE_DIR accordingly --")
 endif()
+
+
+if (UNIX)
+   if ( "${CMAKE_Fortran_COMPILER}" MATCHES "ifort" )
+#   set( CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -fltconsistency -fp_port" )
+   endif ()
+endif ()
 
 macro(SCALAPACK_install_library lib)
   install(TARGETS ${lib} EXPORT scalapack-targets

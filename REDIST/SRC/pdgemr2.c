@@ -110,7 +110,9 @@ extern void Cpdgemr2d();
 /************************************************************************/
 /* Set the memory space with the malloc function */
 void
-setmemory(double **adpointer, Int blocksize)
+setmemory(adpointer, blocksize)
+  double **adpointer;
+  Int   blocksize;
 {
   assert(blocksize >= 0);
   if (blocksize == 0) {

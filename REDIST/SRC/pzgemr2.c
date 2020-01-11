@@ -113,7 +113,9 @@ extern void Cpzgemr2d();
 /************************************************************************/
 /* Set the memory space with the malloc function */
 void
-setmemory(dcomplex **adpointer, Int blocksize)
+setmemory(adpointer, blocksize)
+  dcomplex **adpointer;
+  Int   blocksize;
 {
   assert(blocksize >= 0);
   if (blocksize == 0) {

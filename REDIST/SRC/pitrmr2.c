@@ -110,7 +110,9 @@ extern void Cpitrmr2d();
 /************************************************************************/
 /* Set the memory space with the malloc function */
 void
-setmemory(Int **adpointer, Int blocksize)
+setmemory(adpointer, blocksize)
+  Int **adpointer;
+  Int   blocksize;
 {
   assert(blocksize >= 0);
   if (blocksize == 0) {
@@ -118,12 +120,13 @@ setmemory(Int **adpointer, Int blocksize)
     return;
   }
   *adpointer = (Int *) mr2d_malloc(
-				   (size_t)blocksize * sizeof(Int));
+				   blocksize * sizeof(Int));
 }
 /******************************************************************/
 /* Free the memory space after the malloc */
 void
-freememory(Int *ptrtobefreed)
+freememory(ptrtobefreed)
+  Int  *ptrtobefreed;
 {
   if (ptrtobefreed == NULL)
     return;
@@ -156,7 +159,7 @@ insidemat(uplo, diag, i, j, m, n, offset)
     Int   virtualline;	/* virtual first line if the matrix was extended with
 			 * negative indices */
     Int   off;
-    diagcol = max(n - m, 0);
+    diagcol = max(n - m, 0);;
     virtualline = j - diagcol + (toupper(*diag) == 'U');
     firstline = max(0, virtualline);
     off = max(firstline - i, 0);
@@ -170,13 +173,21 @@ insidemat(uplo, diag, i, j, m, n, offset)
  * action can be the filling of the memory buffer, the count of the memory
  * buffer size or the setting of the memory with the element received) */
 static2 void
-intersect(char *uplo, char *diag,
-	  Int j, Int start, Int end,
-	  Int action,
-	  Int *ptrsizebuff, Int **pptrbuff, Int *ptrblock,
-	  Int m, Int n,
-	  MDESC *ma, Int ia, Int ja, Int templateheight0, Int templatewidth0,
-	  MDESC *mb, Int ib, Int jb, Int templateheight1, Int templatewidth1)
+intersect(uplo, diag,
+	  j, start, end,
+	  action,
+	  ptrsizebuff, pptrbuff, ptrblock,
+	  m, n,
+	  ma, ia, ja, templateheight0, templatewidth0,
+	  mb, ib, jb, templateheight1, templatewidth1)
+  Int   action, *ptrsizebuff;
+  Int   j, start, end;
+  Int **pptrbuff, *ptrblock;
+  Int   templateheight0, templatewidth0;
+  Int   templateheight1, templatewidth1;
+  MDESC *ma, *mb;
+  Int   ia, ja, ib, jb, m, n;
+  char *uplo, *diag;
 /* Execute the action on the local memory for the current interval and
  * increment pptrbuff and ptrsizebuff of the intervalsize */
 /* Notice that if the interval is contigous in the virtual matrice, it is

@@ -256,16 +256,25 @@ extern void Cpstrmr2d();
 #include <assert.h>
 #define DESCLEN 9
 void 
-fortran_mr2d(char *uplo, char *diag, Int *m, Int *n, float *A, Int *ia, Int *ja, Int desc_A[DESCLEN],
-	     float *B, Int *ib, Int *jb, Int desc_B[DESCLEN])
+fortran_mr2d(uplo, diag, m, n, A, ia, ja, desc_A,
+	     B, ib, jb, desc_B)
+  char *uplo, *diag;
+  Int  *ia, *ib, *ja, *jb, *m, *n;
+  Int   desc_A[DESCLEN], desc_B[DESCLEN];
+  float *A, *B;
 {
   Cpstrmr2do(uplo, diag, *m, *n, A, *ia, *ja, (MDESC *) desc_A,
 	     B, *ib, *jb, (MDESC *) desc_B);
   return;
 }
 void 
-fortran_mr2dnew(char *uplo, char *diag, Int *m, Int *n, float *A, Int *ia, Int *ja, Int desc_A[DESCLEN],
-		float *B, Int *ib, Int *jb, Int desc_B[DESCLEN], Int *gcontext)
+fortran_mr2dnew(uplo, diag, m, n, A, ia, ja, desc_A,
+		B, ib, jb, desc_B, gcontext)
+  char *uplo, *diag;
+  Int  *ia, *ib, *ja, *jb, *m, *n;
+  Int   desc_A[DESCLEN], desc_B[DESCLEN];
+  float *A, *B;
+  Int  *gcontext;
 {
   Cpstrmr2d(uplo, diag, *m, *n, A, *ia, *ja, (MDESC *) desc_A,
 	    B, *ib, *jb, (MDESC *) desc_B, *gcontext);
@@ -302,9 +311,15 @@ Cpstrmr2do(uplo, diag, m, n,
 			 * idem B puis ia,ja puis ib,jb */
 #define MAGIC_MAX 100000000
 void
-Cpstrmr2d(char *uplo, char *diag, Int m, Int n,
-	  float *ptrmyblock, Int ia, Int ja, MDESC *ma,
-	  float *ptrmynewblock, Int ib, Int jb, MDESC *mb, Int globcontext)
+Cpstrmr2d(uplo, diag, m, n,
+	  ptrmyblock, ia, ja, ma,
+	  ptrmynewblock, ib, jb, mb, globcontext)
+  char *uplo, *diag;
+  float *ptrmyblock, *ptrmynewblock;
+/* pointers to the memory location of the matrix and the redistributed matrix */
+  MDESC *ma;
+  MDESC *mb;
+  Int   ia, ja, ib, jb, m, n, globcontext;
 {
   float *ptrsendbuff, *ptrrecvbuff, *ptrNULL = 0;
   float *recvptr;
@@ -350,7 +365,7 @@ Cpstrmr2d(char *uplo, char *diag, Int m, Int n,
   assert((myprow1 < p1 && mypcol1 < q1) || (myprow1 == -1 && mypcol1 == -1));
   /* exchange the missing parameters among the processors: shape of grids and
    * location of the processors */
-  param = (Int *) mr2d_malloc(3 * ((size_t)nprocs * 2 + NBPARAM) * sizeof(Int));
+  param = (Int *) mr2d_malloc(3 * (nprocs * 2 + NBPARAM) * sizeof(Int));
   ra = param + nprocs * 2 + NBPARAM;
   ca = param + (nprocs * 2 + NBPARAM) * 2;
   for (i = 0; i < nprocs * 2 + NBPARAM; i++)
@@ -578,12 +593,14 @@ after_comm:
   free(param);
 }/* distrib */
 static2 void 
-init_chenille(Int mypnum, Int nprocs, Int n0, Int *proc0, Int n1, Int *proc1, Int **psend, Int **precv, Int *myrang)
+init_chenille(mypnum, nprocs, n0, proc0, n1, proc1, psend, precv, myrang)
+  Int   nprocs, mypnum, n0, n1;
+  Int  *proc0, *proc1, **psend, **precv, *myrang;
 {
   Int   ns, nr, i, tot;
   Int  *sender, *recver, *g0, *g1;
   tot = max(n0, n1);
-  sender = (Int *) mr2d_malloc((size_t)(nprocs + tot) * sizeof(Int) * 2);
+  sender = (Int *) mr2d_malloc((nprocs + tot) * sizeof(Int) * 2);
   recver = sender + tot;
   *psend = sender;
   *precv = recver;
@@ -632,7 +649,9 @@ init_chenille(Int mypnum, Int nprocs, Int n0, Int *proc0, Int n1, Int *proc1, In
     }
 }
 void 
-Clacpy(Int m, Int n, float *a, Int lda, float *b, Int ldb)
+Clacpy(m, n, a, lda, b, ldb)
+  float *a, *b;
+  Int   m, n, lda, ldb;
 {
   Int   i, j;
   lda -= m;
@@ -646,7 +665,8 @@ Clacpy(Int m, Int n, float *a, Int lda, float *b, Int ldb)
   }
 }
 static2 void 
-gridreshape(Int *ctxtp)
+gridreshape(ctxtp)
+  Int  *ctxtp;
 {
   Int   ori, final;	/* original context, and new context created, with
 			 * line form */
@@ -655,7 +675,7 @@ gridreshape(Int *ctxtp)
   Int   i, j;
   ori = *ctxtp;
   Cblacs_gridinfo(ori, &nprow, &npcol, &myrow, &mycol);
-  usermap = mr2d_malloc(sizeof(Int) * (size_t)nprow * (size_t)npcol);
+  usermap = mr2d_malloc(sizeof(Int) * nprow * npcol);
   for (i = 0; i < nprow; i++)
     for (j = 0; j < npcol; j++) {
       usermap[i + j * nprow] = Cblacs_pnum(ori, i, j);
