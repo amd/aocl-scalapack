@@ -100,8 +100,8 @@ endif(ENABLE_LARGE_MATRIX_TESTING)
 
 
 if (UNIX)
-   if ( "${CMAKE_Fortran_COMPILER}" MATCHES "ifort" )
-#   set( CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -fltconsistency -fp_port" )
+   if ("${CMAKE_Fortran_COMPILER_ID}" STREQUAL "Intel")
+      set( CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -fltconsistency -fp_port" )
    endif ()
    if ("${CMAKE_Fortran_COMPILER_ID}" STREQUAL "Flang")
       set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -ffixed-line-length-132 -I ${SL_FRAMEWORK_INCLUDE_PATH}/" )
@@ -187,8 +187,8 @@ endif()
 
 
 if (UNIX)
-   if ( "${CMAKE_Fortran_COMPILER}" MATCHES "ifort" )
-#   set( CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -fltconsistency -fp_port" )
+   if ("${CMAKE_Fortran_COMPILER_ID}" STREQUAL "Intel")
+      set( CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -fltconsistency -fp_port" )
    endif ()
 endif ()
 
