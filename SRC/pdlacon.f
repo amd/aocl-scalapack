@@ -437,10 +437,6 @@
       KASE = 0
 *
       EST = ESTWORK( 1 )
-*
-*     Capture the subroutine exit in the trace file
-*
-      AOCL_DTL_TRACE_EXIT_F
       RETURN
 *
 *     End of PDLACON

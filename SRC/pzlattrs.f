@@ -281,10 +281,6 @@
      $                   XBND, XJ
       COMPLEX*16         CSUMJ, TJJS, USCAL, XJTMP, ZDUM
       DOUBLE PRECISION   XMAX( 1 )
-#ifdef F2C
-      COMPLEX*16         ZDIV_TMP1
-#endif
-
 *     ..
 *     .. External Functions ..
       LOGICAL            LSAME
