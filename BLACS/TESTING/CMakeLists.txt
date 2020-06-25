@@ -1,4 +1,3 @@
-##Copyright (C) 2021-2024, Advanced Micro Devices, Inc. All rights reserved.##
 set(FTestObj
    blacstest.f btprim.f tools.f)
 
@@ -6,39 +5,11 @@ if ("${CMAKE_Fortran_COMPILER_ID}" STREQUAL "GNU" AND CMAKE_Fortran_COMPILER_VER
     set_source_files_properties(blacstest.f PROPERTIES COMPILE_FLAGS "-std=legacy")
 endif()
 
-# SCALAPACK_BUILD_SOURCE flag determines whether to compile the source code. If this of OFF we need to linked pre-compiled
-# ScaLAPACK library.
-if(SCALAPACK_BUILD_SOURCE STREQUAL "OFF")
-  if(UNIX)
-    if(BUILD_SHARED_LIBS)
-        add_library(scalapack SHARED IMPORTED)
-        set_target_properties(scalapack PROPERTIES
-        IMPORTED_LOCATION "${SCALAPACK_LIBRARY_PATH}/libscalapack.so"
-        )
-    else()
-        add_library(scalapack STATIC IMPORTED)
-        set_target_properties(scalapack PROPERTIES
-        IMPORTED_LOCATION "${SCALAPACK_LIBRARY_PATH}/libscalapack.a"
-        )
-    endif()
-      custom_macros_for_each_scalapack_source (scalapack)
-      target_link_libraries( scalapack INTERFACE ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES})
-  else(UNIX)
-    if(BUILD_SHARED_LIBS)
-      add_library(scalapack SHARED IMPORTED)
-      set_target_properties(scalapack PROPERTIES
-      IMPORTED_LOCATION "${SCALAPACK_LIBRARY_PATH}/scalapack.dll"
-      IMPORTED_IMPLIB "${SCALAPACK_LIBRARY_PATH}/scalapack.lib"
-      )
-    else()
-      add_library(scalapack STATIC IMPORTED)
-      set_target_properties(scalapack PROPERTIES
-      IMPORTED_LOCATION "${SCALAPACK_LIBRARY_PATH}/scalapack.lib"
-      )
-    endif()
-    target_link_libraries( scalapack INTERFACE ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES} ${MPI_LIBRARY})
-  endif(UNIX)
-endif()
+add_executable(xFbtest ${FTestObj})
+target_link_libraries(xFbtest scalapack)
+
+set(CTestObj
+   Cbt.c)
 
 # SCALAPACK_BUILD_TESTS flag determines whether to compile the test framework.
 if(SCALAPACK_BUILD_TESTS)
