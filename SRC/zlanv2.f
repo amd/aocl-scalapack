@@ -56,7 +56,7 @@
 *     .. Local Scalars ..
       COMPLEX*16         AA, BB, DD, T, TEMP, TEMP2, U, X, Y
 #ifdef F2C
-      COMPLEX*16         ZDIV_TMP1
+      COMPLEX*16         ZDIV_TEMP1, ZDIV_TEMP2
 #endif
 
 *     ..
@@ -104,13 +104,21 @@
          ELSE
             TEMP = SQRT( B+C )
 #ifdef F2C
-            CALL ZLADIV( TEMP2, SQRT( B ), TEMP )
+*   LibFlame's ZLADIV's C-implementation takes 3 Arguments. This code is written for compatible for LibFlame.
+*   TEMP2 - gets the o/p of the ZLADIV routine
+*   ZDIV_TEMP1 on LHS avoids data corruption in o/p 'TEMP2' variable
+
+            ZDIV_TEMP1 = ZLADIV( TEMP2, SQRT( B ), TEMP )
 #else
             TEMP2 = ZLADIV( SQRT( B ), TEMP )
 #endif
             CS = DBLE( TEMP2 )
 #ifdef F2C
-            CALL ZLADIV( SN, SQRT( C ), TEMP )       
+*   LibFlame's ZLADIV's C-implementation takes 3 Arguments. This code is written for compatible for LibFlame.
+*   SN - gets the o/p of the ZLADIV routine
+*   ZDIV_TEMP1 on LHS avoids data corruption in o/p 'SN' variable
+
+            ZDIV_TEMP1 = ZLADIV( SN, SQRT( C ), TEMP )          
 #else
             SN = ZLADIV( SQRT( C ), TEMP )
 #endif
@@ -130,8 +138,13 @@
      $      Y = -Y
 
 #ifdef F2C
-         CALL ZLADIV( ZDIV_TMP1, U, ( X+Y ) )
-         T = T - ZDIV_TMP1
+*   LibFlame's ZLADIV's C-implementation takes 3 Arguments. This code is written for compatible for LibFlame.
+*   ZDIV_TEMP2 - gets the o/p of the ZLADIV routine
+*   ZDIV_TEMP1 on LHS avoids data corruption in o/p 'ZDIV_TEMP2' variable
+
+         ZDIV_TEMP1 = X+Y
+         ZDIV_TEMP1 = ZLADIV( ZDIV_TEMP2, U, ZDIV_TEMP1 )
+         T = T - ZDIV_TEMP2
 #else
         T = T - ZLADIV( U, ( X+Y ) )
 #endif

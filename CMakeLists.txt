@@ -253,84 +253,18 @@ MESSAGE(STATUS "Setting CDEFS = ${CDEFS}")
 # --------------------------------------------------
 # Compiler Flags
 option(USE_F2C "Use FORTRAN To C compatible interface for certain Complex type functions" OFF)
+option(USE_DOTC_WRAPPER "Use wrapper for Complex DOTC function" OFF)
+
+set(f2cflag "-cpp ")
 
 if(USE_F2C)
-  set(f2cflag "-DF2C " )
+  set(f2cflag "-cpp -DF2C -DENABLE_LOOK_AHEAD_FOR_LU" )
 ENDIF(USE_F2C)
-MESSAGE(STATUS "CMAKE_C_COMPILER_ID = ${CMAKE_C_COMPILER_ID}")
-MESSAGE(STATUS "CMAKE_Fortran_COMPILER_ID = ${CMAKE_Fortran_COMPILER_ID}")
-
-if(ENABLE_DTL)
-  add_definitions("-DAOCL_DTL ")
-ENDIF(ENABLE_DTL)
-
-if(ENABLE_DRIVER_CHECK)
-  add_definitions("-DENABLE_DRIVER_CHECK")
-ENDIF(ENABLE_DRIVER_CHECK)
-
-if(ENABLE_WRAPPERS)
-  add_definitions("-DENABLE_AOCL_WRAPPERS")
-  set(ENABLE_AOCL_WRAPPERS TRUE)
-ENDIF(ENABLE_WRAPPERS)
-
-if(ENABLE_ILP64)
-  if(UNIX)
-    if (("${CMAKE_Fortran_COMPILER_ID}" STREQUAL "Intel") AND ( "${CMAKE_Fortran_COMPILER}" MATCHES "ifort" ) )
-      add_definitions("-DInt=long" "-DUInt=u_int64_t" "-DENABLE_ILP64")  
-      set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -i8")
-    else (("${CMAKE_Fortran_COMPILER_ID}" STREQUAL "Intel") AND ( "${CMAKE_Fortran_COMPILER}" MATCHES "ifort" ) )
-      add_definitions("-DInt=int64_t" "-DUInt=u_int64_t" "-DENABLE_ILP64")  
-      set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -fdefault-integer-8")
-    endif()
-  else(UNIX)
-   add_definitions("-DInt=__int64" "-DENABLE_ILP64" "-DUInt=unsigned __int64" "-i8")
-  endif()
-else(ENABLE_ILP64)
-   add_definitions("-DUInt=unsigned int " "-DInt=int" )
-ENDIF(ENABLE_ILP64)
-
-#if the flag is not set or set to a binary value, use the AOCL-VERSION
-if("${ENABLE_SET_LIB_VERSION}" MATCHES "^(default_version|OFF|ON)$")
-    string(TIMESTAMP TODAY "%Y%m%d")
-    if(UNIX)
-      set(AOCL_SCALAPACK_LINUX_VERSION TRUE)
-	    set(LIBRARY_VERSION "\"${PROJ_VERSION}\tBuild\t${TODAY}\"")
-    elseif(WIN32)
-      set( LIBRARY_VERSION "${PROJ_VERSION}\tBuild\t${TODAY}")
-    endif()
-    add_definitions("-DAOCL_SCALAPACK_VERSION=${LIBRARY_VERSION}")
-else()
-    if(UNIX)
-      set(AOCL_SCALAPACK_LINUX_VERSION TRUE)
-    endif()
-    add_definitions("-DAOCL_SCALAPACK_VERSION=${ENABLE_SET_LIB_VERSION}")
-endif()
-
-if(ENABLE_AOCL_PROGRESS)
-  if(UNIX)
-    add_definitions("-DAOCL_PROGRESS")
-  endif()
-ENDIF(ENABLE_AOCL_PROGRESS)
-    message(STATUS "ENABLE_SET_LIB_VERSION : ${ENABLE_SET_LIB_VERSION} ")
+if(USE_DOTC_WRAPPER)
+  set(f2cflag "-cpp -DF2C -DF2C_COMPLEX -DENABLE_LOOK_AHEAD_FOR_LU" )
+ENDIF(USE_DOTC_WRAPPER)
 
 ADD_DEFINITIONS( "-D${CDEFS}" "${f2cflag}")
-set(CMAKE_C_FLAGS " ${CMAKE_C_FLAGS} ${CMAKE_ICC_FLAGS} -I ${SL_FRAMEWORK_INCLUDE_PATH}/")
-
-# --------------------------------------------------
-# By default static library
-OPTION(BUILD_SHARED_LIBS "Build shared libraries" OFF )
-OPTION(BUILD_STATIC_LIBS "Build static libraries" ON )
-
-# --------------------------------------------------
-# Subdirectories that need to be processed
-
-macro(append_subdir_files variable dirname)
-get_directory_property(holder DIRECTORY ${dirname} DEFINITION ${variable})
-foreach(depfile ${holder})
-  list(APPEND ${variable} "${dirname}/${depfile}")
-endforeach()
-endmacro()
-
 
 # --------------------------------------------------
 # ScaLAPACK needs BLAS and LAPACK
@@ -380,11 +314,7 @@ IF(LAPACK_LIBRARIES)
   include(CheckFortranFunctionExists)
   message(STATUS "--> LAPACK supplied by user is ${LAPACK_LIBRARIES}.")
   if(BLAS_LIBRARIES)
-     if(WIN32)
-       set(CMAKE_REQUIRED_LIBRARIES ${LAPACK_LIBRARIES};${BLAS_LIBRARIES};${OpenMP_libomp_LIBRARY})
-     else(WIN32)
-       set(CMAKE_REQUIRED_LIBRARIES ${LAPACK_LIBRARIES};${BLAS_LIBRARIES})
-     endif(WIN32)
+     set(CMAKE_REQUIRED_LIBRARIES ${LAPACK_LIBRARIES};${BLAS_LIBRARIES})
   else(BLAS_LIBRARIES)
      set(CMAKE_REQUIRED_LIBRARIES ${LAPACK_LIBRARIES})
   ENDIF(BLAS_LIBRARIES)
