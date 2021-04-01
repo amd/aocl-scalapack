@@ -274,6 +274,10 @@
      $                   XBND, XJ
       REAL               XMAX( 1 )
       COMPLEX            CSUMJ, TJJS, USCAL, XJTMP, ZDUM
+#ifdef F2C
+      COMPLEX            CDIV_TEMP1, CDIV_TEMP2
+#endif
+
 *     ..
 *     .. External Functions ..
       LOGICAL            LSAME
@@ -657,7 +661,16 @@
                   END IF
 *                 X( J ) = CLADIV( X( J ), TJJS )
 *                 XJ = CABS1( X( J ) )
+#ifdef F2C
+*   LibFlame's CLADIV's C-implementation takes 3 Arguments. This code is written for compatible for LibFlame.
+*   XJTMP - gets the o/p of the CLADIV routine
+*   CDIV_TEMP1 on LHS avoids data corruption in o/p 'XJTMP' variable
+
+                  CDIV_TEMP1 = CLADIV( XJTMP, XJTMP, TJJS )
+#else
                   XJTMP = CLADIV( XJTMP, TJJS )
+#endif
+
                   XJ = CABS1( XJTMP )
                   IF( ( MYROW.EQ.ITMP1X ) .AND. ( MYCOL.EQ.ITMP2X ) )
      $                 THEN
@@ -687,7 +700,15 @@
                   END IF
 *                 X( J ) = CLADIV( X( J ), TJJS )
 *                 XJ = CABS1( X( J ) )
-                  XJTMP = CLADIV( XJTMP, TJJS )
+#ifdef F2C
+*   LibFlame's CLADIV's C-implementation takes 3 Arguments. This code is written for compatible for LibFlame.
+*   XJTMP - gets the o/p of the CLADIV routine
+*   CDIV_TEMP1 on LHS avoids data corruption in o/p 'XJTMP' variable
+
+                     CDIV_TEMP1 = CLADIV( XJTMP, XJTMP, TJJS )
+#else
+                    XJTMP = CLADIV( XJTMP, TJJS )
+#endif
                   XJ = CABS1( XJTMP )
                   IF( ( MYROW.EQ.ITMP1X ) .AND. ( MYCOL.EQ.ITMP2X ) )
      $                 THEN
@@ -815,7 +836,15 @@
 *                       Divide by A(j,j) when scaling x if A(j,j) > 1.
 *
                      REC = MIN( ONE, REC*TJJ )
-                     USCAL = CLADIV( USCAL, TJJS )
+#ifdef F2C
+*   LibFlame's CLADIV's C-implementation takes 3 Arguments. This code is written for compatible for LibFlame.
+*   USCAL - gets the o/p of the CLADIV routine
+*   CDIV_TEMP1 on LHS avoids data corruption in o/p 'USCAL' variable
+
+                     CDIV_TEMP1 = CLADIV( USCAL, USCAL, TJJS )
+#else
+                    USCAL = CLADIV( USCAL, TJJS )
+#endif
                   END IF
                   IF( REC.LT.ONE ) THEN
                      CALL PCSSCAL( N, REC, X, IX, JX, DESCX, 1 )
@@ -857,7 +886,16 @@
                      CALL PCSCAL( J-1, ZDUM, A, IA, JA+J-1, DESCA, 1 )
                      CALL PCDOTU( J-1, CSUMJ, A, IA, JA+J-1, DESCA, 1,
      $                            X, IX, JX, DESCX, 1 )
-                     ZDUM = CLADIV( ZDUM, USCAL )
+
+#ifdef F2C
+*   LibFlame's CLADIV's C-implementation takes 3 Arguments. This code is written for compatible for LibFlame.
+*   ZDUM - gets the o/p of the CLADIV routine
+*   CDIV_TEMP1 on LHS avoids data corruption in o/p 'ZDUM' variable
+
+                     CDIV_TEMP1 = CLADIV( ZDUM, ZDUM, USCAL )
+#else
+                    ZDUM = CLADIV( ZDUM, USCAL )
+#endif
                      CALL PCSCAL( J-1, ZDUM, A, IA, JA+J-1, DESCA, 1 )
                   ELSE IF( J.LT.N ) THEN
 *                    DO 140 I = J + 1, N
@@ -867,7 +905,16 @@
                      CALL PCSCAL( N-J, ZDUM, A, IA+J, JA+J-1, DESCA, 1 )
                      CALL PCDOTU( N-J, CSUMJ, A, IA+J, JA+J-1, DESCA, 1,
      $                            X, IX+J, JX, DESCX, 1 )
-                     ZDUM = CLADIV( ZDUM, USCAL )
+     
+#ifdef F2C
+*   LibFlame's CLADIV's C-implementation takes 3 Arguments. This code is written for compatible for LibFlame.
+*   ZDUM - gets the o/p of the CLADIV routine
+*   CDIV_TEMP1 on LHS avoids data corruption in o/p 'ZDUM' variable
+
+                     CDIV_TEMP1 = CLADIV( ZDUM, ZDUM, USCAL )
+#else   
+                    ZDUM = CLADIV( ZDUM, USCAL )
+#endif
                      CALL PCSCAL( N-J, ZDUM, A, IA+J, JA+J-1, DESCA, 1 )
                   END IF
                   IF( MYCOL.EQ.ITMP2X ) THEN
@@ -929,7 +976,16 @@
                         END IF
                      END IF
 *                    X( J ) = CLADIV( X( J ), TJJS )
+#ifdef F2C
+*   LibFlame's CLADIV's C-implementation takes 3 Arguments. This code is written for compatible for LibFlame.
+*   XJTMP - gets the o/p of the CLADIV routine
+*   CDIV_TEMP1 on LHS avoids data corruption in o/p 'XJTMP' variable
+
+                      CDIV_TEMP1 = CLADIV( XJTMP, XJTMP, TJJS )
+#else
                      XJTMP = CLADIV( XJTMP, TJJS )
+#endif
+
                      IF( ( MYROW.EQ.ITMP1X ) .AND. ( MYCOL.EQ.ITMP2X ) )
      $                    THEN
                         X( IROWX ) = XJTMP
@@ -949,7 +1005,16 @@
                         XMAX( 1 ) = XMAX( 1 )*REC
                      END IF
 *                    X( J ) = CLADIV( X( J ), TJJS )
+#ifdef F2C
+*   LibFlame's CLADIV's C-implementation takes 3 Arguments. This code is written for compatible for LibFlame.
+*   XJTMP - gets the o/p of the CLADIV routine
+*   CDIV_TEMP1 on LHS avoids data corruption in o/p 'XJTMP' variable
+
+                      CDIV_TEMP1 = CLADIV( XJTMP, XJTMP, TJJS )
+#else
                      XJTMP = CLADIV( XJTMP, TJJS )
+#endif
+
                      IF( ( MYROW.EQ.ITMP1X ) .AND. ( MYCOL.EQ.ITMP2X ) )
      $                    THEN
                         X( IROWX ) = XJTMP
@@ -976,7 +1041,17 @@
 *                 product has already been divided by 1/A(j,j).
 *
 *                 X( J ) = CLADIV( X( J ), TJJS ) - CSUMJ
+#ifdef F2C
+*   LibFlame's CLADIV's C-implementation takes 3 Arguments. This code is written for compatible for LibFlame.
+*   CDIV_TEMP2 - gets the o/p of the CLADIV routine
+*   CDIV_TEMP1 on LHS avoids data corruption in o/p 'CDIV_TEMP2' variable
+
+                  CDIV_TEMP1 = CLADIV( CDIV_TEMP2, XJTMP, TJJS )
+                  XJTMP = CDIV_TEMP2 - CSUMJ
+#else
                   XJTMP = CLADIV( XJTMP, TJJS ) - CSUMJ
+#endif
+
                   IF( ( MYROW.EQ.ITMP1X ) .AND. ( MYCOL.EQ.ITMP2X ) )
      $                 THEN
                      X( IROWX ) = XJTMP
@@ -1034,7 +1109,17 @@
 *                       Divide by A(j,j) when scaling x if A(j,j) > 1.
 *
                      REC = MIN( ONE, REC*TJJ )
+#ifdef F2C
+*   LibFlame's CLADIV's C-implementation takes 3 Arguments. This code is written for compatible for LibFlame.
+*   USCAL - gets the o/p of the CLADIV routine
+*   CDIV_TEMP1 on LHS avoids data corruption in o/p 'USCAL' variable
+
+                     CDIV_TEMP1 = CLADIV( USCAL, USCAL, TJJS )
+#else
                      USCAL = CLADIV( USCAL, TJJS )
+#endif
+
+
                   END IF
                   IF( REC.LT.ONE ) THEN
                      CALL PCSSCAL( N, REC, X, IX, JX, DESCX, 1 )
@@ -1077,7 +1162,15 @@
                      CALL PCSCAL( J-1, ZDUM, A, IA, JA+J-1, DESCA, 1 )
                      CALL PCDOTC( J-1, CSUMJ, A, IA, JA+J-1, DESCA, 1,
      $                            X, IX, JX, DESCX, 1 )
+#ifdef F2C
+*   LibFlame's CLADIV's C-implementation takes 3 Arguments. This code is written for compatible for LibFlame.
+*   ZDUM - gets the o/p of the CLADIV routine
+*   CDIV_TEMP1 on LHS avoids data corruption in o/p 'ZDUM' variable
+
+                     CDIV_TEMP1 = CLADIV( ZDUM, CONE, ZDUM )
+#else
                      ZDUM = CLADIV( CONE, ZDUM )
+#endif
                      CALL PCSCAL( J-1, ZDUM, A, IA, JA+J-1, DESCA, 1 )
                   ELSE IF( J.LT.N ) THEN
 *                    DO 190 I = J + 1, N
@@ -1088,7 +1181,17 @@
                      CALL PCSCAL( N-J, ZDUM, A, IA+J, JA+J-1, DESCA, 1 )
                      CALL PCDOTC( N-J, CSUMJ, A, IA+J, JA+J-1, DESCA, 1,
      $                            X, IX+J, JX, DESCX, 1 )
+
+#ifdef F2C
+*   LibFlame's CLADIV's C-implementation takes 3 Arguments. This code is written for compatible for LibFlame.
+*   ZDUM - gets the o/p of the CLADIV routine
+*   CDIV_TEMP1 on LHS avoids data corruption in o/p 'ZDUM' variable
+
+                     CDIV_TEMP1 = CLADIV( ZDUM, CONE, ZDUM )
+#else
                      ZDUM = CLADIV( CONE, ZDUM )
+#endif
+
                      CALL PCSCAL( N-J, ZDUM, A, IA+J, JA+J-1, DESCA, 1 )
                   END IF
                   IF( MYCOL.EQ.ITMP2X ) THEN
@@ -1150,7 +1253,16 @@
                         END IF
                      END IF
 *                    X( J ) = CLADIV( X( J ), TJJS )
+#ifdef F2C
+*   LibFlame's CLADIV's C-implementation takes 3 Arguments. This code is written for compatible for LibFlame.
+*   XJTMP - gets the o/p of the CLADIV routine
+*   CDIV_TEMP1 on LHS avoids data corruption in o/p 'XJTMP' variable
+
+                     CDIV_TEMP1 = CLADIV( XJTMP, XJTMP, TJJS )
+#else
                      XJTMP = CLADIV( XJTMP, TJJS )
+#endif
+
                      IF( ( MYROW.EQ.ITMP1X ) .AND. ( MYCOL.EQ.ITMP2X ) )
      $                  X( IROWX ) = XJTMP
                   ELSE IF( TJJ.GT.ZERO ) THEN
@@ -1168,7 +1280,15 @@
                         XMAX( 1 ) = XMAX( 1 )*REC
                      END IF
 *                    X( J ) = CLADIV( X( J ), TJJS )
+#ifdef F2C
+*   LibFlame's CLADIV's C-implementation takes 3 Arguments. This code is written for compatible for LibFlame.
+*   XJTMP - gets the o/p of the CLADIV routine
+*   CDIV_TEMP1 on LHS avoids data corruption in o/p 'XJTMP' variable
+
+                     CDIV_TEMP1 = CLADIV( XJTMP, XJTMP, TJJS )
+#else
                      XJTMP = CLADIV( XJTMP, TJJS )
+#endif
                      IF( ( MYROW.EQ.ITMP1X ) .AND. ( MYCOL.EQ.ITMP2X ) )
      $                  X( IROWX ) = XJTMP
                   ELSE
@@ -1191,7 +1311,17 @@
 *                 product has already been divided by 1/A(j,j).
 *
 *                 X( J ) = CLADIV( X( J ), TJJS ) - CSUMJ
+#ifdef F2C
+*   LibFlame's CLADIV's C-implementation takes 3 Arguments. This code is written for compatible for LibFlame.
+*   CDIV_TEMP2 - gets the o/p of the CLADIV routine
+*   CDIV_TEMP1 on LHS avoids data corruption in o/p 'CDIV_TEMP2' variable
+
+                  CDIV_TEMP1 = CLADIV( CDIV_TEMP2, XJTMP, TJJS )
+                  XJTMP = CDIV_TEMP2 - CSUMJ
+#else
                   XJTMP = CLADIV( XJTMP, TJJS ) - CSUMJ
+#endif
+
                   IF( ( MYROW.EQ.ITMP1X ) .AND. ( MYCOL.EQ.ITMP2X ) )
      $               X( IROWX ) = XJTMP
                END IF
