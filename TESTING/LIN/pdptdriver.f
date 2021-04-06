@@ -86,11 +86,20 @@
      $                     RSRC_ = 7, CSRC_ = 8, LLD_ = 9 )
 *
       DOUBLE PRECISION   ZERO
+#ifndef DYNAMIC_WORK_MEM_ALLOC
       INTEGER            DBLESZ, MEMSIZ, NTESTS
       DOUBLE PRECISION   PADVAL
       PARAMETER          ( DBLESZ = 8,
      $                     MEMSIZ = TOTMEM / DBLESZ, NTESTS = 20,
      $                     PADVAL = -9923.0D+0, ZERO = 0.0D+0 )
+#else
+      INTEGER            DBLESZ, NTESTS
+	  INTEGER, PARAMETER ::  MEMSIZ = 2100000000
+      DOUBLE PRECISION   PADVAL
+      PARAMETER          ( DBLESZ = 8,
+     $                      NTESTS = 20,
+     $                     PADVAL = -9923.0D+0, ZERO = 0.0D+0 )
+#endif
       INTEGER            INT_ONE
       PARAMETER          ( INT_ONE = 1 )
 *     ..
@@ -122,7 +131,7 @@
       DOUBLE PRECISION   MEM( MEMSIZ ), CTIME( 2 ), WTIME( 2 )
 #else
       DOUBLE PRECISION   CTIME( 2 ), WTIME( 2 )
-      DOUBLE PRECISION, allocatable :: MEM (:)
+	  DOUBLE PRECISION, allocatable :: MEM (:)
 #endif
 *     ..
 *     .. External Subroutines ..

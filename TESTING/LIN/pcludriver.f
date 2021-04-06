@@ -74,6 +74,7 @@
       PARAMETER          ( BLOCK_CYCLIC_2D = 1, DLEN_ = 9, DTYPE_ = 1,
      $                     CTXT_ = 2, M_ = 3, N_ = 4, MB_ = 5, NB_ = 6,
      $                     RSRC_ = 7, CSRC_ = 8, LLD_ = 9 )
+#ifndef DYNAMIC_WORK_MEM_ALLOC
       INTEGER            CPLXSZ, INTGSZ, MEMSIZ, NTESTS, REALSZ, TOTMEM
 #ifndef DYNAMIC_WORK_MEM_ALLOC
       PARAMETER          ( TOTMEM = 4000000 )
@@ -91,6 +92,18 @@
      $                     MEMSIZ = TOTMEM / CPLXSZ, NTESTS = 20,
      $                     PADVAL = ( -9923.0E+0, -9923.0E+0 ),
      $                     ZERO = 0.0E+0 )
+#else
+      INTEGER            CPLXSZ, INTGSZ, NTESTS, REALSZ, TOTMEM
+	  INTEGER, PARAMETER ::  MEMSIZ = 2100000000
+
+      REAL               ZERO
+      COMPLEX            PADVAL
+      PARAMETER          ( CPLXSZ = 8, INTGSZ = 4, REALSZ = 4,
+     $                     TOTMEM = 4000000,
+     $                      NTESTS = 20,
+     $                     PADVAL = ( -9923.0E+0, -9923.0E+0 ),
+     $                     ZERO = 0.0E+0 )
+#endif
 *     ..
 *     .. Local Scalars ..
       LOGICAL            CHECK, EST

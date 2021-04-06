@@ -72,25 +72,22 @@
       PARAMETER          ( BLOCK_CYCLIC_2D = 1, DLEN_ = 9, DTYPE_ = 1,
      $                     CTXT_ = 2, M_ = 3, N_ = 4, MB_ = 5, NB_ = 6,
      $                     RSRC_ = 7, CSRC_ = 8, LLD_ = 9 )
-*
-      INTEGER            INTGSZ
-#ifdef ENABLE_ILP64
-      PARAMETER          ( INTGSZ = 8 )
-#else
-      PARAMETER          ( INTGSZ = 4 )
-#endif
-*
-      INTEGER            DBLESZ, MEMSIZ, NTESTS, TOTMEM, ZPLXSZ
 #ifndef DYNAMIC_WORK_MEM_ALLOC
-      PARAMETER          ( TOTMEM = 2000000 )
-#else
-      PARAMETER          ( TOTMEM = 2100000000 )
-#endif
+      INTEGER            DBLESZ, INTGSZ, MEMSIZ, NTESTS, TOTMEM, ZPLXSZ
       COMPLEX*16         PADVAL
       PARAMETER          ( DBLESZ = 8,
      $                     ZPLXSZ = 16, MEMSIZ = TOTMEM / ZPLXSZ,
      $                     NTESTS = 20,
      $                     PADVAL = ( -9923.0D+0, -9923.0D+0 ) )
+#else
+      INTEGER            DBLESZ, INTGSZ, NTESTS, TOTMEM, ZPLXSZ
+	  INTEGER, PARAMETER ::  MEMSIZ = 2100000000
+      COMPLEX*16         PADVAL
+      PARAMETER          ( DBLESZ = 8, INTGSZ = 4, TOTMEM = 2000000,
+     $                     ZPLXSZ = 16,
+     $                     NTESTS = 20,
+     $                     PADVAL = ( -9923.0D+0, -9923.0D+0 ) )
+#endif
 *     ..
 *     .. Local Scalars ..
       CHARACTER*2        FACT

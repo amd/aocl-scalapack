@@ -67,6 +67,7 @@
       PARAMETER          ( BLOCK_CYCLIC_2D = 1, DLEN_ = 9, DTYPE_ = 1,
      $                     CTXT_ = 2, M_ = 3, N_ = 4, MB_ = 5, NB_ = 6,
      $                     RSRC_ = 7, CSRC_ = 8, LLD_ = 9 )
+#ifndef DYNAMIC_WORK_MEM_ALLOC
       INTEGER            MEMSIZ, NTESTS, REALSZ, TOTMEM
 #ifndef DYNAMIC_WORK_MEM_ALLOC
       PARAMETER          ( TOTMEM = 2000000 )
@@ -79,6 +80,16 @@
      $                     MEMSIZ = TOTMEM / REALSZ, NTESTS = 20,
      $                     PADVAL = -9923.0E+0 )
       PARAMETER          ( ONE = 1.0E+0, ZERO = 0.0E+0 )
+#else
+      INTEGER            NTESTS, REALSZ, TOTMEM
+	  INTEGER, PARAMETER ::  MEMSIZ = 2100000000
+      REAL               PADVAL
+      REAL               ONE, ZERO
+      PARAMETER          ( REALSZ = 4, TOTMEM = 2000000,
+     $                      NTESTS = 20,
+     $                     PADVAL = -9923.0E+0 )
+      PARAMETER          ( ONE = 1.0E+0, ZERO = 0.0E+0 )
+#endif
 *     ..
 *     .. Local Scalars ..
       LOGICAL            CHECK, TPSD
@@ -108,7 +119,7 @@
 #else
       REAL, allocatable :: MEM (:)
 #endif
-
+      
       DOUBLE PRECISION   CTIME( 1 ), WTIME( 1 )
 *     ..
 *     .. External Subroutines ..

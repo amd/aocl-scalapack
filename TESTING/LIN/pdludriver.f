@@ -72,24 +72,21 @@
       PARAMETER          ( BLOCK_CYCLIC_2D = 1, DLEN_ = 9, DTYPE_ = 1,
      $                     CTXT_ = 2, M_ = 3, N_ = 4, MB_ = 5, NB_ = 6,
      $                     RSRC_ = 7, CSRC_ = 8, LLD_ = 9 )
-*
-      INTEGER            INTGSZ
-#ifdef ENABLE_ILP64
-      PARAMETER          ( INTGSZ = 8 )
-#else
-      PARAMETER          ( INTGSZ = 4 )
-#endif
-*
-      INTEGER            DBLESZ, MEMSIZ, NTESTS, TOTMEM
 #ifndef DYNAMIC_WORK_MEM_ALLOC
-      PARAMETER          ( TOTMEM = 4000000 )
-#else
-      PARAMETER          ( TOTMEM = WORK_BUFFER_SIZE )
-#endif
+      INTEGER            DBLESZ, INTGSZ, MEMSIZ, NTESTS, TOTMEM
       DOUBLE PRECISION   PADVAL, ZERO
       PARAMETER          ( DBLESZ = 8,
      $                     MEMSIZ = TOTMEM / DBLESZ, NTESTS = 20,
      $                     PADVAL = -9923.0D+0, ZERO = 0.0D+0 )
+#else
+      INTEGER            DBLESZ, INTGSZ,  NTESTS
+      INTEGER, PARAMETER ::  MEMSIZ = 2100000000
+
+      DOUBLE PRECISION   PADVAL, ZERO
+      PARAMETER          ( DBLESZ = 8, INTGSZ = 4, 
+     $                      NTESTS = 20,
+     $                     PADVAL = -9923.0D+0, ZERO = 0.0D+0 )
+#endif
 *     ..
 *     .. Local Scalars ..
       LOGICAL            CHECK, EST
@@ -113,13 +110,13 @@
      $                   NBVAL( NTESTS ), NRVAL( NTESTS ),
      $                   NVAL( NTESTS ), PVAL( NTESTS ),
      $                   QVAL( NTESTS )
-#ifndef DYNAMIC_WORK_MEM_ALLOC
+#ifndef DYNAMIC_WORK_MEM_ALLOC     
       DOUBLE PRECISION   MEM( MEMSIZ ), CTIME( 2 ), WTIME( 2 )
 #else
       DOUBLE PRECISION   CTIME( 2 ), WTIME( 2 )
       DOUBLE PRECISION, allocatable :: MEM (:)
 #endif
-      CHARACTER*100          SVERSION
+      CHARACTER*10       ::  SVERSION
 *     ..
 *     .. External Subroutines ..
       EXTERNAL           BLACS_BARRIER, BLACS_EXIT, BLACS_GET,
@@ -158,9 +155,6 @@
 #ifdef DYNAMIC_WORK_MEM_ALLOC
       allocate(MEM(MEMSIZ))
 #endif
-*
-*     Display AOCL-SCALAPACK Version
-*
       CALL BLACS_PINFO( IAM, NPROCS )
 
       IF (IAM.EQ.0) THEN

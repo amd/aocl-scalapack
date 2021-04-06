@@ -86,11 +86,20 @@
      $                     RSRC_ = 7, CSRC_ = 8, LLD_ = 9 )
 *
       REAL               ZERO
+#ifndef DYNAMIC_WORK_MEM_ALLOC
       INTEGER            MEMSIZ, NTESTS, REALSZ
       REAL               PADVAL
       PARAMETER          ( REALSZ = 4,
      $                     MEMSIZ = TOTMEM / REALSZ, NTESTS = 20,
      $                     PADVAL = -9923.0E+0, ZERO = 0.0E+0 )
+#else
+      INTEGER            NTESTS, REALSZ
+	  INTEGER, PARAMETER ::  MEMSIZ = 21000000
+      REAL               PADVAL
+      PARAMETER          ( REALSZ = 4,
+     $                     NTESTS = 20,
+     $                     PADVAL = -9923.0E+0, ZERO = 0.0E+0 )
+#endif
       INTEGER            INT_ONE
       PARAMETER          ( INT_ONE = 1 )
 *     ..
@@ -117,7 +126,7 @@
      $                   IERR( 1 ), NBRVAL( NTESTS ), NBVAL( NTESTS ),
      $                   NRVAL( NTESTS ), NVAL( NTESTS ),
      $                   PVAL( NTESTS ), QVAL( NTESTS )
-#ifndef DYNAMIC_WORK_MEM_ALLOC
+#ifndef DYNAMIC_WORK_MEM_ALLOC     
       REAL               MEM( MEMSIZ )
 #else
       REAL, allocatable :: MEM (:)
