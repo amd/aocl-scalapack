@@ -148,7 +148,7 @@
 *     ..
 *     .. External Functions ..
       LOGICAL            LSAME
-
+	  
 #ifndef F2C
       COMPLEX*16         ZDOTC
 #endif
@@ -236,7 +236,7 @@
                ICURR = IDIAG + 1
 #ifdef F2C
                CALL  ZDOTC( TMP, N-NA, A( ICURR ), 1,
-     $                             A( ICURR ), 1 )
+     $                             A( ICURR ), 1 ) 
                A( IDIAG ) = AII*AII + DBLE( TMP)
 #else
                A( IDIAG ) = AII*AII + DBLE( ZDOTC( N-NA, A( ICURR ), 1,

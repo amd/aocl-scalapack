@@ -1,5 +1,11 @@
-*  -- ScaLAPACK routine --
-*     Copyright (c) 2020-2023 Advanced Micro Devices, Inc. All rights reserved.
+*  =====================================================================
+*     SUBROUTINE PDGETRF
+*  =====================================================================
+      SUBROUTINE PDGETRF( M, N, A, IA, JA, DESCA, IPIV, INFO )
+*
+*  -- ScaLAPACK routine (version 2.1.0) --
+*     Copyright (c) 2020 Advanced Micro Devices, Inc.  All rights reserved.
+*     June 10, 2020
 *
 *  -- ScaLAPACK routine (version 1.7) --
 *     University of Tennessee, Knoxville, Oak Ridge National Laboratory,
@@ -141,23 +147,11 @@
 *
 *  =====================================================================
 *
-*     ..
-      CALL AOCL_SCALAPACK_INIT( )
-      AOCL_DTL_TRACE_ENTRY_F
-*
-      IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
-         WRITE(LOG_BUF,101) M, N, IA, JA, eos_str
- 101     FORMAT('pdgetrf inputs:,M:',I9,',N:',I9,
-     $               ',IA:',I5,',JA:',I5,A5 )
-         AOCL_DTL_LOG_ENTRY_F
-      END IF
-
-*
 #ifdef ENABLE_LOOK_AHEAD_FOR_LU
 *     ..
 *     .. Local Scalars ..
 
-*     Defining the threshold to invoke look-ahead
+*     Defining the threshold to invoke look-ahead      
       INTEGER            CTXT_, LU_THRESHOLD, NB_, MN, NB
       INTEGER            ICTXT, MYCOL, MYROW, NPCOL, NPROW
 *     ..
@@ -179,6 +173,9 @@
       ICTXT = DESCA( CTXT_ )
       CALL BLACS_GRIDINFO( ICTXT, NPROW, NPCOL, MYROW, MYCOL )
 *
+#ifdef AOCL_DTL_ADVANCED_TRACE_ENABLE
+      CALL AOCL_DTL_TRACE_ENTRY(__FILE__, __LINE__, ' ')
+#endif
       MN = MIN( M, N )
       NB = DESCA( NB_ )
 *
@@ -205,7 +202,9 @@
       CALL PDGETRF0( M, N, A, IA, JA, DESCA, IPIV, INFO )
 #endif /* ENABLE_LOOK_AHEAD_FOR_LU */
 *
-      AOCL_DTL_TRACE_EXIT_F
+#ifdef AOCL_DTL_ADVANCED_TRACE_ENABLE
+      CALL AOCL_DTL_TRACE_EXIT(__FILE__, __LINE__, ' ')
+#endif
       RETURN
 *
 *     End of PDGETRF

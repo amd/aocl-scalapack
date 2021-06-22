@@ -103,27 +103,9 @@ if (UNIX)
    if ("${CMAKE_Fortran_COMPILER_ID}" STREQUAL "Intel")
       set( CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -fltconsistency -fp_port" )
    endif ()
-   if ("${CMAKE_Fortran_COMPILER_ID}" STREQUAL "Flang")
-      set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -ffixed-line-length-132 -I ${SL_FRAMEWORK_INCLUDE_PATH}/" )
+   if ( "${CMAKE_Fortran_COMPILER}" MATCHES "ifort" )
+  set( CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -fltconsistency -fp_port" )
    endif ()
-   if ("${CMAKE_Fortran_COMPILER_ID}" STREQUAL "Intel")
-      set( CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -fltconsistency -fp-port -no-vec -I ${SL_FRAMEWORK_INCLUDE_PATH}/" )
-   elseif ("${CMAKE_Fortran_COMPILER}" MATCHES "ifort" )
-      set( CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -fltconsistency -fp-port -no-vec -I ${SL_FRAMEWORK_INCLUDE_PATH}/" )
-   endif ()
-
-   if (("${CMAKE_C_COMPILER_ID}" STREQUAL "Intel") AND ( "${CMAKE_C_COMPILER}" MATCHES "icc" ) )
-      set(CMAKE_ICC_FLAGS "${CMAKE_ICC_FLAGS} -no-vec ")
-      message(STATUS "Found Intel icc compiler : ${CMAKE_ICC_FLAGS} ")
-   endif ()
-
-   if (("${CMAKE_C_COMPILER_ID}" STREQUAL "IntelLLVM") AND ( "${CMAKE_C_COMPILER}" MATCHES "icc" ) )
-      set(CMAKE_ICC_FLAGS "${CMAKE_ICC_FLAGS} -Wno-implicit-function-declaration")
-      set(CMAKE_ICC_FLAGS "${CMAKE_ICC_FLAGS} -no-vec ")
-      message(STATUS "Found Intel icx compiler : ${CMAKE_ICC_FLAGS} ")
-   endif ()
-else ()
-   set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -I ${SL_FRAMEWORK_INCLUDE_PATH}/ " )
 endif ()
 
 
@@ -189,6 +171,9 @@ endif()
 if (UNIX)
    if ("${CMAKE_Fortran_COMPILER_ID}" STREQUAL "Intel")
       set( CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -fltconsistency -fp_port" )
+   endif ()
+   if ( "${CMAKE_Fortran_COMPILER}" MATCHES "ifort" )
+  set( CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -fltconsistency -fp_port" )
    endif ()
 endif ()
 
@@ -258,10 +243,10 @@ option(USE_DOTC_WRAPPER "Use wrapper for Complex DOTC function" OFF)
 set(f2cflag "-cpp ")
 
 if(USE_F2C)
-  set(f2cflag "-cpp -DF2C -DENABLE_LOOK_AHEAD_FOR_LU" )
+  set(f2cflag "-cpp -DF2C " )
 ENDIF(USE_F2C)
 if(USE_DOTC_WRAPPER)
-  set(f2cflag "-cpp -DF2C -DF2C_COMPLEX -DENABLE_LOOK_AHEAD_FOR_LU" )
+  set(f2cflag "-cpp -DF2C -DF2C_COMPLEX " )
 ENDIF(USE_DOTC_WRAPPER)
 
 ADD_DEFINITIONS( "-D${CDEFS}" "${f2cflag}")
@@ -354,11 +339,25 @@ message(STATUS "LAPACK library: ${LAPACK_LIBRARIES}")
 
 MESSAGE(STATUS "=========")
 
+# --------------------------------------------------
+# By default static library
+OPTION(BUILD_SHARED_LIBS "Build shared libraries" OFF )
+OPTION(BUILD_STATIC_LIBS "Build static libraries" ON )
+
+# --------------------------------------------------
+# Subdirectories that need to be processed
+   
+macro(append_subdir_files variable dirname)
+get_directory_property(holder DIRECTORY ${dirname} DEFINITION ${variable})
+foreach(depfile ${holder})
+  list(APPEND ${variable} "${dirname}/${depfile}")
+endforeach()
+endmacro()
+
 #
 # AOCL_DTL
 #
-add_subdirectory(AOCL_DTL)
-append_subdir_files(dtl "AOCL_DTL")
+#add_subdirectory(AOCL_DTL)
 
 #
 # FRAMEWORK

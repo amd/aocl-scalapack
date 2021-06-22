@@ -111,9 +111,8 @@ void pdgemmla_( TRANSA, TRANSB, M, N, K, ALPHA,
 *
 *  ---------------------------------------------------------------------
 */
-#ifdef AOCL_DTL_ADVANCED_TRACE_ENABLE
-      CALL AOCL_DTL_TRACE_ENTRY(__FILE__, __LINE__, ' ')
-#endif
+   AOCL_DTL_TRACE_ENTRY(AOCL_DTL_LEVEL_TRACE_5);
+
    PBTYP_T  * type;
    char     * Aptr, * Bptr, * Cptr;
    Int        ln;
@@ -129,13 +128,11 @@ void pdgemmla_( TRANSA, TRANSB, M, N, K, ALPHA,
                 PANEL->Xjj, PANEL->lda, type->size );
    if( PANEL->brows > 0 )
       type->Fgemm( TRANSA, TRANSB, &PANEL->brows, &ln, &PANEL->JB,
-                   (char *)ALPHA, (char *)PANEL->pmem, &PANEL->ldm, Bptr, &PANEL->ldu,
-                   (char *)BETA,  Cptr, &PANEL->lda );
+                   ALPHA, PANEL->pmem, &PANEL->ldm, Bptr, &PANEL->ldu,
+                   BETA,  Cptr, &PANEL->lda );
    return;
 /*
 *  End of PDGEMMLA
 */
-#ifdef AOCL_DTL_ADVANCED_TRACE_ENABLE
-      CALL AOCL_DTL_TRACE_EXIT(__FILE__, __LINE__, ' ')
-#endif
+   AOCL_DTL_TRACE_EXIT(AOCL_DTL_LEVEL_TRACE_5);
 }

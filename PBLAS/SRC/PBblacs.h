@@ -123,6 +123,9 @@ void           Ccgesd2d        ( Int,       Int,       Int,
 void           Czgesd2d        ( Int,       Int,       Int,
                                  char *,    Int,       Int,
                                  Int );
+void           Cugesd2d        ( Int,       Int,       Int,
+                                 char *,    Int,       Int,
+                                 Int );
 
 void           Citrsd2d        ( Int,       char *,    char *,
                                  Int,       Int,       char *,
@@ -171,6 +174,12 @@ void           Cctrbs2d        ( Int,       char *,    char *,
 void           Cztrbs2d        ( Int,       char *,    char *,
                                  char *,    char *,    Int,
                                  Int,       char *,    Int );
+
+/* Send/Receive for user defined datatype */
+Int            Cugebx2d        ( Int,       char *,    char *,
+                                 Int,       char *,    Int,
+                                 Int,       Int, 
+                                 void *,    void * );
 
                                                    /* BLACS Receiving */
 void           Cigerv2d        ( Int,       Int,       Int,

@@ -22,17 +22,7 @@
 #include <math.h>
 #include <stdarg.h>
 #include <mpi.h>
-#include "../../AOCL_DTL/aocldtl.h"
-/*
- * Integer types used by BLACS
- */
-#ifndef Int
-#define Int int
-#endif
-#ifndef MpiInt
-#define MpiInt int
-#endif
-
+#include "../../AOCL_DTL/SRC/aocldtl.h"
 /*
  * Integer types used by BLACS
  */

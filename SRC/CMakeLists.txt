@@ -1,20 +1,10 @@
 ##Copyright (C) 2021-2023, Advanced Micro Devices, Inc. All rights reserved.##
 
 set (ALLAUX  pjlaenv.f  pilaenvx.f piparmq.f pilaver.f pmpim2.f pmpcol.f)
-
-if(ENABLE_DTL)
 set (ALLAUX-C
    pbchkvect.c getpbbuf.c pcrot.c pslaiect.c pdlaiect.c pzrot.c
-   slamov.c clamov.c dlamov.c zlamov.c aocl_scalapack_progress.c
-   get_aocl_scalapack_version.c aocl_dtl_trace_entry.c aocl_dtl_trace_exit.c
-   aocl_f2c_src_wrappers.c)
-else(ENABLE_DTL)
-set (ALLAUX-C
-   pbchkvect.c getpbbuf.c pcrot.c pslaiect.c pdlaiect.c pzrot.c
-   slamov.c clamov.c dlamov.c zlamov.c aocl_scalapack_progress.c
-   get_aocl_scalapack_version.c aocl_dtl_trace_entry.c aocl_dtl_trace_exit.c
-   aocl_f2c_src_wrappers.c)
-ENDIF(ENABLE_DTL)
+   slamov.c clamov.c dlamov.c zlamov.c
+   get_aocl_scalapack_version.c aocl_dtl_trace_entry.c aocl_dtl_trace_exit.c)
 
 set (SCLAUX  
    pslabad.f pslaed0.f pslaed1.f pslaed2.f pslaed3.f pslaedz.f 

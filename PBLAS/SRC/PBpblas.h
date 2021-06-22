@@ -215,9 +215,6 @@
 #define    pdpanel_pinit_      PDPANEL_PINIT
 #define    pdpanel_pfree_      PDPANEL_PFREE
 
-#define    pdgemmla_           PDGEMMLA
-#define    pdtrsmla_           PDTRSMLA
-
 #endif
 
 #if( _F2C_CALL_ == _F2C_NOCHANGE )
@@ -383,19 +380,16 @@
 #define    pctranc_            pctranc
 #define    pztranc_            pztranc
 
-#define    pdpanel_lcopy_      pdpanel_lcopy
-#define    pdpanel_lcast_      pdpanel_lcast
-#define    pdpanel_bcsiz_      pdpanel_bcsiz
-#define    pdpanel_bpack_      pdpanel_bpack
-#define    pdpanel_bcast_      pdpanel_bcast
-#define    pdpanel_ucast_      pdpanel_ucast
-#define    pdpanel_bwait_      pdpanel_bwait
-#define    pdpanel_bfree_      pdpanel_bfree
-#define    pdpanel_pinit_      pdpanel_pinit
-#define    pdpanel_pfree_      pdpanel_pfree
-
-#define    pdgemmla_           pdgemmla
-#define    pdtrsmla_           pdtrsmla
+#define    pdpanel_lcopy_      PDPANEL_LCOPY
+#define    pdpanel_lcast_      PDPANEL_LCAST
+#define    pdpanel_bcsiz_      PDPANEL_BCSIZ
+#define    pdpanel_bpack_      PDPANEL_BPACK
+#define    pdpanel_bcast_      PDPANEL_BCAST
+#define    pdpanel_ucast_      PDPANEL_UCAST
+#define    pdpanel_bwait_      PDPANEL_BWAIT
+#define    pdpanel_bfree_      PDPANEL_BFREE
+#define    pdpanel_pinit_      PDPANEL_PINIT
+#define    pdpanel_pfree_      PDPANEL_PFREE
 
 #endif
 
@@ -910,6 +904,9 @@ void           pdgemm_         ( F_CHAR_T,  F_CHAR_T,  Int *,
                                  Int *,     Int *,     double *,
                                  double *,  Int *,     Int *,
                                  Int * );
+void           pdgemmla_       ( F_CHAR_T,  F_CHAR_T,  Int *,
+                                 Int *,     Int *,     double *,
+                                 double *,  pd_panel * );
 void           pcgemm_         ( F_CHAR_T,  F_CHAR_T,  Int *,
                                  Int *,     Int *,     float *,
                                  float *,   Int *,     Int *,
@@ -1107,6 +1104,9 @@ void           pdtrsm_         ( F_CHAR_T,  F_CHAR_T,  F_CHAR_T,
                                  double *,  double *,  Int *,
                                  Int *,     Int *,     double *,
                                  Int *,     Int *,     Int * );
+void           pdtrsmla_       ( F_CHAR_T,  F_CHAR_T,  F_CHAR_T,
+                                 F_CHAR_T,  Int *,     Int *,
+                                 double *,  pd_panel * );
 void           pctrsm_         ( F_CHAR_T,  F_CHAR_T,  F_CHAR_T,
                                  F_CHAR_T,  Int *,     Int *,
                                  float *,   float *,   Int *,
@@ -1117,6 +1117,25 @@ void           pztrsm_         ( F_CHAR_T,  F_CHAR_T,  F_CHAR_T,
                                  double *,  double *,  Int *,
                                  Int *,     Int *,     double *,
                                  Int *,     Int *,     Int * );
+void           pdpanel_lcopy_  ( double *,  Int *,     Int *,
+                                 Int *,     Int *,
+                                 pd_panel * );
+void           pdpanel_lcast_  ( pd_panel *,
+                                 Int * );
+void           pdpanel_bcsiz_  ( double *,  Int *,     Int *,
+                                 Int *,     Int *,     Int *,
+                                 Int *,     Int *,     Int *,
+                                 pd_panel *,           Int *,
+                                 Int * );
+void           pdpanel_bpack_  ( pd_panel *,           Int * );
+void           pdpanel_bcast_  ( double *,  pd_panel *,
+                                 Int * );
+void           pdpanel_ucast_  ( double *,  Int *,     Int *,
+                                 Int *,     pd_panel * );
+void           pdpanel_bwait_  ( pd_panel * );
+void           pdpanel_bfree_  ( pd_panel * );
+void           pdpanel_pinit_  ( pd_panel *, Int * );
+void           pdpanel_pfree_  ( pd_panel * );
 #else
 
 void           PB_freebuf_     ();

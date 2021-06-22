@@ -75,11 +75,11 @@
 *     .. Parameters ..
       INTEGER            I, IACOL, IAROW, ICTXT,
      $                   J, MN, MYCOL, MYROW, NPCOL, NPROW
-      INTEGER,PARAMETER :: CTXT_ = 2
+      PARAMETER          ( CTXT_ = 2 )
 *     ..
 *     .. External Subroutines ..
       EXTERNAL           BLACS_ABORT, BLACS_GRIDINFO, CHK1MAT, IGEBR2D,
-     $                   IGEBS2D, INFOG2L, PDAMAX, ICOPY,
+     $                   IGEBS2D, INFOG2L, PDAMAX, ICOPY
      $                   PDSCAL, PDSWAP, PB_TOPGET, PXERBLA
 *     ..
 *     .. Executable Statements ..

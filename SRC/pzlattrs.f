@@ -282,7 +282,7 @@
       COMPLEX*16         CSUMJ, TJJS, USCAL, XJTMP, ZDUM
       DOUBLE PRECISION   XMAX( 1 )
 #ifdef F2C
-      COMPLEX*16         ZDIV_TEMP1, ZDIV_TEMP2
+      COMPLEX*16         ZDIV_TMP1
 #endif
 
 *     ..
@@ -706,11 +706,7 @@
 *                 X( J ) = ZLADIV( X( J ), TJJS )
 *                 XJ = CABS1( X( J ) )
 #ifdef F2C
-*   LibFlame's ZLADIV's C-implementation takes 3 Arguments. This code is written for compatible for LibFlame.
-*   XJTMP - gets the o/p of the ZLADIV routine
-*   ZDIV_TEMP1 on LHS avoids data corruption in o/p 'XJTMP' variable
-
-                  ZDIV_TEMP1 = ZLADIV( XJTMP, XJTMP, TJJS )
+                  CALL  ZLADIV( XJTMP, XJTMP, TJJS )
 #else
                   XJTMP = ZLADIV( XJTMP, TJJS )
 #endif
@@ -746,11 +742,7 @@
 *                 X( J ) = ZLADIV( X( J ), TJJS )
 *                 XJ = CABS1( X( J ) )
 #ifdef F2C
-*   LibFlame's ZLADIV's C-implementation takes 3 Arguments. This code is written for compatible for LibFlame.
-*   XJTMP - gets the o/p of the ZLADIV routine
-*   ZDIV_TEMP1 on LHS avoids data corruption in o/p 'XJTMP' variable
-
-                     ZDIV_TEMP1 = ZLADIV( XJTMP, XJTMP, TJJS )
+                   CALL  ZLADIV( XJTMP, XJTMP, TJJS )
 #else
                     XJTMP = ZLADIV( XJTMP, TJJS )
 #endif
@@ -882,11 +874,7 @@
 *
                      REC = MIN( ONE, REC*TJJ )
 #ifdef F2C
-*   LibFlame's ZLADIV's C-implementation takes 3 Arguments. This code is written for compatible for LibFlame.
-*   USCAL - gets the o/p of the ZLADIV routine
-*   ZDIV_TEMP1 on LHS avoids data corruption in o/p 'USCAL' variable
-
-                     ZDIV_TEMP1 = ZLADIV( USCAL, USCAL, TJJS )
+                   CALL ZLADIV( USCAL, USCAL, TJJS )
 #else
                     USCAL = ZLADIV( USCAL, TJJS )
 #endif
@@ -935,11 +923,7 @@
      $                            X, IX, JX, DESCX, 1 )
 
 #ifdef F2C
-*   LibFlame's ZLADIV's C-implementation takes 3 Arguments. This code is written for compatible for LibFlame.
-*   ZDUM - gets the o/p of the ZLADIV routine
-*   ZDIV_TEMP1 on LHS avoids data corruption in o/p 'ZDUM' variable
-
-                     ZDIV_TEMP1 = ZLADIV( ZDUM, ZDUM, USCAL )
+                   CALL ZLADIV( ZDUM, ZDUM, USCAL )
 #else
                     ZDUM = ZLADIV( ZDUM, USCAL )
 #endif
@@ -954,11 +938,7 @@
                      CALL PZDOTU( N-J, CSUMJ, A, IA+J, JA+J-1, DESCA, 1,
      $                            X, IX+J, JX, DESCX, 1 )
 #ifdef F2C
-*   LibFlame's ZLADIV's C-implementation takes 3 Arguments. This code is written for compatible for LibFlame.
-*   ZDUM - gets the o/p of the ZLADIV routine
-*   ZDIV_TEMP1 on LHS avoids data corruption in o/p 'ZDUM' variable
-
-                     ZDIV_TEMP1 = ZLADIV( ZDUM, ZDUM, USCAL )
+                    CALL ZLADIV( ZDUM, ZDUM, USCAL )
 #else
                     ZDUM = ZLADIV( ZDUM, USCAL )
 #endif
@@ -1024,11 +1004,7 @@
                      END IF
 *                    X( J ) = ZLADIV( X( J ), TJJS )
 #ifdef F2C
-*   LibFlame's ZLADIV's C-implementation takes 3 Arguments. This code is written for compatible for LibFlame.
-*   XJTMP - gets the o/p of the ZLADIV routine
-*   ZDIV_TEMP1 on LHS avoids data corruption in o/p 'XJTMP' variable
-
-                      CDIV_TEMP1 = ZLADIV( XJTMP, XJTMP, TJJS )
+                     CALL  ZLADIV( XJTMP, XJTMP, TJJS )
 #else
                      XJTMP = ZLADIV( XJTMP, TJJS )
 #endif
@@ -1052,11 +1028,7 @@
                      END IF
 *                    X( J ) = ZLADIV( X( J ), TJJS )
 #ifdef F2C
-*   LibFlame's ZLADIV's C-implementation takes 3 Arguments. This code is written for compatible for LibFlame.
-*   XJTMP - gets the o/p of the ZLADIV routine
-*   ZDIV_TEMP1 on LHS avoids data corruption in o/p 'XJTMP' variable
-
-                      CDIV_TEMP1 = ZLADIV( XJTMP, XJTMP, TJJS )
+                     CALL ZLADIV( XJTMP, XJTMP, TJJS )
 #else
                      XJTMP = ZLADIV( XJTMP, TJJS )
 #endif
@@ -1087,12 +1059,8 @@
 *
 *                 X( J ) = ZLADIV( X( J ), TJJS ) - CSUMJ
 #ifdef F2C
-*   LibFlame's ZLADIV's C-implementation takes 3 Arguments. This code is written for compatible for LibFlame.
-*   ZDIV_TEMP2 - gets the o/p of the ZLADIV routine
-*   ZDIV_TEMP1 on LHS avoids data corruption in o/p 'ZDIV_TEMP2' variable
-
-                  ZDIV_TEMP1 = ZLADIV( ZDIV_TEMP2, XJTMP, TJJS )
-                  XJTMP = ZDIV_TEMP2 - CSUMJ
+                  CALL ZLADIV( ZDIV_TMP1, XJTMP, TJJS )
+                  XJTMP = ZDIV_TMP1 - CSUMJ
 #else
                   XJTMP = ZLADIV( XJTMP, TJJS ) - CSUMJ
 #endif
@@ -1154,11 +1122,7 @@
 *
                      REC = MIN( ONE, REC*TJJ )
 #ifdef F2C
-*   LibFlame's ZLADIV's C-implementation takes 3 Arguments. This code is written for compatible for LibFlame.
-*   USCAL - gets the o/p of the ZLADIV routine
-*   ZDIV_TEMP1 on LHS avoids data corruption in o/p 'USCAL' variable
-
-                     ZDIV_TEMP1 = ZLADIV( USCAL, USCAL, TJJS )
+                     CALL ZLADIV( USCAL, USCAL, TJJS )
 #else
                      USCAL = ZLADIV( USCAL, TJJS )
 #endif
@@ -1205,11 +1169,7 @@
                      CALL PZDOTC( J-1, CSUMJ, A, IA, JA+J-1, DESCA, 1,
      $                            X, IX, JX, DESCX, 1 )
 #ifdef F2C
-*   LibFlame's ZLADIV's C-implementation takes 3 Arguments. This code is written for compatible for LibFlame.
-*   ZDUM - gets the o/p of the ZLADIV routine
-*   ZDIV_TEMP1 on LHS avoids data corruption in o/p 'ZDUM' variable
-
-                     ZDIV_TEMP1 = ZLADIV( ZDUM, CONE, ZDUM )
+                     CALL ZLADIV( ZDUM, CONE, ZDUM )
 #else
                      ZDUM = ZLADIV( CONE, ZDUM )
 #endif
@@ -1224,11 +1184,7 @@
                      CALL PZDOTC( N-J, CSUMJ, A, IA+J, JA+J-1, DESCA, 1,
      $                            X, IX+J, JX, DESCX, 1 )
 #ifdef F2C
-*   LibFlame's ZLADIV's C-implementation takes 3 Arguments. This code is written for compatible for LibFlame.
-*   ZDUM - gets the o/p of the ZLADIV routine
-*   ZDIV_TEMP1 on LHS avoids data corruption in o/p 'ZDUM' variable
-
-                     ZDIV_TEMP1 = ZLADIV( ZDUM, CONE, ZDUM )
+                     CALL ZLADIV( ZDUM, CONE, ZDUM )
 #else
                      ZDUM = ZLADIV( CONE, ZDUM )
 #endif
@@ -1296,11 +1252,7 @@
                      END IF
 *                    X( J ) = ZLADIV( X( J ), TJJS )
 #ifdef F2C
-*   LibFlame's ZLADIV's C-implementation takes 3 Arguments. This code is written for compatible for LibFlame.
-*   XJTMP - gets the o/p of the ZLADIV routine
-*   ZDIV_TEMP1 on LHS avoids data corruption in o/p 'XJTMP' variable
-
-                     ZDIV_TEMP1 = ZLADIV( XJTMP, XJTMP, TJJS )
+                     CALL ZLADIV( XJTMP, XJTMP, TJJS )
 #else
                      XJTMP = ZLADIV( XJTMP, TJJS )
 #endif
@@ -1322,11 +1274,7 @@
                      END IF
 *                    X( J ) = ZLADIV( X( J ), TJJS )
 #ifdef F2C
-*   LibFlame's ZLADIV's C-implementation takes 3 Arguments. This code is written for compatible for LibFlame.
-*   XJTMP - gets the o/p of the ZLADIV routine
-*   ZDIV_TEMP1 on LHS avoids data corruption in o/p 'XJTMP' variable
-
-                     ZDIV_TEMP1 = ZLADIV( XJTMP, XJTMP, TJJS )
+                     CALL ZLADIV( XJTMP, XJTMP, TJJS )
 #else
                      XJTMP = ZLADIV( XJTMP, TJJS )
 #endif
@@ -1354,12 +1302,8 @@
 *
 *                 X( J ) = ZLADIV( X( J ), TJJS ) - CSUMJ
 #ifdef F2C
-*   LibFlame's ZLADIV's C-implementation takes 3 Arguments. This code is written for compatible for LibFlame.
-*   ZDIV_TEMP2 - gets the o/p of the ZLADIV routine
-*   ZDIV_TEMP1 on LHS avoids data corruption in o/p 'ZDIV_TEMP2' variable
-
-                  ZDIV_TEMP1 = ZLADIV( ZDIV_TEMP2, XJTMP, TJJS )
-                  XJTMP = ZDIV_TEMP2 - CSUMJ
+                  CALL ZLADIV( ZDIV_TMP1, XJTMP, TJJS )
+                  XJTMP = ZDIV_TMP1 - CSUMJ
 #else
                   XJTMP = ZLADIV( XJTMP, TJJS ) - CSUMJ
 #endif

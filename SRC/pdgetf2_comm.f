@@ -1,15 +1,10 @@
-*
-*     Copyright (c) 2020-23 Advanced Micro Devices, Inc.  All rights reserved.
-*
 *  -- AOCL ScaLAPACK routine --
-*
-*
-#include "SL_Context_fortran_include.h"
+*     Copyright (c) 2020-21 Advanced Micro Devices, Inc.  All rights reserved.
+*     June 10, 2020
 *
       SUBROUTINE PDGETF2_COMM( M, N, A, IA, JA, DESCA, IPIV, INFO )
 *
 
-      USE LINK_TO_C_GLOBALS
 *     .. Scalar Arguments ..
       INTEGER            IA, INFO, JA, M, N
 *     ..
@@ -36,35 +31,12 @@
      $                   PDSCAL, PDSWAP, PB_TOPGET, PXERBLA
 
 *     ..
-*     ..
 *     .. Executable Statements ..
-*
-*     Initialize framework context structure if not initialized
-*
-*
-      CALL AOCL_SCALAPACK_INIT( )
-*
-*
-*     Capture the subroutine entry in the trace file
-*
-      AOCL_DTL_TRACE_ENTRY_F
 *
 *     Get grid parameters.
 *
       ICTXT = DESCA( CTXT_ )
       CALL BLACS_GRIDINFO( ICTXT, NPROW, NPCOL, MYROW, MYCOL )
-*
-*     Update the log buffer with the scalar arguments details,
-*     MPI process grid information and write to the log file
-*
-      IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
-         WRITE(LOG_BUF,102)  IA, INFO, JA, M, N, NPROW, NPCOL,
-     $            MYROW, MYCOL, eos_str
- 102     FORMAT('PDGETF2_COMM inputs:,IA:',I5,',INFO:',I5,
-     $           ',JA:',I5,',M:',I5,',N:',I5,',NPROW:',I5,
-     $           ',NPCOL:',I5 ,',MYROW:',I5,',MYCOL:',I5,A5)
-         AOCL_DTL_LOG_ENTRY_F
-      END IF
 
 
       MN = MIN( M, N )
@@ -84,10 +56,6 @@
 *
       END IF
 *
-*
-*     Capture the subroutine exit in the trace file
-*
-      AOCL_DTL_TRACE_EXIT_F
       RETURN
 *
 *     End of PDGETF2_COMM

@@ -3,7 +3,8 @@
 /* ---------------------------------------------------------------------
 *
 *  -- AOCL ScaLAPACK routine --
-*     Copyright (c) 2020-2022 Advanced Micro Devices, Inc.  All rights reserved.
+*     Copyright (c) 2020 Advanced Micro Devices, Inc.  All rights reserved.
+*     July 13, 2020
 *
 *  ---------------------------------------------------------------------
 */
@@ -13,27 +14,29 @@
  */
 #include <stdio.h>
 #include <string.h>
-#include "../AOCL_DTL/aocldtl.h"
-#include "pxsyevx.h"
+#include "../AOCL_DTL/SRC/aocldtl.h"
 
-void aocl_sl_dtl_trace_exit_( const char * fileName, unsigned int * lineNumber,
+#ifdef __STDC__
+void aocl_dtl_trace_exit_( const char * fileName, unsigned int * lineNumber,
                            const char * message )
+#else
+void aocl_dtl_trace_exit_( fileName, lineNumber, message )
+  const char   * fileName;
+  unsigned int * lineNumber;
+  const char   * message;
+#endif
 {
-#if AOCL_DTL_TRACE_ENABLE
+#if AOCL_DTL_TRACE_ENABLE 
   char * funcName = NULL;
   Int    i, fnlen, cval;
 
   fnlen = strlen( fileName );
-  
-  //Make sure a valid file fetch happened and the length was determined.
-  if(fnlen < 2)
-    return;
-  funcName = (char *) malloc( fnlen + 1 );
+  funcName = (char *) malloc( fnlen );
 
   if( funcName != NULL)
   {
     strncpy( funcName, fileName, fnlen );
-
+  
     funcName[ fnlen - 2 ] = '\0';
 
     i = 0;
@@ -51,7 +54,7 @@ void aocl_sl_dtl_trace_exit_( const char * fileName, unsigned int * lineNumber,
 
     DTL_Trace( AOCL_DTL_TRACE_LEVEL, TRACE_TYPE_FEXIT, fileName, funcName,
                *lineNumber, NULL );
-
+  
     free( funcName );
   }
   else
@@ -62,24 +65,5 @@ void aocl_sl_dtl_trace_exit_( const char * fileName, unsigned int * lineNumber,
 #endif
   return;
 }
-/**
-    Wrapper functions for 'aocl_sl_dtl_trace_exit_' function
-    to enable Fortran to C calls.
-**/
-void aocl_sl_dtl_trace_exit( const char * fileName, unsigned int * lineNumber,
-                           const char * message )
-{
-   aocl_sl_dtl_trace_exit_( fileName, lineNumber, message );
-}
 
-void AOCL_SL_DTL_TRACE_EXIT( const char * fileName, unsigned int * lineNumber,
-                           const char * message )
-{
-   aocl_sl_dtl_trace_exit_( fileName, lineNumber, message );
-}
 
-void AOCL_SL_DTL_TRACE_EXIT_( const char * fileName, unsigned int * lineNumber,
-                           const char * message )
-{
-   aocl_sl_dtl_trace_exit_( fileName, lineNumber, message );
-}

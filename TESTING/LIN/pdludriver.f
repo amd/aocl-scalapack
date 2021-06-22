@@ -116,7 +116,7 @@
       DOUBLE PRECISION   CTIME( 2 ), WTIME( 2 )
       DOUBLE PRECISION, allocatable :: MEM (:)
 #endif
-      CHARACTER*10       ::  SVERSION
+      CHARACTER          SVERSION( 12 )
 *     ..
 *     .. External Subroutines ..
       EXTERNAL           BLACS_BARRIER, BLACS_EXIT, BLACS_GET,
@@ -203,6 +203,14 @@
                   exit
             end select
       end do
+*
+*     Print version
+*
+      IF( IAM.EQ.0 ) THEN
+          CALL GET_AOCL_SCALAPACK_VERSION( SVERSION )
+          WRITE(*, *) 
+          WRITE(*, *) 'AOCL Version: ', SVERSION
+      END IF
 *
 *     Print headings
 *

@@ -1,7 +1,10 @@
+
+
 /* ---------------------------------------------------------------------
 *
 *  -- AOCL ScaLAPACK routine --
-*     Copyright (c) 2020-2025 Advanced Micro Devices, Inc.  All rights reserved.
+*     Copyright (c) 2020 Advanced Micro Devices, Inc.  All rights reserved.
+*     July 13, 2020
 *
 *  ---------------------------------------------------------------------
 */
@@ -10,12 +13,6 @@
  * Include Files
  */
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include "pxsyevx.h"
-
-#define VERSION_MAKE_STR(x) _VERSION_MAKE_STR(x)
-#define _VERSION_MAKE_STR(x) #x
 
 #ifdef __STDC__
 void get_aocl_scalapack_version_( char * version )
@@ -24,59 +21,21 @@ void get_aocl_scalapack_version_( version )
    char * version;
 #endif
 {
+/*
+* version = "AOCL 3.1 ScaLAPACK. Supports Netlib ScaLAPACK 2.1.0"
+*/
+  version[ 0] = 'A';
+  version[ 1] = 'O';
+  version[ 2] = 'C';
+  version[ 3] = 'L';
+  version[ 4] = ' ';
+  version[ 5] = '3';
+  version[ 6] = '.';
+  version[ 7] = '1';
+  version[ 8] = ' ';
+  version[ 9] = ' ';
+  version[10] = ' ';
 
-
-     char slmainversion[1000];
-     char slversion[1000];
-     char scalapackversion[] = ", supports ScaLAPACK 2.2.0";
-     int length, i;
-
-     char prefix[] = "AOCL-ScaLAPACK ";
-
-     strcpy(slmainversion, prefix);
-     length = 0;
-     for (i = 0; i<strlen(slmainversion); ++i, ++length)
-     {
-	    slversion[length] = slmainversion[i];
-     }
-
-#ifdef AOCL_SCALAPACK_LINUX_VERSION
-     char configslversion[] = AOCL_SCALAPACK_VERSION;
-#else
-     char configslversion[] = VERSION_MAKE_STR(AOCL_SCALAPACK_VERSION);
-#endif
-     for (i = 0; i<strlen(configslversion); ++i, ++length)
-     {
-	    slversion[length] = configslversion[i];
-     }
-
-     for (i = 0; i < strlen(scalapackversion); ++i, ++length)
-     {
-	    slversion[length] = scalapackversion[i];
-     }
-
-     slversion[length] = '\0';
-     strcpy(version, slversion);
-
-return;
-}
-
-/**
-    Wrapper functions for 'get_aocl_scalapack_version_' function
-    to enable Fortran to C calls.
-**/
-void get_aocl_scalapack_version( char * version )
-{
-	get_aocl_scalapack_version_( version );
-}
-
-void GET_AOCL_SCALAPACK_VERSION( char * version )
-{
-	get_aocl_scalapack_version_( version );
-}
-
-void GET_AOCL_SCALAPACK_VERSION_( char * version )
-{
-	get_aocl_scalapack_version_( version );
+  return;
 }
 

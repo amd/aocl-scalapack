@@ -1,7 +1,10 @@
+
+
 /* ---------------------------------------------------------------------
 *
 *  -- AOCL ScaLAPACK routine --
-*     Copyright (c) 2020-2023 Advanced Micro Devices, Inc.  All rights reserved.
+*     Copyright (c) 2020 Advanced Micro Devices, Inc.  All rights reserved.
+*     July 13, 2020
 *
 *  ---------------------------------------------------------------------
 */
@@ -11,63 +14,29 @@
  */
 #include <stdio.h>
 #include <string.h>
-#include <stdarg.h>
-#include "../AOCL_DTL/aocldtl.h"
-#include "pxsyevx.h"
+#include "../AOCL_DTL/SRC/aocldtl.h"
 
-
-/* Customized for Fortran calls from Scalapack code */
-void aocl_sl_dtl_log_entry_( const char *filename, const char *function_name,
-                             unsigned int *line_number, const char *buffer )
-{
-  DTL_Trace(AOCL_DTL_LEVEL_INFO,
-              TRACE_TYPE_LOG,
-              filename,
-              function_name,
-              *line_number,
-              buffer);
-}
-
-/**
-    Wrapper functions for 'aocl_sl_dtl_log_entry_' function
-    to enable Fortran to C calls.
-**/
-void aocl_sl_dtl_log_entry( const char *filename, const char *function_name,
-                             unsigned int *line_number, const char *buffer )
-{
-    aocl_sl_dtl_log_entry_(filename, function_name, line_number, buffer);
-}
-
-void AOCL_SL_DTL_LOG_ENTRY( const char *filename, const char *function_name,
-                             unsigned int *line_number, const char *buffer )
-{
-    aocl_sl_dtl_log_entry_(filename, function_name, line_number, buffer);
-}
-
-void AOCL_SL_DTL_LOG_ENTRY_( const char *filename, const char *function_name,
-                             unsigned int *line_number, const char *buffer )
-{
-    aocl_sl_dtl_log_entry_(filename, function_name, line_number, buffer);
-}
-
-void aocl_sl_dtl_trace_entry_( const char * fileName, unsigned int * lineNumber,
+#ifdef __STDC__
+void aocl_dtl_trace_entry_( const char * fileName, unsigned int * lineNumber,
                             const char * message )
+#else
+void aocl_dtl_trace_entry_( fileName, lineNumber, message )
+  const char   * fileName;
+  unsigned int * lineNumber;
+  const char   * message;
+#endif
 {
-#if AOCL_DTL_TRACE_ENABLE
+#if AOCL_DTL_TRACE_ENABLE 
   char * funcName = NULL;
   Int    i, fnlen, cval;
 
   fnlen = strlen( fileName );
-
-  //Make sure a valid file fetch happened and the length was determined.
-  if(fnlen < 2)
-    return;
-  funcName = (char *) malloc( fnlen + 1);
+  funcName = (char *) malloc( fnlen );
 
   if( funcName != NULL)
   {
     strncpy( funcName, fileName, fnlen );
-
+  
     funcName[ fnlen - 2 ] = '\0';
 
     i = 0;
@@ -82,10 +51,10 @@ void aocl_sl_dtl_trace_entry_( const char * fileName, unsigned int * lineNumber,
       funcName[ i ] = cval;
       i++;
     }
-
+  
     DTL_Trace( AOCL_DTL_TRACE_LEVEL, TRACE_TYPE_FENTRY, fileName, funcName,
                *lineNumber, NULL );
-
+  
     free( funcName );
   }
   else
@@ -97,26 +66,4 @@ void aocl_sl_dtl_trace_entry_( const char * fileName, unsigned int * lineNumber,
   return;
 }
 
-/**
-    Wrapper functions for 'aocl_sl_dtl_trace_entry_' function
-    to enable Fortran to C calls.
-**/
-
-void aocl_sl_dtl_trace_entry( const char * fileName, unsigned int * lineNumber,
-                            const char * message )
-{
-   aocl_sl_dtl_trace_entry_( fileName, lineNumber, message );
-}
-
-void AOCL_SL_DTL_TRACE_ENTRY( const char * fileName, unsigned int * lineNumber,
-                            const char * message )
-{
-   aocl_sl_dtl_trace_entry_( fileName, lineNumber, message );
-}
-
-void AOCL_SL_DTL_TRACE_ENTRY_( const char * fileName, unsigned int * lineNumber,
-                            const char * message )
-{
-   aocl_sl_dtl_trace_entry_( fileName, lineNumber, message );
-}
 
