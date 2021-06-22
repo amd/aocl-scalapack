@@ -154,11 +154,6 @@
       INTEGER            ICTXT, IIAX, INDXTAU, IXCOL, IXROW, J, JJAX,
      $                   KNT, MYCOL, MYROW, NPCOL, NPROW
       DOUBLE PRECISION   ALPHI, ALPHR, BETA, RSAFMN, SAFMIN, XNORM
-
-#ifdef F2C
-      COMPLEX*16   ZDIV_TEMP1, ZDIV_TEMP2
-#endif
-
 *     ..
 *     .. External Subroutines ..
       EXTERNAL           BLACS_GRIDINFO, INFOG2L, PDZNRM2,
@@ -167,7 +162,9 @@
 *     ..
 *     .. External Functions ..
       DOUBLE PRECISION   DLAMCH, DLAPY3
+#ifndef F2C
       COMPLEX*16         ZLADIV
+#endif
       EXTERNAL           DLAMCH, DLAPY3, ZLADIV
 *     ..
 *     .. Intrinsic Functions ..
@@ -273,13 +270,7 @@
      $                                 -ALPHI / BETA )
 
 #ifdef F2C
-*   LibFlame's ZLADIV's C-implementation takes 3 Arguments. This code is written for compatible for LibFlame.
-*   ALPHA - gets the o/p of the ZLADIV routine
-*   ZDIV_TEMP2 on LHS avoids data corruption in o/p 'ALPHA' variable
-
-            ZDIV_TEMP1 = ALPHA-BETA
-            ZDIV_TEMP2 = DCMPLX( ONE )
-            ZDIV_TEMP2 = ZLADIV( ALPHA, ZDIV_TEMP2, ZDIV_TEMP1 )
+            CALL ZLADIV( ALPHA, DCMPLX( ONE ), ALPHA-BETA )
 #else
             ALPHA = ZLADIV( DCMPLX( ONE ), ALPHA-BETA )
 #endif
@@ -295,13 +286,7 @@
             TAU( INDXTAU ) = DCMPLX( ( BETA-ALPHR ) / BETA,
      $                               -ALPHI / BETA )
 #ifdef F2C
-*   LibFlame's ZLADIV's C-implementation takes 3 Arguments. This code is written for compatible for LibFlame.
-*   ALPHA - gets the o/p of the ZLADIV routine
-*   ZDIV_TEMP1 on LHS avoids data corruption in o/p 'ALPHA' variable
-
-            ZDIV_TEMP1 = ALPHA-BETA
-            ZDIV_TEMP2 = DCMPLX( ONE )
-            ZDIV_TEMP2 = ZLADIV( ALPHA, ZDIV_TEMP2, ZDIV_TEMP1 )
+            CALL ZLADIV( ALPHA, DCMPLX( ONE ), ALPHA-BETA )
 #else
             ALPHA = ZLADIV( DCMPLX( ONE ), ALPHA-BETA )
 #endif

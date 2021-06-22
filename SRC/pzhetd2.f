@@ -229,6 +229,9 @@
      $                   JJ, JK, JN, LDA, LWMIN, MYCOL, MYROW, NPCOL,
      $                   NPROW
       COMPLEX*16         ALPHA, TAUI
+#ifdef F2C
+      COMPLEX*16         TMP
+#endif
 *     ..
 *     .. External Subroutines ..
       EXTERNAL           BLACS_ABORT, BLACS_GRIDINFO, CHK1MAT, INFOG2L,
@@ -237,7 +240,9 @@
 *     ..
 *     .. External Functions ..
       LOGICAL            LSAME
+#ifndef F2C
       COMPLEX*16         ZDOTC
+#endif
       EXTERNAL           LSAME, ZDOTC
 *     ..
 *     .. Intrinsic Functions ..
@@ -333,8 +338,14 @@
 *
 *                    Compute  w := x - 1/2 * tau * (x'*v) * v
 *
+#ifdef F2C
+                     CALL ZDOTC( TMP, J, TAU( JJ ), 1,
+     $                                         A( II+JK*LDA ), 1 )
+                     ALPHA = -HALF*TAUI*TMP
+#else
                      ALPHA = -HALF*TAUI*ZDOTC( J, TAU( JJ ), 1,
      $                                         A( II+JK*LDA ), 1 )
+#endif
                      CALL ZAXPY( J, ALPHA, A( II+JK*LDA ), 1,
      $                           TAU( JJ ), 1 )
 *
@@ -413,8 +424,14 @@
 *
 *                    Compute  w := x - 1/2 * tau * (x'*v) * v
 *
+#ifdef F2C
+                     CALL ZDOTC( TMP, N-J, TAU( JK ), 1,
+     $                        A( IK+1+(JK-1)*LDA ), 1 )
+                     ALPHA = -HALF*TAUI*TMP
+#else
                      ALPHA = -HALF*TAUI*ZDOTC( N-J, TAU( JK ), 1,
      $                        A( IK+1+(JK-1)*LDA ), 1 )
+#endif
                      CALL ZAXPY( N-J, ALPHA, A( IK+1+(JK-1)*LDA ),
      $                           1, TAU( JK ), 1 )
 *

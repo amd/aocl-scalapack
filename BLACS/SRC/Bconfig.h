@@ -14,7 +14,7 @@
 #include <math.h>
 #include <stdarg.h>
 #include <mpi.h>
-
+#include "../../AOCL_DTL/SRC/aocldtl.h"
 /*
  * Integer types used by BLACS
  */

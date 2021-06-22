@@ -237,8 +237,14 @@
 *     ..
 *     .. External Functions ..
       LOGICAL            LSAME
+#ifndef F2C
       COMPLEX            CDOTC
+#endif
       EXTERNAL           LSAME, CDOTC
+#ifdef F2C
+	  COMPLEX            TMP
+#endif
+
 *     ..
 *     .. Intrinsic Functions ..
       INTRINSIC          CMPLX, REAL
@@ -333,8 +339,14 @@
 *
 *                    Compute  w := x - 1/2 * tau * (x'*v) * v
 *
+#ifdef F2C
+                    CALL CDOTC( TMP, J, TAU( JJ ), 1,
+     $                               A( II+JK*LDA ), 1 )
+                     ALPHA = -HALF*TAUI*TMP
+#else
                      ALPHA = -HALF*TAUI*CDOTC( J, TAU( JJ ), 1,
      $                                         A( II+JK*LDA ), 1 )
+#endif
                      CALL CAXPY( J, ALPHA, A( II+JK*LDA ), 1,
      $                           TAU( JJ ), 1 )
 *
@@ -413,8 +425,15 @@
 *
 *                    Compute  w := x - 1/2 * tau * (x'*v) * v
 *
+#ifdef F2C
+                     CALL CDOTC( TMP, N-J, TAU( JK ), 1,
+     $                          A( IK+1+(JK-1)*LDA ), 1 )
+                     ALPHA = -HALF*TAUI*TMP
+
+#else
                      ALPHA = -HALF*TAUI*CDOTC( N-J, TAU( JK ), 1,
      $                        A( IK+1+(JK-1)*LDA ), 1 )
+#endif
                      CALL CAXPY( N-J, ALPHA, A( IK+1+(JK-1)*LDA ),
      $                           1, TAU( JK ), 1 )
 *

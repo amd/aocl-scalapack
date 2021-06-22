@@ -1,5 +1,12 @@
 /* ---------------------------------------------------------------------
 *
+*     Copyright (c) 2020-21 Advanced Micro Devices, Inc.  All rights reserved.
+*     August 11, 2020
+*
+*  ---------------------------------------------------------------------
+*/
+/* ---------------------------------------------------------------------
+*
 *  -- PBLAS routine (version 2.0) --
 *     University of Tennessee, Knoxville, Oak Ridge National Laboratory,
 *     and University of California, Berkeley.
@@ -66,6 +73,10 @@
 #define    TOP_TREE8           "8"
 #define    TOP_TREE9           "9"
 
+#define    AOCL_SUCCESS         0
+#define    AOCL_FAILURE         1
+#define    AOCL_KEEP_POLLING    2
+
 /*
 *  ---------------------------------------------------------------------
 *  Function prototypes
@@ -110,6 +121,9 @@ void           Ccgesd2d        ( Int,       Int,       Int,
                                  char *,    Int,       Int,
                                  Int );
 void           Czgesd2d        ( Int,       Int,       Int,
+                                 char *,    Int,       Int,
+                                 Int );
+void           Cugesd2d        ( Int,       Int,       Int,
                                  char *,    Int,       Int,
                                  Int );
 
@@ -160,6 +174,12 @@ void           Cctrbs2d        ( Int,       char *,    char *,
 void           Cztrbs2d        ( Int,       char *,    char *,
                                  char *,    char *,    Int,
                                  Int,       char *,    Int );
+
+/* Send/Receive for user defined datatype */
+Int            Cugebx2d        ( Int,       char *,    char *,
+                                 Int,       char *,    Int,
+                                 Int,       Int, 
+                                 void *,    void * );
 
                                                    /* BLACS Receiving */
 void           Cigerv2d        ( Int,       Int,       Int,
@@ -335,6 +355,8 @@ void           Cstrbs2d        ();
 void           Cdtrbs2d        ();
 void           Cctrbs2d        ();
 void           Cztrbs2d        ();
+/* Send/Receive for user defined datatype */
+void           Cugebx2d        ();
 
                                                    /* BLACS Receiving */
 void           Cigerv2d        ();

@@ -1,4 +1,11 @@
+*  =====================================================================
+*     SUBROUTINE PDGETRF
+*  =====================================================================
       SUBROUTINE PDGETRF( M, N, A, IA, JA, DESCA, IPIV, INFO )
+*
+*  -- ScaLAPACK routine (version 2.1.0) --
+*     Copyright (c) 2020 Advanced Micro Devices, Inc.  All rights reserved.
+*     June 10, 2020
 *
 *  -- ScaLAPACK routine (version 1.7) --
 *     University of Tennessee, Knoxville, Oak Ridge National Laboratory,
@@ -6,7 +13,7 @@
 *     May 25, 2001
 *
 *     .. Scalar Arguments ..
-      INTEGER            IA, INFO, JA, M, N
+      INTEGER            INFO, IA, JA, M, N
 *     ..
 *     .. Array Arguments ..
       INTEGER            DESCA( * ), IPIV( * )
@@ -132,34 +139,24 @@
 *
 *  =====================================================================
 *
-*     .. Parameters ..
-      INTEGER            BLOCK_CYCLIC_2D, CSRC_, CTXT_, DLEN_, DTYPE_,
-     $                   LLD_, MB_, M_, NB_, N_, RSRC_
-      PARAMETER          ( BLOCK_CYCLIC_2D = 1, DLEN_ = 9, DTYPE_ = 1,
-     $                     CTXT_ = 2, M_ = 3, N_ = 4, MB_ = 5, NB_ = 6,
-     $                     RSRC_ = 7, CSRC_ = 8, LLD_ = 9 )
-      DOUBLE PRECISION   ONE
-      PARAMETER          ( ONE = 1.0D+0 )
+#ifdef ENABLE_LOOK_AHEAD_FOR_LU
 *     ..
 *     .. Local Scalars ..
-      CHARACTER          COLBTOP, COLCTOP, ROWBTOP
-      INTEGER            I, ICOFF, ICTXT, IINFO, IN, IROFF, J, JB, JN,
-     $                   MN, MYCOL, MYROW, NPCOL, NPROW
+
+*     Defining the threshold to invoke look-ahead      
+      INTEGER            CTXT_, LU_THRESHOLD, NB_, MN, NB
+      INTEGER            ICTXT, MYCOL, MYROW, NPCOL, NPROW
 *     ..
-*     .. Local Arrays ..
-      INTEGER            IDUM1( 1 ), IDUM2( 1 )
+*     LU_THRESHOLD is used to filter out lower size matrices
+*     from taking lookahead path as it may not provide any gain
+*
+      PARAMETER          (CTXT_ = 2, LU_THRESHOLD = 0, NB_ = 6)
 *     ..
 *     .. External Subroutines ..
-      EXTERNAL           BLACS_GRIDINFO, CHK1MAT, IGAMN2D, PCHK1MAT,
-     $                   PB_TOPGET, PB_TOPSET, PDGEMM, PDGETF2,
-     $                   PDLASWP, PDTRSM, PXERBLA
-*     ..
-*     .. External Functions ..
-      INTEGER            ICEIL
-      EXTERNAL           ICEIL
+      EXTERNAL           BLACS_GRIDINFO, PDGETRFLA, PDGETRF0
 *     ..
 *     .. Intrinsic Functions ..
-      INTRINSIC          MIN, MOD
+      INTRINSIC          MIN
 *     ..
 *     .. Executable Statements ..
 *
@@ -168,142 +165,38 @@
       ICTXT = DESCA( CTXT_ )
       CALL BLACS_GRIDINFO( ICTXT, NPROW, NPCOL, MYROW, MYCOL )
 *
-*     Test the input parameters
-*
-      INFO = 0
-      IF( NPROW.EQ.-1 ) THEN
-         INFO = -(600+CTXT_)
-      ELSE
-         CALL CHK1MAT( M, 1, N, 2, IA, JA, DESCA, 6, INFO )
-         IF( INFO.EQ.0 ) THEN
-            IROFF = MOD( IA-1, DESCA( MB_ ) )
-            ICOFF = MOD( JA-1, DESCA( NB_ ) )
-            IF( IROFF.NE.0 ) THEN
-               INFO = -4
-            ELSE IF( ICOFF.NE.0 ) THEN
-               INFO = -5
-            ELSE IF( DESCA( MB_ ).NE.DESCA( NB_ ) ) THEN
-               INFO = -(600+NB_)
-            END IF
-         END IF
-         CALL PCHK1MAT( M, 1, N, 2, IA, JA, DESCA, 6, 0, IDUM1,
-     $                  IDUM2, INFO )
-      END IF
-*
-      IF( INFO.NE.0 ) THEN
-         CALL PXERBLA( ICTXT, 'PDGETRF', -INFO )
-         RETURN
-      END IF
-*
-*     Quick return if possible
-*
-      IF( DESCA( M_ ).EQ.1 ) THEN
-         IPIV( 1 ) = 1
-         RETURN
-      ELSE IF( M.EQ.0 .OR. N.EQ.0 ) THEN
-         RETURN
-      END IF
-*
-*     Split-ring topology for the communication along process rows
-*
-      CALL PB_TOPGET( ICTXT, 'Broadcast', 'Rowwise', ROWBTOP )
-      CALL PB_TOPGET( ICTXT, 'Broadcast', 'Columnwise', COLBTOP )
-      CALL PB_TOPGET( ICTXT, 'Combine', 'Columnwise', COLCTOP )
-      CALL PB_TOPSET( ICTXT, 'Broadcast', 'Rowwise', 'S-ring' )
-      CALL PB_TOPSET( ICTXT, 'Broadcast', 'Columnwise', ' ' )
-      CALL PB_TOPSET( ICTXT, 'Combine', 'Columnwise', ' ' )
-*
-*     Handle the first block of columns separately
-*
+#ifdef AOCL_DTL_ADVANCED_TRACE_ENABLE
+      CALL AOCL_DTL_TRACE_ENTRY(__FILE__, __LINE__, ' ')
+#endif
       MN = MIN( M, N )
-      IN = MIN( ICEIL( IA, DESCA( MB_ ) )*DESCA( MB_ ), IA+M-1 )
-      JN = MIN( ICEIL( JA, DESCA( NB_ ) )*DESCA( NB_ ), JA+MN-1 )
-      JB = JN - JA + 1
+      NB = DESCA( NB_ )
 *
-*     Factor diagonal and subdiagonal blocks and test for exact
-*     singularity.
+      IF( ( MN.LT.LU_THRESHOLD ).OR.( NB.GE.MN ) ) THEN
 *
-      CALL PDGETF2( M, JB, A, IA, JA, DESCA, IPIV, INFO )
+*        Default LU for small matrices and
+*        when block size is larger than matrix size
 *
-      IF( JB+1.LE.N ) THEN
+         CALL PDGETRF0( M, N, A, IA, JA, DESCA, IPIV, INFO )
+      ELSE
+         IF( NPCOL.LT.2 ) THEN
 *
-*        Apply interchanges to columns JN+1:JA+N-1.
+*           Default LU when number of process colums is 1
 *
-         CALL PDLASWP( 'Forward', 'Rows', N-JB, A, IA, JN+1, DESCA,
-     $                 IA, IN, IPIV )
+            CALL PDGETRF0( M, N, A, IA, JA, DESCA, IPIV, INFO )
+         ELSE
 *
-*        Compute block row of U.
+*           LU with Look Ahead Depth 1
 *
-         CALL PDTRSM( 'Left', 'Lower', 'No transpose', 'Unit', JB,
-     $                N-JB, ONE, A, IA, JA, DESCA, A, IA, JN+1, DESCA )
-*
-         IF( JB+1.LE.M ) THEN
-*
-*           Update trailing submatrix.
-*
-            CALL PDGEMM( 'No transpose', 'No transpose', M-JB, N-JB, JB,
-     $                   -ONE, A, IN+1, JA, DESCA, A, IA, JN+1, DESCA,
-     $                   ONE, A, IN+1, JN+1, DESCA )
-*
+            CALL PDGETRFLA( M, N, A, IA, JA, DESCA, IPIV, INFO )
          END IF
       END IF
+#else /* ENABLE_LOOK_AHEAD_FOR_LU */
+      CALL PDGETRF0( M, N, A, IA, JA, DESCA, IPIV, INFO )
+#endif /* ENABLE_LOOK_AHEAD_FOR_LU */
 *
-*     Loop over the remaining blocks of columns.
-*
-      DO 10 J = JN+1, JA+MN-1, DESCA( NB_ )
-         JB = MIN( MN-J+JA, DESCA( NB_ ) )
-         I = IA + J - JA
-*
-*        Factor diagonal and subdiagonal blocks and test for exact
-*        singularity.
-*
-         CALL PDGETF2( M-J+JA, JB, A, I, J, DESCA, IPIV, IINFO )
-*
-         IF( INFO.EQ.0 .AND. IINFO.GT.0 )
-     $      INFO = IINFO + J - JA
-*
-*        Apply interchanges to columns JA:J-JA.
-*
-         CALL PDLASWP( 'Forward', 'Rowwise', J-JA, A, IA, JA, DESCA,
-     $                 I, I+JB-1, IPIV )
-*
-         IF( J-JA+JB+1.LE.N ) THEN
-*
-*           Apply interchanges to columns J+JB:JA+N-1.
-*
-            CALL PDLASWP( 'Forward', 'Rowwise', N-J-JB+JA, A, IA, J+JB,
-     $                    DESCA, I, I+JB-1, IPIV )
-*
-*           Compute block row of U.
-*
-            CALL PDTRSM( 'Left', 'Lower', 'No transpose', 'Unit', JB,
-     $                   N-J-JB+JA, ONE, A, I, J, DESCA, A, I, J+JB,
-     $                   DESCA )
-*
-            IF( J-JA+JB+1.LE.M ) THEN
-*
-*              Update trailing submatrix.
-*
-               CALL PDGEMM( 'No transpose', 'No transpose', M-J-JB+JA,
-     $                      N-J-JB+JA, JB, -ONE, A, I+JB, J, DESCA, A,
-     $                      I, J+JB, DESCA, ONE, A, I+JB, J+JB, DESCA )
-*
-            END IF
-         END IF
-*
-   10 CONTINUE
-*
-      IF( INFO.EQ.0 )
-     $   INFO = MN + 1
-      CALL IGAMN2D( ICTXT, 'Rowwise', ' ', 1, 1, INFO, 1, IDUM1, IDUM2,
-     $              -1, -1, MYCOL )
-      IF( INFO.EQ.MN+1 )
-     $   INFO = 0
-*
-      CALL PB_TOPSET( ICTXT, 'Broadcast', 'Rowwise', ROWBTOP )
-      CALL PB_TOPSET( ICTXT, 'Broadcast', 'Columnwise', COLBTOP )
-      CALL PB_TOPSET( ICTXT, 'Combine', 'Columnwise', COLCTOP )
-*
+#ifdef AOCL_DTL_ADVANCED_TRACE_ENABLE
+      CALL AOCL_DTL_TRACE_EXIT(__FILE__, __LINE__, ' ')
+#endif
       RETURN
 *
 *     End of PDGETRF

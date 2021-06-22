@@ -390,7 +390,9 @@
 *     .. External Functions ..
       LOGICAL            LSAME
       INTEGER            NUMROC
+#ifndef F2C
       COMPLEX*16         ZDOTC
+#endif
       EXTERNAL           LSAME, NUMROC, ZDOTC
 *     ..
 *     .. Intrinsic Functions ..
@@ -741,8 +743,13 @@
 *
 *         Calculate the update block for previous proc, E_i = GL_i{GU_i}
 *
+#ifdef F2C
+          CALL ZDOTC( TMP, ODD_SIZE, AF( 1 ), 1, AF( WORK_U+1 ), 1 )
+          AF( ODD_SIZE+3 ) = -CONE * TMP
+#else
           AF( ODD_SIZE+3 ) = -CONE *
      $        ZDOTC( ODD_SIZE, AF( 1 ), 1, AF( WORK_U+1 ), 1 )
+#endif
 *
 *
 *         Initiate send of E_i to previous processor to overlap

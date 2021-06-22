@@ -48,7 +48,9 @@ include ../SLmake.inc
 #
 #######################################################################
 
-ALLAUX = pjlaenv.o pbchkvect.o getpbbuf.o pilaenvx.o piparmq.o pilaver.o pmpim2.o pmpcol.o
+ALLAUX = pjlaenv.o pbchkvect.o getpbbuf.o pilaenvx.o piparmq.o pilaver.o \
+         pmpim2.o pmpcol.o get_aocl_scalapack_version.o \
+         aocl_dtl_trace_entry.o aocl_dtl_trace_exit.o
 
 SCLAUX = \
    pslabad.o pslaed0.o pslaed1.o pslaed2.o pslaed3.o pslaedz.o pslaiect.o \
@@ -135,7 +137,8 @@ DLASRC = \
    pdgelq2.o pdgelqf.o pdgels.o  pdgeql2.o pdgeqlf.o pdgeqpf.o pdgeqr2.o \
    pdgeqrf.o pdgerfs.o pdgerq2.o pdgerqf.o                               \
    pdgesv.o  pdgesvd.o pdgesvx.o pdgetf2.o pdgetrf.o pdgetri.o pdgetrs.o \
-   pdggqrf.o pdggrqf.o pdlabrd.o \
+   pdggqrf.o pdggrqf.o pdlabrd.o pdgetf2K.o pdupdate.o pdgetrf0.o \
+   pdgetrfla.o         pdgetf2_comm.o       icopypv.o \
    pdlacon.o pdlacp2.o pdlacpy.o pdlahrd.o pdlange.o pdlanhs.o pdlansy.o \
    pdlantr.o pdlapiv.o pdlapv2.o pdlaqge.o pdlaqsy.o pdlarf.o  pdlarfb.o \
    pdlarfg.o pdlarft.o pdlase2.o pdlaset.o pdlascl.o pdlassq.o pdlaswp.o \

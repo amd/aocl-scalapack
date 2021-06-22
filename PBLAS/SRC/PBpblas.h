@@ -1,5 +1,12 @@
 /* ---------------------------------------------------------------------
 *
+*     Copyright (c) 2020-21 Advanced Micro Devices, Inc.  All rights reserved.
+*     August 11, 2020
+*
+*  ---------------------------------------------------------------------
+*/
+/* ---------------------------------------------------------------------
+*
 *  -- PBLAS routine (version 2.0) --
 *     University of Tennessee, Knoxville, Oak Ridge National Laboratory,
 *     and University of California, Berkeley.
@@ -7,6 +14,7 @@
 *
 *  ---------------------------------------------------------------------
 */
+#include <mpi.h>
 /*
 *  This file includes PBLAS definitions. All PBLAS routines include this
 *  file.
@@ -195,6 +203,17 @@
 #define    pztranu_            PZTRANU
 #define    pctranc_            PCTRANC
 #define    pztranc_            PZTRANC
+                                                            /* LOOK AHEAD ROUTINES */
+#define    pdpanel_lcopy_      PDPANEL_LCOPY
+#define    pdpanel_lcast_      PDPANEL_LCAST
+#define    pdpanel_bcsiz_      PDPANEL_BCSIZ
+#define    pdpanel_bpack_      PDPANEL_BPACK
+#define    pdpanel_bcast_      PDPANEL_BCAST
+#define    pdpanel_ucast_      PDPANEL_UCAST
+#define    pdpanel_bwait_      PDPANEL_BWAIT
+#define    pdpanel_bfree_      PDPANEL_BFREE
+#define    pdpanel_pinit_      PDPANEL_PINIT
+#define    pdpanel_pfree_      PDPANEL_PFREE
 
 #endif
 
@@ -361,6 +380,17 @@
 #define    pctranc_            pctranc
 #define    pztranc_            pztranc
 
+#define    pdpanel_lcopy_      PDPANEL_LCOPY
+#define    pdpanel_lcast_      PDPANEL_LCAST
+#define    pdpanel_bcsiz_      PDPANEL_BCSIZ
+#define    pdpanel_bpack_      PDPANEL_BPACK
+#define    pdpanel_bcast_      PDPANEL_BCAST
+#define    pdpanel_ucast_      PDPANEL_UCAST
+#define    pdpanel_bwait_      PDPANEL_BWAIT
+#define    pdpanel_bfree_      PDPANEL_BFREE
+#define    pdpanel_pinit_      PDPANEL_PINIT
+#define    pdpanel_pfree_      PDPANEL_PFREE
+
 #endif
 
 #if( _F2C_CALL_ == _F2C_F77ISF2C )
@@ -370,6 +400,64 @@
 #define    PB_topset_          pb_topset__
 
 #endif
+/*
+*  ---------------------------------------------------------------------
+*  Structure definitions
+*  ---------------------------------------------------------------------
+*/
+
+#ifdef __STDC__
+
+typedef struct pd_panel
+{
+   Int TM;   /* trsm data row size */ 
+   Int LN;   /* trsm data col size */
+
+   Int brows; /* Panel rows */
+
+   Int iarow;
+   Int iacol;
+   Int myrow;
+   Int mycol;
+   Int nprow;
+   Int npcol;
+   Int msgid;
+   Int ictxt;
+
+   Int Xii; /* Local row index */
+   Int Xjj; /* Local col index */
+   Int ldm; /* Leading dim for panel mem */
+   Int lda; /* Leading dim for input matrix */
+
+   Int SN;  /* Swap row length */
+   Int K1;  /* Swap starting row */
+   Int K2;  /* Swap ending row */
+   Int JB;
+
+   Int     psize;
+   Int     ucols;
+   Int     ldu;
+   Int     uoff;
+   Int     usize;
+
+   double *pmem; /* Panel data */
+   double *lmem; /* L11 Memory */
+   double *umem; /* L12 or U Memory */
+   double *amem; /* Output of GEMM update */
+
+   char         *pbuff;
+   MPI_Datatype *dtype;
+   MPI_Request  *request;
+   MPI_Status   *status;
+
+}pd_panel;
+
+#else
+
+typedef struct pd_panel;
+
+#endif
+
 /*
 *  ---------------------------------------------------------------------
 *  Function prototypes
@@ -816,6 +904,9 @@ void           pdgemm_         ( F_CHAR_T,  F_CHAR_T,  Int *,
                                  Int *,     Int *,     double *,
                                  double *,  Int *,     Int *,
                                  Int * );
+void           pdgemmla_       ( F_CHAR_T,  F_CHAR_T,  Int *,
+                                 Int *,     Int *,     double *,
+                                 double *,  pd_panel * );
 void           pcgemm_         ( F_CHAR_T,  F_CHAR_T,  Int *,
                                  Int *,     Int *,     float *,
                                  float *,   Int *,     Int *,
@@ -1013,6 +1104,9 @@ void           pdtrsm_         ( F_CHAR_T,  F_CHAR_T,  F_CHAR_T,
                                  double *,  double *,  Int *,
                                  Int *,     Int *,     double *,
                                  Int *,     Int *,     Int * );
+void           pdtrsmla_       ( F_CHAR_T,  F_CHAR_T,  F_CHAR_T,
+                                 F_CHAR_T,  Int *,     Int *,
+                                 double *,  pd_panel * );
 void           pctrsm_         ( F_CHAR_T,  F_CHAR_T,  F_CHAR_T,
                                  F_CHAR_T,  Int *,     Int *,
                                  float *,   float *,   Int *,
@@ -1023,6 +1117,25 @@ void           pztrsm_         ( F_CHAR_T,  F_CHAR_T,  F_CHAR_T,
                                  double *,  double *,  Int *,
                                  Int *,     Int *,     double *,
                                  Int *,     Int *,     Int * );
+void           pdpanel_lcopy_  ( double *,  Int *,     Int *,
+                                 Int *,     Int *,
+                                 pd_panel * );
+void           pdpanel_lcast_  ( pd_panel *,
+                                 Int * );
+void           pdpanel_bcsiz_  ( double *,  Int *,     Int *,
+                                 Int *,     Int *,     Int *,
+                                 Int *,     Int *,     Int *,
+                                 pd_panel *,           Int *,
+                                 Int * );
+void           pdpanel_bpack_  ( pd_panel *,           Int * );
+void           pdpanel_bcast_  ( double *,  pd_panel *,
+                                 Int * );
+void           pdpanel_ucast_  ( double *,  Int *,     Int *,
+                                 Int *,     pd_panel * );
+void           pdpanel_bwait_  ( pd_panel * );
+void           pdpanel_bfree_  ( pd_panel * );
+void           pdpanel_pinit_  ( pd_panel *, Int * );
+void           pdpanel_pfree_  ( pd_panel * );
 #else
 
 void           PB_freebuf_     ();
@@ -1133,6 +1246,7 @@ void           pzgeadd_        ();
 
 void           psgemm_         ();
 void           pdgemm_         ();
+void           pdgemmla_       ();
 void           pcgemm_         ();
 void           pzgemm_         ();
 
@@ -1176,7 +1290,17 @@ void           pztrmm_         ();
 
 void           pstrsm_         ();
 void           pdtrsm_         ();
+void           pdtrsmla_       ();
 void           pctrsm_         ();
 void           pztrsm_         ();
 
+void           pdpanel_lcopy_  ();
+void           pdpanel_lcast_  ();
+void           pdpanel_bcsiz_  ();
+void           pdpanel_bpack_  ();
+void           pdpanel_bcast_  ();
+void           pdpanel_ucast_  ();
+void           pdpanel_bwait_  ();
+void           pdpanel_bfree_  ();
+void           pdpanel_pfree_  ();
 #endif

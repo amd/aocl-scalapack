@@ -1,5 +1,12 @@
 /* ---------------------------------------------------------------------
 *
+*     Copyright (c) 2020-21 Advanced Micro Devices, Inc.  All rights reserved.
+*     August 11, 2020
+*
+*  ---------------------------------------------------------------------
+*/
+/* ---------------------------------------------------------------------
+*
 *  -- PBLAS routine (version 2.0) --
 *     University of Tennessee, Knoxville, Oak Ridge National Laboratory,
 *     and University of California, Berkeley.
@@ -156,6 +163,10 @@ typedef void           (*GEBR2D_T)   ( Int,       char *,    char *,
 typedef void           (*GSUM2D_T)   ( Int,       char *,    char *,
                                        Int,       Int,       char *,
                                        Int,       Int,       Int );
+typedef  Int           (*GESR2D_T)   ( Int,       char *,    char *,
+                                       Int,       char *,    Int,
+                                       Int,       Int, 
+                                       void *,    void * );
 
 typedef F_VOID_FCT     (*MMADD_T)    ( Int  *,    Int  *,    char *,
                                        char *,    Int  *,    char *,
@@ -284,6 +295,7 @@ typedef void           (*GERV2D_T)   ();
 typedef void           (*GEBS2D_T)   ();
 typedef void           (*GEBR2D_T)   ();
 typedef void           (*GSUM2D_T)   ();
+typedef  int           (*GESR2D_T)   ();
 
 typedef F_VOID_FCT     (*MMADD_T)    ();
 typedef F_VOID_FCT     (*MMSHFT_T)   ();
@@ -341,6 +353,7 @@ typedef struct
    GEBS2D_T       Cgebs2d;
    GEBR2D_T       Cgebr2d;
    GSUM2D_T       Cgsum2d;
+   GESR2D_T       Cgesr2d; 
 
    MMADD_T        Fmmadd;                       /* Addition functions */
    MMADD_T        Fmmcadd;

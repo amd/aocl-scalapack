@@ -49,11 +49,14 @@ PRECISIONS = single double complex complex16
 
 all: lib exe example
 
-lib: blacslib toolslib pblaslib redistlib scalapacklib
+lib: aocldtllib blacslib toolslib pblaslib redistlib scalapacklib
 
 exe: blacsexe pblasexe redistexe scalapackexe
 
 clean: cleanlib cleanexe cleanexample
+
+aocldtllib:
+	( cd AOCL_DTL; $(MAKE) lib )
 
 blacslib:
 	( cd BLACS; $(MAKE) lib )
@@ -97,6 +100,7 @@ cleanexe:
 	( cd TESTING; rm -f x* )
 
 cleanlib:
+	( cd AOCL_DTL; $(MAKE) clean )
 	( cd BLACS; $(MAKE) clean )
 	( cd PBLAS/SRC; $(MAKE) clean )
 	( cd SRC; $(MAKE) clean )

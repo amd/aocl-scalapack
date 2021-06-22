@@ -11,6 +11,9 @@
 *     ..
 *     .. Array Arguments ..
       COMPLEX*16         X( * ), Y( * )
+#ifdef F2C
+	  COMPLEX*16         TMP
+#endif
 *     ..
 *
 *  Purpose
@@ -55,12 +58,19 @@
 *  =====================================================================
 *
 *     .. External Functions ..
+#ifndef F2C
       COMPLEX*16         ZDOTC
+#endif
       EXTERNAL           ZDOTC
 *     ..
 *     .. Executable Statements ..
 *
+#ifdef F2C
+      CALL ZDOTC( TMP, N, X, INCX, Y, INCY )
+      DOT = DOT + TMP
+#else
       DOT = DOT + ZDOTC( N, X, INCX, Y, INCY )
+#endif
 *
       RETURN
 *

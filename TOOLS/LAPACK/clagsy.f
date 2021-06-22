@@ -65,6 +65,9 @@
       INTEGER            I, II, J, JJ
       REAL               WN
       COMPLEX            ALPHA, TAU, WA, WB
+#ifdef F2C
+      COMPLEX            TMP
+#endif
 *     ..
 *     .. External Subroutines ..
       EXTERNAL           CAXPY, CGEMV, CGERC, CLACGV, CLARNV, CSCAL,
@@ -72,7 +75,9 @@
 *     ..
 *     .. External Functions ..
       REAL               SCNRM2
+#ifndef F2C
       COMPLEX            CDOTC
+#endif
       EXTERNAL           SCNRM2, CDOTC
 *     ..
 *     .. Intrinsic Functions ..
@@ -136,7 +141,12 @@
 *
 *        compute  v := y - 1/2 * tau * ( u, y ) * u
 *
+#ifdef F2C
+         CALL CDOTC( TMP, N-I+1, WORK, 1, WORK( N+1 ), 1 )
+         ALPHA = -HALF*TAU*TMP
+#else
          ALPHA = -HALF*TAU*CDOTC( N-I+1, WORK, 1, WORK( N+1 ), 1 )
+#endif
          CALL CAXPY( N-I+1, ALPHA, WORK, 1, WORK( N+1 ), 1 )
 *
 *        apply the transformation as a rank-2 update to A(i:n,i:n)
@@ -188,7 +198,12 @@
 *
 *        compute  v := y - 1/2 * tau * ( u, y ) * u
 *
+#ifdef F2C
+         CALL CDOTC( TMP, N-K-I+1, A( K+I, I ), 1, WORK, 1 )
+         ALPHA = -HALF*TAU*TMP
+#else
          ALPHA = -HALF*TAU*CDOTC( N-K-I+1, A( K+I, I ), 1, WORK, 1 )
+#endif
          CALL CAXPY( N-K-I+1, ALPHA, A( K+I, I ), 1, WORK, 1 )
 *
 *        apply symmetric rank-2 update to A(k+i:n,k+i:n)

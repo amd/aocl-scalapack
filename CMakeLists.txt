@@ -14,6 +14,9 @@ if (UNIX)
    if ("${CMAKE_Fortran_COMPILER_ID}" STREQUAL "Intel")
       set( CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -fltconsistency -fp_port" )
    endif ()
+   if ( "${CMAKE_Fortran_COMPILER}" MATCHES "ifort" )
+  set( CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -fltconsistency -fp_port" )
+   endif ()
 endif ()
 
 #
@@ -79,6 +82,9 @@ if (UNIX)
    if ("${CMAKE_Fortran_COMPILER_ID}" STREQUAL "Intel")
       set( CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -fltconsistency -fp_port" )
    endif ()
+   if ( "${CMAKE_Fortran_COMPILER}" MATCHES "ifort" )
+  set( CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -fltconsistency -fp_port" )
+   endif ()
 endif ()
 
 macro(SCALAPACK_install_library lib)
@@ -134,10 +140,10 @@ option(USE_DOTC_WRAPPER "Use wrapper for Complex DOTC function" OFF)
 set(f2cflag "-cpp ")
 
 if(USE_F2C)
-  set(f2cflag "-cpp -DF2C -DENABLE_LOOK_AHEAD_FOR_LU" )
+  set(f2cflag "-cpp -DF2C " )
 ENDIF(USE_F2C)
 if(USE_DOTC_WRAPPER)
-  set(f2cflag "-cpp -DF2C -DF2C_COMPLEX -DENABLE_LOOK_AHEAD_FOR_LU" )
+  set(f2cflag "-cpp -DF2C -DF2C_COMPLEX " )
 ENDIF(USE_DOTC_WRAPPER)
 
 ADD_DEFINITIONS( "-D${CDEFS}" "${f2cflag}")
@@ -208,6 +214,10 @@ foreach(depfile ${holder})
 endforeach()
 endmacro()
 
+#
+# AOCL_DTL
+#
+#add_subdirectory(AOCL_DTL)
 
 #
 # BLACS
