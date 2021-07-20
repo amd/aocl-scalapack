@@ -1,12 +1,6 @@
-##Copyright (C) 2021-2025, Advanced Micro Devices, Inc. All rights reserved.##
+##Copyright (C) 2021, Advanced Micro Devices, Inc. All rights reserved.##
 
-cmake_minimum_required(VERSION 3.26)
-
-# Reading program version from file
-
-file(STRINGS "so_version" VERSION_DATA)
-list(JOIN VERSION_DATA "." PROJ_VERSION)
-
+cmake_minimum_required(VERSION 3.0)
 project(SCALAPACK C Fortran)
 # Configure the warning and code coverage suppression file
 configure_file(
@@ -21,6 +15,13 @@ endif ()
 
 # Add the CMake directory for custon CMake modules
 set(CMAKE_MODULE_PATH "${SCALAPACK_SOURCE_DIR}/CMAKE" ${CMAKE_MODULE_PATH})
+option(ENABLE_ILP64 "Enable ILP64 " OFF)
+
+if (WIN32 AND CMAKE_Fortran_COMPILER_ID MATCHES "Intel")
+    set (CMAKE_IFORT_LIBDEPS_DIR "C:/Program Files (x86)/IntelSWTools/compilers_and_libraries/windows/compiler/lib/intel64_win" CACHE STRING "")
+    set (CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} /names:lowercase")
+    #set (CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} /assume:underscore")
+endif()
 
 set(SL_FRAMEWORK_INCLUDE_PATH  "${SCALAPACK_SOURCE_DIR}/FRAMEWORK")
 
@@ -240,11 +241,12 @@ MESSAGE(STATUS "Setting CDEFS = ${CDEFS}")
 option(USE_F2C "Use FORTRAN To C compatible interface for certain Complex type functions" OFF)
 option(USE_DOTC_WRAPPER "Use wrapper for Complex DOTC function" OFF)
 
-set(f2cflag "-cpp ")
+set(f2cflag "-cpp")
 
 if(USE_F2C)
-  set(f2cflag "-cpp -DF2C " )
+  set(f2cflag "-cpp -DF2C" )
 ENDIF(USE_F2C)
+
 if(USE_DOTC_WRAPPER)
   set(f2cflag "-cpp -DF2C -DF2C_COMPLEX " )
 ENDIF(USE_DOTC_WRAPPER)
@@ -401,6 +403,35 @@ append_subdir_files(src-C "SRC")
 if (WIN32)
   add_definitions(-D__STDC__)
 endif ()
+
+if(WIN32 AND BUILD_SHARED_LIBS)
+  set (CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+endif ()
+
+if (UNIX)
+   add_library(scalapack ${blacs} ${tools} ${tools-C} ${extra_lapack} ${pblas} ${pblas-F} ${ptzblas} ${ptools} ${pbblas} ${redist} ${src} ${src-C})
+   target_link_libraries( scalapack ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES})
+   scalapack_install_library(scalapack)
+else (UNIX) # Need to separate Fortran and C Code
+    if (CMAKE_C_COMPILER_ID MATCHES MSVC)
+        # create Fortran objects and add to scalapack library first
+        add_library(scalapack-F OBJECT  ${pblas-F} ${pbblas} ${ptzblas} ${tools} ${src} ${extra_lapack} )
+        add_library(scalapack $<TARGET_OBJECTS:scalapack-F> ${blacs} ${tools-C} ${pblas} ${ptools} ${redist} ${src-C})
+        target_link_libraries( scalapack ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES} ${MPI_LIBRARY})
+        target_link_directories( scalapack PUBLIC ${CMAKE_IFORT_LIBDEPS_DIR})
+        scalapack_install_library(scalapack)
+    else (CMAKE_C_COMPILER_ID MATCHES Clang)
+        # create C objects and add to scalapack library first
+        add_library(scalapack-C OBJECT ${blacs} ${tools-C} ${pblas} ${ptools} ${redist} ${src-C})
+        target_link_libraries( scalapack-C ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES} ${MPI_LIBRARY})
+        target_link_directories( scalapack-C PUBLIC ${CMAKE_IFORT_LIBDEPS_DIR})
+        add_library(scalapack $<TARGET_OBJECTS:scalapack-C> ${pblas-F} ${pbblas} ${ptzblas} ${tools} ${src} ${extra_lapack} )
+        target_link_libraries( scalapack ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES} ${MPI_LIBRARY})
+        target_link_directories( scalapack PUBLIC ${CMAKE_IFORT_LIBDEPS_DIR})
+        scalapack_install_library(scalapack)
+    endif ()
+endif (UNIX)
+add_subdirectory(TESTING)
 
 if(WIN32 AND BUILD_SHARED_LIBS)
   set (CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)

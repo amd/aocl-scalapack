@@ -1,4 +1,4 @@
-##Copyright (C) 2021-2023, Advanced Micro Devices, Inc. All rights reserved.##
+##Copyright (C) 2021, Advanced Micro Devices, Inc. All rights reserved.##
 
 set (ALLAUX  pjlaenv.f  pilaenvx.f piparmq.f pilaver.f pmpim2.f pmpcol.f)
 set (ALLAUX-C

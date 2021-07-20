@@ -111,8 +111,9 @@ void pdgemmla_( TRANSA, TRANSB, M, N, K, ALPHA,
 *
 *  ---------------------------------------------------------------------
 */
-   AOCL_DTL_TRACE_ENTRY(AOCL_DTL_LEVEL_TRACE_5);
-
+#ifdef AOCL_DTL_ADVANCED_TRACE_ENABLE
+      CALL AOCL_DTL_TRACE_ENTRY(__FILE__, __LINE__, ' ')
+#endif
    PBTYP_T  * type;
    char     * Aptr, * Bptr, * Cptr;
    Int        ln;
@@ -134,5 +135,7 @@ void pdgemmla_( TRANSA, TRANSB, M, N, K, ALPHA,
 /*
 *  End of PDGEMMLA
 */
-   AOCL_DTL_TRACE_EXIT(AOCL_DTL_LEVEL_TRACE_5);
+#ifdef AOCL_DTL_ADVANCED_TRACE_ENABLE
+      CALL AOCL_DTL_TRACE_EXIT(__FILE__, __LINE__, ' ')
+#endif
 }

@@ -1,3 +1,4 @@
+##Copyright (C) 2021, Advanced Micro Devices, Inc. All rights reserved.##
 set(FTestObj
    blacstest.f btprim.f tools.f)
 
@@ -16,17 +17,13 @@ if(SCALAPACK_BUILD_TESTS)
   add_executable(xFbtest ${FTestObj})
   target_link_libraries(xFbtest scalapack)
 
-  set(CTestObj
-    Cbt.c)
-
-  if (UNIX)
+if (UNIX)
     add_executable(xCbtest ${CTestObj} ${FTestObj})
     target_link_libraries(xCbtest scalapack)
-  else ()
+else ()
     add_library(CTestObj OBJECT Cbt.c)
     add_executable(xCbtest ${FTestObj})
     target_link_libraries(xCbtest scalapack CTestObj)
-  endif ()
 endif ()
 
 if (UNIX)

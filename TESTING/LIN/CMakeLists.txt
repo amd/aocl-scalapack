@@ -1,4 +1,4 @@
-##Copyright (C) 2025, Advanced Micro Devices, Inc. All rights reserved.##
+##Copyright (C) 2021, Advanced Micro Devices, Inc. All rights reserved.##
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${SCALAPACK_BINARY_DIR}/TESTING)
 

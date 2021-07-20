@@ -3,8 +3,7 @@
 /* ---------------------------------------------------------------------
 *
 *  -- AOCL ScaLAPACK routine --
-*     Copyright (c) 2020 Advanced Micro Devices, Inc.  All rights reserved.
-*     July 13, 2020
+*     Copyright (c) 2020-2021 Advanced Micro Devices, Inc.  All rights reserved.
 *
 *  ---------------------------------------------------------------------
 */
@@ -15,6 +14,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "../AOCL_DTL/SRC/aocldtl.h"
+#include "pxsyevx.h"
 
 #ifdef __STDC__
 void aocl_dtl_trace_entry_( const char * fileName, unsigned int * lineNumber,

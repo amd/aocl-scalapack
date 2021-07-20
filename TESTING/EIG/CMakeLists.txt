@@ -1,9 +1,15 @@
+##Copyright (C) 2021, Advanced Micro Devices, Inc. All rights reserved.##
+
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${SCALAPACK_BINARY_DIR}/TESTING)
 
 set (smatgen psmatgen.f pmatgeninc.f)
 set (dmatgen pdmatgen.f pmatgeninc.f)
 set (cmatgen pcmatgen.f pmatgeninc.f)
 set (zmatgen pzmatgen.f pmatgeninc.f)
+
+if (WIN32 AND CMAKE_C_COMPILER_ID MATCHES Clang)
+    add_definitions(-D__STDC__)
+endif ()
 
 add_executable(xsbrd psbrddriver.f psbrdinfo.f psgebdrv.f pslafchk.f ${smatgen})
 add_executable(xdbrd pdbrddriver.f pdbrdinfo.f pdgebdrv.f pdlafchk.f ${dmatgen})
