@@ -215,6 +215,9 @@
 #define    pdpanel_pinit_      PDPANEL_PINIT
 #define    pdpanel_pfree_      PDPANEL_PFREE
 
+#define    pdgemmla_           PDGEMMLA
+#define    pdtrsmla_           PDTRSMLA
+
 #endif
 
 #if( _F2C_CALL_ == _F2C_NOCHANGE )
@@ -380,16 +383,19 @@
 #define    pctranc_            pctranc
 #define    pztranc_            pztranc
 
-#define    pdpanel_lcopy_      PDPANEL_LCOPY
-#define    pdpanel_lcast_      PDPANEL_LCAST
-#define    pdpanel_bcsiz_      PDPANEL_BCSIZ
-#define    pdpanel_bpack_      PDPANEL_BPACK
-#define    pdpanel_bcast_      PDPANEL_BCAST
-#define    pdpanel_ucast_      PDPANEL_UCAST
-#define    pdpanel_bwait_      PDPANEL_BWAIT
-#define    pdpanel_bfree_      PDPANEL_BFREE
-#define    pdpanel_pinit_      PDPANEL_PINIT
-#define    pdpanel_pfree_      PDPANEL_PFREE
+#define    pdpanel_lcopy_      pdpanel_lcopy
+#define    pdpanel_lcast_      pdpanel_lcast
+#define    pdpanel_bcsiz_      pdpanel_bcsiz
+#define    pdpanel_bpack_      pdpanel_bpack
+#define    pdpanel_bcast_      pdpanel_bcast
+#define    pdpanel_ucast_      pdpanel_ucast
+#define    pdpanel_bwait_      pdpanel_bwait
+#define    pdpanel_bfree_      pdpanel_bfree
+#define    pdpanel_pinit_      pdpanel_pinit
+#define    pdpanel_pfree_      pdpanel_pfree
+
+#define    pdgemmla_           pdgemmla
+#define    pdtrsmla_           pdtrsmla
 
 #endif
 

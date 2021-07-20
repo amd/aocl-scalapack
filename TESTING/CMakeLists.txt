@@ -1,7 +1,14 @@
+##Copyright (C) 2021, Advanced Micro Devices, Inc. All rights reserved.##
+
 add_subdirectory(LIN)
 add_subdirectory(EIG)
 
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${SCALAPACK_BINARY_DIR}/TESTING)
+if (UNIX)
+    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${SCALAPACK_BINARY_DIR}/TESTING)
+else (UNIX)
+    # in MSVC, library files are generated in Release/Debug directories
+    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${SCALAPACK_BINARY_DIR}/TESTING/${CMAKE_BUILD_TYPE})
+endif (UNIX)
 
 file(COPY BLLT.dat DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 file(COPY BLU.dat DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})

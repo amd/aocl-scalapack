@@ -1,3 +1,5 @@
+##Copyright (C) 2021, Advanced Micro Devices, Inc. All rights reserved.##
+
 set (PBSBLASAUX  pbstran.f pbsmatadd.f pbstrsrt.f pbstrget.f 
              pbstrnv.f pbsvecadd.f pbstrst1.f)
 

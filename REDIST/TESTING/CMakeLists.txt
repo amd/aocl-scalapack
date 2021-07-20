@@ -1,7 +1,18 @@
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${SCALAPACK_BINARY_DIR}/scalapack/REDIST/TESTING)
+##Copyright (C) 2021, Advanced Micro Devices, Inc. All rights reserved.##
+
+if (UNIX)
+    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${SCALAPACK_BINARY_DIR}/scalapack/REDIST/TESTING)
+else ()
+    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${SCALAPACK_BINARY_DIR}/scalapack/REDIST/TESTING/${CMAKE_BUILD_TYPE})
+endif ()
 
 file(COPY GEMR2D.dat DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 file(COPY TRMR2D.dat DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
+
+if (WIN32 AND CMAKE_C_COMPILER_ID MATCHES Clang)
+    add_definitions(-D__STDC__)
+endif ()
+
 
 add_executable(xigemr pigemrdrv.c)
 add_executable(xsgemr psgemrdrv.c)

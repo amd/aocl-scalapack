@@ -1,8 +1,20 @@
+##Copyright (C) 2021, Advanced Micro Devices, Inc. All rights reserved.##
+
 file(COPY ../SRC/PTOOLS/PB_Cwarn.c DESTINATION ${CMAKE_CURRENT_SOURCE_DIR})
 file(COPY ../SRC/PTOOLS/PB_Cabort.c DESTINATION ${CMAKE_CURRENT_SOURCE_DIR})
 
-set (PblasErrorHandler  PB_Cwarn.c PB_Cabort.c)
-set (pbtcom pblastst.f ${PblasErrorHandler})
+if(WIN32 AND CMAKE_C_COMPILER_ID MATCHES Clang)
+    add_definitions(-D__STDC__)
+endif()
+
+if (UNIX)
+   set (PblasErrorHandler  PB_Cwarn.c PB_Cabort.c)
+   set (pbtcom pblastst.f ${PblasErrorHandler})
+else ()
+    add_library (PblasErrorHandler OBJECT  PB_Cwarn.c PB_Cabort.c)
+    target_include_directories(PblasErrorHandler PUBLIC ${CMAKE_SOURCE_DIR}/PBLAS/SRC/PTOOLS)
+    set (pbtcom pblastst.f $<TARGET_OBJECTS:PblasErrorHandler>)
+endif ()
 set (spbtcom psblastst.f slamch.f ${pbtcom})
 set (dpbtcom pdblastst.f dlamch.f ${pbtcom})
 set (cpbtcom pcblastst.f slamch.f ${pbtcom})
@@ -13,7 +25,11 @@ set_property(
    APPEND PROPERTY COMPILE_DEFINITIONS TestingPblas
    )
 
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${SCALAPACK_BINARY_DIR}/PBLAS/TESTING)
+if (UNIX)
+    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${SCALAPACK_BINARY_DIR}/PBLAS/TESTING)
+else ()
+    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${SCALAPACK_BINARY_DIR}/PBLAS/TESTING/${CMAKE_BUILD_TYPE})
+endif ()
 
 file(COPY PCBLAS1TST.dat DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 file(COPY PCBLAS2TST.dat DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})

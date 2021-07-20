@@ -1,3 +1,5 @@
+##Copyright (C) 2021, Advanced Micro Devices, Inc. All rights reserved.##
+
 set (ALLAUX icopy.f)
 
 set (SCATGEN slatm1.f slaran.f slarnd.f)

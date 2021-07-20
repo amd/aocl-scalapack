@@ -15,12 +15,22 @@ FUNCTION(COMPILE RESULT)
     MESSAGE(STATUS "Compiling and Building BLACS INSTALL Testing to set correct variables")
    
    # Configure: 
+   if(MSVC)
+    EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND}
+         "-DCMAKE_Fortran_COMPILER=${CMAKE_Fortran_COMPILER}"
+         "-DCMAKE_C_COMPILER=${CMAKE_C_COMPILER}"
+         "-DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}" "${PROJECT_SOURCE_DIR}//BLACS/INSTALL"
+        WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/BLACS/INSTALL/
+        RESULT_VARIABLE RESVAR OUTPUT_VARIABLE LOG1_OUT ERROR_VARIABLE LOG1_ERR
+    )
+   else()
     EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND}  
          "-DCMAKE_Fortran_COMPILER=${CMAKE_Fortran_COMPILER}"
          "-DCMAKE_C_COMPILER=${CMAKE_C_COMPILER}" "${PROJECT_SOURCE_DIR}//BLACS/INSTALL"
         WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/BLACS/INSTALL/        
         RESULT_VARIABLE RESVAR OUTPUT_VARIABLE LOG1_OUT ERROR_VARIABLE LOG1_ERR
     )
+   endif()
     if(RESVAR EQUAL 0)
     MESSAGE(STATUS "Configure in the INSTALL directory successful")
     else()
@@ -30,10 +40,18 @@ FUNCTION(COMPILE RESULT)
     endif()
 
     # Build:
+    if(MSVC)
+    EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} --build
+        ${PROJECT_SOURCE_DIR}/BLACS/INSTALL/ --config
+        ${CMAKE_BUILD_TYPE}
+        RESULT_VARIABLE RESVAR OUTPUT_VARIABLE LOG2_OUT ERROR_VARIABLE LOG2_ERR
+    )
+    else()
     EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} --build
         ${PROJECT_SOURCE_DIR}/BLACS/INSTALL/ 
         RESULT_VARIABLE RESVAR OUTPUT_VARIABLE LOG2_OUT ERROR_VARIABLE LOG2_ERR
     )
+    endif()
     if(RESVAR  EQUAL 0)
     MESSAGE(STATUS "Build in the BLACS INSTALL directory successful")
     else()
@@ -50,12 +68,17 @@ ENDFUNCTION()
 macro(FORTRAN_MANGLING CDEFS)
 MESSAGE(STATUS "=========")
 MESSAGE(STATUS "Testing FORTRAN_MANGLING")
-   
+if(MSVC)
+    execute_process ( COMMAND  ${PROJECT_SOURCE_DIR}/BLACS/INSTALL/${CMAKE_BUILD_TYPE}/xintface
+                          RESULT_VARIABLE xintface_RES
+                          OUTPUT_VARIABLE xintface_OUT
+                          ERROR_VARIABLE xintface_ERR)
+else()
     execute_process ( COMMAND  ${PROJECT_SOURCE_DIR}/BLACS/INSTALL/xintface
                          RESULT_VARIABLE xintface_RES
                          OUTPUT_VARIABLE xintface_OUT
                          ERROR_VARIABLE xintface_ERR)
-                         
+endif()
 
 #    MESSAGE(STATUS "FORTRAN MANGLING:RUN \n${xintface_OUT}")
 

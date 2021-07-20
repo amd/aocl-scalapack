@@ -1,3 +1,5 @@
+##Copyright (C) 2021, Advanced Micro Devices, Inc. All rights reserved.##
+
 set( ALLCTOOLS  
     PB_CGatherV.c    PB_CInV.c        PB_CInV2.c       PB_CInOutV.c     
     PB_CInOutV2.c    PB_COutV.c       PB_CScatterV.c   PB_CVMinit.c     

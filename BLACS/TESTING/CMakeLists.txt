@@ -1,3 +1,4 @@
+##Copyright (C) 2021, Advanced Micro Devices, Inc. All rights reserved.##
 set(FTestObj
    blacstest.f btprim.f tools.f)
 
@@ -16,13 +17,23 @@ set_property(
    APPEND PROPERTY COMPILE_DEFINITIONS BTCINTFACE
    )
 
-add_executable(xCbtest ${CTestObj} ${FTestObj})
-target_link_libraries(xCbtest scalapack)
+if (UNIX)
+    add_executable(xCbtest ${CTestObj} ${FTestObj})
+    target_link_libraries(xCbtest scalapack)
+else ()
+    add_library(CTestObj OBJECT Cbt.c)
+    add_executable(xCbtest ${FTestObj})
+    target_link_libraries(xCbtest scalapack CTestObj)
+endif ()
 
-file(COPY bsbr.dat DESTINATION ${SCALAPACK_BINARY_DIR}/BLACS/TESTING)
-file(COPY bt.dat DESTINATION ${SCALAPACK_BINARY_DIR}/BLACS/TESTING)
-file(COPY comb.dat DESTINATION ${SCALAPACK_BINARY_DIR}/BLACS/TESTING)
-file(COPY sdrv.dat DESTINATION ${SCALAPACK_BINARY_DIR}/BLACS/TESTING)
+if (UNIX)
+set (CMAKE_BUILD_TYPE "")
+endif ()
+
+file(COPY bsbr.dat DESTINATION ${SCALAPACK_BINARY_DIR}/BLACS/TESTING/${CMAKE_BUILD_TYPE})
+file(COPY bt.dat DESTINATION ${SCALAPACK_BINARY_DIR}/BLACS/TESTING/${CMAKE_BUILD_TYPE})
+file(COPY comb.dat DESTINATION ${SCALAPACK_BINARY_DIR}/BLACS/TESTING/${CMAKE_BUILD_TYPE})
+file(COPY sdrv.dat DESTINATION ${SCALAPACK_BINARY_DIR}/BLACS/TESTING/${CMAKE_BUILD_TYPE})
 
 # We could run the BLACS TESTING the following way
 # But BLACS TESTING are TESTING anormal exit so even if they pass,

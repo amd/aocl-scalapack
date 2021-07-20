@@ -1,8 +1,20 @@
+##Copyright (C) 2021, Advanced Micro Devices, Inc. All rights reserved.##
+
 file(COPY ../SRC/PTOOLS/PB_Cwarn.c DESTINATION ${CMAKE_CURRENT_SOURCE_DIR})
 file(COPY ../SRC/PTOOLS/PB_Cabort.c DESTINATION ${CMAKE_CURRENT_SOURCE_DIR})
 
-set (PblasErrorHandler  PB_Cwarn.c PB_Cabort.c)
-set (pbtcom pblastim.f ${PblasErrorHandler})
+if(WIN32 AND CMAKE_C_COMPILER_ID MATCHES Clang)
+    add_definitions(-D__STDC__)
+endif()
+
+if (UNIX)
+    set (PblasErrorHandler  PB_Cwarn.c PB_Cabort.c)
+    set (pbtcom pblastim.f ${PblasErrorHandler})
+else ()
+    add_library (PblasHandler OBJECT  PB_Cwarn.c PB_Cabort.c)
+    target_include_directories(PblasHandler PUBLIC ${CMAKE_SOURCE_DIR}/PBLAS/SRC/PTOOLS)
+    set (pbtcom pblastim.f $<TARGET_OBJECTS:PblasHandler>)
+endif ()
 set (spbtcom psblastim.f ${pbtcom})
 set (dpbtcom pdblastim.f ${pbtcom})
 set (cpbtcom pcblastim.f ${pbtcom})
@@ -13,7 +25,11 @@ set_property(
    APPEND PROPERTY COMPILE_DEFINITIONS TestingPblas 
    )
 
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${SCALAPACK_BINARY_DIR}/PBLAS/TIMING)
+if (UNIX)
+    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${SCALAPACK_BINARY_DIR}/PBLAS/TIMING)
+else ()
+    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${SCALAPACK_BINARY_DIR}/PBLAS/TIMING/${CMAKE_BUILD_TYPE})
+endif ()
 
 file(COPY PCBLAS1TIM.dat DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 file(COPY PCBLAS2TIM.dat DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})

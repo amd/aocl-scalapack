@@ -185,7 +185,7 @@
 *     .. External Subroutines ..
       EXTERNAL           BLACS_GRIDINFO, CHK1MAT, IGAMN2D, PCHK1MAT,
      $                   PB_TOPGET, PB_TOPSET, PDGEMM, PDGETF2,
-     $                   PDLASWP, PDTRSM, PXERBLA, PDUPDATE
+     $                   PDLASWP, PDTRSM, PXERBLA, PDUPDATE,
      $                   PDGETF2_COMM, PDGETF2K, ICOPYPV
 *     ..
 *     .. External Functions ..
