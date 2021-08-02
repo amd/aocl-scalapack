@@ -86,7 +86,7 @@
       PARAMETER          ( INTGSZ = 4 )
 #endif
       PARAMETER          ( CPLXSZ = 8, REALSZ = 4,
-     $                     MEMSIZ = TOTMEM / CPLXSZ,
+     $                     TOTMEM = 2000000, MEMSIZ = TOTMEM / CPLXSZ,
      $                     NTESTS = 20,
      $                     PADVAL = ( -9923.0E+0, -9923.0E+0 ) )
 #else
@@ -94,7 +94,11 @@
 	  INTEGER, PARAMETER ::  MEMSIZ = 2100000000
 
       COMPLEX            PADVAL
+#ifdef ENABLE_ILP64
+      PARAMETER          ( CPLXSZ = 8, INTGSZ = 8, REALSZ = 4,
+#else
       PARAMETER          ( CPLXSZ = 8, INTGSZ = 4, REALSZ = 4,
+#endif
      $                     TOTMEM = 2000000, 
      $                     NTESTS = 20,
      $                     PADVAL = ( -9923.0E+0, -9923.0E+0 ) )

@@ -239,17 +239,22 @@ MESSAGE(STATUS "Setting CDEFS = ${CDEFS}")
 # --------------------------------------------------
 # Compiler Flags
 option(USE_F2C "Use FORTRAN To C compatible interface for certain Complex type functions" OFF)
-option(USE_DOTC_WRAPPER "Use wrapper for Complex DOTC function" OFF)
 
 set(f2cflag "-cpp")
 
 if(USE_F2C)
-  set(f2cflag "-cpp -DF2C" )
+  set(f2cflag "-cpp -DF2C " )
 ENDIF(USE_F2C)
 
-if(USE_DOTC_WRAPPER)
-  set(f2cflag "-cpp -DF2C -DF2C_COMPLEX " )
-ENDIF(USE_DOTC_WRAPPER)
+if(ENABLE_ILP64)
+  if(UNIX)
+    add_definitions("-DInt=int64_t" "-DUInt=u_int64_t" "-DENABLE_ILP64" "-fdefault-integer-8")
+  else(UNIX)
+   add_definitions("-DInt=__int64" "-DENABLE_ILP64" "-DUInt=unsigned __int64" "-i8")
+  endif()
+else(ENABLE_ILP64)
+   add_definitions("-DUInt=unsigned int ")
+ENDIF(ENABLE_ILP64)
 
 ADD_DEFINITIONS( "-D${CDEFS}" "${f2cflag}")
 

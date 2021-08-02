@@ -57,8 +57,7 @@ void pdlasnbt_( Int *ieflag )
 */
    double x;
    Int         negone=-1, errornum;
-   unsigned Int *ix; 
-/* ..
+   UInt *ix; /* ..
 *  .. Executable Statements ..
 */
 
@@ -70,7 +69,8 @@ void pdlasnbt_( Int *ieflag )
       return;
    }
    x = (double) -1.0;
-   ix = (unsigned Int *) &x;
+   ix = (UInt *) &x;
+
    if(( *ix == 0xbff00000) && ( *(ix+1) == 0x0) ) 
    {
       *ieflag = 1;
