@@ -79,7 +79,12 @@
      $                   CTXT_ = 2, M_ = 3, N_ = 4, MB_ = 5, NB_ = 6,
      $                   RSRC_ = 7, CSRC_ = 8, LLD_ = 9 )
       INTEGER            REALSZ, INTGSZ
-      PARAMETER          ( REALSZ = 4, INTGSZ = 4 )
+#ifdef ENABLE_ILP64
+      PARAMETER          ( INTGSZ = 8 )
+#else
+      PARAMETER          ( INTGSZ = 4 )
+#endif
+      PARAMETER          ( REALSZ = 4 )
       INTEGER            MAXSETSIZE
       PARAMETER          ( MAXSETSIZE = 50 )
 *     ..
@@ -95,6 +100,9 @@
      $                   SIZECHK, SIZEMQRLEFT, SIZEMQRRIGHT, SIZEQRF,
      $                   SIZEQTQ, SIZESUBTST, SIZESYEV, SIZESYEVX,
      $                   SIZETMS, SIZETST, UPLO, SIZESYEVD, ISIZESYEVD
+#ifdef ENABLE_ILP64
+      INTEGER            ILP64_TEMP
+#endif
       REAL               ABSTOL, THRESH
 *     ..
 *     .. Local Arrays ..
@@ -183,12 +191,22 @@
      $                           IPOSTPAD
                         PTRIFAIL = PTRGAP + NPROW*NPCOL + IPREPAD +
      $                             IPOSTPAD
+#ifdef ENABLE_ILP64
+                        ILP64_TEMP = ICEIL( N+IPREPAD+IPOSTPAD, 1)
+                        PTRICLUS = PTRIFAIL + 2*ILP64_TEMP
+*
+                        PTRIWRK = PTRICLUS + 2*ICEIL( 2*NPROW*NPCOL+
+     $                            IPREPAD+IPOSTPAD, REALSZ / 4 )
+                        PTRWORK = PTRIWRK + 2*ICEIL( ISIZETST+IPREPAD+
+     $                            IPOSTPAD, REALSZ / 4 )
+#else
                         PTRICLUS = PTRIFAIL + ICEIL( N+IPREPAD+IPOSTPAD,
      $                             REALSZ / INTGSZ )
                         PTRIWRK = PTRICLUS + ICEIL( 2*NPROW*NPCOL+
      $                            IPREPAD+IPOSTPAD, REALSZ / INTGSZ )
                         PTRWORK = PTRIWRK + ICEIL( ISIZETST+IPREPAD+
      $                            IPOSTPAD, REALSZ / INTGSZ )
+#endif
                         LLWORK = MEMSIZE - PTRWORK + 1
 C                       LLWORK = MEMSIZE - PTRWORK - IPREPAD -
 C    $                           IPOSTPAD + 1

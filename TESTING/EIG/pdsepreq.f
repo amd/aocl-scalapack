@@ -79,7 +79,13 @@
      $                   CTXT_ = 2, M_ = 3, N_ = 4, MB_ = 5, NB_ = 6,
      $                   RSRC_ = 7, CSRC_ = 8, LLD_ = 9 )
       INTEGER            DBLESZ, INTGSZ
-      PARAMETER          ( DBLESZ = 8, INTGSZ = 4 )
+#ifdef ENABLE_ILP64
+      PARAMETER          ( INTGSZ = 8 )
+#else
+      PARAMETER          ( INTGSZ = 4 )
+#endif
+      PARAMETER          ( DBLESZ = 8 )
+
       INTEGER            MAXSETSIZE
       PARAMETER          ( MAXSETSIZE = 50 )
 *     ..

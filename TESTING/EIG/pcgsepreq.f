@@ -80,7 +80,12 @@
       REAL               FIVE
       PARAMETER          ( FIVE = 5.0E+0 )
       INTEGER            CPLXSZ, INTGSZ
-      PARAMETER          ( CPLXSZ = 8, INTGSZ = 4 )
+#ifdef ENABLE_ILP64
+      PARAMETER          ( INTGSZ = 8 )
+#else
+      PARAMETER          ( INTGSZ = 4 )
+#endif
+      PARAMETER          ( CPLXSZ = 8 )
       INTEGER            REALSZ
       PARAMETER          ( REALSZ = 4 )
       INTEGER            MAXSETSIZE

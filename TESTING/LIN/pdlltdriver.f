@@ -70,17 +70,25 @@
       PARAMETER          ( BLOCK_CYCLIC_2D = 1, DLEN_ = 9, DTYPE_ = 1,
      $                     CTXT_ = 2, M_ = 3, N_ = 4, MB_ = 5, NB_ = 6,
      $                     RSRC_ = 7, CSRC_ = 8, LLD_ = 9 )
+*
+      INTEGER            INTGSZ
+#ifdef ENABLE_ILP64
+      PARAMETER          ( INTGSZ = 8 )
+#else
+      PARAMETER          ( INTGSZ = 4 )
+#endif
+*
 #ifndef DYNAMIC_WORK_MEM_ALLOC
-      INTEGER            DBLESZ, INTGSZ, MEMSIZ, NTESTS, TOTMEM
+      INTEGER            DBLESZ, MEMSIZ, NTESTS, TOTMEM
       DOUBLE PRECISION   PADVAL, ZERO
-      PARAMETER          ( DBLESZ = 8, INTGSZ = 4, TOTMEM = 2000000,
+      PARAMETER          ( DBLESZ = 8, TOTMEM = 2000000,
      $                     MEMSIZ = TOTMEM / DBLESZ, NTESTS = 20,
      $                     PADVAL = -9923.0D+0, ZERO = 0.0D+0 )
 #else
-      INTEGER            DBLESZ, INTGSZ, NTESTS, TOTMEM
+      INTEGER            DBLESZ, NTESTS, TOTMEM
 	  INTEGER, PARAMETER ::  MEMSIZ = 2100000000
       DOUBLE PRECISION   PADVAL, ZERO
-      PARAMETER          ( DBLESZ = 8, INTGSZ = 4, TOTMEM = 2000000,
+      PARAMETER          ( DBLESZ = 8, TOTMEM = 2000000,
      $                      NTESTS = 20,
      $                     PADVAL = -9923.0D+0, ZERO = 0.0D+0 )
 #endif

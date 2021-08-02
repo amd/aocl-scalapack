@@ -76,7 +76,12 @@
       INTEGER            CPLXSZ, INTGSZ, MEMSIZ, NTESTS, REALSZ, TOTMEM
       REAL               ZERO
       COMPLEX            PADVAL
-      PARAMETER          ( CPLXSZ = 8, INTGSZ = 4, REALSZ = 4,
+#ifdef ENABLE_ILP64
+      PARAMETER          ( INTGSZ = 8 )
+#else
+      PARAMETER          ( INTGSZ = 4 )
+#endif
+      PARAMETER          ( CPLXSZ = 8, REALSZ = 4,
      $                     TOTMEM = 4000000,
      $                     MEMSIZ = TOTMEM / CPLXSZ, NTESTS = 20,
      $                     PADVAL = ( -9923.0E+0, -9923.0E+0 ),
@@ -87,7 +92,11 @@
 
       REAL               ZERO
       COMPLEX            PADVAL
+#ifdef ENABLE_ILP64
+      PARAMETER          ( CPLXSZ = 8, INTGSZ = 8, REALSZ = 4,
+#else
       PARAMETER          ( CPLXSZ = 8, INTGSZ = 4, REALSZ = 4,
+#endif
      $                     TOTMEM = 4000000,
      $                      NTESTS = 20,
      $                     PADVAL = ( -9923.0E+0, -9923.0E+0 ),

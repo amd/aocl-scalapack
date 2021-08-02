@@ -80,7 +80,12 @@
       DOUBLE PRECISION   FIVE
       PARAMETER          ( FIVE = 5.0D+0 )
       INTEGER            ZPLXSZ, INTGSZ
-      PARAMETER          ( ZPLXSZ = 16, INTGSZ = 4 )
+#ifdef ENABLE_ILP64
+      PARAMETER          ( INTGSZ = 8 )
+#else
+      PARAMETER          ( INTGSZ = 4 )
+#endif
+      PARAMETER          ( ZPLXSZ = 16 )
       INTEGER            DBLESZ
       PARAMETER          ( DBLESZ = 8 )
       INTEGER            MAXSETSIZE

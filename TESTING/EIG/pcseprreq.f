@@ -72,7 +72,12 @@
       INTEGER            DLEN_
       PARAMETER          ( DLEN_ = 9 )
       INTEGER            REALSZ, INTGSZ
-      PARAMETER          ( REALSZ = 4, INTGSZ = 4 )
+#ifdef ENABLE_ILP64
+      PARAMETER          ( INTGSZ = 8 )
+#else
+      PARAMETER          ( INTGSZ = 4 )
+#endif
+      PARAMETER          ( REALSZ = 4 )
       INTEGER            KMPXSZ
       PARAMETER          ( KMPXSZ = 8 )
       INTEGER            MAXSETSIZE

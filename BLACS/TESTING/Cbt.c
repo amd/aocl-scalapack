@@ -1,6 +1,9 @@
 #ifdef BTCINTFACE
 #include "Cbt.h"
-
+#ifdef ENABLE_ILP64
+#include <inttypes.h>
+#include <stdint.h>
+#endif
 void blacs_gridinit_(ConTxt, order, nprow, npcol)
 Int *ConTxt;
 char *order;

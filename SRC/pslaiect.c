@@ -54,7 +54,7 @@ void pslasnbt_( Int *ieflag )
 */
    float x;
    Int         negone=-1, errornum;
-   unsigned Int *ix; 
+   UInt *ix;
 /* ..
 *  .. Executable Statements ..
 */
@@ -67,7 +67,7 @@ void pslasnbt_( Int *ieflag )
       return;
    }
    x = (float) -1.0;
-   ix = (unsigned Int *) &x;
+   ix = (UInt *) &x;
    if( *ix == 0xbff00000 )
    {
       *ieflag = 1;

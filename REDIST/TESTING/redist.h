@@ -1,3 +1,8 @@
+#ifdef ENABLE_ILP64
+#include <inttypes.h>
+#include <stdint.h>
+#endif
+
 #ifdef T3D
 #define float double
 #endif

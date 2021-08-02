@@ -1,4 +1,7 @@
 #include "redist.h"
+#ifdef ENABLE_ILP64
+#include <inttypes.h>
+#endif
 /* $Id: pigemr2.c,v 1.1.1.1 2000/02/15 18:04:08 susan Exp $
  * 
  * some functions used by the pigemr2d routine see file pigemr.c for more

@@ -69,7 +69,12 @@
 #ifndef DYNAMIC_WORK_MEM_ALLOC
       INTEGER            CPLXSZ, INTGSZ, MEMSIZ, NTESTS, REALSZ, TOTMEM
       COMPLEX            PADVAL, ZERO
-      PARAMETER          ( CPLXSZ = 8, INTGSZ = 4, REALSZ = 4,
+#ifdef ENABLE_ILP64
+      PARAMETER          ( INTGSZ = 8 )
+#else
+      PARAMETER          ( INTGSZ = 4 )
+#endif
+      PARAMETER          ( CPLXSZ = 8, REALSZ = 4,
      $                     TOTMEM = 2000000, MEMSIZ = TOTMEM / CPLXSZ,
      $                     NTESTS = 20,
      $                     PADVAL = ( -9923.0E+0, -9923.0E+0 ),
@@ -78,7 +83,11 @@
       INTEGER            CPLXSZ, INTGSZ, NTESTS, REALSZ, TOTMEM
       INTEGER, PARAMETER ::  MEMSIZ = 2100000000
 	  COMPLEX            PADVAL, ZERO
+#ifdef ENABLE_ILP64
+      PARAMETER          ( CPLXSZ = 8, INTGSZ = 8, REALSZ = 4,
+#else
       PARAMETER          ( CPLXSZ = 8, INTGSZ = 4, REALSZ = 4,
+#endif
      $                     TOTMEM = 2000000, 
      $                     NTESTS = 20,
      $                     PADVAL = ( -9923.0E+0, -9923.0E+0 ),

@@ -72,7 +72,12 @@
       INTEGER            DLEN_
       PARAMETER          ( DLEN_ = 9 )
       INTEGER            REALSZ, INTGSZ
-      PARAMETER          ( REALSZ = 4, INTGSZ = 4 )
+#ifdef ENABLE_ILP64
+      PARAMETER          ( INTGSZ = 8 )
+#else
+      PARAMETER          ( INTGSZ = 4 )
+#endif
+      PARAMETER          ( REALSZ = 4 )
       INTEGER            MAXSETSIZE
       PARAMETER          ( MAXSETSIZE = 50 )
 *     ..
@@ -88,6 +93,9 @@
      $                   SIZECHK, SIZEMQRLEFT, SIZEMQRRIGHT, SIZEQRF,
      $                   SIZEQTQ, SIZESUBTST, SIZEEVR,
      $                   SIZETMS, SIZETST, UPLO
+#ifdef ENABLE_ILP64
+      INTEGER            ILP64_TEMP
+#endif
 *
       REAL               ABSTOL, THRESH
 *     ..
@@ -171,12 +179,22 @@
      $                           IPOSTPAD
                         PTRIFAIL = PTRGAP + NPROW*NPCOL + IPREPAD +
      $                             IPOSTPAD
+#ifdef ENABLE_ILP64
+                        ILP64_TEMP = ICEIL( N+IPREPAD+IPOSTPAD, 1)
+                        PTRICLUS = PTRIFAIL + 2*ILP64_TEMP
+*
+                        PTRIWRK = PTRICLUS + 2*ICEIL( 2*NPROW*NPCOL+
+     $                            IPREPAD+IPOSTPAD, REALSZ / 4 )
+                        PTRWORK = PTRIWRK + 2*ICEIL( ISIZETST+IPREPAD+
+     $                            IPOSTPAD, REALSZ / 4 )
+#else
                         PTRICLUS = PTRIFAIL + ICEIL( N+IPREPAD+IPOSTPAD,
      $                             REALSZ / INTGSZ )
                         PTRIWRK = PTRICLUS + ICEIL( 2*NPROW*NPCOL+
      $                            IPREPAD+IPOSTPAD, REALSZ / INTGSZ )
                         PTRWORK = PTRIWRK + ICEIL( ISIZETST+IPREPAD+
      $                            IPOSTPAD, REALSZ / INTGSZ )
+#endif
                         LLWORK = MEMSIZE - PTRWORK + 1
 
                         NTESTS = NTESTS + 1
