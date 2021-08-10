@@ -1,5 +1,5 @@
 ##Copyright (C) 2021, Advanced Micro Devices, Inc. All rights reserved.##
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.0)
 project(INSTALL C Fortran)
 
 if (WIN32 AND CMAKE_Fortran_COMPILER_ID MATCHES "Intel")
