@@ -24,7 +24,7 @@ void get_aocl_scalapack_version_( version )
 /*
 * version = "AOCL 3.1 ScaLAPACK. Supports Netlib ScaLAPACK 2.1.0"
 */
-	strcpy(version, "AOCL ScaLAPACK 3.0.1, supports ScaLAPACK 2.1.0");
+	strcpy(version, "AOCL ScaLAPACK 3.1, supports ScaLAPACK 2.1.0");
 
   return;
 }
