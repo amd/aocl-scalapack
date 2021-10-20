@@ -63,8 +63,6 @@
 #define pslaiect_           PSLAIECT
 
 #define get_aocl_scalapack_version_       GET_AOCL_SCALAPACK_VERSION
-#define aocl_dtl_trace_entry_             AOCL_DTL_TRACE_ENTRY
-#define aocl_dtl_trace_exit_              AOCL_DTL_TRACE_EXIT
 
 #endif
 
@@ -87,7 +85,5 @@
 #define pslaiect_           pslaiect
 
 #define get_aocl_scalapack_version_      get_aocl_scalapack_version
-#define aocl_dtl_trace_entry_            aocl_dtl_trace_entry
-#define aocl_dtl_trace_exit_             aocl_dtl_trace_exit
 
 #endif
