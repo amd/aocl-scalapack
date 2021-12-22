@@ -168,12 +168,48 @@ ENDIF(ENABLE_ILP64)
 ADD_DEFINITIONS( "-D${CDEFS}" "${f2cflag}")
 
 # --------------------------------------------------
+# By default static library
+OPTION(BUILD_SHARED_LIBS "Build shared libraries" OFF )
+OPTION(BUILD_STATIC_LIBS "Build static libraries" ON )
+
+# --------------------------------------------------
+# Subdirectories that need to be processed
+   
+macro(append_subdir_files variable dirname)
+get_directory_property(holder DIRECTORY ${dirname} DEFINITION ${variable})
+foreach(depfile ${holder})
+  list(APPEND ${variable} "${dirname}/${depfile}")
+endforeach()
+endmacro()
+
+
+# --------------------------------------------------
 # ScaLAPACK needs BLAS and LAPACK
 
 option(USE_OPTIMIZED_LAPACK_BLAS "Whether or not to search for optimized LAPACK and BLAS libraries on your machine (if not found, Reference LAPACK and BLAS will be downloaded and installed)" OFF)
 
-message(STATUS "CHECKING BLAS AND LAPACK LIBRARIES")
+IF(BLACS_LIBRARY)
+  message(STATUS "CHECKING & VERIFYING BLACS LIBRARY")
+  include(CheckFunctionExists)
+  set(CMAKE_REQUIRED_LIBRARIES ${BLACS_LIBRARY})
+  message(STATUS "--> BLACS supplied by user is ${BLACS_LIBRARY}.")
+  CHECK_FUNCTION_EXISTS("Cblacs_get" BLACS_FOUND)
+  unset( CMAKE_REQUIRED_LIBRARIES )
+  message(STATUS "--> BLACS routine blacs_pinfo is found: ${BLACS_FOUND}.")
+ENDIF()
+if(BLACS_FOUND)
+   message(STATUS "--> BLACS supplied by user is WORKING, will use ${BLACS_LIBRARY}.")
+else( BLACS_FOUND )
+#
+# BLACS
+#
+  add_subdirectory(BLACS)
+  append_subdir_files(blacs "BLACS/SRC")
+  message(STATUS "--> BLACS supplied by user is NOT WORKING, will use BLACS source code for building aocl-scalapack")
+endif( BLACS_FOUND )
 
+
+message(STATUS "CHECKING BLAS AND LAPACK LIBRARIES")
 IF(LAPACK_LIBRARIES)
   include(CheckFortranFunctionExists)
   message(STATUS "--> LAPACK supplied by user is ${LAPACK_LIBRARIES}.")
@@ -218,31 +254,10 @@ message(STATUS "LAPACK library: ${LAPACK_LIBRARIES}")
 
 MESSAGE(STATUS "=========")
 
-# --------------------------------------------------
-# By default static library
-OPTION(BUILD_SHARED_LIBS "Build shared libraries" OFF )
-OPTION(BUILD_STATIC_LIBS "Build static libraries" ON )
-
-# --------------------------------------------------
-# Subdirectories that need to be processed
-   
-macro(append_subdir_files variable dirname)
-get_directory_property(holder DIRECTORY ${dirname} DEFINITION ${variable})
-foreach(depfile ${holder})
-  list(APPEND ${variable} "${dirname}/${depfile}")
-endforeach()
-endmacro()
-
 #
 # AOCL_DTL
 #
 #add_subdirectory(AOCL_DTL)
-
-#
-# BLACS
-#
-add_subdirectory(BLACS)
-append_subdir_files(blacs "BLACS/SRC")
 
 #
 # TOOLS
@@ -285,19 +300,42 @@ if(WIN32 AND BUILD_SHARED_LIBS)
 endif ()
 
 if (UNIX)
-   add_library(scalapack ${blacs} ${tools} ${tools-C} ${extra_lapack} ${pblas} ${pblas-F} ${ptzblas} ${ptools} ${pbblas} ${redist} ${src} ${src-C})
-   target_link_libraries( scalapack ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES})
-   scalapack_install_library(scalapack)
+  if(BLACS_FOUND)
+    add_library(scalapack ${tools} ${tools-C} ${extra_lapack} ${pblas} ${pblas-F} ${ptzblas} ${ptools} ${pbblas} ${redist} ${src} ${src-C})
+    target_link_libraries( scalapack ${BLACS_LIBRARY} ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES})
+    scalapack_install_library(scalapack)
+  else(BLACS_FOUND)
+    add_library(scalapack ${blacs} ${tools} ${tools-C} ${extra_lapack} ${pblas} ${pblas-F} ${ptzblas} ${ptools} ${pbblas} ${redist} ${src} ${src-C})
+    target_link_libraries( scalapack ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES})
+    scalapack_install_library(scalapack)
+  endif(BLACS_FOUND)
 else (UNIX) # Need to separate Fortran and C Code
     if (CMAKE_C_COMPILER_ID MATCHES MSVC)
         # create Fortran objects and add to scalapack library first
+      if(BLACS_FOUND)
+        add_library(scalapack-F OBJECT  ${pblas-F} ${pbblas} ${ptzblas} ${tools} ${src} ${extra_lapack} )
+        add_library(scalapack $<TARGET_OBJECTS:scalapack-F> ${tools-C} ${pblas} ${ptools} ${redist} ${src-C})
+        target_link_libraries( scalapack ${BLACS_LIBRARY} ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES} ${MPI_LIBRARY})
+        target_link_directories( scalapack PUBLIC ${CMAKE_IFORT_LIBDEPS_DIR})
+        scalapack_install_library(scalapack)
+      else(BLACS_FOUND)
         add_library(scalapack-F OBJECT  ${pblas-F} ${pbblas} ${ptzblas} ${tools} ${src} ${extra_lapack} )
         add_library(scalapack $<TARGET_OBJECTS:scalapack-F> ${blacs} ${tools-C} ${pblas} ${ptools} ${redist} ${src-C})
         target_link_libraries( scalapack ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES} ${MPI_LIBRARY})
         target_link_directories( scalapack PUBLIC ${CMAKE_IFORT_LIBDEPS_DIR})
         scalapack_install_library(scalapack)
+      endif(BLACS_FOUND)
     else (CMAKE_C_COMPILER_ID MATCHES Clang)
         # create C objects and add to scalapack library first
+      if(BLACS_FOUND)
+        add_library(scalapack-C OBJECT ${tools-C} ${pblas} ${ptools} ${redist} ${src-C})
+        target_link_libraries( scalapack-C ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES} ${MPI_LIBRARY})
+        target_link_directories( scalapack-C PUBLIC ${CMAKE_IFORT_LIBDEPS_DIR})
+        add_library(scalapack $<TARGET_OBJECTS:scalapack-C> ${pblas-F} ${pbblas} ${ptzblas} ${tools} ${src} ${extra_lapack} )
+        target_link_libraries( scalapack ${BLACS_LIBRARY} ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES} ${MPI_LIBRARY})
+        target_link_directories( scalapack PUBLIC ${CMAKE_IFORT_LIBDEPS_DIR})
+        scalapack_install_library(scalapack)
+      else(BLACS_FOUND)
         add_library(scalapack-C OBJECT ${blacs} ${tools-C} ${pblas} ${ptools} ${redist} ${src-C})
         target_link_libraries( scalapack-C ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES} ${MPI_LIBRARY})
         target_link_directories( scalapack-C PUBLIC ${CMAKE_IFORT_LIBDEPS_DIR})
@@ -305,6 +343,7 @@ else (UNIX) # Need to separate Fortran and C Code
         target_link_libraries( scalapack ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES} ${MPI_LIBRARY})
         target_link_directories( scalapack PUBLIC ${CMAKE_IFORT_LIBDEPS_DIR})
         scalapack_install_library(scalapack)
+      endif(BLACS_FOUND)
     endif ()
 endif (UNIX)
 add_subdirectory(TESTING)
