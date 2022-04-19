@@ -3,7 +3,7 @@
 /* ---------------------------------------------------------------------
 *
 *  -- AOCL ScaLAPACK routine --
-*     Copyright (c) 2020-2021 Advanced Micro Devices, Inc.  All rights reserved.
+*     Copyright (c) 2020-2022 Advanced Micro Devices, Inc.  All rights reserved.
 *
 *  ---------------------------------------------------------------------
 */
@@ -22,9 +22,9 @@ void get_aocl_scalapack_version_( version )
 #endif
 {
 /*
-* version = "AOCL 3.1 ScaLAPACK. Supports Netlib ScaLAPACK 2.1.0"
+* version = "AOCL-ScaLAPACK 3.1.2, Supports Netlib ScaLAPACK 2.1.0"
 */
-	strcpy(version, "AOCL ScaLAPACK 3.1, supports ScaLAPACK 2.1.0");
+	strcpy(version, "AOCL-ScaLAPACK 3.1.2, supports ScaLAPACK 2.1.0");
 
   return;
 }
