@@ -165,6 +165,11 @@ else(ENABLE_ILP64)
    add_definitions("-DUInt=unsigned int ")
 ENDIF(ENABLE_ILP64)
 
+if(ENABLE_AOCL_PROGRESS)
+    add_definitions("-DAOCL_PROGRESS")
+ENDIF(ENABLE_AOCL_PROGRESS)
+
+
 ADD_DEFINITIONS( "-D${CDEFS}" "${f2cflag}")
 
 # --------------------------------------------------

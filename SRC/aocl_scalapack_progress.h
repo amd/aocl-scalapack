@@ -1,0 +1,41 @@
+/* ---------------------------------------------------------------------
+ * *
+ * *  -- AOCL ScaLAPACK progress support routine/s --
+ * *     Copyright (c) 2022 Advanced Micro Devices, Inc.  All rights reserved.
+ * *
+ * *  ---------------------------------------------------------------------
+ * */
+#ifndef _AOCL_SCALAPACK_PROGRESS_
+#define _AOCL_SCALAPACK_PROGRESS_
+
+#include <stddef.h>
+#include <stdio.h>
+/** Declarations **/
+
+#define aocl_scalapack_set_progress_ aocl_scalapack_set_progress
+
+#if defined(ENABLE_ILP64)
+typedef int64_t integer;
+typedef uint64_t uinteger;
+#else
+typedef int integer;
+typedef unsigned long uinteger;
+#endif
+
+typedef integer ( *aocl_scalapack_progress_callback )(
+char *api,
+integer  *lenapi,
+integer  *progress,
+integer  *current_process,
+integer  *total_processes
+);
+
+
+integer aocl_scalapack_progress ( char* api, integer *lenapi, integer* progress, 
+                                     integer* current_process, integer *total_processes );
+
+aocl_scalapack_progress_callback aocl_scalapack_progress_ptr_;
+
+void aocl_scalapack_set_progress( aocl_scalapack_progress_callback func );
+
+#endif // _AOCL_SCALAPACK_PROGRESS_
