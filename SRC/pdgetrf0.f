@@ -1,5 +1,5 @@
 *  -- ScaLAPACK routine --
-*     Copyright (c) 2020-21 Advanced Micro Devices, Inc.  All rights reserved.
+*     Copyright (c) 2020-22 Advanced Micro Devices, Inc.  All rights reserved.
 *     June 10, 2020
 *
 *  =====================================================================
@@ -147,6 +147,11 @@
       CHARACTER          COLBTOP, COLCTOP, ROWBTOP
       INTEGER            I, ICOFF, ICTXT, IINFO, IN, IROFF, J, JB, JN,
      $                   MN, MYCOL, MYROW, NPCOL, NPROW
+*
+#ifdef AOCL_PROGRESS
+      INTEGER TOTAL_MPI_PROCESSES, STEP, LSTAGE, CURRENT_RANK
+      CHARACTER*7 API_NAME
+#endif
 *     ..
 *     .. Local Arrays ..
       INTEGER            IDUM1( 1 ), IDUM2( 1 )
@@ -159,6 +164,8 @@
 *     .. External Functions ..
       INTEGER            ICEIL
       EXTERNAL           ICEIL
+*
+*
 *     ..
 *     .. Intrinsic Functions ..
       INTRINSIC          MIN, MOD
@@ -222,6 +229,14 @@
       JN = MIN( ICEIL( JA, DESCA( NB_ ) )*DESCA( NB_ ), JA+MN-1 )
       JB = JN - JA + 1
 *
+#ifdef AOCL_PROGRESS
+      CURRENT_RANK = MYCOL+MYROW*NPCOL
+      TOTAL_MPI_PROCESSES = NPROW*NPCOL
+      STEP = JB
+      LSTAGE = 7
+      API_NAME = 'PDGETRF'
+#endif
+
 *     Factor diagonal and subdiagonal blocks and test for exact
 *     singularity.
 *
@@ -255,6 +270,10 @@
       DO 10 J = JN+1, JA+MN-1, DESCA( NB_ )
          JB = MIN( MN-J+JA, DESCA( NB_ ) )
          I = IA + J - JA
+#ifdef AOCL_PROGRESS
+         CALL AOCL_SCALAPACK_PROGRESS ( API_NAME, LSTAGE,
+     $                 J, CURRENT_RANK, TOTAL_MPI_PROCESSES )
+#endif
 *
 *        Factor diagonal and subdiagonal blocks and test for exact
 *        singularity.
