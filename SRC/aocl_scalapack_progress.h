@@ -9,6 +9,7 @@
 #define _AOCL_SCALAPACK_PROGRESS_
 
 #include <stddef.h>
+#include <stdint.h>
 #include <stdio.h>
 /** Declarations **/
 
