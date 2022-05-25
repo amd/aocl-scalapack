@@ -1,0 +1,48 @@
+
+AOCL-ScaLAPACK
+===============================================================================
+ScaLAPACK, or Scalable LAPACK, is a library of high performance linear algebra
+routines for distributed memory computers supporting MPI.
+
+AOCL-ScaLAPACK is the optimized version of ScaLAPACK for AMD EPYC family of
+processors.
+
+===============================================================================
+
+1. Install MPI library and set the PATH and LD_LIBRARY_PATH environment
+    variables to point to installed binaries.
+   eg. export PATH=<path to MPI install directory>/bin:$PATH
+   eg. export LD_LIBRARY_PATH=<path to MPI install directory>/lib:$LD_LIBRARY_PATH
+
+2. Download AMD optimized versions of BLIS and libFLAME from following link
+   https://developer.amd.com/amd-aocl/
+
+3. Install latest CMAKE tool.
+
+4. Install AOCL-BLIS and AOCL-libFLAME libraries either using pre-built binaries or build
+   from source.
+   To build AOCL-BLIS and AOCL-libFLAME from source, clone from following github links
+   BLIS: https://github.com/amd/blis
+   libFLAME: https://github.com/amd/libflame
+
+5. Steps to build the AOCL-ScaLAPACK library and the test suite:
+
+   a. Create a new directory. For example, build:
+      $ mkdir build
+      $ cd build
+
+   b. Set PATH and LD_LIBRARY_PATH appropriately to the MPI installation.
+
+   c. To Build the AOCL-ScaLAPACK library and the test suite, Run the below commands:
+       $ cmake .. -DBUILD_SHARED_LIBS=OFF -DBLAS_LIBRARIES="-fopenmp <path to AOCL-BLIS library>/libblis-mt.a"
+         -DLAPACK_LIBRARIES="<path to AOCL-libFLAME library>/libflame.a"
+         -DCMAKE_C_COMPILER=mpicc -DCMAKE_Fortran_COMPILER=mpif90
+         -DUSE_OPTIMIZED_LAPACK_BLAS=OFF [-D DENABLE_ILP64=ON]
+       $ make -j
+
+       This command generates the AOCL-ScaLAPACK library in the 'build/lib' folder and test applications in the 'build/TESTING' folder.
+
+4. To Run the AOCL-ScaLAPACK test suite, Run the below script in the 'build/' folder:
+   cp -f ../scalapack_test.sh  .
+   ./scalapack_test.sh
+   Test logs will be generated in 'ScalaPack_TestResults.txt'.
