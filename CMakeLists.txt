@@ -1,6 +1,6 @@
 ##Copyright (C) 2021, Advanced Micro Devices, Inc. All rights reserved.##
 
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.2)
 project(SCALAPACK C Fortran)
 # Configure the warning and code coverage suppression file
 configure_file( 
@@ -351,7 +351,11 @@ else (UNIX) # Need to separate Fortran and C Code
       endif(BLACS_FOUND)
     endif ()
 endif (UNIX)
-add_subdirectory(TESTING)
+
+option(SCALAPACK_BUILD_TESTS "Build all tests of the ScaLAPACK library" ON)
+if(${SCALAPACK_BUILD_TESTS})
+  add_subdirectory(TESTING)
+endif()
 
 # --------------------------------------------------
 # CPACK Packaging 

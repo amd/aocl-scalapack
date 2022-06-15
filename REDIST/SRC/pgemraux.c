@@ -109,8 +109,7 @@ extern void Cpigemr2d();
 #include <stdlib.h>
 #include <assert.h>
 void *
-mr2d_malloc(n)
-  Int   n;
+mr2d_malloc(Int n)
 {
   void *ptr;
   assert(n > 0);
@@ -122,8 +121,7 @@ mr2d_malloc(n)
   return ptr;
 }
 Int 
-pgcd(a, b)
-  Int   a, b;
+pgcd(Int a, Int b)
 {
   Int   aux;
   if (a < b)
@@ -137,8 +135,7 @@ pgcd(a, b)
   }
 }
 Int 
-ppcm(a, b)
-  Int   a, b;
+ppcm(Int a, Int b)
 {
   Int   pg;
   pg = pgcd(a, b);
@@ -149,8 +146,7 @@ ppcm(a, b)
  * grid of processors with p rows with blocksize nbrow : this procedure can
  * also be used to compute the number of cols by replacing rows by cols */
 Int 
-localsize(myprow, p, nbrow, m)
-  Int   myprow, p, nbrow, m;
+localsize(Int myprow, Int p, Int nbrow, Int m)
 {
   Int   templateheight, blockheight;
   templateheight = p * nbrow;
@@ -178,8 +174,7 @@ localsize(myprow, p, nbrow, m)
 /****************************************************************/
 /* Returns the exact memory block size corresponding to the parameters */
 Int
-memoryblocksize(a)
-  MDESC *a;
+memoryblocksize(MDESC *a)
 {
   Int   myprow, mypcol, p, q;
   /* Compute the (myprow,mypcol) indices of processor mypnum in P0xQ0 We
@@ -192,8 +187,7 @@ memoryblocksize(a)
 	localsize(mypcol, q, a->nbcol, a->n);
 }
 void 
-checkequal(ctxt, a)
-  Int   a, ctxt;
+checkequal(Int ctxt, Int a)
 {
   Int   np, dummy, nbrow, myp, b;
   Cblacs_gridinfo(ctxt, &nbrow, &np, &dummy, &myp);
@@ -211,9 +205,7 @@ checkequal(ctxt, a)
   }
 }
 void 
-paramcheck(a, i, j, m, n, p, q, gcontext)
-  MDESC *a;
-  Int   i, j, m, n, p, q;
+paramcheck(MDESC *a, Int i, Int j, Int m, Int n, Int p, Int q, Int gcontext)
 {
   Int   p2, q2, myprow, mypcol;
 #ifndef NDEBUG
@@ -259,9 +251,7 @@ nbrow=%d,lda=%d,sprow=%d\n",
  * i' with i'< blocksize return the line number on the local process where
  * the new matrix begin, the new process number, and i' */
 Int 
-changeorigin(myp, sp, p, bs, i, decal, newsp)
-  Int   myp, sp, p, bs, i;
-  Int  *decal, *newsp;
+changeorigin(Int myp, Int sp, Int p, Int bs, Int i, Int *decal, Int *newsp)
 {
   Int   tempheight, firstblock, firsttemp;
   /* we begin by changing the parameters so that ia < templatewidth,... */
@@ -278,9 +268,7 @@ changeorigin(myp, sp, p, bs, i, decal, newsp)
 /******************************************************************/
 /* Return the indice in local memory of element of indice a in the matrix */
 Int
-localindice(ig, jg, templateheight, templatewidth, a)
-  Int   templateheight, templatewidth, ig, jg;
-  MDESC *a;
+localindice(Int ig, Int jg, Int templateheight, Int templatewidth, MDESC *a)
 /* Return the indice in local memory (scattered distribution) of the element
  * of indice a in global matrix */
 {
