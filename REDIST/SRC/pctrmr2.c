@@ -113,9 +113,7 @@ extern void Cpctrmr2d();
 /************************************************************************/
 /* Set the memory space with the malloc function */
 void
-setmemory(adpointer, blocksize)
-  complex **adpointer;
-  Int   blocksize;
+setmemory(complex **adpointer, Int blocksize)
 {
   assert(blocksize >= 0);
   if (blocksize == 0) {

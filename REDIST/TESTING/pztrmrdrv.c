@@ -165,9 +165,7 @@ extern void Cpztrmr2d();
 /* initblock: intialize the local part of a matrix with random data (well,
  * not very random) */
 static2 void
-initblock(block, m, n)
-  dcomplex *block;
-  Int   m, n;
+initblock(dcomplex *block, Int m, Int n)
 {
   dcomplex *pdata;
   Int   i;
@@ -225,9 +223,7 @@ va_dcl
   va_end(ap);
 }
 void 
-initforpvm(argc, argv)
-  Int   argc;
-  char *argv[];
+initforpvm(Int argc, char *argv[])
 {
   Int   pnum, nproc;
   Cblacs_pinfo(&pnum, &nproc);

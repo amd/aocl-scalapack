@@ -12,6 +12,7 @@ F_VOID_FUNC blacs_exit_(Int *NotDone)
    Int BI_BuffIsFree(BLACBUFF *, Int);
    BLACBUFF *bp;
    extern BLACBUFF *BI_ReadyB, *BI_ActiveQ, BI_AuxBuff;
+   extern MPI_Status *BI_Stats;
    Int i;
    extern Int BI_MaxNCtxt, BI_Np;
    extern BLACSCONTEXT **BI_MyContxts;

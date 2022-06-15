@@ -15,18 +15,6 @@ void pcrot_( Int *n, complex X[], Int *ix, Int *jx, Int desc_X[], Int *incx, com
 *  Mark Fahey
 *  June 22, 2000
 */
-/*
-*  .. Scalar Arguments ..
-*/
-   Int         * incx, * incy, * ix, * iy, * jx, * jy, * n;
-   float       * c;
-   complex     * s;
-/*
-*  ..
-*  .. Array Arguments ..
-*/
-   Int         desc_X[], desc_Y[];
-   complex     X[], Y[];
 {
 /*
 *  Purpose
