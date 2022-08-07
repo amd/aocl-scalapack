@@ -23,12 +23,18 @@ if (WIN32 AND CMAKE_Fortran_COMPILER_ID MATCHES "Intel")
     #set (CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} /assume:underscore")
 endif()
 
+set(CMAKE_ICC_FLAGS " ")
+
 if (UNIX)
    if ("${CMAKE_Fortran_COMPILER_ID}" STREQUAL "Intel")
       set( CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -fltconsistency -fp_port" )
    endif ()
    if ( "${CMAKE_Fortran_COMPILER}" MATCHES "ifort" )
-  set( CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -fltconsistency -fp_port" )
+      set( CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -fltconsistency -fp_port" )
+   endif ()
+   if (("${CMAKE_C_COMPILER_ID}" STREQUAL "Intel") AND ( "${CMAKE_C_COMPILER}" MATCHES "icc" ) )
+      set( CMAKE_ICC_FLAGS "${CMAKE_ICC_FLAGS} -no-vec ")
+      message(STATUS "Found Intel icc compiler : ${CMAKE_ICC_FLAGS} ")
    endif ()
 endif ()
 
@@ -149,7 +155,7 @@ MESSAGE(STATUS "=========")
 # Compiler Flags
 option(USE_F2C "Use FORTRAN To C compatible interface for certain Complex type functions" OFF)
 
-set(f2cflag "-cpp")
+set(f2cflag "-cpp ")
 
 if(USE_F2C)
   set(f2cflag "-cpp -DF2C " )
@@ -170,7 +176,7 @@ if(ENABLE_AOCL_PROGRESS)
 ENDIF(ENABLE_AOCL_PROGRESS)
 
 
-ADD_DEFINITIONS( "-D${CDEFS}" "${f2cflag}")
+ADD_DEFINITIONS( "-D${CDEFS}" "${CMAKE_ICC_FLAGS}" "${f2cflag}")
 
 # --------------------------------------------------
 # By default static library
@@ -356,7 +362,6 @@ option(SCALAPACK_BUILD_TESTS "Build all tests of the ScaLAPACK library" ON)
 if(${SCALAPACK_BUILD_TESTS})
   add_subdirectory(TESTING)
 endif()
-
 # --------------------------------------------------
 # CPACK Packaging 
 
