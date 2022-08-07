@@ -23,89 +23,18 @@ if (WIN32 AND CMAKE_Fortran_COMPILER_ID MATCHES "Intel")
     #set (CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} /assume:underscore")
 endif()
 
-set(SL_FRAMEWORK_INCLUDE_PATH  "${SCALAPACK_SOURCE_DIR}/FRAMEWORK")
-
-# ------   Build Options List  -----------
-# Fortran to C Name Mangling build option
-set(CDEFS "NoChange" CACHE STRING "Naming strategy needed for a fortran routine to call a C routine")
-set_property(CACHE CDEFS PROPERTY STRINGS "NoChange" "UpCase" "Add_")
-
-# ILP64 build option
-option(ENABLE_ILP64 "Enable ILP64 " OFF)
-
-# aocl progress option
-option(ENABLE_AOCL_PROGRESS "Enable progress feature " OFF)
-
-# DTL option
-option(ENABLE_DTL "Enable DTL feature " OFF)
-
-# Driver check option
-option(ENABLE_DRIVER_CHECK "Enable driver check feature " OFF)
-
-# ASAN testing option
-option(ENABLE_ASAN_TESTS "Enable Address sanitizer tests " OFF)
-
-# Coverage option
-option(ENABLE_COVERAGE "Enable code coverage" OFF)
-
-# Set custom library version number
-set(ENABLE_SET_LIB_VERSION "default_version" CACHE STRING "Set the library version")
-
-# Option: Dynamic allocation of work buffer memory in Test code
-# Helpful to test larger matrix sizes more than 2K
-option (ENABLE_LARGE_MATRIX_TESTING "Dynamic allocation of work buffer memory in test code" OFF)
-
-#Option to enable wrappers, default is set to ON
-option(ENABLE_WRAPPERS "Enable building the f2c wrapper interfaces" ON)
-# ------   Build Options List End   -----------
-
-
-if (WIN32 AND CMAKE_Fortran_COMPILER_ID MATCHES "Intel")
-    set (CMAKE_IFORT_LIBDEPS_DIR "C:/Program Files (x86)/IntelSWTools/compilers_and_libraries/windows/compiler/lib/intel64_win" CACHE STRING "")
-    # set the "FORCE:MULTIPLE" option to handle linker errors due to some
-    # of the common functions of scalapack and lapack in case of static build.
-	if("${CDEFS}" STREQUAL "NoChange")
-	   set (CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} /names:lowercase")
-	elseif("${CDEFS}" STREQUAL "Add_")
-	   set (CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} /names:lowercase")
-	   set (CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} /assume:underscore")
-    endif ()
-    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /FORCE:MULTIPLE")
-endif()
-
 set(CMAKE_ICC_FLAGS " ")
-set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -cpp" )
-
-# set compile flags to enable address sanitizer (ASAN) tests
-if(ENABLE_ASAN_TESTS)
-   set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -fsanitize=address " )
-   set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fsanitize=address  ")
-   message(STATUS " ASAN testing enabled for the scaLAPACK build ")
-endif(ENABLE_ASAN_TESTS)
-
-# Option to enable the scaLAPACK test-suite with "Dynamic work buffer memory allocation".
-if(ENABLE_LARGE_MATRIX_TESTING)
-
-#  Configure option to customize Dynamic work buffer size "-DWORK_BUFFER_SIZE = custom_size Bytes"
-#  as per the machine's memory configuration.
-   if(WORK_BUFFER_SIZE)
-      message(STATUS "scaLAPACK test-suite build with custom dynamic work_buffer_size: ${WORK_BUFFER_SIZE} bytes.")
-      set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS}  -DDYNAMIC_WORK_MEM_ALLOC -DWORK_BUFFER_SIZE=${WORK_BUFFER_SIZE}" )
-   else(WORK_BUFFER_SIZE)
-#  Build with Dynamic work buffer size = 2100000000 bytes by default.
-      message(STATUS "scaLAPACK test-suite build with dynamic work_buffer_size: 2100000000 bytes.")
-      set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS}  -DDYNAMIC_WORK_MEM_ALLOC -DWORK_BUFFER_SIZE=2100000000 " )
-   endif(WORK_BUFFER_SIZE)
-
-endif(ENABLE_LARGE_MATRIX_TESTING)
-
 
 if (UNIX)
    if ("${CMAKE_Fortran_COMPILER_ID}" STREQUAL "Intel")
       set( CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -fltconsistency -fp_port" )
    endif ()
    if ( "${CMAKE_Fortran_COMPILER}" MATCHES "ifort" )
-  set( CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -fltconsistency -fp_port" )
+      set( CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -fltconsistency -fp_port" )
+   endif ()
+   if (("${CMAKE_C_COMPILER_ID}" STREQUAL "Intel") AND ( "${CMAKE_C_COMPILER}" MATCHES "icc" ) )
+      set( CMAKE_ICC_FLAGS "${CMAKE_ICC_FLAGS} -no-vec ")
+      message(STATUS "Found Intel icc compiler : ${CMAKE_ICC_FLAGS} ")
    endif ()
 endif ()
 
@@ -240,7 +169,7 @@ MESSAGE(STATUS "Setting CDEFS = ${CDEFS}")
 # Compiler Flags
 option(USE_F2C "Use FORTRAN To C compatible interface for certain Complex type functions" OFF)
 
-set(f2cflag "-cpp")
+set(f2cflag "-cpp ")
 
 if(USE_F2C)
   set(f2cflag "-cpp -DF2C " )
@@ -261,7 +190,7 @@ if(ENABLE_AOCL_PROGRESS)
 ENDIF(ENABLE_AOCL_PROGRESS)
 
 
-ADD_DEFINITIONS( "-D${CDEFS}" "${f2cflag}")
+ADD_DEFINITIONS( "-D${CDEFS}" "${CMAKE_ICC_FLAGS}" "${f2cflag}")
 
 # --------------------------------------------------
 # By default static library
@@ -444,156 +373,6 @@ else (UNIX) # Need to separate Fortran and C Code
 endif (UNIX)
 
 option(SCALAPACK_BUILD_TESTS "Build all tests of the ScaLAPACK library" ON)
-if(${SCALAPACK_BUILD_TESTS})
-  add_subdirectory(TESTING)
-endif()
-
-if(WIN32 AND BUILD_SHARED_LIBS)
-  set (CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
-endif ()
-
-# Option to choose whether to compile the source code and the test framework. By default both are ON.
-option(SCALAPACK_BUILD_SOURCE "Build all source of the ScaLAPACK library" ON)
-option(SCALAPACK_BUILD_TESTS "Build all tests of the ScaLAPACK library" ON)
-
-if(SCALAPACK_BUILD_SOURCE STREQUAL "OFF" AND SCALAPACK_BUILD_TESTS STREQUAL "ON")
-  if(NOT SCALAPACK_LIBRARY_PATH)
-    message (FATAL_ERROR "Please provide SCALAPACK_LIBRARY_PATH")
-  endif()
-endif()
-
-# If user want to build ScaLAPACK source code, unset precompiled SCALAPACK_LIBRARY_PATH variable
-if(SCALAPACK_BUILD_SOURCE STREQUAL "ON")
-  if(SCALAPACK_LIBRARY_PATH)
-    UNSET(SCALAPACK_LIBRARY_PATH CACHE)
-  endif()
-endif()
-
-if (UNIX)
-  if(CUSTOM_BLACS_FOUND)
-    add_library(scalapack ${dtl} ${framework} ${framework-C} ${tools} ${tools-C} ${extra_lapack} ${pblas} ${pblas-F} ${ptzblas} ${ptools} ${pbblas} ${redist} ${src} ${src-C})
-    custom_macros_for_each_scalapack_source (scalapack)
-    target_link_libraries( scalapack ${BLACS_LIBRARY} ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES})
-    scalapack_install_library(scalapack)
-  else(CUSTOM_BLACS_FOUND)
-    if(SCALAPACK_BUILD_SOURCE)
-      add_library(scalapack ${dtl} ${framework} ${framework-C} ${blacs} ${tools} ${tools-C} ${extra_lapack} ${pblas} ${pblas-F} ${ptzblas} ${ptools} ${pbblas} ${redist} ${src} ${src-C})
-      custom_macros_for_each_scalapack_source (scalapack)
-      target_link_libraries( scalapack ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES})
-      scalapack_install_library(scalapack)
-    else()
-      if(BUILD_SHARED_LIBS)
-        add_library(scalapack SHARED IMPORTED)
-        set_target_properties(scalapack PROPERTIES
-        IMPORTED_LOCATION "${SCALAPACK_LIBRARY_PATH}/libscalapack.so"
-        )
-      else()
-        add_library(scalapack STATIC IMPORTED)
-        set_target_properties(scalapack PROPERTIES
-        IMPORTED_LOCATION "${SCALAPACK_LIBRARY_PATH}/libscalapack.a"
-        )
-      endif()
-      custom_macros_for_each_scalapack_source (scalapack)
-      target_link_libraries( scalapack INTERFACE ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES})
-    endif()
-  endif(CUSTOM_BLACS_FOUND)
-  
-  #Add C-specific compile options to remove absolute path 
-  target_compile_options(scalapack PRIVATE  
-    $<$<COMPILE_LANGUAGE:C>:-fPIC>  
-    $<$<COMPILE_LANGUAGE:C>:-fmacro-prefix-map=${SCALAPACK_SOURCE_DIR}/=>  
-  ) 
-
-  if(ENABLE_COVERAGE)
-    target_compile_options(scalapack PUBLIC -fprofile-arcs  -ftest-coverage)
-    target_link_options(scalapack PUBLIC -fprofile-arcs  -ftest-coverage)
-  endif(ENABLE_COVERAGE)
-
-else (UNIX) # Need to separate Fortran and C Code
-    if (CMAKE_C_COMPILER_ID MATCHES MSVC)
-        # create Fortran objects and add to scalapack library first
-      if(CUSTOM_BLACS_FOUND)
-        add_library(scalapack-F OBJECT  ${pblas-F} ${pbblas} ${ptzblas} ${tools} ${framework} ${src} ${extra_lapack} )
-        add_library(scalapack $<TARGET_OBJECTS:scalapack-F> ${tools-C} ${dtl} ${framework-C} ${pblas} ${ptools} ${redist} ${src-C})
-        target_link_libraries( scalapack ${BLACS_LIBRARY} ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES} ${MPI_LIBRARY})
-        target_link_directories( scalapack PUBLIC ${CMAKE_IFORT_LIBDEPS_DIR})
-        scalapack_install_library(scalapack)
-      else(CUSTOM_BLACS_FOUND)
-        if(SCALAPACK_BUILD_SOURCE)
-          add_library(scalapack-F OBJECT  ${pblas-F} ${pbblas} ${ptzblas} ${tools} ${framework} ${src} ${extra_lapack} )
-          add_library(scalapack $<TARGET_OBJECTS:scalapack-F> ${blacs} ${tools-C}  ${dtl} ${framework-C} ${pblas} ${ptools} ${redist} ${src-C})
-          target_link_libraries( scalapack ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES} ${MPI_LIBRARY})
-          target_link_directories( scalapack PUBLIC ${CMAKE_IFORT_LIBDEPS_DIR})
-          scalapack_install_library(scalapack)
-        else()
-          if(BUILD_SHARED_LIBS)
-            add_library(scalapack SHARED IMPORTED)
-            set_target_properties(scalapack PROPERTIES
-            IMPORTED_LOCATION "${SCALAPACK_LIBRARY_PATH}/scalapack.dll"
-            IMPORTED_IMPLIB "${SCALAPACK_LIBRARY_PATH}/scalapack.lib"
-            )
-            file(COPY ${SCALAPACK_LIBRARY_PATH}/scalapack.dll
-            DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/Testing/Release)
-          else()
-            add_library(scalapack STATIC IMPORTED)
-            set_target_properties(scalapack PROPERTIES
-            IMPORTED_LOCATION "${SCALAPACK_LIBRARY_PATH}/scalapack.lib"
-            )
-          endif()
-          target_link_libraries( scalapack INTERFACE ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES} ${MPI_LIBRARY})
-        endif()
-      endif(CUSTOM_BLACS_FOUND)
-    else (CMAKE_C_COMPILER_ID MATCHES Clang)
-        # create C objects and add to scalapack library first
-      if(CUSTOM_BLACS_FOUND)
-        add_library(scalapack-C OBJECT ${tools-C} ${dtl} ${framework-C} ${pblas} ${ptools} ${redist} ${src-C})
-        target_link_libraries( scalapack-C ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES} ${MPI_LIBRARY})
-        target_link_directories( scalapack-C PUBLIC ${CMAKE_IFORT_LIBDEPS_DIR})
-        add_library(scalapack $<TARGET_OBJECTS:scalapack-C> ${pblas-F} ${pbblas} ${ptzblas} ${tools} ${dtl} ${framework} ${src} ${extra_lapack} )
-        target_link_libraries( scalapack ${BLACS_LIBRARY} ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES} ${MPI_LIBRARY})
-        target_link_directories( scalapack PUBLIC ${CMAKE_IFORT_LIBDEPS_DIR})
-        scalapack_install_library(scalapack)
-      else(CUSTOM_BLACS_FOUND)
-        if(SCALAPACK_BUILD_SOURCE)
-          add_library(scalapack-C OBJECT ${blacs} ${tools-C} ${dtl} ${framework-C} ${pblas} ${ptools} ${redist} ${src-C})
-          target_link_libraries( scalapack-C ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES} ${MPI_LIBRARY})
-          target_link_directories( scalapack-C PUBLIC ${CMAKE_IFORT_LIBDEPS_DIR})
-          add_library(scalapack $<TARGET_OBJECTS:scalapack-C> ${pblas-F} ${pbblas} ${ptzblas} ${tools} ${framework} ${src} ${extra_lapack} )
-          target_link_libraries( scalapack ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES} ${MPI_LIBRARY})
-          target_link_directories( scalapack PUBLIC ${CMAKE_IFORT_LIBDEPS_DIR})
-          scalapack_install_library(scalapack)
-        else()
-          if(BUILD_SHARED_LIBS)
-            add_library(scalapack SHARED IMPORTED)
-            set_target_properties(scalapack PROPERTIES
-            IMPORTED_LOCATION "${SCALAPACK_LIBRARY_PATH}/scalapack.dll"
-            IMPORTED_IMPLIB "${SCALAPACK_LIBRARY_PATH}/scalapack.lib"
-            )
-            file(COPY ${SCALAPACK_LIBRARY_PATH}/scalapack.dll
-            DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/Testing/Release)
-          else()
-            add_library(scalapack STATIC IMPORTED)
-            set_target_properties(scalapack PROPERTIES
-            IMPORTED_LOCATION "${SCALAPACK_LIBRARY_PATH}/scalapack.lib"
-            )
-          endif()
-          target_link_libraries( scalapack INTERFACE ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES} ${MPI_LIBRARY})
-        endif()
-      endif(CUSTOM_BLACS_FOUND)
-    endif ()
-endif (UNIX)
-
-if(ENABLE_WRAPPERS AND TARGET scalapack)
-  # Skip if scalapack is an imported prebuilt library
-  get_target_property(_is_imported scalapack IMPORTED)
-  if(NOT _is_imported)
-    message(STATUS "ENABLE_WRAPPERS = ON (adding f2c wrappers)")
-    target_compile_definitions(scalapack PUBLIC AOCL_ENABLE_WRAPPERS=1)
-  else()
-    message(WARNING "ENABLE_WRAPPERS requested, but scalapack is IMPORTED. Ignoring wrappers.")
-  endif()
-endif()
-
 if(${SCALAPACK_BUILD_TESTS})
   add_subdirectory(TESTING)
 endif()
