@@ -19,8 +19,6 @@ option(ENABLE_ILP64 "Enable ILP64 " OFF)
 
 if (WIN32 AND CMAKE_Fortran_COMPILER_ID MATCHES "Intel")
     set (CMAKE_IFORT_LIBDEPS_DIR "C:/Program Files (x86)/IntelSWTools/compilers_and_libraries/windows/compiler/lib/intel64_win" CACHE STRING "")
-    set (CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} /names:lowercase")
-    #set (CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} /assume:underscore")
 endif()
 
 set(CMAKE_ICC_FLAGS " ")
@@ -160,6 +158,10 @@ set(f2cflag "-cpp ")
 if(USE_F2C)
   set(f2cflag "-cpp -DF2C " )
 ENDIF(USE_F2C)
+
+if(ENABLE_DTL)
+   add_definitions("-DENABLE_DTL")
+ENDIF(ENABLE_DTL)
 
 if(ENABLE_ILP64)
   if(UNIX)
