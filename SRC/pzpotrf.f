@@ -1,13 +1,6 @@
-*
-*     Modifications Copyright (c) 2023 Advanced Micro Devices, Inc.  All rights reserved.
-*
 *  -- ScaLAPACK routine --
+*     Copyright (c) 2020-22 Advanced Micro Devices, Inc.  All rights reserved.
 *     June 20, 2022
-*
-#include "SL_Context_fortran_include.h"
-*
-*
-#include "SL_Context_fortran_include.h"
 *
       SUBROUTINE PZPOTRF( UPLO, N, A, IA, JA, DESCA, INFO )
 *
@@ -158,20 +151,11 @@
       PARAMETER          ( ONE = 1.0D+0 )
       COMPLEX*16         CONE
       PARAMETER          ( CONE = ( 1.0D+0, 0.0D+0 ) )
-*     ..
+*
 #ifdef AOCL_PROGRESS
-*     .. AOCL Progress variables ..
-      INTEGER TOTAL_MPI_PROCESSES, CURRENT_RANK, PROGRESS
-*
-*     .. Declaring 'API NAME' and its length as const objects
-*     .. API_NAME string terminated with 'NULL' character.
-*
-#include "SL_Context_fortran_include.h"
-*
-      CHARACTER*8, PARAMETER :: API_NAME = FUNCTION_NAME // C_NULL_CHAR
-      INTEGER, PARAMETER :: LEN_API_NAME = 8
+      INTEGER TOTAL_MPI_PROCESSES, LSTAGE, CURRENT_RANK
+      CHARACTER*7 API_NAME
 #endif
-*     ..
 *     .. Local Scalars ..
       LOGICAL            UPPER
       CHARACTER          COLBTOP, ROWBTOP
@@ -293,6 +277,13 @@
       END IF
 #endif
 *
+#ifdef AOCL_PROGRESS
+      LSTAGE = 7
+      API_NAME = 'PDPOTRF'
+      CURRENT_RANK = MYCOL+MYROW*NPCOL
+      TOTAL_MPI_PROCESSES = NPROW*NPCOL
+#endif
+*
       CALL PB_TOPGET( ICTXT, 'Broadcast', 'Rowwise', ROWBTOP )
       CALL PB_TOPGET( ICTXT, 'Broadcast', 'Columnwise', COLBTOP )
 *
@@ -338,17 +329,8 @@
             I = IA + J - JA
 *
 #ifdef AOCL_PROGRESS
-*        Update the progress and callback if progress is enabled
-*
-         IF( SCALAPACK_CONTEXT%IS_PROGRESS_ENABLED.EQ.1 ) THEN
-*
-*           Capture the Loop count 'J' to a separate 'PROGRESS'
-*           variable to avoid the corruption at application side.
-*
-            PROGRESS = J
-            CALL AOCL_SCALAPACK_PROGRESS ( API_NAME, LEN_API_NAME,
-     $                PROGRESS, CURRENT_RANK, TOTAL_MPI_PROCESSES )
-         END IF
+            CALL AOCL_SCALAPACK_PROGRESS ( API_NAME, LSTAGE,
+     $                 J, CURRENT_RANK, TOTAL_MPI_PROCESSES )
 #endif
 *
 *           Perform unblocked Cholesky factorization on JB block
@@ -417,17 +399,8 @@
             I = IA + J - JA
 *
 #ifdef AOCL_PROGRESS
-*        Update the progress and callback if progress is enabled
-*
-         IF( SCALAPACK_CONTEXT%IS_PROGRESS_ENABLED.EQ.1 ) THEN
-*
-*           Capture the Loop count 'J' to a separate 'PROGRESS'
-*           variable to avoid the corruption at application side.
-*
-            PROGRESS = J
-            CALL AOCL_SCALAPACK_PROGRESS ( API_NAME, LEN_API_NAME,
-     $                PROGRESS, CURRENT_RANK, TOTAL_MPI_PROCESSES )
-         END IF
+            CALL AOCL_SCALAPACK_PROGRESS ( API_NAME, LSTAGE,
+     $                 J, CURRENT_RANK, TOTAL_MPI_PROCESSES )
 #endif
 *
 *           Perform unblocked Cholesky factorization on JB block

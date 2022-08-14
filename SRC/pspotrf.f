@@ -1,13 +1,6 @@
-*
-*     Copyright (c) 2023 Advanced Micro Devices, Inc.  All rights reserved.
-*
 *  -- ScaLAPACK routine --
+*     Copyright (c) 2020-22 Advanced Micro Devices, Inc.  All rights reserved.
 *     June 20, 2022
-*
-#include "SL_Context_fortran_include.h"
-*
-*
-#include "SL_Context_fortran_include.h"
 *
       SUBROUTINE PSPOTRF( UPLO, N, A, IA, JA, DESCA, INFO )
 *
@@ -162,6 +155,11 @@
       CHARACTER          COLBTOP, ROWBTOP
       INTEGER            I, ICOFF, ICTXT, IROFF, J, JB, JN, MYCOL,
      $                   MYROW, NPCOL, NPROW
+*
+#ifdef AOCL_PROGRESS
+      INTEGER TOTAL_MPI_PROCESSES, LSTAGE, CURRENT_RANK
+      CHARACTER*7 API_NAME
+#endif
 *     ..
 #ifdef AOCL_PROGRESS
 *     .. AOCL Progress variables ..
@@ -288,6 +286,13 @@
       END IF
 #endif
 *
+#ifdef AOCL_PROGRESS
+      LSTAGE = 7
+      API_NAME = 'PSPOTRF'
+      CURRENT_RANK = MYCOL+MYROW*NPCOL
+      TOTAL_MPI_PROCESSES = NPROW*NPCOL
+#endif
+*
       CALL PB_TOPGET( ICTXT, 'Broadcast', 'Rowwise', ROWBTOP )
       CALL PB_TOPGET( ICTXT, 'Broadcast', 'Columnwise', COLBTOP )
 *
@@ -331,6 +336,10 @@
          DO 10 J = JN+1, JA+N-1, DESCA( NB_ )
             JB = MIN( N-J+JA, DESCA( NB_ ) )
             I = IA + J - JA
+#ifdef AOCL_PROGRESS
+            CALL AOCL_SCALAPACK_PROGRESS ( API_NAME, LSTAGE,
+     $                 J, CURRENT_RANK, TOTAL_MPI_PROCESSES )
+#endif
 *
 #ifdef AOCL_PROGRESS
 *        Update the progress and callback if progress is enabled
@@ -410,6 +419,10 @@
          DO 20 J = JN+1, JA+N-1, DESCA( NB_ )
             JB = MIN( N-J+JA, DESCA( NB_ ) )
             I = IA + J - JA
+#ifdef AOCL_PROGRESS
+            CALL AOCL_SCALAPACK_PROGRESS ( API_NAME, LSTAGE,
+     $                 J, CURRENT_RANK, TOTAL_MPI_PROCESSES )
+#endif
 *
 #ifdef AOCL_PROGRESS
 *        Update the progress and callback if progress is enabled

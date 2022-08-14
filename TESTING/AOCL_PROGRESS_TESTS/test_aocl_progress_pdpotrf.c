@@ -1,25 +1,11 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <sys/time.h>
 #include <math.h>
 #include <assert.h>
-#ifdef _WIN32
-#include <time.h>
-#else
-#include <sys/times.h>
-#endif
 #include "mpi.h"
 
-/** Typedefs  **/
-typedef Int ( *aocl_scalapack_progress_callback )(
-const char * const api,
-const Int  *lenapi,
-const Int  *progress,
-const Int  *current_process,
-const Int  *total_processes
-);
-
-/** Function prototype declarations  **/
 void blacs_get_(Int*, Int*, Int*);
 void blacs_pinfo_(Int*, Int*);
 void blacs_gridinit_(Int*, char*, Int*, Int*);
@@ -27,21 +13,20 @@ void blacs_gridinfo_(Int*, Int*, Int*, Int*, Int*);
 void descinit_(Int*, Int*, Int*, Int*, Int*, Int*, Int*, Int*, Int*, Int*);
 void pdpotrf_(char*, Int*, double*, Int*, Int*, Int*, Int*);
 void blacs_gridexit_(Int*);
-void aocl_scalapack_set_progress(aocl_scalapack_progress_callback AOCL_progress_ptr);
-Int AOCL_progress(const char* const api, const Int *lenapi, const Int *progress, const Int *mpi_rank, const Int *total_mpi_processes);
 Int numroc_(Int*, Int*, Int*, Int*, Int*);
-/** Prototype declaration end  **/
 
-Int AOCL_progress(const char* const api, const Int *lenapi, const Int *progress, const Int *mpi_rank, const Int *total_mpi_processes)
+Int AOCL_progress(char* api, Int *lenapi, Int *progress, Int *mpi_rank, Int *total_mpi_processes);
+
+Int AOCL_progress(char* api, Int *lenapi, Int *progress, Int *mpi_rank, Int *total_mpi_processes)
 {
-    char api_name[20];
-    memcpy(api_name, api, *lenapi);
+	char api_name[20];
+	memcpy(api_name, api, *lenapi);
     printf( "In AOCL Progress MPI Rank: %i    API: %s   progress: %i   MPI processes: %i\n", *mpi_rank, api_name, *progress,*total_mpi_processes );
     return 0;
 }
 
 
-int main(int argc, char **argv) {
+Int main(Int argc, char **argv) {
     Int izero=0;
     Int ione=1;
     Int myrank_mpi, nprocs_mpi;
@@ -94,13 +79,13 @@ int main(int argc, char **argv) {
     double *A;
     A = (double *)calloc(mpA*nqA,sizeof(double)) ;
     if (A==NULL){ printf("Error of memory allocation A on proc %dx%d\n",myrow,mycol); exit(0); }
-
-    Int k = 0, i, j;
-    for (j = 0; j < nqA; j++) { // local col
+	
+    Int k = 0;
+    for (Int j = 0; j < nqA; j++) { // local col
         Int l_j = j / nb; // which block
         Int x_j = j % nb; // where within that block
         Int J   = (l_j * npcol + mycol) * nb + x_j; // global col
-        for (i = 0; i < mpA; i++) { // local row
+        for (Int i = 0; i < mpA; i++) { // local row
             Int l_i = i / nb; // which block
             Int x_i = i % nb; // where within that block
             Int I   = (l_i * nprow + myrow) * nb + x_i; // global row
@@ -122,16 +107,16 @@ int main(int argc, char **argv) {
     Int lddA = mpA > 1 ? mpA : 1;
     descinit_( descA,  &n, &n, &nb, &nb, &izero, &izero, &ictxt, &lddA, &info);
     if(info != 0) {
-        printf("Error in descinit, info = %i\n", info);
+        printf("Error in descinit, info = %d\n", info);
     }
 
-    // Run pdpotrf and measure time
+    // Run pdpotrf and time
     double MPIt1 = MPI_Wtime();
     printf("[%dx%d] Starting pdpotrf\n", myrow, mycol);
     aocl_scalapack_set_progress(&AOCL_progress);
     pdpotrf_(&uplo, &n, A, &ione, &ione, descA, &info);
     if (info != 0) {
-        printf("Error in pdpotrf, info = %i\n", info);
+        printf("Error in pdpotrf, info = %d\n", info);
     }
 
     double MPIt2 = MPI_Wtime();

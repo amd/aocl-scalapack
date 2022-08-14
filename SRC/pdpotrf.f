@@ -1,9 +1,6 @@
-*
-*     Copyright (c) 2022-23 Advanced Micro Devices, Inc.  All rights reserved.
-*
 *  -- ScaLAPACK routine --
-*
-#include "SL_Context_fortran_include.h"
+*     Copyright (c) 2020-22 Advanced Micro Devices, Inc.  All rights reserved.
+*     June 20, 2022
 *
       SUBROUTINE PDPOTRF( UPLO, N, A, IA, JA, DESCA, INFO )
 *
@@ -157,17 +154,10 @@
       INTEGER            I, ICOFF, ICTXT, IROFF, J, JB, JN, MYCOL,
      $                   MYROW, NPCOL, NPROW
 *
-*     ..
 #ifdef AOCL_PROGRESS
-*     .. AOCL Progress variables ..
-      INTEGER TOTAL_MPI_PROCESSES, CURRENT_RANK, PROGRESS
-*
-*     .. Declaring 'API NAME' and its length as const objects
-*     .. API_NAME string terminated with 'NULL' character.
-      CHARACTER*8, PARAMETER :: API_NAME = FUNCTION_NAME // C_NULL_CHAR
-      INTEGER, PARAMETER :: LEN_API_NAME = 8
+      INTEGER TOTAL_MPI_PROCESSES, LSTAGE, CURRENT_RANK
+      CHARACTER*7 API_NAME
 #endif
-*     ..
 *     ..
 *     .. Local Arrays ..
       INTEGER            IDUM1( 1 ), IDUM2( 1 )
@@ -274,6 +264,13 @@
       END IF
 #endif
 *
+#ifdef AOCL_PROGRESS
+         LSTAGE = 7
+         API_NAME = 'PDPOTRF'
+         CURRENT_RANK = MYCOL+MYROW*NPCOL
+         TOTAL_MPI_PROCESSES = NPROW*NPCOL
+#endif
+*
       CALL PB_TOPGET( ICTXT, 'Broadcast', 'Rowwise', ROWBTOP )
       CALL PB_TOPGET( ICTXT, 'Broadcast', 'Columnwise', COLBTOP )
 *
@@ -317,6 +314,10 @@
          DO 10 J = JN+1, JA+N-1, DESCA( NB_ )
             JB = MIN( N-J+JA, DESCA( NB_ ) )
             I = IA + J - JA
+#ifdef AOCL_PROGRESS
+            CALL AOCL_SCALAPACK_PROGRESS ( API_NAME, LSTAGE,
+     $                 J, CURRENT_RANK, TOTAL_MPI_PROCESSES )
+#endif
 *
 #ifdef AOCL_PROGRESS
 *        Update the progress and callback if progress is enabled
@@ -396,6 +397,10 @@
          DO 20 J = JN+1, JA+N-1, DESCA( NB_ )
             JB = MIN( N-J+JA, DESCA( NB_ ) )
             I = IA + J - JA
+#ifdef AOCL_PROGRESS
+            CALL AOCL_SCALAPACK_PROGRESS ( API_NAME, LSTAGE,
+     $                 J, CURRENT_RANK, TOTAL_MPI_PROCESSES )
+#endif
 *
 #ifdef AOCL_PROGRESS
 *        Update the progress and callback if progress is enabled
