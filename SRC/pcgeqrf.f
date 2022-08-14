@@ -1,3 +1,7 @@
+*  -- ScaLAPACK routine --
+*     Copyright (c) 2020-22 Advanced Micro Devices, Inc.  All rights reserved.
+*     June 20, 2022
+*
       SUBROUTINE PCGEQRF( M, N, A, IA, JA, DESCA, TAU, WORK, LWORK,
      $                    INFO )
 *
@@ -166,6 +170,11 @@
       PARAMETER          ( BLOCK_CYCLIC_2D = 1, DLEN_ = 9, DTYPE_ = 1,
      $                     CTXT_ = 2, M_ = 3, N_ = 4, MB_ = 5, NB_ = 6,
      $                     RSRC_ = 7, CSRC_ = 8, LLD_ = 9 )
+*
+#ifdef AOCL_PROGRESS
+      INTEGER TOTAL_MPI_PROCESSES, LSTAGE, CURRENT_RANK
+      CHARACTER*7 API_NAME
+#endif
 *     ..
 *     .. Local Scalars ..
       LOGICAL            LQUERY
@@ -252,6 +261,14 @@
       JN = MIN( ICEIL( JA, DESCA( NB_ ) ) * DESCA( NB_ ), JA+K-1 )
       JB = JN - JA + 1
 *
+#ifdef AOCL_PROGRESS
+         CURRENT_RANK = MYCOL+MYROW*NPCOL
+         TOTAL_MPI_PROCESSES = NPROW*NPCOL
+         LSTAGE = 7
+         API_NAME = 'PCGEQRF'
+#endif
+*
+*
 *     Compute the QR factorization of the first block A(ia:ia+m-1,ja:jn)
 *
       CALL PCGEQR2( M, JB, A, IA, JA, DESCA, TAU, WORK, LWORK, IINFO )
@@ -276,6 +293,12 @@
       DO 10 J = JN+1, JA+K-1, DESCA( NB_ )
          JB = MIN( K-J+JA, DESCA( NB_ ) )
          I = IA + J - JA
+*
+#ifdef AOCL_PROGRESS
+            CALL AOCL_SCALAPACK_PROGRESS ( API_NAME, LSTAGE,
+     $                 J, CURRENT_RANK, TOTAL_MPI_PROCESSES )
+#endif
+*
 *
 *        Compute the QR factorization of the current block
 *        A(i:ia+m-1,j:j+jb-1)

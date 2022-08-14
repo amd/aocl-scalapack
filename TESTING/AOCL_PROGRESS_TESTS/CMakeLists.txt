@@ -1,0 +1,38 @@
+##Copyright (C) 2022, Advanced Micro Devices, Inc. All rights reserved.##
+
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${SCALAPACK_BINARY_DIR}/TESTING/AOCL_PROGRESS_TESTS)
+
+if (WIN32 AND CMAKE_C_COMPILER_ID MATCHES Clang)
+    add_definitions(-D__STDC__)
+endif ()
+
+add_executable(xap_pdpotrf  test_aocl_progress_pdpotrf.c )
+add_executable(xap_pspotrf  test_aocl_progress_pspotrf.c )
+add_executable(xap_pcpotrf  test_aocl_progress_pcpotrf.c )
+add_executable(xap_pzpotrf  test_aocl_progress_pzpotrf.c )
+add_executable(xap_pcgetrf  test_aocl_progress_pcgetrf.c )
+add_executable(xap_pdgetrf  test_aocl_progress_pdgetrf.c )
+add_executable(xap_psgetrf  test_aocl_progress_psgetrf.c )
+add_executable(xap_pzgetrf  test_aocl_progress_pzgetrf.c )
+add_executable(xap_pdgeqrf  test_aocl_progress_pdgeqrf.c )
+add_executable(xap_psgeqrf  test_aocl_progress_psgeqrf.c )
+add_executable(xap_pcgeqrf  test_aocl_progress_pcgeqrf.c )
+add_executable(xap_pzgeqrf  test_aocl_progress_pzgeqrf.c )
+
+
+target_link_libraries(xap_pdpotrf  scalapack ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES})
+target_link_libraries(xap_pspotrf  scalapack ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES})
+target_link_libraries(xap_pcpotrf  scalapack ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES})
+target_link_libraries(xap_pzpotrf  scalapack ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES})
+target_link_libraries(xap_pcgetrf  scalapack ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES})
+target_link_libraries(xap_pdgetrf  scalapack ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES})
+target_link_libraries(xap_psgetrf  scalapack ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES})
+target_link_libraries(xap_pzgetrf  scalapack ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES})
+target_link_libraries(xap_pdgeqrf  scalapack ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES})
+target_link_libraries(xap_psgeqrf  scalapack ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES})
+target_link_libraries(xap_pcgeqrf  scalapack ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES})
+target_link_libraries(xap_pzgeqrf  scalapack ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES})
+
+if ("${CMAKE_Fortran_COMPILER_ID}" STREQUAL "GNU" AND CMAKE_Fortran_COMPILER_VERSION VERSION_GREATER_EQUAL 10)
+    set( CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -std=legacy" )  # local to this directory
+endif()

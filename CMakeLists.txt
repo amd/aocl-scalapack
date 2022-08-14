@@ -170,7 +170,7 @@ if(ENABLE_ILP64)
    add_definitions("-DInt=__int64" "-DENABLE_ILP64" "-DUInt=unsigned __int64" "-i8")
   endif()
 else(ENABLE_ILP64)
-   add_definitions("-DUInt=unsigned int ")
+   add_definitions("-DUInt=unsigned int " "-DInt=int")
 ENDIF(ENABLE_ILP64)
 
 if(ENABLE_AOCL_PROGRESS)

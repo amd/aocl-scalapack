@@ -1,3 +1,7 @@
+*  -- ScaLAPACK routine --
+*     Copyright (c) 2020-22 Advanced Micro Devices, Inc.  All rights reserved.
+*     June 20, 2022
+*
       SUBROUTINE PSPOTRF( UPLO, N, A, IA, JA, DESCA, INFO )
 *
 *  -- ScaLAPACK routine (version 1.7) --
@@ -148,6 +152,11 @@
       CHARACTER          COLBTOP, ROWBTOP
       INTEGER            I, ICOFF, ICTXT, IROFF, J, JB, JN, MYCOL,
      $                   MYROW, NPCOL, NPROW
+*
+#ifdef AOCL_PROGRESS
+      INTEGER TOTAL_MPI_PROCESSES, LSTAGE, CURRENT_RANK
+      CHARACTER*7 API_NAME
+#endif
 *     ..
 *     .. Local Arrays ..
       INTEGER            IDUM1( 1 ), IDUM2( 1 )
@@ -213,6 +222,13 @@
       IF( N.EQ.0 )
      $   RETURN
 *
+#ifdef AOCL_PROGRESS
+      LSTAGE = 7
+      API_NAME = 'PSPOTRF'
+      CURRENT_RANK = MYCOL+MYROW*NPCOL
+      TOTAL_MPI_PROCESSES = NPROW*NPCOL
+#endif
+*
       CALL PB_TOPGET( ICTXT, 'Broadcast', 'Rowwise', ROWBTOP )
       CALL PB_TOPGET( ICTXT, 'Broadcast', 'Columnwise', COLBTOP )
 *
@@ -256,6 +272,10 @@
          DO 10 J = JN+1, JA+N-1, DESCA( NB_ )
             JB = MIN( N-J+JA, DESCA( NB_ ) )
             I = IA + J - JA
+#ifdef AOCL_PROGRESS
+            CALL AOCL_SCALAPACK_PROGRESS ( API_NAME, LSTAGE,
+     $                 J, CURRENT_RANK, TOTAL_MPI_PROCESSES )
+#endif
 *
 *           Perform unblocked Cholesky factorization on JB block
 *
@@ -321,6 +341,10 @@
          DO 20 J = JN+1, JA+N-1, DESCA( NB_ )
             JB = MIN( N-J+JA, DESCA( NB_ ) )
             I = IA + J - JA
+#ifdef AOCL_PROGRESS
+            CALL AOCL_SCALAPACK_PROGRESS ( API_NAME, LSTAGE,
+     $                 J, CURRENT_RANK, TOTAL_MPI_PROCESSES )
+#endif
 *
 *           Perform unblocked Cholesky factorization on JB block
 *

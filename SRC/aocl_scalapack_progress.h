@@ -13,8 +13,6 @@
 #include <stdio.h>
 /** Declarations **/
 
-#define aocl_scalapack_set_progress_ aocl_scalapack_set_progress
-
 #if defined(ENABLE_ILP64)
 typedef int64_t integer;
 typedef uint64_t uinteger;
@@ -38,5 +36,6 @@ integer aocl_scalapack_progress ( char* api, integer *lenapi, integer* progress,
 aocl_scalapack_progress_callback aocl_scalapack_progress_ptr_;
 
 void aocl_scalapack_set_progress( aocl_scalapack_progress_callback func );
+void aocl_scalapack_set_progress_( aocl_scalapack_progress_callback func );
 
 #endif // _AOCL_SCALAPACK_PROGRESS_

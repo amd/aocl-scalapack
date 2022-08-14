@@ -63,7 +63,8 @@
 #define pslaiect_           PSLAIECT
 
 #define get_aocl_scalapack_version_       GET_AOCL_SCALAPACK_VERSION
-#define aocl_scalapack_progress_           AOCL_SCALAPACK_PROGRESS
+#define aocl_scalapack_progress_          AOCL_SCALAPACK_PROGRESS
+#define aocl_scalapack_progress_          AOCL_SCALAPACK_PROGRESS
 #endif
 
 #if (F77_CALL_C == NOCHANGE)
@@ -86,4 +87,5 @@
 
 #define get_aocl_scalapack_version_      get_aocl_scalapack_version
 #define aocl_scalapack_progress_         aocl_scalapack_progress
+#define aocl_scalapack_progress_          aocl_scalapack_progress
 #endif
