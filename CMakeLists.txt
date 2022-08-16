@@ -15,9 +15,16 @@ endif ()
 
 # Add the CMake directory for custon CMake modules
 set(CMAKE_MODULE_PATH "${SCALAPACK_SOURCE_DIR}/CMAKE" ${CMAKE_MODULE_PATH})
+
+#Build Options
+
+# ILP64 build option
 option(ENABLE_ILP64 "Enable ILP64 " OFF)
 option(ENABLE_AOCL_PROGRESS "Enable ILP64 " OFF)
 option(ENABLE_DTL "Enable ILP64 " OFF)
+
+# Option: Include build number in the version string.
+option (ENABLE_SET_LIB_VERSION "Set library version" OFF)
 
 if (WIN32 AND CMAKE_Fortran_COMPILER_ID MATCHES "Intel")
     set (CMAKE_IFORT_LIBDEPS_DIR "C:/Program Files (x86)/IntelSWTools/compilers_and_libraries/windows/compiler/lib/intel64_win" CACHE STRING "")
@@ -188,7 +195,13 @@ ENDIF(ENABLE_ILP64)
 if(ENABLE_AOCL_PROGRESS)
     add_definitions("-DAOCL_PROGRESS")
 ENDIF(ENABLE_AOCL_PROGRESS)
+      message(STATUS "ENABLE_SET_LIB_VERSION : ${ENABLE_SET_LIB_VERSION} ")
 
+if(ENABLE_SET_LIB_VERSION)
+    string(TIMESTAMP TODAY "%Y%m%d")
+    set( LIBRARY_VERSION "\tBuild\t${TODAY}")
+    add_definitions("-DAOCL_SCALAPACK_VERSION=${LIBRARY_VERSION}")
+endif()
 
 ADD_DEFINITIONS( "-D${CDEFS}" "${CMAKE_ICC_FLAGS}" "${f2cflag}")
 

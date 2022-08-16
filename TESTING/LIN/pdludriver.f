@@ -123,7 +123,7 @@
       DOUBLE PRECISION   CTIME( 2 ), WTIME( 2 )
       DOUBLE PRECISION, allocatable :: MEM (:)
 #endif
-      CHARACTER          SVERSION( 50 )
+      CHARACTER          SVERSION( 100 )
 *     ..
 *     .. External Subroutines ..
       EXTERNAL           BLACS_BARRIER, BLACS_EXIT, BLACS_GET,

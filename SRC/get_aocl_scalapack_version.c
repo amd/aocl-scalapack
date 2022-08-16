@@ -11,8 +11,13 @@
 /*
  * Include Files
  */
+#include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include "pxsyevx.h"
+
+#define VERSION_MAKE_STR(x) _VERSION_MAKE_STR(x)
+#define _VERSION_MAKE_STR(x) #x
 
 #ifdef __STDC__
 void get_aocl_scalapack_version_( char * version )
@@ -21,11 +26,34 @@ void get_aocl_scalapack_version_( version )
    char * version;
 #endif
 {
-/*
-* version = "AOCL-ScaLAPACK 3.2.1, Supports Netlib ScaLAPACK 2.2.0"
-*/
-	strcpy(version, "AOCL-ScaLAPACK 3.2.1, supports ScaLAPACK 2.2.0");
+#ifdef AOCL_SCALAPACK_VERSION
+     char slmainversion[] = "AOCL-ScaLAPACK 3.2.1 ";
+     char slversion[1000];
+     char scalapackversion[] = ", supports ScaLAPACK 2.2.0";
+     int length, i;
 
-  return;
+     length = 0;
+     for (i = 0; i<strlen(slmainversion); ++i, ++length) 
+     { 
+	    slversion[length] = slmainversion[i];
+     }
+
+     char configslversion[] = VERSION_MAKE_STR(AOCL_SCALAPACK_VERSION);
+     for (i = 0; i<strlen(configslversion); ++i, ++length) 
+     {
+	    slversion[length] = configslversion[i];
+     }
+
+     for (i = 0; i < strlen(scalapackversion); ++i, ++length) 
+     {
+	    slversion[length] = scalapackversion[i];
+     }
+
+     slversion[length] = '\0';
+     strcpy(version, slversion);
+#else
+    strcpy(version, "AOCL-ScaLAPACK 3.2.1, supports ScaLAPACK 2.2.0");
+#endif  
+return;
 }
 
