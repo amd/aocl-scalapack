@@ -1,4 +1,6 @@
-
+/*  -- ScaLAPACK routine --
+*     Copyright (c) 2020-2022 Advanced Micro Devices, Inc.  All rights reserved.
+*/
 
 /*
  * These macros define how C routines will be called.  ADD_ assumes that
@@ -64,7 +66,10 @@
 
 #define get_aocl_scalapack_version_       GET_AOCL_SCALAPACK_VERSION
 #define aocl_scalapack_progress_          AOCL_SCALAPACK_PROGRESS
-#define aocl_scalapack_progress_          AOCL_SCALAPACK_PROGRESS
+#define aocl_dtl_trace_entry_             AOCL_DTL_TRACE_ENTRY
+#define aocl_dtl_trace_exit_              AOCL_DTL_TRACE_EXIT
+#define aocl_dtl_log_entry_               AOCL_DTL_LOG_ENTRY
+#define aocl_dtl_log_exit_	              AOCL_DTL_LOG_EXIT
 #endif
 
 #if (F77_CALL_C == NOCHANGE)
@@ -85,7 +90,10 @@
 #define pslachkieee_        pslachkieee
 #define pslaiect_           pslaiect
 
-#define get_aocl_scalapack_version_      get_aocl_scalapack_version
-#define aocl_scalapack_progress_         aocl_scalapack_progress
+#define get_aocl_scalapack_version_       get_aocl_scalapack_version
 #define aocl_scalapack_progress_          aocl_scalapack_progress
+#define aocl_dtl_trace_entry_             aocl_dtl_trace_entry
+#define aocl_dtl_trace_exit_              aocl_dtl_trace_exit
+#define aocl_dtl_log_entry_               aocl_dtl_log_entry
+#define aocl_dtl_log_exit_	              aocl_dtl_log_exit
 #endif

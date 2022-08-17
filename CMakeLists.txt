@@ -1,4 +1,4 @@
-##Copyright (C) 2021, Advanced Micro Devices, Inc. All rights reserved.##
+##Copyright (C) 2021-2022, Advanced Micro Devices, Inc. All rights reserved.##
 
 cmake_minimum_required(VERSION 3.2)
 project(SCALAPACK C Fortran)
@@ -16,6 +16,8 @@ endif ()
 # Add the CMake directory for custon CMake modules
 set(CMAKE_MODULE_PATH "${SCALAPACK_SOURCE_DIR}/CMAKE" ${CMAKE_MODULE_PATH})
 option(ENABLE_ILP64 "Enable ILP64 " OFF)
+option(ENABLE_AOCL_PROGRESS "Enable ILP64 " OFF)
+option(ENABLE_DTL "Enable ILP64 " OFF)
 
 if (WIN32 AND CMAKE_Fortran_COMPILER_ID MATCHES "Intel")
     set (CMAKE_IFORT_LIBDEPS_DIR "C:/Program Files (x86)/IntelSWTools/compilers_and_libraries/windows/compiler/lib/intel64_win" CACHE STRING "")
@@ -160,7 +162,13 @@ if(USE_F2C)
 ENDIF(USE_F2C)
 
 if(ENABLE_DTL)
-   add_definitions("-DENABLE_DTL")
+#Enable DTL for GNU tool chain in UNIX
+  if(UNIX)
+    if ("${CMAKE_C_COMPILER_ID}" STREQUAL "GNU")
+      add_definitions("-DAOCL_DTL ")
+      set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -cpp -ffixed-line-length-none")
+    endif ()
+  endif()
 ENDIF(ENABLE_DTL)
 
 if(ENABLE_ILP64)
@@ -270,7 +278,8 @@ MESSAGE(STATUS "=========")
 #
 # AOCL_DTL
 #
-#add_subdirectory(AOCL_DTL)
+add_subdirectory(AOCL_DTL)
+append_subdir_files(dtl "AOCL_DTL")
 
 #
 # TOOLS
@@ -314,11 +323,11 @@ endif ()
 
 if (UNIX)
   if(BLACS_FOUND)
-    add_library(scalapack ${tools} ${tools-C} ${extra_lapack} ${pblas} ${pblas-F} ${ptzblas} ${ptools} ${pbblas} ${redist} ${src} ${src-C})
+    add_library(scalapack ${dtl} ${tools} ${tools-C} ${extra_lapack} ${pblas} ${pblas-F} ${ptzblas} ${ptools} ${pbblas} ${redist} ${src} ${src-C})
     target_link_libraries( scalapack ${BLACS_LIBRARY} ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES})
     scalapack_install_library(scalapack)
   else(BLACS_FOUND)
-    add_library(scalapack ${blacs} ${tools} ${tools-C} ${extra_lapack} ${pblas} ${pblas-F} ${ptzblas} ${ptools} ${pbblas} ${redist} ${src} ${src-C})
+    add_library(scalapack ${dtl} ${blacs} ${tools} ${tools-C} ${extra_lapack} ${pblas} ${pblas-F} ${ptzblas} ${ptools} ${pbblas} ${redist} ${src} ${src-C})
     target_link_libraries( scalapack ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES})
     scalapack_install_library(scalapack)
   endif(BLACS_FOUND)

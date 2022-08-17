@@ -1,3 +1,11 @@
+/* ---------------------------------------------------------------------
+ * *
+ * *  -- AOCL ScaLAPACK routine --
+ * *     Copyright (c) 2022 Advanced Micro Devices, Inc.  All rights reserved.
+ * *
+ * *  ---------------------------------------------------------------------
+ * */
+
 /*
  *  This file includes the standard C libraries, as well as system dependant
  *  include files.  All BLACS routines include this file.
@@ -14,7 +22,7 @@
 #include <math.h>
 #include <stdarg.h>
 #include <mpi.h>
-#include "../../AOCL_DTL/SRC/aocldtl.h"
+#include "../../AOCL_DTL/aocldtl.h"
 /*
  * Integer types used by BLACS
  */

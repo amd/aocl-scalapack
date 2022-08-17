@@ -1,3 +1,6 @@
+*  -- ScaLAPACK routine --
+*     Copyright (c) 2022 Advanced Micro Devices, Inc.  All rights reserved.
+*
       SUBROUTINE PDLASWP( DIREC, ROWCOL, N, A, IA, JA, DESCA, K1, K2,
      $                    IPIV )
 *
@@ -152,10 +155,17 @@
 *     ..
 *     .. Executable Statements ..
 *
+#ifdef AOCL_DTL
+      CALL AOCL_DTL_TRACE_ENTRY(__FILE__, __LINE__, ' ')
+#endif
 *     Quick return if possible
 *
-      IF( N.EQ.0 )
-     $   RETURN
+      IF( N.EQ.0 ) THEN
+#ifdef AOCL_DTL
+         CALL AOCL_DTL_TRACE_EXIT(__FILE__, __LINE__, ' ')
+#endif
+         RETURN
+      END IF
 *
       CALL BLACS_GRIDINFO( DESCA( CTXT_ ), NPROW, NPCOL, MYROW, MYCOL )
 *
@@ -201,6 +211,9 @@
          END IF
       END IF
 *
+#ifdef AOCL_DTL
+      CALL AOCL_DTL_TRACE_EXIT(__FILE__, __LINE__, ' ')
+#endif
       RETURN
 *
 *     End PDLASWP

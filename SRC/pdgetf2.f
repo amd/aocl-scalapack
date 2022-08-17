@@ -159,6 +159,11 @@
 *     ..
 *     .. Executable Statements ..
 *
+*     .. Debug trace log capture if the DTL is enabled
+#ifdef AOCL_DTL
+      CALL AOCL_DTL_TRACE_ENTRY(__FILE__, __LINE__, ' ')
+#endif
+*
 *     Get grid parameters.
 *
       ICTXT = DESCA( CTXT_ )
@@ -189,13 +194,21 @@
       IF( INFO.NE.0 ) THEN
          CALL PXERBLA( ICTXT, 'PDGETF2', -INFO )
          CALL BLACS_ABORT( ICTXT, 1 )
+*
+#ifdef AOCL_DTL
+         CALL AOCL_DTL_TRACE_EXIT(__FILE__, __LINE__, ' ')
+#endif
          RETURN
       END IF
 *
 *     Quick return if possible
 *
-      IF( M.EQ.0 .OR. N.EQ.0 )
-     $   RETURN
+      IF( M.EQ.0 .OR. N.EQ.0 ) THEN
+#ifdef AOCL_DTL
+         CALL AOCL_DTL_TRACE_EXIT(__FILE__, __LINE__, ' ')
+#endif
+         RETURN
+      END IF
 *
       MN = MIN( M, N )
       CALL INFOG2L( IA, JA, DESCA, NPROW, NPCOL, MYROW, MYCOL, IIA, JJA,
@@ -245,6 +258,10 @@
 *
       END IF
 *
+*
+#ifdef AOCL_DTL
+         CALL AOCL_DTL_TRACE_EXIT(__FILE__, __LINE__, ' ')
+#endif
       RETURN
 *
 *     End of PDGETF2

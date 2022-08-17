@@ -3,7 +3,7 @@
 /* ---------------------------------------------------------------------
 *
 *  -- AOCL ScaLAPACK routine --
-*     Copyright (c) 2020-2021 Advanced Micro Devices, Inc.  All rights reserved.
+*     Copyright (c) 2020-2022 Advanced Micro Devices, Inc.  All rights reserved.
 *
 *  ---------------------------------------------------------------------
 */
@@ -13,18 +13,11 @@
  */
 #include <stdio.h>
 #include <string.h>
-#include "../AOCL_DTL/SRC/aocldtl.h"
+#include "../AOCL_DTL/aocldtl.h"
 #include "pxsyevx.h"
 
-#ifdef __STDC__
 void aocl_dtl_trace_exit_( const char * fileName, unsigned int * lineNumber,
                            const char * message )
-#else
-void aocl_dtl_trace_exit_( fileName, lineNumber, message )
-  const char   * fileName;
-  unsigned int * lineNumber;
-  const char   * message;
-#endif
 {
 #if AOCL_DTL_TRACE_ENABLE 
   char * funcName = NULL;

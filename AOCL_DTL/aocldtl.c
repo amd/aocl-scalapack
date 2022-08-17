@@ -45,7 +45,7 @@ static char *pchDTL_LOG_FILE = AOCL_DTL_LOG_FILE;
 AOCL_FLIST_Node *gpLogFileList = NULL;
 #endif
 
-#ifdef AOCL_DTL_AUTO_TRACE_ENABLE
+#if AOCL_DTL_AUTO_TRACE_ENABLE
 
 /* The file name for storing execution trace, 
    These files are used by compiler assisted execution testing */
@@ -105,7 +105,7 @@ void DTL_Initialize(
     }
 #endif
 
-#ifdef AOCL_DTL_AUTO_TRACE_ENABLE
+#if AOCL_DTL_AUTO_TRACE_ENABLE
     /* Create/Open the file to log the log data */
     AOCL_FLIST_AddFile(pchDTL_AUTO_TRACE_FILE, &gpAutoTraceFileList, AOCL_gettid());
 
@@ -140,7 +140,7 @@ void DTL_Uninitialize(void)
     AOCL_FLIST_CloseAll(gpLogFileList);
 #endif
 
-#ifdef AOCL_DTL_AUTO_TRACE_ENABLE
+#if AOCL_DTL_AUTO_TRACE_ENABLE
     /* Close the log file */
     AOCL_FLIST_CloseAll(gpAutoTraceFileList);
 #endif
@@ -262,6 +262,7 @@ void DTL_Trace(
             fprintf(pOutFile, "%s\n", pi8Message);
             break;
         }
+        fflush(pOutFile);
     }
 } /* DTL_Data_Trace_Entry */
 #endif
@@ -382,7 +383,7 @@ void DTL_DumpData(
         }
         fprintf(pDumpFile, "\n");
     } /* End of if */
-
+    fflush(pDumpFile);
 } /* DTL_DumpData */
 #endif
 
@@ -441,6 +442,7 @@ void __cyg_profile_func_enter(void *pvThisFunc, void *pvCaller)
     fprintf(pOutFile, "\n%lu:+:%p",
             AOCL_getTimestamp(),
             (void *)(pvThisFunc - info.dli_fbase));
+    fflush(pOutFile);
 }
 
 /*===================================================================
@@ -479,6 +481,7 @@ void __cyg_profile_func_exit(void *pvThisFunc, void *pvCaller)
     fprintf(pOutFile, "\n%lu:-:%p",
             AOCL_getTimestamp(),
             (void *)(pvThisFunc - info.dli_fbase));
+    fflush(pOutFile);
 }
 
 #endif /* AOCL_AUTO_TRACE_ENABLE */

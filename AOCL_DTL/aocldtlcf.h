@@ -12,21 +12,17 @@
 #ifndef _AOCLDTLCF_H_
 #define _AOCLDTLCF_H_
 
-#ifdef AOCL_DTL_ADVANCED_TRACE_ENABLE 
-
 /* Macro for tracing the log If the user wants to enable tracing he has to 
    enable this macro by making it to 1 else 0 */
-#define AOCL_DTL_TRACE_ENABLE       1
+#define AOCL_DTL_TRACE_ENABLE       0
 
 /* Macro for dumping the log If the user wants to enable dumping he has to 
    enable this macro by making it to 1 else 0 */
-#define AOCL_DTL_DUMP_ENABLE        1
+#define AOCL_DTL_DUMP_ENABLE        0
 
 /* Macro for logging the logs If the user wants to enable loging information he
    has to enable this macro by making it to 1 else 0 */
-#define AOCL_DTL_LOG_ENABLE         1
-
-#endif
+#define AOCL_DTL_LOG_ENABLE         0
 
 /* Select the trace level till which you want to log the data */
 /* By default it will log for all levels */

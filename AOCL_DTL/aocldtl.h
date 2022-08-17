@@ -24,6 +24,19 @@
 /* Type definition for printf */
 #define AOCL_DEBUGPRINT printf
 
+/* Customization for scalapack */
+#if AOCL_DTL_LOG_ENABLE
+	#define BUFF_SIZE 256
+	#define BUFFER buffer
+	/*Variable Argument macro for snprintf*/
+	#define AOCL_DTL_SNPRINTF(...) snprintf(BUFFER,BUFF_SIZE,__VA_ARGS__)
+
+#else
+	#define AOCL_DTL_SNPRINTF(...)
+
+#endif
+
+
 /* Define the AOCL_DTL_INITIALIZE_ENABLE if any of the debug macro
  * are defined */
 #if (AOCL_DTL_TRACE_ENABLE || AOCL_DTL_DUMP_ENABLE || AOCL_DTL_LOG_ENABLE)
