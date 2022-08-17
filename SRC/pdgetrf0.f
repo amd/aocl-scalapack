@@ -1,6 +1,5 @@
 *  -- ScaLAPACK routine --
 *     Copyright (c) 2020-22 Advanced Micro Devices, Inc.  All rights reserved.
-*     June 10, 2020
 *
 *  =====================================================================
 *     SUBROUTINE PDGETRF0
@@ -201,6 +200,10 @@
 *
       IF( INFO.NE.0 ) THEN
          CALL PXERBLA( ICTXT, 'PDGETRF', -INFO )
+*
+#ifdef AOCL_DTL
+         CALL AOCL_DTL_TRACE_EXIT(__FILE__, __LINE__, ' ')
+#endif
          RETURN
       END IF
 *
@@ -208,8 +211,14 @@
 *
       IF( DESCA( M_ ).EQ.1 ) THEN
          IPIV( 1 ) = 1
+#ifdef AOCL_DTL
+         CALL AOCL_DTL_TRACE_EXIT(__FILE__, __LINE__, ' ')
+#endif
          RETURN
       ELSE IF( M.EQ.0 .OR. N.EQ.0 ) THEN
+#ifdef AOCL_DTL
+         CALL AOCL_DTL_TRACE_EXIT(__FILE__, __LINE__, ' ')
+#endif
          RETURN
       END IF
 *
@@ -324,6 +333,9 @@
       CALL PB_TOPSET( ICTXT, 'Broadcast', 'Columnwise', COLBTOP )
       CALL PB_TOPSET( ICTXT, 'Combine', 'Columnwise', COLCTOP )
 *
+#ifdef AOCL_DTL
+      CALL AOCL_DTL_TRACE_EXIT(__FILE__, __LINE__, ' ')
+#endif
       RETURN
 *
 *     End of PDGETRF

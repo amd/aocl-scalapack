@@ -1,10 +1,5 @@
-*
-*     Copyright (c) 2020-23 Advanced Micro Devices, Inc.  All rights reserved.
-*
 *  -- ScaLAPACK routine --
-*
-*
-#include "SL_Context_fortran_include.h"
+*     Copyright (c) 2022 Advanced Micro Devices, Inc.  All rights reserved.
 *
       SUBROUTINE PDLASWP( DIREC, ROWCOL, N, A, IA, JA, DESCA, K1, K2,
      $                    IPIV )
@@ -161,41 +156,15 @@
 *     ..
 *     .. Executable Statements ..
 *
-*     Initialize framework context structure if not initialized
-*
-*
-      CALL AOCL_SCALAPACK_INIT( )
-*
-*
-*     Capture the subroutine entry in the trace file
-*
-      AOCL_DTL_TRACE_ENTRY_F
-*
-*     Update the log buffer with the scalar arguments details,
-*     MPI process grid information and write to the log file
-*
-      IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
-         WRITE(LOG_BUF,102)  DIREC, ROWCOL, IA, JA, K1,
-     $            K2, N, eos_str
- 102     FORMAT('PDLASWP inputs: ,DIREC:',A5,', ROWCOL:',A5,
-     $           ', IA:',I5,', JA:',I5,', K1:',I5,
-     $           ', K2:',I5,', N:',I5, A1 )
-         AOCL_DTL_LOG_ENTRY_F
-      END IF
-*
 #ifdef AOCL_DTL
-      CALL AOCL_SL_DTL_TRACE_ENTRY(__FILE__, __LINE__, ' ')
+      CALL AOCL_DTL_TRACE_ENTRY(__FILE__, __LINE__, ' ')
 #endif
 *     Quick return if possible
 *
       IF( N.EQ.0 ) THEN
 #ifdef AOCL_DTL
-         CALL AOCL_SL_DTL_TRACE_EXIT(__FILE__, __LINE__, ' ')
+         CALL AOCL_DTL_TRACE_EXIT(__FILE__, __LINE__, ' ')
 #endif
-*
-*        Capture the subroutine exit in the trace file
-*
-         AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
 *
@@ -244,12 +213,8 @@
       END IF
 *
 #ifdef AOCL_DTL
-      CALL AOCL_SL_DTL_TRACE_EXIT(__FILE__, __LINE__, ' ')
+      CALL AOCL_DTL_TRACE_EXIT(__FILE__, __LINE__, ' ')
 #endif
-*
-*     Capture the subroutine exit in the trace file
-*
-      AOCL_DTL_TRACE_EXIT_F
       RETURN
 *
 *     End PDLASWP

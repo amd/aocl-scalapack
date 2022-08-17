@@ -1,3 +1,6 @@
+*  -- ScaLAPACK routine --
+*     Copyright (c) 2022 Advanced Micro Devices, Inc.  All rights reserved.
+*
 *  =====================================================================
 *     SUBROUTINE PDGETRF
 *  =====================================================================
@@ -147,6 +150,15 @@
 *
 *  =====================================================================
 *
+#ifdef AOCL_DTL
+      CHARACTER  BUFFER*90
+      CALL AOCL_DTL_TRACE_ENTRY(__FILE__, __LINE__, ' ')
+	  WRITE(BUFFER,101) M, N, IA, JA
+ 101  FORMAT('pdgetrf inputs: M: ', I2, '  N: ', I2 ,'  IA: ', I2,'  JA: ', I2 )
+      CALL AOCL_DTL_LOG_ENTRY( BUFFER )
+#endif
+
+*
 #ifdef ENABLE_LOOK_AHEAD_FOR_LU
 *     ..
 *     .. Local Scalars ..
@@ -173,9 +185,6 @@
       ICTXT = DESCA( CTXT_ )
       CALL BLACS_GRIDINFO( ICTXT, NPROW, NPCOL, MYROW, MYCOL )
 *
-#ifdef AOCL_DTL_ADVANCED_TRACE_ENABLE
-      CALL AOCL_DTL_TRACE_ENTRY(__FILE__, __LINE__, ' ')
-#endif
       MN = MIN( M, N )
       NB = DESCA( NB_ )
 *
@@ -202,7 +211,7 @@
       CALL PDGETRF0( M, N, A, IA, JA, DESCA, IPIV, INFO )
 #endif /* ENABLE_LOOK_AHEAD_FOR_LU */
 *
-#ifdef AOCL_DTL_ADVANCED_TRACE_ENABLE
+#ifdef AOCL_DTL
       CALL AOCL_DTL_TRACE_EXIT(__FILE__, __LINE__, ' ')
 #endif
       RETURN

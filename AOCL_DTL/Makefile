@@ -1,7 +1,17 @@
-all : lib 
 
-clean:
-	( cd SRC ; make clean )
+#
+# Makefile
+#
+# 
+#
 
-lib :
-	( cd SRC ; make )
+.PHONY: generate clean
+
+generate:
+	$(CC) -fPIC -c *.h *.c
+	$(CC) -shared -o libaocldtl.so *.o
+	ar -rc libaocldtl.a *.o
+
+clean: cleanx
+cleanx:
+	rm *.o *.gch *.a *.so

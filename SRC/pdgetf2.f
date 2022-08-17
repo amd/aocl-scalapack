@@ -167,16 +167,10 @@
 *     ..
 *     .. Executable Statements ..
 *
-*     Initialize framework context structure if not initialized
-*
-*
-      CALL AOCL_SCALAPACK_INIT( )
-*
-*
-*     Capture the subroutine entry in the trace file
-*
-      AOCL_DTL_TRACE_ENTRY_F
-*
+*     .. Debug trace log capture if the DTL is enabled
+#ifdef AOCL_DTL
+      CALL AOCL_DTL_TRACE_ENTRY(__FILE__, __LINE__, ' ')
+#endif
 *
 *     Get grid parameters.
 *
@@ -221,20 +215,18 @@
          CALL PXERBLA( ICTXT, 'PDGETF2', -INFO )
          CALL BLACS_ABORT( ICTXT, 1 )
 *
-*
-*        Capture the subroutine exit in the trace file
-*
-         AOCL_DTL_TRACE_EXIT_F
+#ifdef AOCL_DTL
+         CALL AOCL_DTL_TRACE_EXIT(__FILE__, __LINE__, ' ')
+#endif
          RETURN
       END IF
 *
 *     Quick return if possible
 *
       IF( M.EQ.0 .OR. N.EQ.0 ) THEN
-*
-*        Capture the subroutine exit in the trace file
-*
-         AOCL_DTL_TRACE_EXIT_F
+#ifdef AOCL_DTL
+         CALL AOCL_DTL_TRACE_EXIT(__FILE__, __LINE__, ' ')
+#endif
          RETURN
       END IF
 *
@@ -287,10 +279,9 @@
       END IF
 *
 *
-*
-*     Capture the subroutine exit in the trace file
-*
-      AOCL_DTL_TRACE_EXIT_F
+#ifdef AOCL_DTL
+         CALL AOCL_DTL_TRACE_EXIT(__FILE__, __LINE__, ' ')
+#endif
       RETURN
 *
 *     End of PDGETF2
