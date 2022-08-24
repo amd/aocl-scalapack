@@ -2,7 +2,11 @@
 
 add_subdirectory(LIN)
 add_subdirectory(EIG)
-add_subdirectory(AOCL_PROGRESS_TESTS)
+if(ENABLE_AOCL_PROGRESS)
+  if (UNIX)
+    add_subdirectory(AOCL_PROGRESS_TESTS)
+  endif (UNIX)
+endif(ENABLE_AOCL_PROGRESS)
 
 if (UNIX)
     set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${SCALAPACK_BINARY_DIR}/TESTING)

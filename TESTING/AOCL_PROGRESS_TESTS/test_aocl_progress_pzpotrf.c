@@ -1,9 +1,13 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include <sys/time.h>
 #include <math.h>
 #include <assert.h>
+#ifdef _WIN32
+#include <time.h>
+#else
+#include <sys/times.h>
+#endif
 #include "mpi.h"
 
 #define SL_complex_double    double _Complex
@@ -28,7 +32,7 @@ Int AOCL_progress(char* api, Int *lenapi, Int *progress, Int *mpi_rank, Int *tot
 }
 
 
-Int main(Int argc, char **argv) {
+int main(int argc, char **argv) {
     Int izero=0;
     Int ione=1;
     Int myrank_mpi, nprocs_mpi;
@@ -109,7 +113,7 @@ Int main(Int argc, char **argv) {
     Int lddA = mpA > 1 ? mpA : 1;
     descinit_( descA,  &n, &n, &nb, &nb, &izero, &izero, &ictxt, &lddA, &info);
     if(info != 0) {
-        printf("Error in descinit, info = %d\n", info);
+        printf("Error in descinit, info = %i\n", info);
     }
 
     // Run pzpotrf and time
@@ -118,7 +122,7 @@ Int main(Int argc, char **argv) {
     aocl_scalapack_set_progress(&AOCL_progress);
     pzpotrf_(&uplo, &n, A, &ione, &ione, descA, &info);
     if (info != 0) {
-        printf("Error in pzpotrf, info = %d\n", info);
+        printf("Error in pzpotrf, info = %i\n", info);
     }
 
     double MPIt2 = MPI_Wtime();
