@@ -22,16 +22,21 @@ typedef unsigned long uinteger;
 #endif
 
 typedef integer ( *aocl_scalapack_progress_callback )(
-char *api,
-integer  *lenapi,
-integer  *progress,
-integer  *current_process,
-integer  *total_processes
+const char * const api,
+const integer  *lenapi,
+const integer  *progress,
+const integer  *current_process,
+const integer  *total_processes
 );
 
 
-integer aocl_scalapack_progress ( char* api, integer *lenapi, integer* progress, 
-                                     integer* current_process, integer *total_processes );
+integer aocl_scalapack_progress (
+const char * const api,
+const integer  *lenapi,
+const integer  *progress,
+const integer  *current_process,
+const integer  *total_processes
+);
 
 aocl_scalapack_progress_callback aocl_scalapack_progress_ptr_;
 

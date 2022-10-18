@@ -148,8 +148,11 @@
      $                   MN, MYCOL, MYROW, NPCOL, NPROW
 *
 #ifdef AOCL_PROGRESS
-      INTEGER TOTAL_MPI_PROCESSES, LSTAGE, CURRENT_RANK
-      CHARACTER*7 API_NAME
+      INTEGER TOTAL_MPI_PROCESSES, CURRENT_RANK, PROGRESS
+ 
+*     .. Declaring below API name string and its length as const objects
+      CHARACTER*8, PARAMETER :: API_NAME = 'PDGETRF '
+      INTEGER, PARAMETER :: LSTAGE = 8
 #endif
 *     ..
 *     .. Local Arrays ..
@@ -241,8 +244,6 @@
 #ifdef AOCL_PROGRESS
       CURRENT_RANK = MYCOL+MYROW*NPCOL
       TOTAL_MPI_PROCESSES = NPROW*NPCOL
-      LSTAGE = 7
-      API_NAME = 'PDGETRF'
 #endif
 
 *     Factor diagonal and subdiagonal blocks and test for exact
@@ -279,8 +280,11 @@
          JB = MIN( MN-J+JA, DESCA( NB_ ) )
          I = IA + J - JA
 #ifdef AOCL_PROGRESS
+*        Capture the Loop count 'J' to a separate 'PROGRESS' variable
+*        to avoid the corruption at application side.
+         PROGRESS = J
          CALL AOCL_SCALAPACK_PROGRESS ( API_NAME, LSTAGE,
-     $                 J, CURRENT_RANK, TOTAL_MPI_PROCESSES )
+     $                 PROGRESS, CURRENT_RANK, TOTAL_MPI_PROCESSES )
 #endif
 *
 *        Factor diagonal and subdiagonal blocks and test for exact

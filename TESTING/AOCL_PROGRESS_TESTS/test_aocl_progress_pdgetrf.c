@@ -19,13 +19,14 @@ void pdgetrf_(Int*, Int*, double*, Int*, Int*, Int*, Int*, Int*);
 void blacs_gridexit_(Int*);
 Int numroc_(Int*, Int*, Int*, Int*, Int*);
 
-Int AOCL_progress(char* api, Int *lenapi, Int *progress, Int *mpi_rank, Int *total_mpi_processes);
+Int AOCL_progress(const char* const api, const Int *lenapi, const Int *progress, const Int *mpi_rank, const Int *total_mpi_processes);
 
-Int AOCL_progress(char* api, Int *lenapi, Int *progress, Int *mpi_rank, Int *total_mpi_processes)
+Int AOCL_progress(const char* const api, const Int *lenapi, const Int *progress, const Int *mpi_rank, const Int *total_mpi_processes)
 {
-    char api_name[20];
+    char api_name [30];
     memcpy(api_name, api, *lenapi);
-    printf( "In AOCL Progress MPI Rank: %i    API: %s   progress: %i   MPI processes: %i\n", *mpi_rank, api_name, *progress,*total_mpi_processes );
+    api_name[*lenapi - 1] = '\0';
+    printf( "In AOCL Progress MPI Rank: %i    API: %s   progress: %i   MPI processes: %i \n", *mpi_rank, api_name, *progress,*total_mpi_processes );
     return 0;
 }
 
@@ -61,7 +62,6 @@ int main(int argc, char **argv) {
     }
 
     assert((int)nprow * (int)npcol == (int)nprocs_mpi);
-    // assert(nprow * npcol == nprocs_mpi);
 
     // Initialize BLACS
     Int iam, nprocs;
@@ -81,13 +81,13 @@ int main(int argc, char **argv) {
     // Allocate and fill the matrices A and B
     // A[I,J] = (I == J ? 5*n : I+J)
     double *A;
-	Int *IPPIV;
+    Int *IPPIV;
     A = (double *)calloc(mpA*nqA,sizeof(double)) ;
     if (A==NULL){ printf("Error of memory allocation A on proc %dx%d\n",myrow,mycol); exit(0); }
-	
+
     IPPIV = (Int *)calloc(2*n,sizeof(Int)) ;
     if (IPPIV==NULL){ printf("Error of memory allocation IPPIV %d\n",2*n); exit(0); }
-	
+
     Int k = 0;
     for (Int j = 0; j < nqA; j++) { // local col
         Int l_j = j / nb; // which block
