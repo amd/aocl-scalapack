@@ -27,7 +27,7 @@ void get_aocl_scalapack_version_( version )
 #endif
 {
 #ifdef AOCL_SCALAPACK_VERSION
-     char slmainversion[] = "AOCL-ScaLAPACK 3.2.1 ";
+     char slmainversion[] = "AOCL-ScaLAPACK 4.0 ";
      char slversion[1000];
      char scalapackversion[] = ", supports ScaLAPACK 2.2.0";
      int length, i;
@@ -52,7 +52,7 @@ void get_aocl_scalapack_version_( version )
      slversion[length] = '\0';
      strcpy(version, slversion);
 #else
-    strcpy(version, "AOCL-ScaLAPACK 3.2.1, supports ScaLAPACK 2.2.0");
+    strcpy(version, "AOCL-ScaLAPACK 4.0, supports ScaLAPACK 2.2.0");
 #endif  
 return;
 }
