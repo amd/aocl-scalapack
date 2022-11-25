@@ -253,6 +253,7 @@ ELSE(BLACS_LIBRARY)
     message(STATUS "--> Using default BLACS source code for building aocl-scalapack")
 ENDIF()
 
+unset(LAPACK_FOUND CACHE)
 message(STATUS "CHECKING BLAS AND LAPACK LIBRARIES")
 IF(LAPACK_LIBRARIES)
   include(CheckFortranFunctionExists)
