@@ -236,18 +236,22 @@ IF(BLACS_LIBRARY)
   CHECK_FUNCTION_EXISTS("Cblacs_get" BLACS_FOUND)
   unset( CMAKE_REQUIRED_LIBRARIES )
   message(STATUS "--> BLACS routine blacs_pinfo is found: ${BLACS_FOUND}.")
-ENDIF()
-if(BLACS_FOUND)
-   message(STATUS "--> BLACS supplied by user is WORKING, will use ${BLACS_LIBRARY}.")
-else( BLACS_FOUND )
-#
-# BLACS
-#
-  add_subdirectory(BLACS)
-  append_subdir_files(blacs "BLACS/SRC")
-  message(STATUS "--> BLACS supplied by user is NOT WORKING, will use BLACS source code for building aocl-scalapack")
-endif( BLACS_FOUND )
 
+  if(BLACS_FOUND)
+     message(STATUS "--> BLACS supplied by user is WORKING, will use ${BLACS_LIBRARY}.")
+  else( BLACS_FOUND )
+  #
+  # BLACS
+  #
+    add_subdirectory(BLACS)
+    append_subdir_files(blacs "BLACS/SRC")
+    message(STATUS "--> BLACS supplied by user is NOT WORKING, will use BLACS source code for building aocl-scalapack")
+  endif( BLACS_FOUND )
+ELSE(BLACS_LIBRARY)
+    add_subdirectory(BLACS)
+    append_subdir_files(blacs "BLACS/SRC")
+    message(STATUS "--> Using default BLACS source code for building aocl-scalapack")
+ENDIF()
 
 message(STATUS "CHECKING BLAS AND LAPACK LIBRARIES")
 IF(LAPACK_LIBRARIES)
