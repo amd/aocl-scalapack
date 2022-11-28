@@ -31,6 +31,7 @@ if (WIN32 AND CMAKE_Fortran_COMPILER_ID MATCHES "Intel")
 endif()
 
 set(CMAKE_ICC_FLAGS " ")
+set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -cpp" )
 
 if (UNIX)
    if ("${CMAKE_Fortran_COMPILER_ID}" STREQUAL "Intel")
@@ -162,10 +163,8 @@ MESSAGE(STATUS "=========")
 # Compiler Flags
 option(USE_F2C "Use FORTRAN To C compatible interface for certain Complex type functions" OFF)
 
-set(f2cflag "-cpp ")
-
 if(USE_F2C)
-  set(f2cflag "-cpp -DF2C " )
+  set(f2cflag "-DF2C " )
 ENDIF(USE_F2C)
 
 if(ENABLE_DTL)
@@ -173,7 +172,7 @@ if(ENABLE_DTL)
   if(UNIX)
     if ("${CMAKE_C_COMPILER_ID}" STREQUAL "GNU")
       add_definitions("-DAOCL_DTL ")
-      set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -cpp -ffixed-line-length-none")
+      set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -ffixed-line-length-none")
     endif ()
   endif()
 ENDIF(ENABLE_DTL)
