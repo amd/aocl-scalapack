@@ -44,7 +44,13 @@ if (UNIX)
       set( CMAKE_ICC_FLAGS "${CMAKE_ICC_FLAGS} -no-vec ")
       message(STATUS "Found Intel icc compiler : ${CMAKE_ICC_FLAGS} ")
    endif ()
+   if (("${CMAKE_C_COMPILER_ID}" STREQUAL "IntelLLVM") AND ( "${CMAKE_C_COMPILER}" MATCHES "icc" ) )
+      set(CMAKE_ICC_FLAGS "${CMAKE_ICC_FLAGS} -Wno-implicit-function-declaration")
+      set(CMAKE_ICC_FLAGS "${CMAKE_ICC_FLAGS} -no-vec ")
+      message(STATUS "Found Intel icx compiler : ${CMAKE_ICC_FLAGS} ")
+   endif ()
 endif ()
+
 
 #
 #   MPI
