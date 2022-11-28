@@ -210,7 +210,8 @@ if(ENABLE_SET_LIB_VERSION)
     add_definitions("-DAOCL_SCALAPACK_VERSION=${LIBRARY_VERSION}")
 endif()
 
-ADD_DEFINITIONS( "-D${CDEFS}" "${CMAKE_ICC_FLAGS}" "${f2cflag}")
+ADD_DEFINITIONS( "-D${CDEFS}" "${f2cflag}")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${CMAKE_ICC_FLAGS}")
 
 # --------------------------------------------------
 # By default static library
