@@ -169,7 +169,7 @@
 *
 *     .. Debug trace log capture if the DTL is enabled
 #ifdef AOCL_DTL
-      CALL AOCL_DTL_TRACE_ENTRY(__FILE__, __LINE__, ' ')
+      CALL AOCL_SL_DTL_TRACE_ENTRY(__FILE__, __LINE__, ' ')
 #endif
 *
 *     Get grid parameters.
@@ -216,7 +216,7 @@
          CALL BLACS_ABORT( ICTXT, 1 )
 *
 #ifdef AOCL_DTL
-         CALL AOCL_DTL_TRACE_EXIT(__FILE__, __LINE__, ' ')
+         CALL AOCL_SL_DTL_TRACE_EXIT(__FILE__, __LINE__, ' ')
 #endif
          RETURN
       END IF
@@ -225,7 +225,7 @@
 *
       IF( M.EQ.0 .OR. N.EQ.0 ) THEN
 #ifdef AOCL_DTL
-         CALL AOCL_DTL_TRACE_EXIT(__FILE__, __LINE__, ' ')
+         CALL AOCL_SL_DTL_TRACE_EXIT(__FILE__, __LINE__, ' ')
 #endif
          RETURN
       END IF
@@ -280,7 +280,7 @@
 *
 *
 #ifdef AOCL_DTL
-         CALL AOCL_DTL_TRACE_EXIT(__FILE__, __LINE__, ' ')
+         CALL AOCL_SL_DTL_TRACE_EXIT(__FILE__, __LINE__, ' ')
 #endif
       RETURN
 *

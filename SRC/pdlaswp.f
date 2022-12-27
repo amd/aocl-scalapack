@@ -157,13 +157,13 @@
 *     .. Executable Statements ..
 *
 #ifdef AOCL_DTL
-      CALL AOCL_DTL_TRACE_ENTRY(__FILE__, __LINE__, ' ')
+      CALL AOCL_SL_DTL_TRACE_ENTRY(__FILE__, __LINE__, ' ')
 #endif
 *     Quick return if possible
 *
       IF( N.EQ.0 ) THEN
 #ifdef AOCL_DTL
-         CALL AOCL_DTL_TRACE_EXIT(__FILE__, __LINE__, ' ')
+         CALL AOCL_SL_DTL_TRACE_EXIT(__FILE__, __LINE__, ' ')
 #endif
          RETURN
       END IF
@@ -213,7 +213,7 @@
       END IF
 *
 #ifdef AOCL_DTL
-      CALL AOCL_DTL_TRACE_EXIT(__FILE__, __LINE__, ' ')
+      CALL AOCL_SL_DTL_TRACE_EXIT(__FILE__, __LINE__, ' ')
 #endif
       RETURN
 *

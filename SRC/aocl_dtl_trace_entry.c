@@ -17,7 +17,7 @@
 
 
 /* Customized for Fortran calls from Scalapack code */
-void aocl_dtl_log_entry_( char *buffer )
+void aocl_sl_dtl_log_entry_( char *buffer )
 {
 #if AOCL_DTL_LOG_ENABLE
 	/* Capture the contents to the DTL log file */
@@ -25,7 +25,7 @@ void aocl_dtl_log_entry_( char *buffer )
 #endif
 }
 
-void aocl_dtl_trace_entry_( const char * fileName, unsigned int * lineNumber,
+void aocl_sl_dtl_trace_entry_( const char * fileName, unsigned int * lineNumber,
                             const char * message )
 {
 #if AOCL_DTL_TRACE_ENABLE

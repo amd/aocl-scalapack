@@ -49,7 +49,6 @@ typedef INIT_ONCE scalapack_pthread_once_t;
 #define SL_PTHREAD_ONCE_INIT INIT_ONCE_STATIC_INIT
 #else /* !defined(SCALAPACK_NO_CONTEXT) && !defined(_MSC_VER)*/
 #include <pthread.h>
-#include <stdint.h>
 /* This branch defines a pthreads-like API, scalapack_pthreads_*(), and implements it
  in terms of the corresponding pthreads_*() types, macros, and function calls.
  -- pthread types --  */
@@ -78,16 +77,11 @@ void scalapack_pthread_once(scalapack_pthread_once_t *once, void (*init)(void));
  *****************************************************************************************/
 typedef struct _aocl_scalapack_global_context
 {
-    int  num_threads; /* Number of threads */
-    int  is_trace_enabled;  /* Enable debug trace  */
-    int  is_log_enabled;  /* Enable debug log  */
+    int   num_threads; /* Number of Threads */
+    int  is_dtl_enabled;  /* DTL log */
     int  is_progress_enabled; /* AOCL-progress */
 
-    // MPI Variables related to rank, process info
-    Int  rank;
-    Int  num_procs;
 } aocl_scalapack_global_context;
-
 extern aocl_scalapack_global_context  scalapack_context;
 typedef aocl_scalapack_global_context aocl_scalapack_global_context_;
 typedef aocl_scalapack_global_context AOCL_SCALAPACK_GLOBAL_CONTEXT;
@@ -96,16 +90,14 @@ typedef aocl_scalapack_global_context AOCL_SCALAPACK_GLOBAL_CONTEXT;
  *    context
  *
  *  \retval none.
-*/
+ 
+void aocl_scalapack_init(); */
 void aocl_scalapack_init_();
-/******************************************************************************************
- * \brief Wrapper functions for 'aocl_scalapack_init_'
-       to enable F2C calls.
-
- *****************************************************************************************/
-void aocl_scalapack_init();
 void AOCL_SCALAPACK_INIT();
-void AOCL_SCALAPACK_INIT_();
+/* Alias Declarations to enable F2C calls
+#define aocl_scalapack_init_ aocl_scalapack_init
+#define AOCL_SCALAPACK_INIT_ aocl_scalapack_init
+#define AOCL_SCALAPACK_INIT  aocl_scalapack_init*/
 
 /*! \ingroup aux_module
  *  \brief Deallocate and clean all initalized buffers

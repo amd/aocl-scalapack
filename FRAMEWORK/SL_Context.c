@@ -24,8 +24,6 @@
 #include "SL_Context.h"
 #include <stdlib.h>
 #include <string.h>
-#include "../BLACS/SRC/Bdef.h"
-
 #if defined(SCALAPACK_NO_CONTEXT)
 // This branch defines a pthread-like API, scalapack_pthread_*(), and implements it
 // in terms of "dummy" code that doesn't depend on POSIX threads or any other
@@ -63,7 +61,7 @@ int scalapack_pthread_mutex_unlock(scalapack_pthread_mutex_t *mutex)
     return 0;
 }
 // -- pthread_once() --
-static BOOL
+static bool
     scalapack_init_once_wrapper(scalapack_pthread_once_t *once, void *param, void **context)
 {
     (void)once;
@@ -102,7 +100,7 @@ void scalapack_pthread_once(scalapack_pthread_once_t *once, void (*init)(void))
 **/
 aocl_scalapack_global_context scalapack_context = {0,0,0};
 /* A mutex to allow synchronous access to global_thread. */
-scalapack_pthread_mutex_t sl_global_thread_mutex = SL_PTHREAD_MUTEX_INITIALIZER;
+scalapack_pthread_mutex_t global_thread_mutex = SL_PTHREAD_MUTEX_INITIALIZER;
 /********************************************************************************
  * \brief scalapack_env_get_var is a function used to query the environment
  * variable and convert the string into integer and return the same
@@ -130,27 +128,16 @@ int scalapack_env_get_var(const char *env, int fallback)
 void scalapack_thread_init_rntm_from_env(aocl_scalapack_global_context *context)
 {
     int status;
+    /* Check whether DTL is set in the run-time environment */
+    status = scalapack_env_get_var("AOCL_SL_DTL", -1);
 
-    /* Check whether 'debug trace' is set in the run-time environment */
-    status = scalapack_env_get_var("AOCL_SL_TRACE", -1);
     if (status == -1)
     {
-        context->is_trace_enabled = 0;
+        context->is_dtl_enabled = 0;
     }
     else
     {
-        context->is_trace_enabled = 1;
-    }
-
-    /* Check whether 'debug trace' is set in the run-time environment */
-    status = scalapack_env_get_var("AOCL_SL_LOG", -1);
-    if (status == -1)
-    {
-        context->is_log_enabled = 0;
-    }
-    else
-    {
-        context->is_log_enabled = 1;
+        context->is_dtl_enabled = 1;
     }
 
     /* Check whether AOCL-progress requirement is set in the run-time environment */
@@ -164,9 +151,6 @@ void scalapack_thread_init_rntm_from_env(aocl_scalapack_global_context *context)
     {
         context->is_progress_enabled = 1;
     }
-
-    /* set the context MPI  rank, number of processes  */
-    Cblacs_pinfo(&(context->rank), &(context->num_procs) );
 
     /* Since multithreading support is not present in the aocl-scaLAPACK,
        we set the context number of threads to 1.
@@ -196,21 +180,9 @@ void aocl_scalapack_init_()
 {
     scalapack_pthread_once(&once_init, scalapack_context_init);
 }
-
-/** Wrapper Functions for 'aocl_scalapack_init_'
-    To enable Fortran to C calls
-**/
-void aocl_scalapack_init()
-{
-    aocl_scalapack_init_();
-}
 void AOCL_SCALAPACK_INIT()
 {
-    aocl_scalapack_init_();
-}
-void AOCL_SCALAPACK_INIT_()
-{
-    aocl_scalapack_init_();
+    scalapack_pthread_once(&once_init, scalapack_context_init);
 }
 
 void aocl_scalapack_finalize(void)
@@ -228,8 +200,8 @@ void scalapack_thread_set_num_threads(int n_threads)
     // We must ensure that global_thread has been initialized.
     aocl_scalapack_init_();
     // Acquire the mutex protecting global_thread.
-    scalapack_pthread_mutex_lock(&sl_global_thread_mutex);
+    scalapack_pthread_mutex_lock(&global_thread_mutex);
     scalapack_context.num_threads = n_threads;
     // Release the mutex protecting global_thread.
-    scalapack_pthread_mutex_unlock(&sl_global_thread_mutex);
+    scalapack_pthread_mutex_unlock(&global_thread_mutex);
 }
