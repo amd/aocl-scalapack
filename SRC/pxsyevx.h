@@ -9,7 +9,7 @@
  * NOCHANGE indicates that fortran will be calling, and that it expects
  * the name called by fortran to be identical to that compiled by the C
  * (RS6K's do this).  UPCASE says it expects C routines called by fortran
- * to be in all upcase (CRAY wants this). 
+ * to be in all upcase (CRAY wants this).
  */
 
 #define ADD_       0
@@ -49,7 +49,7 @@
 #if (F77_CALL_C == UPCASE)
 /*
  * These defines set up the naming scheme required to have a fortran 77
- * routine call a C routine 
+ * routine call a C routine
  * following Fortran to C interface:
  *           FORTRAN CALL               C DECLARATION
  *           call pdgemm(...)           void PDGEMM(...)
@@ -64,18 +64,17 @@
 #define pslachkieee_        PSLACHKIEEE
 #define pslaiect_           PSLAIECT
 
-#define get_aocl_scalapack_version_       GET_AOCL_SCALAPACK_VERSION
-#define aocl_scalapack_progress_          AOCL_SCALAPACK_PROGRESS
-#define aocl_dtl_trace_entry_             AOCL_DTL_TRACE_ENTRY
-#define aocl_dtl_trace_exit_              AOCL_DTL_TRACE_EXIT
-#define aocl_dtl_log_entry_               AOCL_DTL_LOG_ENTRY
-#define aocl_dtl_log_exit_	              AOCL_DTL_LOG_EXIT
+#define get_aocl_scalapack_version_  GET_AOCL_SCALAPACK_VERSION
+#define aocl_sl_dtl_trace_entry_       AOCL_SL_DTL_TRACE_ENTRY
+#define aocl_sl_dtl_trace_exit_        AOCL_SL_DTL_TRACE_EXIT
+#define aocl_sl_dtl_log_entry_          AOCL_SL_DTL_LOG_ENTRY
+#define aocl_dtl_log_exit_  AOCL_DTL_LOG_EXIT
 #endif
 
 #if (F77_CALL_C == NOCHANGE)
 /*
  * These defines set up the naming scheme required to have a fortran 77
- * routine call a C routine 
+ * routine call a C routine
  * for following Fortran to C interface:
  *           FORTRAN CALL               C DECLARATION
  *           call pdgemm(...)           void pdgemm(...)
@@ -90,10 +89,12 @@
 #define pslachkieee_        pslachkieee
 #define pslaiect_           pslaiect
 
-#define get_aocl_scalapack_version_       get_aocl_scalapack_version
-#define aocl_scalapack_progress_          aocl_scalapack_progress
-#define aocl_dtl_trace_entry_             aocl_dtl_trace_entry
-#define aocl_dtl_trace_exit_              aocl_dtl_trace_exit
-#define aocl_dtl_log_entry_               aocl_dtl_log_entry
-#define aocl_dtl_log_exit_	              aocl_dtl_log_exit
+#define get_aocl_scalapack_version_  get_aocl_scalapack_version
+#define aocl_scalapack_progress_     aocl_scalapack_progress
+#define aocl_dtl_trace_entry_        aocl_dtl_trace_entry
+#define aocl_dtl_trace_exit_         aocl_dtl_trace_exit
+#define aocl_dtl_log_entry_          aocl_dtl_log_entry
+#define aocl_dtl_log_exit_	         aocl_dtl_log_exit
+#define aocl_scalapack_init_         aocl_scalapack_init
+
 #endif

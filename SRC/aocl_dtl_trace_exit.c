@@ -16,7 +16,7 @@
 #include "../AOCL_DTL/aocldtl.h"
 #include "pxsyevx.h"
 
-void aocl_dtl_trace_exit_( const char * fileName, unsigned int * lineNumber,
+void aocl_sl_dtl_trace_exit_( const char * fileName, unsigned int * lineNumber,
                            const char * message )
 {
 #if AOCL_DTL_TRACE_ENABLE 

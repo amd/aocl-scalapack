@@ -1,20 +1,19 @@
 *  -- ScaLAPACK routine --
-*     Copyright (c) 2022 Advanced Micro Devices, Inc.  All rights reserved.
-*
-*  =====================================================================
-*     SUBROUTINE PDGETRF
-*  =====================================================================
-      SUBROUTINE PDGETRF( M, N, A, IA, JA, DESCA, IPIV, INFO )
-*
-*  -- ScaLAPACK routine (version 2.1.0) --
-*     Copyright (c) 2020 Advanced Micro Devices, Inc.  All rights reserved.
-*     June 10, 2020
+*     Copyright (c) 2022-2023 Advanced Micro Devices, Inc. All rights reserved.
 *
 *  -- ScaLAPACK routine (version 1.7) --
 *     University of Tennessee, Knoxville, Oak Ridge National Laboratory,
 *     and University of California, Berkeley.
 *     May 25, 2001
 *
+#include "SL_Context_fortran_include.h"
+*
+*  =====================================================================
+*     SUBROUTINE PDGETRF
+*  =====================================================================
+      SUBROUTINE PDGETRF( M, N, A, IA, JA, DESCA, IPIV, INFO )
+*
+      USE LINK_TO_C_GLOBALS
 *     .. Scalar Arguments ..
       INTEGER            INFO, IA, JA, M, N
 *     ..
@@ -142,20 +141,24 @@
 *
 *  =====================================================================
 *
-#ifdef AOCL_DTL
-      CHARACTER  BUFFER*90
-      CALL AOCL_DTL_TRACE_ENTRY(__FILE__, __LINE__, ' ')
-	  WRITE(BUFFER,101) M, N, IA, JA
- 101  FORMAT('pdgetrf inputs: M: ', I2, '  N: ', I2 ,'  IA: ', I2,'  JA: ', I2 )
-      CALL AOCL_DTL_LOG_ENTRY( BUFFER )
-#endif
+      CHARACTER  BUFFER*450
+      CHARACTER*15, PARAMETER :: FILE_NAME = 'pdgetrf.f'
+      CALL AOCL_SCALAPACK_INIT( )
+      AOCL_DTL_TRACE_ENTRY_F
+*
+      IF( SCALAPACK_CONTEXT%IS_DTL_ENABLED.EQ.1 ) THEN
+         WRITE(BUFFER,101) M, N, IA, JA
+ 101     FORMAT('pdgetrf inputs: M: ', I2, '  N: ', I2 ,'
+     $               IA: ', I2,'  JA: ', I2 )
+         CALL AOCL_SL_DTL_LOG_ENTRY( BUFFER )
+      END IF
 
 *
 #ifdef ENABLE_LOOK_AHEAD_FOR_LU
 *     ..
 *     .. Local Scalars ..
 
-*     Defining the threshold to invoke look-ahead      
+*     Defining the threshold to invoke look-ahead
       INTEGER            CTXT_, LU_THRESHOLD, NB_, MN, NB
       INTEGER            ICTXT, MYCOL, MYROW, NPCOL, NPROW
 *     ..
@@ -203,9 +206,7 @@
       CALL PDGETRF0( M, N, A, IA, JA, DESCA, IPIV, INFO )
 #endif /* ENABLE_LOOK_AHEAD_FOR_LU */
 *
-#ifdef AOCL_DTL
-      CALL AOCL_DTL_TRACE_EXIT(__FILE__, __LINE__, ' ')
-#endif
+      AOCL_DTL_TRACE_EXIT_F
       RETURN
 *
 *     End of PDGETRF

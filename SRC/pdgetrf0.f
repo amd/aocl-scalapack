@@ -1,11 +1,14 @@
 *  -- ScaLAPACK routine --
-*     Copyright (c) 2020-22 Advanced Micro Devices, Inc.  All rights reserved.
+*     Copyright (c) 2020-23 Advanced Micro Devices, Inc.  All rights reserved.
 *
+#include "SL_Context_fortran_include.h"
+
 *  =====================================================================
 *     SUBROUTINE PDGETRF0
 *  =====================================================================
       SUBROUTINE PDGETRF0( M, N, A, IA, JA, DESCA, IPIV, INFO )
 *
+      USE LINK_TO_C_GLOBALS
 *     .. Scalar Arguments ..
       INTEGER            IA, INFO, JA, M, N
 *     ..
@@ -146,14 +149,14 @@
       CHARACTER          COLBTOP, COLCTOP, ROWBTOP
       INTEGER            I, ICOFF, ICTXT, IINFO, IN, IROFF, J, JB, JN,
      $                   MN, MYCOL, MYROW, NPCOL, NPROW
-*
-#ifdef AOCL_PROGRESS
-      INTEGER TOTAL_MPI_PROCESSES, CURRENT_RANK, PROGRESS
+*     ..
+*     .. AOCL Progress variables ..
+      INTEGER TOTAL_MPI_PROCESSES, CURRENT_RANK, PROGRESS, RET
  
-*     .. Declaring below API name string and its length as const objects
-      CHARACTER*8, PARAMETER :: API_NAME = 'PDGETRF '
+*     .. Declaring below 'API NAME' string and its length as const objects
+*     .. API_NAME string terminated with 'NULL' character.
+      CHARACTER*8, PARAMETER :: API_NAME = 'PDGETRF' // C_NULL_CHAR
       INTEGER, PARAMETER :: LSTAGE = 8
-#endif
 *     ..
 *     .. Local Arrays ..
       INTEGER            IDUM1( 1 ), IDUM2( 1 )
@@ -173,6 +176,7 @@
       INTRINSIC          MIN, MOD
 *     ..
 *     .. Executable Statements ..
+      CHARACTER*15, PARAMETER :: FILE_NAME = 'pdgetrf0.f' // C_NULL_CHAR
 *
 *     Get grid parameters
 *
@@ -203,10 +207,6 @@
 *
       IF( INFO.NE.0 ) THEN
          CALL PXERBLA( ICTXT, 'PDGETRF', -INFO )
-*
-#ifdef AOCL_DTL
-         CALL AOCL_DTL_TRACE_EXIT(__FILE__, __LINE__, ' ')
-#endif
          RETURN
       END IF
 *
@@ -214,14 +214,8 @@
 *
       IF( DESCA( M_ ).EQ.1 ) THEN
          IPIV( 1 ) = 1
-#ifdef AOCL_DTL
-         CALL AOCL_DTL_TRACE_EXIT(__FILE__, __LINE__, ' ')
-#endif
          RETURN
       ELSE IF( M.EQ.0 .OR. N.EQ.0 ) THEN
-#ifdef AOCL_DTL
-         CALL AOCL_DTL_TRACE_EXIT(__FILE__, __LINE__, ' ')
-#endif
          RETURN
       END IF
 *
@@ -241,10 +235,10 @@
       JN = MIN( ICEIL( JA, DESCA( NB_ ) )*DESCA( NB_ ), JA+MN-1 )
       JB = JN - JA + 1
 *
-#ifdef AOCL_PROGRESS
-      CURRENT_RANK = MYCOL+MYROW*NPCOL
-      TOTAL_MPI_PROCESSES = NPROW*NPCOL
-#endif
+      IF( SCALAPACK_CONTEXT%IS_PROGRESS_ENABLED.EQ.1 ) THEN
+         CURRENT_RANK = MYCOL+MYROW*NPCOL
+         TOTAL_MPI_PROCESSES = NPROW*NPCOL
+      END IF
 
 *     Factor diagonal and subdiagonal blocks and test for exact
 *     singularity.
@@ -279,13 +273,13 @@
       DO 10 J = JN+1, JA+MN-1, DESCA( NB_ )
          JB = MIN( MN-J+JA, DESCA( NB_ ) )
          I = IA + J - JA
-#ifdef AOCL_PROGRESS
-*        Capture the Loop count 'J' to a separate 'PROGRESS' variable
-*        to avoid the corruption at application side.
-         PROGRESS = J
-         CALL AOCL_SCALAPACK_PROGRESS ( API_NAME, LSTAGE,
+         IF( SCALAPACK_CONTEXT%IS_PROGRESS_ENABLED.EQ.1 ) THEN
+*           Capture the Loop count 'J' to a separate 'PROGRESS' variable
+*           to avoid the corruption at application side.
+            PROGRESS = J
+            RET = AOCL_SCALAPACK_PROGRESS ( API_NAME, LSTAGE,
      $                 PROGRESS, CURRENT_RANK, TOTAL_MPI_PROCESSES )
-#endif
+         END IF
 *
 *        Factor diagonal and subdiagonal blocks and test for exact
 *        singularity.
@@ -337,9 +331,6 @@
       CALL PB_TOPSET( ICTXT, 'Broadcast', 'Columnwise', COLBTOP )
       CALL PB_TOPSET( ICTXT, 'Combine', 'Columnwise', COLCTOP )
 *
-#ifdef AOCL_DTL
-      CALL AOCL_DTL_TRACE_EXIT(__FILE__, __LINE__, ' ')
-#endif
       RETURN
 *
 *     End of PDGETRF
