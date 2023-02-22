@@ -315,6 +315,8 @@
       CABS1( ZDUM ) = ABS( REAL( ZDUM ) ) + ABS( AIMAG( ZDUM ) )
 *     ..
 *     .. Executable Statements ..
+*     .. Initialize EST
+      EST = (0.0, 0.0)
 *
 *     Initialize framework context structure if not initialized
 *

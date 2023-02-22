@@ -306,6 +306,8 @@
 *     ..
 *     ..
 *     .. Executable Statements ..
+*     .. Initialize EST
+	  EST = 0.0
 *
 *     Initialize framework context structure if not initialized
 *
