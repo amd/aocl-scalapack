@@ -306,6 +306,8 @@
       CABS1( ZDUM ) = ABS( DBLE( ZDUM ) ) + ABS( DIMAG( ZDUM ) )
 *     ..
 *     .. Executable Statements ..
+*     .. Initialize EST
+      EST = (0.0, 0.0)
 *
 *     Get grid parameters
 *

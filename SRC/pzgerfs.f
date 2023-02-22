@@ -309,6 +309,9 @@
 *     ..
 *     .. Executable Statements ..
 *
+*     .. Initialize EST
+      EST = (0.0, 0.0)
+*
 *     Get grid parameters
 *
       ICTXT = DESCA( CTXT_ )

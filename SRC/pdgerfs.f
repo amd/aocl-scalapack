@@ -301,6 +301,7 @@
       INTRINSIC          ABS, DBLE, ICHAR, MAX, MIN, MOD
 *     ..
 *     .. Executable Statements ..
+	  EST = 0.0
 *
 *     Get grid parameters
 *
