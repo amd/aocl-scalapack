@@ -18,21 +18,50 @@ set(CMAKE_MODULE_PATH "${SCALAPACK_SOURCE_DIR}/CMAKE" ${CMAKE_MODULE_PATH})
 
 set(SL_FRAMEWORK_INCLUDE_PATH  "${SCALAPACK_SOURCE_DIR}/FRAMEWORK")
 
-#Build Options
+# ------   Build Options List  -----------
 
 # ILP64 build option
 option(ENABLE_ILP64 "Enable ILP64 " OFF)
+
+# aocl progress option
 option(ENABLE_AOCL_PROGRESS "Enable progress feature " OFF)
+
+# DTL option
 option(ENABLE_DTL "Enable DTL feature " OFF)
 
 # Option: Include build number in the version string.
 option (ENABLE_SET_LIB_VERSION "Set library version" OFF)
+
+# Option: Dynamic allocation of work buffer memory in Test code
+# Helpful to test larger matrix sizes more than 2K
+option (ENABLE_LARGE_MATRIX_TESTING "Dynamic allocation of work buffer memory in test code" OFF)
+
+# ------   Build Options List End   -----------
+
+
 if (WIN32 AND CMAKE_Fortran_COMPILER_ID MATCHES "Intel")
     set (CMAKE_IFORT_LIBDEPS_DIR "C:/Program Files (x86)/IntelSWTools/compilers_and_libraries/windows/compiler/lib/intel64_win" CACHE STRING "")
 endif()
 
 set(CMAKE_ICC_FLAGS " ")
 set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -cpp" )
+
+# Option to enable the scaLAPACK test-suite with "Dynamic work buffer memory allocation".
+if(ENABLE_LARGE_MATRIX_TESTING)
+
+#  Configure option to customize Dynamic work buffer size "-DWORK_BUFFER_SIZE = custom_size Bytes"
+#  as per the machine's memory configuration.
+   if(WORK_BUFFER_SIZE)
+      message(STATUS "scaLAPACK test-suite build with custom dynamic work_buffer_size: ${WORK_BUFFER_SIZE} bytes.")
+      set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS}  -DDYNAMIC_WORK_MEM_ALLOC -DWORK_BUFFER_SIZE=${WORK_BUFFER_SIZE}" )
+   else(WORK_BUFFER_SIZE)
+#  Build with Dynamic work buffer size = 2100000000 bytes by default.
+      message(STATUS "scaLAPACK test-suite build with dynamic work_buffer_size: 2100000000 bytes.")
+      set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS}  -DDYNAMIC_WORK_MEM_ALLOC -DWORK_BUFFER_SIZE=2100000000 " )
+   endif(WORK_BUFFER_SIZE)
+
+endif(ENABLE_LARGE_MATRIX_TESTING)
+
 
 if (UNIX)
    if ("${CMAKE_C_COMPILER_ID}" STREQUAL "GNU")

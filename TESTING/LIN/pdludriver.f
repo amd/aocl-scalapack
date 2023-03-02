@@ -87,8 +87,7 @@
      $                     PADVAL = -9923.0D+0, ZERO = 0.0D+0 )
 #else
       INTEGER            DBLESZ, NTESTS
-      INTEGER, PARAMETER ::  MEMSIZ = 2100000000
-
+      INTEGER, PARAMETER ::  MEMSIZ = WORK_BUFFER_SIZE
       DOUBLE PRECISION   PADVAL, ZERO
       PARAMETER          ( DBLESZ = 8,
      $                      NTESTS = 20,
