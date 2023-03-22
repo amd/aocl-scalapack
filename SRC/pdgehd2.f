@@ -221,18 +221,25 @@
 *     .. Intrinsic Functions ..
       INTRINSIC          DBLE, MAX, MIN, MOD
 *     ..
-*     ..
+*     .. DTL variables declaration ..
+      CHARACTER  BUFFER*512
+      CHARACTER*15, PARAMETER :: FILE_NAME = 'pdgehd2.f'
 *     .. Executable Statements ..
-*
-*     Initialize framework context structure if not initialized
-*
 *
       CALL AOCL_SCALAPACK_INIT( )
 *
+      IF( SCALAPACK_CONTEXT%IS_DTL_ENABLED.EQ.1 ) THEN
+*        .. Init DTL log Buffer to zero ..
+         BUFFER='0'
+         AOCL_DTL_TRACE_ENTRY_F
+         WRITE(BUFFER,102)  IA, IHI, ILO, INFO,
+     $ JA, LWORK, N
+ 102     FORMAT('PDGEHD2 inputs:
+     $ IA: ', I5,'  IHI: ', I5,'  ILO: ', I5,'  INFO: ',
+     $ I5,'  JA: ', I5,'  LWORK: ', I5,'  N: ', I5)
+         CALL AOCL_SL_DTL_LOG_ENTRY( BUFFER )
+      END IF
 *
-*     Capture the subroutine entry in the trace file
-*
-      AOCL_DTL_TRACE_ENTRY_F
 *
 *     Get grid parameters
 *
@@ -287,15 +294,9 @@
       IF( INFO.NE.0 ) THEN
          CALL PXERBLA( ICTXT, 'PDGEHD2', -INFO )
          CALL BLACS_ABORT( ICTXT, 1 )
-*
-*        Capture the subroutine exit in the trace file
-*
          AOCL_DTL_TRACE_EXIT_F
          RETURN
       ELSE IF( LQUERY ) THEN
-*
-*        Capture the subroutine exit in the trace file
-*
          AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
@@ -325,9 +326,6 @@
    10 CONTINUE
 *
       WORK( 1 ) = DBLE( LWMIN )
-*
-*
-*     Capture the subroutine exit in the trace file
 *
       AOCL_DTL_TRACE_EXIT_F
       RETURN

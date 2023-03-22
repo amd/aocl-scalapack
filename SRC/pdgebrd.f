@@ -274,18 +274,25 @@
 *     .. Intrinsic Functions ..
       INTRINSIC          DBLE, MAX, MIN, MOD
 *     ..
-*     ..
+*     .. DTL variables declaration ..
+      CHARACTER  BUFFER*512
+      CHARACTER*15, PARAMETER :: FILE_NAME = 'pdgebrd.f'
 *     .. Executable Statements ..
-*
-*     Initialize framework context structure if not initialized
-*
 *
       CALL AOCL_SCALAPACK_INIT( )
 *
+      IF( SCALAPACK_CONTEXT%IS_DTL_ENABLED.EQ.1 ) THEN
+*        .. Init DTL log Buffer to zero ..
+         BUFFER='0'
+         AOCL_DTL_TRACE_ENTRY_F
+         WRITE(BUFFER,102)  IA, INFO, JA, LWORK,
+     $ M, N
+ 102     FORMAT('PDGEBRD inputs:
+     $ IA: ', I5,'  INFO: ', I5,'  JA: ', I5,'  LWORK: ',
+     $  I5,'  M: ', I5,'  N: ', I5)
+         CALL AOCL_SL_DTL_LOG_ENTRY( BUFFER )
+      END IF
 *
-*     Capture the subroutine entry in the trace file
-*
-      AOCL_DTL_TRACE_ENTRY_F
 *
 *     Get grid parameters
 *
@@ -343,15 +350,9 @@
 *
       IF( INFO.LT.0 ) THEN
          CALL PXERBLA( ICTXT, 'PDGEBRD', -INFO )
-*
-*        Capture the subroutine exit in the trace file
-*
          AOCL_DTL_TRACE_EXIT_F
          RETURN
       ELSE IF( LQUERY ) THEN
-*
-*        Capture the subroutine exit in the trace file
-*
          AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
@@ -360,9 +361,6 @@
 *
       MN = MIN( M, N )
       IF( MN.EQ.0 ) THEN
-*
-*        Capture the subroutine exit in the trace file
-*
          AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
@@ -448,9 +446,6 @@
       CALL PB_TOPSET( ICTXT, 'Combine', 'Rowwise',    ROWCTOP )
 *
       WORK( 1 ) = DBLE( LWMIN )
-*
-*
-*     Capture the subroutine exit in the trace file
 *
       AOCL_DTL_TRACE_EXIT_F
       RETURN

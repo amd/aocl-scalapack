@@ -270,18 +270,27 @@
 *     .. Intrinsic Functions ..
       INTRINSIC          DBLE, ICHAR, MAX, MIN, MOD
 *     ..
-*     ..
+*     .. DTL variables declaration ..
+      CHARACTER  BUFFER*512
+      CHARACTER*15, PARAMETER :: FILE_NAME = 'pdgels.f'
 *     .. Executable Statements ..
-*
-*     Initialize framework context structure if not initialized
-*
 *
       CALL AOCL_SCALAPACK_INIT( )
 *
+      IF( SCALAPACK_CONTEXT%IS_DTL_ENABLED.EQ.1 ) THEN
+*        .. Init DTL log Buffer to zero ..
+         BUFFER='0'
+         AOCL_DTL_TRACE_ENTRY_F
+         WRITE(BUFFER,102)  TRANS, IA, IB, INFO,
+     $ JA, JB, LWORK, M, N, NRHS
+ 102     FORMAT('PDGELS inputs:
+     $ TRANS: ', A5,'
+     $ IA: ', I5,'  IB: ', I5,'  INFO: ', I5,'  JA: ', I5
+     $ ,'  JB: ', I5,'  LWORK: ', I5,'  M: ', I5,'  N: ',
+     $  I5,'  NRHS: ', I5)
+         CALL AOCL_SL_DTL_LOG_ENTRY( BUFFER )
+      END IF
 *
-*     Capture the subroutine entry in the trace file
-*
-      AOCL_DTL_TRACE_ENTRY_F
 *
 *     Get grid parameters
 *
@@ -408,15 +417,9 @@
 *
       IF( INFO.NE.0 ) THEN
          CALL PXERBLA( ICTXT, 'PDGELS', -INFO )
-*
-*        Capture the subroutine exit in the trace file
-*
          AOCL_DTL_TRACE_EXIT_F
          RETURN
       ELSE IF( LQUERY ) THEN
-*
-*        Capture the subroutine exit in the trace file
-*
          AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
@@ -426,9 +429,6 @@
       IF( MIN( M, N, NRHS ).EQ.0 ) THEN
          CALL PDLASET( 'Full', MAX( M, N ), NRHS, ZERO, ZERO, B,
      $                 IB, JB, DESCB )
-*
-*        Capture the subroutine exit in the trace file
-*
          AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
@@ -627,9 +627,6 @@
    10 CONTINUE
 *
       WORK( 1 ) = DBLE( LWMIN )
-*
-*
-*     Capture the subroutine exit in the trace file
 *
       AOCL_DTL_TRACE_EXIT_F
       RETURN

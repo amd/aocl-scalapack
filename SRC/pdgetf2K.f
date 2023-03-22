@@ -1,9 +1,14 @@
+*
+*     Copyright (c) 2020-23 Advanced Micro Devices, Inc.  All rights reserved.
+*
 *  -- ScaLAPACK routine --
-*     Copyright (c) 2020-21 Advanced Micro Devices, Inc.  All rights reserved.
-*     June 10, 2020
+*
+*
+#include "SL_Context_fortran_include.h"
 *
       SUBROUTINE PDGETF2K( M, N, A, IA, JA, DESCA, IPIV, PANEL, INFO )
 *
+      USE LINK_TO_C_GLOBALS
 *     .. Scalar Arguments ..
       INTEGER            IA, INFO, JA, M, N
 *     ..
@@ -43,7 +48,7 @@
 *  to be present entirely in a single column of processes in the
 *  2D grid. This function is an internal function called by LU
 *  factorization using lookahead panel optimization. In addition,
-*  the top L11 matrix is copied to a temporary buffer in the 
+*  the top L11 matrix is copied to a temporary buffer in the
 *  panel struct.
 *
 *  The factorization has the form sub( A ) = P * L * U, where P is a
@@ -187,7 +192,24 @@
 *     .. Intrinsic Functions ..
       INTRINSIC          MIN, MOD
 *     ..
+*     .. DTL variables declaration ..
+      CHARACTER  BUFFER*512
+      CHARACTER*15, PARAMETER :: FILE_NAME = 'pdgetf2K.f'
 *     .. Executable Statements ..
+*
+      CALL AOCL_SCALAPACK_INIT( )
+*
+      IF( SCALAPACK_CONTEXT%IS_DTL_ENABLED.EQ.1 ) THEN
+*        .. Init DTL log Buffer to zero ..
+         BUFFER='0'
+         AOCL_DTL_TRACE_ENTRY_F
+         WRITE(BUFFER,102)  IA, INFO, JA, M, N
+ 102     FORMAT('PDGETF2K inputs:
+     $ IA: ', I5,'  INFO: ', I5,'  JA: ', I5,'  M: ', I5,
+     $ '  N: ', I5)
+         CALL AOCL_SL_DTL_LOG_ENTRY( BUFFER )
+      END IF
+*
 *
 *     Get grid parameters.
 *
@@ -220,13 +242,16 @@
       IF( INFO.NE.0 ) THEN
          CALL PXERBLA( ICTXT, 'PDGETF2', -INFO )
          CALL BLACS_ABORT( ICTXT, 1 )
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
 *
 *     Quick return if possible
 *
-      IF( M.EQ.0 .OR. N.EQ.0 )
-     $   RETURN
+      IF( M.EQ.0 .OR. N.EQ.0 ) THEN
+         AOCL_DTL_TRACE_EXIT_F
+         RETURN
+      END IF
 *
       MN = MIN( M, N )
       CALL INFOG2L( IA, JA, DESCA, NPROW, NPCOL, MYROW, MYCOL, IIA, JJA,
@@ -263,7 +288,7 @@
             IF( J-JA+1.LT.MN ) THEN
                CALL PDGER( M-J+JA-1, N-J+JA-1, -ONE, A, I+1, J, DESCA,
      $                     1, A, I, J+1, DESCA, DESCA( M_ ), A, I+1,
-     $                     J+1, DESCA ) 
+     $                     J+1, DESCA )
             END IF
             PI = PI + 1
    10    CONTINUE
@@ -271,7 +296,7 @@
 *        Copy L11 into LMEM.
 *
          IF( MYROW.EQ.IAROW )
-     $      CALL PDPANEL_LCOPY( A, IA, JA, LDA, N, PANEL ) 
+     $      CALL PDPANEL_LCOPY( A, IA, JA, LDA, N, PANEL )
 *
 *        Broadcast L11 with-in column
 *
@@ -279,6 +304,7 @@
 *
       END IF
 *
+      AOCL_DTL_TRACE_EXIT_F
       RETURN
 *
 *     End of PDGETF2K

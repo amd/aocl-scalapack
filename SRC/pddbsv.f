@@ -389,29 +389,26 @@
 *     .. External Subroutines ..
       EXTERNAL           PDDBTRF, PDDBTRS, PXERBLA
 *     ..
+*     .. DTL variables declaration ..
+      CHARACTER  BUFFER*512
+      CHARACTER*15, PARAMETER :: FILE_NAME = 'pddbsv.f'
 *     .. Executable Statements ..
-*
-*     Initialize framework context structure if not initialized
-*
 *
       CALL AOCL_SCALAPACK_INIT( )
 *
-*
-*     Capture the subroutine entry in the trace file
-*
-      AOCL_DTL_TRACE_ENTRY_F
-*
-*     Update the log buffer with the scalar arguments details,
-*     MPI process grid information and write to the log file
-*
-      IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
-         WRITE(LOG_BUF,102)  BWL, BWU, IB, INFO, JA, LWORK,
-     $            N, NRHS, eos_str
- 102     FORMAT('PDDBSV inputs: ,BWL:',I5,', BWU:',I5,', IB:',I5,
-     $           ', INFO:',I5,', JA:',I5,', LWORK:',I5,
-     $           ', N:',I5,', NRHS:',I5, A1 )
-         AOCL_DTL_LOG_ENTRY_F
+      IF( SCALAPACK_CONTEXT%IS_DTL_ENABLED.EQ.1 ) THEN
+*        .. Init DTL log Buffer to zero ..
+         BUFFER='0'
+         AOCL_DTL_TRACE_ENTRY_F
+         WRITE(BUFFER,102)  BWL, BWU, IB, INFO,
+     $ JA, LWORK, N, NRHS
+ 102     FORMAT('PDDBSV inputs:
+     $ BWL: ', I5,'  BWU: ', I5,'  IB: ', I5,'  INFO: ',
+     $ I5,'  JA: ', I5,'  LWORK: ', I5,'  N: ', I5,'  NRH
+     $ S: ', I5)
+         CALL AOCL_SL_DTL_LOG_ENTRY( BUFFER )
       END IF
+*
 *
 *     Note: to avoid duplication, most error checking is not performed
 *           in this routine and is left to routines
@@ -434,9 +431,6 @@
          CALL PXERBLA( ICTXT,
      $      'PDDBSV',
      $      -INFO )
-*
-*        Capture the subroutine exit in the trace file
-*
          AOCL_DTL_TRACE_EXIT_F
          RETURN
       ENDIF
@@ -460,9 +454,6 @@
          IF( INFO .LT. 0 ) THEN
             CALL PXERBLA( ICTXT, 'PDDBSV', -INFO )
          ENDIF
-*
-*        Capture the subroutine exit in the trace file
-*
          AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
@@ -477,15 +468,9 @@
 *
       IF( INFO.NE.0 ) THEN
          CALL PXERBLA( ICTXT, 'PDDBSV', -INFO )
-*
-*        Capture the subroutine exit in the trace file
-*
          AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
-*
-*
-*     Capture the subroutine exit in the trace file
 *
       AOCL_DTL_TRACE_EXIT_F
       RETURN

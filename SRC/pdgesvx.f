@@ -453,18 +453,30 @@
 *     .. Intrinsic Functions ..
       INTRINSIC          DBLE, ICHAR, MAX, MIN, MOD
 *     ..
-*     ..
+*     .. DTL variables declaration ..
+      CHARACTER  BUFFER*512
+      CHARACTER*15, PARAMETER :: FILE_NAME = 'pdgesvx.f'
 *     .. Executable Statements ..
-*
-*     Initialize framework context structure if not initialized
-*
 *
       CALL AOCL_SCALAPACK_INIT( )
 *
+      IF( SCALAPACK_CONTEXT%IS_DTL_ENABLED.EQ.1 ) THEN
+*        .. Init DTL log Buffer to zero ..
+         BUFFER='0'
+         AOCL_DTL_TRACE_ENTRY_F
+         WRITE(BUFFER,102)  EQUED, FACT, TRANS,
+     $ IA, IAF, IB, INFO, IX, JA, JAF, JB, JX, LIWORK,
+     $ LWORK, N, NRHS, RCOND
+ 102     FORMAT('PDGESVX inputs:
+     $ EQUED: ', A5,'  FACT: ', A5,'  TRANS: ', A5,'
+     $ IA: ', I5,'  IAF: ', I5,'  IB: ', I5,'  INFO: ', I
+     $ 5,'  IX: ', I5,'  JA: ', I5,'  JAF: ', I5,'  JB: '
+     $ , I5,'  JX: ', I5,'  LIWORK: ', I5,'  LWORK: ', I5
+     $ ,'  N: ', I5,'  NRHS: ', I5,'
+     $ RCOND: ', F9.4)
+         CALL AOCL_SL_DTL_LOG_ENTRY( BUFFER )
+      END IF
 *
-*     Capture the subroutine entry in the trace file
-*
-      AOCL_DTL_TRACE_ENTRY_F
 *
 *     Get grid parameters
 *
@@ -688,15 +700,9 @@
 *
       IF( INFO.NE.0 ) THEN
          CALL PXERBLA( ICTXT, 'PDGESVX', -INFO )
-*
-*        Capture the subroutine exit in the trace file
-*
          AOCL_DTL_TRACE_EXIT_F
          RETURN
       ELSE IF( LQUERY ) THEN
-*
-*        Capture the subroutine exit in the trace file
-*
          AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
@@ -774,9 +780,6 @@
          IF( INFO.NE.0 ) THEN
             IF( INFO.GT.0 )
      $         RCOND = ZERO
-*
-*           Capture the subroutine exit in the trace file
-*
             AOCL_DTL_TRACE_EXIT_F
             RETURN
          END IF
@@ -800,9 +803,6 @@
 *
       IF( RCOND.LT.PDLAMCH( ICTXT, 'Epsilon' ) ) THEN
          INFO = IA + N
-*
-*        Capture the subroutine exit in the trace file
-*
          AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
@@ -874,9 +874,6 @@
 *
       WORK( 1 ) = DBLE( LWMIN )
       IWORK( 1 ) = LIWMIN
-*
-*
-*     Capture the subroutine exit in the trace file
 *
       AOCL_DTL_TRACE_EXIT_F
       RETURN

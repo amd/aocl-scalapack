@@ -184,18 +184,26 @@
 *     .. Intrinsic Functions ..
       INTRINSIC          ICHAR, MOD
 *     ..
-*     ..
+*     .. DTL variables declaration ..
+      CHARACTER  BUFFER*512
+      CHARACTER*15, PARAMETER :: FILE_NAME = 'pdgetrs.f'
 *     .. Executable Statements ..
-*
-*     Initialize framework context structure if not initialized
-*
 *
       CALL AOCL_SCALAPACK_INIT( )
 *
+      IF( SCALAPACK_CONTEXT%IS_DTL_ENABLED.EQ.1 ) THEN
+*        .. Init DTL log Buffer to zero ..
+         BUFFER='0'
+         AOCL_DTL_TRACE_ENTRY_F
+         WRITE(BUFFER,102)  TRANS, IA, IB, INFO,
+     $ JA, JB, N, NRHS
+ 102     FORMAT('PDGETRS inputs:
+     $ TRANS: ', A5,'
+     $ IA: ', I5,'  IB: ', I5,'  INFO: ', I5,'  JA: ', I5
+     $ ,'  JB: ', I5,'  N: ', I5,'  NRHS: ', I5)
+         CALL AOCL_SL_DTL_LOG_ENTRY( BUFFER )
+      END IF
 *
-*     Capture the subroutine entry in the trace file
-*
-      AOCL_DTL_TRACE_ENTRY_F
 *
 *     Get grid parameters
 *
@@ -264,9 +272,6 @@
 *
       IF( INFO.NE.0 ) THEN
          CALL PXERBLA( ICTXT, 'PDGETRS', -INFO )
-*
-*        Capture the subroutine exit in the trace file
-*
          AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
@@ -274,9 +279,6 @@
 *     Quick return if possible
 *
       IF( N.EQ.0 .OR. NRHS.EQ.0 ) THEN
-*
-*        Capture the subroutine exit in the trace file
-*
          AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
@@ -324,9 +326,6 @@
      $                 DESCB, IPIV, IA, 1, DESCIP, IDUM1 )
 *
       END IF
-*
-*
-*     Capture the subroutine exit in the trace file
 *
       AOCL_DTL_TRACE_EXIT_F
       RETURN

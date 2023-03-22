@@ -1,10 +1,15 @@
+*
+*     Copyright (c) 2020-23 Advanced Micro Devices, Inc.  All rights reserved.
+*
 *  -- AOCL ScaLAPACK routine --
-*     Copyright (c) 2020-21 Advanced Micro Devices, Inc.  All rights reserved.
-*     June 10, 2020
+*
+*
+#include "SL_Context_fortran_include.h"
 *
       SUBROUTINE PDGETF2_COMM( M, N, A, IA, JA, DESCA, IPIV, INFO )
 *
 
+      USE LINK_TO_C_GLOBALS
 *     .. Scalar Arguments ..
       INTEGER            IA, INFO, JA, M, N
 *     ..
@@ -31,7 +36,24 @@
      $                   PDSCAL, PDSWAP, PB_TOPGET, PXERBLA
 
 *     ..
+*     .. DTL variables declaration ..
+      CHARACTER  BUFFER*512
+      CHARACTER*15, PARAMETER :: FILE_NAME = 'pdgetf2_comm.f'
 *     .. Executable Statements ..
+*
+      CALL AOCL_SCALAPACK_INIT( )
+*
+      IF( SCALAPACK_CONTEXT%IS_DTL_ENABLED.EQ.1 ) THEN
+*        .. Init DTL log Buffer to zero ..
+         BUFFER='0'
+         AOCL_DTL_TRACE_ENTRY_F
+         WRITE(BUFFER,102)  IA, INFO, JA, M, N
+ 102     FORMAT('PDGETF2_COMM inputs:
+     $ IA: ', I5,'  INFO: ', I5,'  JA: ', I5,'  M: ', I5,
+     $ '  N: ', I5)
+         CALL AOCL_SL_DTL_LOG_ENTRY( BUFFER )
+      END IF
+*
 *
 *     Get grid parameters.
 *
@@ -56,6 +78,7 @@
 *
       END IF
 *
+      AOCL_DTL_TRACE_EXIT_F
       RETURN
 *
 *     End of PDGETF2_COMM

@@ -402,18 +402,25 @@
 *     .. Intrinsic Functions ..
       INTRINSIC          MAX, MIN, MOD
 *     ..
-*     ..
+*     .. DTL variables declaration ..
+      CHARACTER  BUFFER*512
+      CHARACTER*15, PARAMETER :: FILE_NAME = 'pdgbtrf.f'
 *     .. Executable Statements ..
-*
-*     Initialize framework context structure if not initialized
-*
 *
       CALL AOCL_SCALAPACK_INIT( )
 *
+      IF( SCALAPACK_CONTEXT%IS_DTL_ENABLED.EQ.1 ) THEN
+*        .. Init DTL log Buffer to zero ..
+         BUFFER='0'
+         AOCL_DTL_TRACE_ENTRY_F
+         WRITE(BUFFER,102)  BWL, BWU, INFO, JA,
+     $ LAF, LWORK, N
+ 102     FORMAT('PDGBTRF inputs:
+     $ BWL: ', I5,'  BWU: ', I5,'  INFO: ', I5,'  JA: ',
+     $ I5,'  LAF: ', I5,'  LWORK: ', I5,'  N: ', I5)
+         CALL AOCL_SL_DTL_LOG_ENTRY( BUFFER )
+      END IF
 *
-*     Capture the subroutine entry in the trace file
-*
-      AOCL_DTL_TRACE_ENTRY_F
 *
 *
 *     Test the input parameters
@@ -504,9 +511,6 @@
          INFO = -( 1 )
          CALL PXERBLA( ICTXT, 'PDGBTRF, D&C alg.: only 1 block per proc'
      $                 , -INFO )
-*
-*        Capture the subroutine exit in the trace file
-*
          AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
@@ -514,9 +518,6 @@
       IF( ( JA+N-1.GT.NB ) .AND. ( NB.LT.( BWL+BWU+1 ) ) ) THEN
          INFO = -( 6*100+4 )
          CALL PXERBLA( ICTXT, 'PDGBTRF, D&C alg.: NB too small', -INFO )
-*
-*        Capture the subroutine exit in the trace file
-*
          AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
@@ -532,9 +533,6 @@
          AF( 1 ) = LAF_MIN
          CALL PXERBLA( ICTXT, 'PDGBTRF: auxiliary storage error ',
      $                 -INFO )
-*
-*        Capture the subroutine exit in the trace file
-*
          AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
@@ -552,9 +550,6 @@
             WORK( 1 ) = WORK_SIZE_MIN
             CALL PXERBLA( ICTXT, 'PDGBTRF: worksize error ', -INFO )
          END IF
-*
-*        Capture the subroutine exit in the trace file
-*
          AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
@@ -611,9 +606,6 @@
 *
       IF( INFO.LT.0 ) THEN
          CALL PXERBLA( ICTXT, 'PDGBTRF', -INFO )
-*
-*        Capture the subroutine exit in the trace file
-*
          AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
@@ -621,9 +613,6 @@
 *     Quick return if possible
 *
       IF( N.EQ.0 ) THEN
-*
-*        Capture the subroutine exit in the trace file
-*
          AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
@@ -1148,9 +1137,6 @@
          CALL IGEBR2D( ICTXT, 'A', ' ', 1, 1, INFO, 1, 0, 0 )
       END IF
 *
-*
-*
-*     Capture the subroutine exit in the trace file
 *
       AOCL_DTL_TRACE_EXIT_F
       RETURN

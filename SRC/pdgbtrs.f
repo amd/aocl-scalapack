@@ -414,18 +414,27 @@
 *     .. Intrinsic Functions ..
       INTRINSIC          ICHAR, MAX, MIN, MOD
 *     ..
-*     ..
+*     .. DTL variables declaration ..
+      CHARACTER  BUFFER*512
+      CHARACTER*15, PARAMETER :: FILE_NAME = 'pdgbtrs.f'
 *     .. Executable Statements ..
-*
-*     Initialize framework context structure if not initialized
-*
 *
       CALL AOCL_SCALAPACK_INIT( )
 *
+      IF( SCALAPACK_CONTEXT%IS_DTL_ENABLED.EQ.1 ) THEN
+*        .. Init DTL log Buffer to zero ..
+         BUFFER='0'
+         AOCL_DTL_TRACE_ENTRY_F
+         WRITE(BUFFER,102)  TRANS, BWL, BWU, IB,
+     $ INFO, JA, LAF, LWORK, N, NRHS
+ 102     FORMAT('PDGBTRS inputs:
+     $ TRANS: ', A5,'
+     $ BWL: ', I5,'  BWU: ', I5,'  IB: ', I5,'  INFO: ',
+     $ I5,'  JA: ', I5,'  LAF: ', I5,'  LWORK: ', I5,'  N
+     $ : ', I5,'  NRHS: ', I5)
+         CALL AOCL_SL_DTL_LOG_ENTRY( BUFFER )
+      END IF
 *
-*     Capture the subroutine entry in the trace file
-*
-      AOCL_DTL_TRACE_ENTRY_F
 *
 *
 *     Test the input parameters
@@ -576,9 +585,6 @@
          INFO = -( 2 )
          CALL PXERBLA( ICTXT, 'PDGBTRS, D&C alg.: only 1 block per proc'
      $                 , -INFO )
-*
-*        Capture the subroutine exit in the trace file
-*
          AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
@@ -586,9 +592,6 @@
       IF( ( JA+N-1.GT.NB ) .AND. ( NB.LT.( BWL+BWU+1 ) ) ) THEN
          INFO = -( 8*100+4 )
          CALL PXERBLA( ICTXT, 'PDGBTRS, D&C alg.: NB too small', -INFO )
-*
-*        Capture the subroutine exit in the trace file
-*
          AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
@@ -605,9 +608,6 @@
             INFO = -16
             CALL PXERBLA( ICTXT, 'PDGBTRS: worksize error ', -INFO )
          END IF
-*
-*        Capture the subroutine exit in the trace file
-*
          AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
@@ -680,9 +680,6 @@
 *
       IF( INFO.LT.0 ) THEN
          CALL PXERBLA( ICTXT, 'PDGBTRS', -INFO )
-*
-*        Capture the subroutine exit in the trace file
-*
          AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
@@ -690,17 +687,11 @@
 *     Quick return if possible
 *
       IF( N.EQ.0 ) THEN
-*
-*        Capture the subroutine exit in the trace file
-*
          AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
 *
       IF( NRHS.EQ.0 ) THEN
-*
-*        Capture the subroutine exit in the trace file
-*
          AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
@@ -1223,9 +1214,6 @@
 *     Output worksize
 *
       WORK( 1 ) = WORK_SIZE_MIN
-*
-*
-*     Capture the subroutine exit in the trace file
 *
       AOCL_DTL_TRACE_EXIT_F
       RETURN
