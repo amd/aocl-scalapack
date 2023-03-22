@@ -1,4 +1,10 @@
+*
+*     Copyright (c) 2023 Advanced Micro Devices, Inc.  All rights reserved.
+*
 
+*
+#include "SL_Context_fortran_include.h"
+*
       SUBROUTINE PDGESVD(JOBU,JOBVT,M,N,A,IA,JA,DESCA,S,U,IU,JU,DESCU,
      +                   VT,IVT,JVT,DESCVT,WORK,LWORK,INFO)
 *
@@ -8,6 +14,7 @@
 *     Jan 2006
 
 *
+      USE LINK_TO_C_GLOBALS
 *     .. Scalar Arguments ..
       CHARACTER JOBU,JOBVT
       INTEGER IA,INFO,IU,IVT,JA,JU,JVT,LWORK,M,N
@@ -320,8 +327,29 @@
 *     .. Intrinsic Functions ..
       INTRINSIC MAX,MIN,SQRT,DBLE
 *     ..
+*     .. DTL variables declaration ..
+      CHARACTER  BUFFER*512
+      CHARACTER*15, PARAMETER :: FILE_NAME = 'pdgesvd.f'
 *     .. Executable Statements ..
+*
+      CALL AOCL_SCALAPACK_INIT( )
+*
+      IF( SCALAPACK_CONTEXT%IS_DTL_ENABLED.EQ.1 ) THEN
+*        .. Init DTL log Buffer to zero ..
+         BUFFER='0'
+         AOCL_DTL_TRACE_ENTRY_F
+         WRITE(BUFFER,102)  JOBU,JOBVT,
+     $ IA,INFO,IU,IVT,JA,JU,JVT,LWORK,M,N
+ 102     FORMAT('PDGESVDJOBU,JOBVT,M,N,A,IA,JA,DESCA,S,U,IU,JU,DESCU, inputs:
+     $ JOBU: ', A5,'  JOBVT: ', A5,'
+     $ IA: ', I5,'  INFO: ', I5,'  IU: ', I5,'  IVT: ', I
+     $ 5,'  JA: ', I5,'  JU: ', I5,'  JVT: ', I5,'  LWORK
+     $ : ', I5,'  M: ', I5,'  N: ', I5)
+         CALL AOCL_SL_DTL_LOG_ENTRY( BUFFER )
+      END IF
+*
 *     This is just to keep ftnchek happy
+      AOCL_DTL_TRACE_EXIT_F
       IF (BLOCK_CYCLIC_2D*DTYPE_*LLD_*MB_*M_*NB_*N_.LT.0) RETURN
 *
       CALL BLACS_GRIDINFO(DESCA(CTXT_),NPROW,NPCOL,MYPROW,MYPCOL)
@@ -472,6 +500,7 @@
 *
       IF (INFO.NE.0) THEN
           CALL PXERBLA(DESCA(CTXT_),'PDGESVD',-INFO)
+          AOCL_DTL_TRACE_EXIT_F
           RETURN
       ELSE IF (LWORK.EQ.-1) THEN
           GO TO 40
@@ -636,5 +665,6 @@
 *
 *     End of PDGESVD
 *
+      AOCL_DTL_TRACE_EXIT_F
       RETURN
       END

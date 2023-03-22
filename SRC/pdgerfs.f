@@ -1,3 +1,9 @@
+*
+*     Copyright (c) 2023 Advanced Micro Devices, Inc.  All rights reserved.
+*
+*
+#include "SL_Context_fortran_include.h"
+*
       SUBROUTINE PDGERFS( TRANS, N, NRHS, A, IA, JA, DESCA, AF, IAF,
      $                    JAF, DESCAF, IPIV, B, IB, JB, DESCB, X, IX,
      $                    JX, DESCX, FERR, BERR, WORK, LWORK, IWORK,
@@ -8,6 +14,7 @@
 *     and University of California, Berkeley.
 *     November 15, 1997
 *
+      USE LINK_TO_C_GLOBALS
 *     .. Scalar Arguments ..
       CHARACTER          TRANS
       INTEGER            IA, IAF, IB, IX, INFO, JA, JAF, JB, JX,
@@ -300,7 +307,29 @@
 *     .. Intrinsic Functions ..
       INTRINSIC          ABS, DBLE, ICHAR, MAX, MIN, MOD
 *     ..
+*     .. DTL variables declaration ..
+      CHARACTER  BUFFER*512
+      CHARACTER*15, PARAMETER :: FILE_NAME = 'pdgerfs.f'
 *     .. Executable Statements ..
+*
+      CALL AOCL_SCALAPACK_INIT( )
+*
+      IF( SCALAPACK_CONTEXT%IS_DTL_ENABLED.EQ.1 ) THEN
+*        .. Init DTL log Buffer to zero ..
+         BUFFER='0'
+         AOCL_DTL_TRACE_ENTRY_F
+         WRITE(BUFFER,102)  TRANS, IA, IAF, IB,
+     $ IX, INFO, JA, JAF, JB, JX,
+     $ LIWORK, LWORK, N, NRHS
+ 102     FORMAT('PDGERFS inputs:
+     $ TRANS: ', A5,'
+     $ IA: ', I5,'  IAF: ', I5,'  IB: ', I5,'  IX: ', I5,
+     $ '  INFO: ', I5,'  JA: ', I5,'  JAF: ', I5,'  JB: '
+     $ , I5,'  JX: ', I5,'  LIWORK: ', I5,'  LWORK: ', I5
+     $ ,'  N: ', I5,'  NRHS: ', I5)
+         CALL AOCL_SL_DTL_LOG_ENTRY( BUFFER )
+      END IF
+*
 	  EST = 0.0
 *
 *     Get grid parameters
@@ -428,8 +457,10 @@
       END IF
       IF( INFO.NE.0 ) THEN
          CALL PXERBLA( ICTXT, 'PDGERFS', -INFO )
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       ELSE IF( LQUERY ) THEN
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
 *
@@ -444,6 +475,7 @@
             FERR( JJ ) = ZERO
             BERR( JJ ) = ZERO
    10    CONTINUE
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
 *
@@ -880,6 +912,7 @@
       WORK( 1 ) = DBLE( LWMIN )
       IWORK( 1 ) = LIWMIN
 *
+      AOCL_DTL_TRACE_EXIT_F
       RETURN
 *
 *     End of PDGERFS

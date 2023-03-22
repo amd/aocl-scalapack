@@ -1,3 +1,9 @@
+*
+*     Copyright (c) 2023 Advanced Micro Devices, Inc.  All rights reserved.
+*
+*
+#include "SL_Context_fortran_include.h"
+*
       SUBROUTINE PDGESV( N, NRHS, A, IA, JA, DESCA, IPIV, B, IB, JB,
      $                   DESCB, INFO )
 *
@@ -6,6 +12,7 @@
 *     and University of California, Berkeley.
 *     Jan 30, 2006
 *
+      USE LINK_TO_C_GLOBALS
 *     .. Scalar Arguments ..
       INTEGER            IA, IB, INFO, JA, JB, N, NRHS
 *     ..
@@ -177,7 +184,25 @@
 *     .. Intrinsic Functions ..
       INTRINSIC          MOD
 *     ..
+*     .. DTL variables declaration ..
+      CHARACTER  BUFFER*512
+      CHARACTER*15, PARAMETER :: FILE_NAME = 'pdgesv.f'
 *     .. Executable Statements ..
+*
+      CALL AOCL_SCALAPACK_INIT( )
+*
+      IF( SCALAPACK_CONTEXT%IS_DTL_ENABLED.EQ.1 ) THEN
+*        .. Init DTL log Buffer to zero ..
+         BUFFER='0'
+         AOCL_DTL_TRACE_ENTRY_F
+         WRITE(BUFFER,102)  IA, IB, INFO, JA, JB,
+     $ N, NRHS
+ 102     FORMAT('PDGESV inputs:
+     $ IA: ', I5,'  IB: ', I5,'  INFO: ', I5,'  JA: ', I5
+     $ ,'  JB: ', I5,'  N: ', I5,'  NRHS: ', I5)
+         CALL AOCL_SL_DTL_LOG_ENTRY( BUFFER )
+      END IF
+*
 *
 *     Get grid parameters
 *
@@ -220,6 +245,7 @@
 *
       IF( INFO.NE.0 ) THEN
          CALL PXERBLA( ICTXT, 'PDGESV', -INFO )
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
 *
@@ -237,6 +263,7 @@
 *
       END IF
 *
+      AOCL_DTL_TRACE_EXIT_F
       RETURN
 *
 *     End of PDGESV

@@ -1,12 +1,19 @@
+*
+*     Copyright (c) 2023 Advanced Micro Devices, Inc.  All rights reserved.
+*
+*
+#include "SL_Context_fortran_include.h"
+*
       SUBROUTINE PDGETRI( N, A, IA, JA, DESCA, IPIV, WORK, LWORK,
      $                    IWORK, LIWORK, INFO )
 *
 *  -- ScaLAPACK routine (version 1.7.4) --
 *     University of Tennessee, Knoxville, Oak Ridge National Laboratory,
 *     and University of California, Berkeley.
-*     v1.7.4: May 10, 2006 
+*     v1.7.4: May 10, 2006
 *     v1.7:   May 1,  1997
 *
+      USE LINK_TO_C_GLOBALS
 *     .. Scalar Arguments ..
       INTEGER            IA, INFO, JA, LIWORK, LWORK, N
 *     ..
@@ -189,7 +196,25 @@
 *     .. Intrinsic Functions ..
       INTRINSIC          DBLE, MAX, MIN, MOD
 *     ..
+*     .. DTL variables declaration ..
+      CHARACTER  BUFFER*512
+      CHARACTER*15, PARAMETER :: FILE_NAME = 'pdgetri.f'
 *     .. Executable Statements ..
+*
+      CALL AOCL_SCALAPACK_INIT( )
+*
+      IF( SCALAPACK_CONTEXT%IS_DTL_ENABLED.EQ.1 ) THEN
+*        .. Init DTL log Buffer to zero ..
+         BUFFER='0'
+         AOCL_DTL_TRACE_ENTRY_F
+         WRITE(BUFFER,102)  IA, INFO, JA, LIWORK,
+     $ LWORK, N
+ 102     FORMAT('PDGETRI inputs:
+     $ IA: ', I5,'  INFO: ', I5,'  JA: ', I5,'  LIWORK: '
+     $ , I5,'  LWORK: ', I5,'  N: ', I5)
+         CALL AOCL_SL_DTL_LOG_ENTRY( BUFFER )
+      END IF
+*
 *
 *     Get grid parameters
 *
@@ -226,21 +251,21 @@
 *   LDW = LOCc( M_P + MOD(IP-1, MB_P) ) +
 *         MB_P * CEIL( CEIL(LOCr(M_P)/MB_P) / (LCM/NPROW) )
 *
-* where 
+* where
 *   M_P     is the global length of the pivot vector
 *           MP = DESCA( M_ ) + DESCA( MB_ ) * NPROW
 *   I_P     is IA
 *           I_P = IA
-*   MB_P    is the block size use for the block cyclic distribution of the 
+*   MB_P    is the block size use for the block cyclic distribution of the
 *           pivot vector
 *           MB_P = DESCA (MB_ )
-*   LOCc ( . ) 
+*   LOCc ( . )
 *           NUMROC ( . , DESCA ( NB_ ), MYCOL, DESCA ( CSRC_ ), NPCOL )
 *   LOCr ( . )
 *           NUMROC ( . , DESCA ( MB_ ), MYROW, DESCA ( RSRC_ ), NPROW )
 *   CEIL ( X / Y )
 *           ICEIL( X, Y )
-*   LCM 
+*   LCM
 *           LCM = ILCM( NPROW, NPCOL )
 *
                LCM = ILCM( NPROW, NPCOL )
@@ -285,22 +310,28 @@
 *
       IF( INFO.NE.0 ) THEN
          CALL PXERBLA( ICTXT, 'PDGETRI', -INFO )
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       ELSE IF( LQUERY ) THEN
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
 *
 *     Quick return if possible
 *
-      IF( N.EQ.0 )
-     $   RETURN
+      IF( N.EQ.0 ) THEN
+         AOCL_DTL_TRACE_EXIT_F
+         RETURN
+      END IF
 *
 *     Form inv(U).  If INFO > 0 from PDTRTRI, then U is singular,
 *     and the inverse is not computed.
 *
       CALL PDTRTRI( 'Upper', 'Non-unit', N, A, IA, JA, DESCA, INFO )
-      IF( INFO.GT.0 )
-     $   RETURN
+      IF( INFO.GT.0 ) THEN
+         AOCL_DTL_TRACE_EXIT_F
+         RETURN
+      END IF
 *
 *     Define array descriptor for working array WORK
 *
@@ -371,6 +402,7 @@
       WORK( 1 ) = DBLE( LWMIN )
       IWORK( 1 ) = LIWMIN
 *
+      AOCL_DTL_TRACE_EXIT_F
       RETURN
 *
 *     End of PDGETRI

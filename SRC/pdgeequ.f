@@ -1,3 +1,9 @@
+*
+*     Copyright (c) 2023 Advanced Micro Devices, Inc.  All rights reserved.
+*
+*
+#include "SL_Context_fortran_include.h"
+*
       SUBROUTINE PDGEEQU( M, N, A, IA, JA, DESCA, R, C, ROWCND, COLCND,
      $                    AMAX, INFO )
 *
@@ -6,6 +12,7 @@
 *     and University of California, Berkeley.
 *     May 1, 1997
 *
+      USE LINK_TO_C_GLOBALS
 *     .. Scalar Arguments ..
       INTEGER            IA, INFO, JA, M, N
       DOUBLE PRECISION   AMAX, COLCND, ROWCND
@@ -185,7 +192,27 @@
 *     .. Intrinsic Functions ..
       INTRINSIC          ABS, MAX, MIN, MOD
 *     ..
+*     .. DTL variables declaration ..
+      CHARACTER  BUFFER*512
+      CHARACTER*15, PARAMETER :: FILE_NAME = 'pdgeequ.f'
 *     .. Executable Statements ..
+*
+      CALL AOCL_SCALAPACK_INIT( )
+*
+      IF( SCALAPACK_CONTEXT%IS_DTL_ENABLED.EQ.1 ) THEN
+*        .. Init DTL log Buffer to zero ..
+         BUFFER='0'
+         AOCL_DTL_TRACE_ENTRY_F
+         WRITE(BUFFER,102)  IA, INFO, JA, M, N,
+     $ AMAX, COLCND, ROWCND
+ 102     FORMAT('PDGEEQU inputs:
+     $ IA: ', I5,'  INFO: ', I5,'  JA: ', I5,'  M: ', I5,
+     $ '  N: ', I5,'
+     $ AMAX: ', F9.4,'  COLCND: ', F9.4,'  ROWCND: ', F9.
+     $ 4)
+         CALL AOCL_SL_DTL_LOG_ENTRY( BUFFER )
+      END IF
+*
 *
 *     Get grid parameters
 *
@@ -205,6 +232,7 @@
 *
       IF( INFO.NE.0 ) THEN
          CALL PXERBLA( ICTXT, 'PDGEEQU', -INFO )
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
 *
@@ -214,6 +242,7 @@
          ROWCND = ONE
          COLCND = ONE
          AMAX = ZERO
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
 *
@@ -285,8 +314,10 @@
    50    CONTINUE
          CALL IGAMX2D( ICTXT, 'Columnwise', COLCTOP, 1, 1, INFO, 1,
      $                 IDUMM, IDUMM, -1, -1, MYCOL )
-         IF( INFO.NE.0 )
-     $      RETURN
+         IF( INFO.NE.0 ) THEN
+            AOCL_DTL_TRACE_EXIT_F
+            RETURN
+         END IF
       ELSE
 *
 *        Invert the scale factors.
@@ -344,8 +375,10 @@
   110    CONTINUE
          CALL IGAMX2D( ICTXT, 'Columnwise', COLCTOP, 1, 1, INFO, 1,
      $                 IDUMM, IDUMM, -1, -1, MYCOL )
-         IF( INFO.NE.0 )
-     $      RETURN
+         IF( INFO.NE.0 ) THEN
+            AOCL_DTL_TRACE_EXIT_F
+            RETURN
+         END IF
       ELSE
 *
 *        Invert the scale factors.
@@ -360,6 +393,7 @@
 *
       END IF
 *
+      AOCL_DTL_TRACE_EXIT_F
       RETURN
 *
 *     End of PDGEEQU

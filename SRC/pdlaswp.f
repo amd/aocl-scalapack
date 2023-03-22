@@ -1,5 +1,10 @@
+*
+*     Copyright (c) 2022-23 Advanced Micro Devices, Inc.  All rights reserved.
+*
 *  -- ScaLAPACK routine --
-*     Copyright (c) 2022 Advanced Micro Devices, Inc.  All rights reserved.
+*
+*
+#include "SL_Context_fortran_include.h"
 *
       SUBROUTINE PDLASWP( DIREC, ROWCOL, N, A, IA, JA, DESCA, K1, K2,
      $                    IPIV )
@@ -9,6 +14,7 @@
 *     and University of California, Berkeley.
 *     May 1, 1997
 *
+      USE LINK_TO_C_GLOBALS
 *     .. Scalar Arguments ..
       CHARACTER          DIREC, ROWCOL
       INTEGER            IA, JA, K1, K2, N
@@ -153,17 +159,30 @@
       LOGICAL            LSAME
       EXTERNAL           LSAME
 *     ..
+*     .. DTL variables declaration ..
+      CHARACTER  BUFFER*512
+      CHARACTER*15, PARAMETER :: FILE_NAME = 'pdlaswp.f'
 *     .. Executable Statements ..
 *
-#ifdef AOCL_DTL
-      CALL AOCL_SL_DTL_TRACE_ENTRY(__FILE__, __LINE__, ' ')
-#endif
+      CALL AOCL_SCALAPACK_INIT( )
+*
+      IF( SCALAPACK_CONTEXT%IS_DTL_ENABLED.EQ.1 ) THEN
+*        .. Init DTL log Buffer to zero ..
+         BUFFER='0'
+         AOCL_DTL_TRACE_ENTRY_F
+         WRITE(BUFFER,102)  DIREC, ROWCOL, IA, JA,
+     $ K1, K2, N
+ 102     FORMAT('PDLASWP inputs:
+     $ DIREC: ', A5,'  ROWCOL: ', A5,'
+     $ IA: ', I5,'  JA: ', I5,'  K1: ', I5,'  K2: ', I5,'
+     $   N: ', I5)
+         CALL AOCL_SL_DTL_LOG_ENTRY( BUFFER )
+      END IF
+*
 *     Quick return if possible
 *
       IF( N.EQ.0 ) THEN
-#ifdef AOCL_DTL
-         CALL AOCL_SL_DTL_TRACE_EXIT(__FILE__, __LINE__, ' ')
-#endif
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
 *
@@ -211,9 +230,7 @@
          END IF
       END IF
 *
-#ifdef AOCL_DTL
-      CALL AOCL_SL_DTL_TRACE_EXIT(__FILE__, __LINE__, ' ')
-#endif
+      AOCL_DTL_TRACE_EXIT_F
       RETURN
 *
 *     End PDLASWP

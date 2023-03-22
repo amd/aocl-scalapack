@@ -1,3 +1,9 @@
+*
+*     Copyright (c) 2023 Advanced Micro Devices, Inc.  All rights reserved.
+*
+*
+#include "SL_Context_fortran_include.h"
+*
       SUBROUTINE PDDTTRF( N, DL, D, DU, JA, DESCA, AF, LAF, WORK, LWORK,
      $                    INFO )
 *
@@ -6,6 +12,7 @@
 *     and University of California, Berkeley.
 *     April 3, 2000
 *
+      USE LINK_TO_C_GLOBALS
 *     .. Scalar Arguments ..
       INTEGER            INFO, JA, LAF, LWORK, N
 *     ..
@@ -391,7 +398,25 @@
 *     .. Intrinsic Functions ..
       INTRINSIC          DBLE, MOD
 *     ..
+*     .. DTL variables declaration ..
+      CHARACTER  BUFFER*512
+      CHARACTER*15, PARAMETER :: FILE_NAME = 'pddttrf.f'
 *     .. Executable Statements ..
+*
+      CALL AOCL_SCALAPACK_INIT( )
+*
+      IF( SCALAPACK_CONTEXT%IS_DTL_ENABLED.EQ.1 ) THEN
+*        .. Init DTL log Buffer to zero ..
+         BUFFER='0'
+         AOCL_DTL_TRACE_ENTRY_F
+         WRITE(BUFFER,102)  INFO, JA, LAF, LWORK,
+     $ N
+ 102     FORMAT('PDDTTRF inputs:
+     $ INFO: ', I5,'  JA: ', I5,'  LAF: ', I5,'  LWORK: '
+     $ , I5,'  N: ', I5)
+         CALL AOCL_SL_DTL_LOG_ENTRY( BUFFER )
+      END IF
+*
 *
 *     Test the input parameters
 *
@@ -458,12 +483,14 @@
          INFO = -( 1 )
          CALL PXERBLA( ICTXT, 'PDDTTRF, D&C alg.: only 1 block per proc'
      $                 , -INFO )
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
 *
       IF( ( JA+N-1.GT.NB ) .AND. ( NB.LT.2*INT_ONE ) ) THEN
          INFO = -( 6*100+4 )
          CALL PXERBLA( ICTXT, 'PDDTTRF, D&C alg.: NB too small', -INFO )
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
 *
@@ -478,6 +505,7 @@
          AF( 1 ) = LAF_MIN
          CALL PXERBLA( ICTXT, 'PDDTTRF: auxiliary storage error ',
      $                 -INFO )
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
 *
@@ -492,6 +520,7 @@
             INFO = -10
             CALL PXERBLA( ICTXT, 'PDDTTRF: worksize error ', -INFO )
          END IF
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
 *
@@ -543,13 +572,16 @@
 *
       IF( INFO.LT.0 ) THEN
          CALL PXERBLA( ICTXT, 'PDDTTRF', -INFO )
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
 *
 *     Quick return if possible
 *
-      IF( N.EQ.0 )
-     $   RETURN
+      IF( N.EQ.0 ) THEN
+         AOCL_DTL_TRACE_EXIT_F
+         RETURN
+      END IF
 *
 *
 *     Adjust addressing into matrix space to properly get into
@@ -1036,6 +1068,7 @@
       END IF
 *
 *
+      AOCL_DTL_TRACE_EXIT_F
       RETURN
 *
 *     End of PDDTTRF

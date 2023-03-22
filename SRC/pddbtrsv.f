@@ -1,3 +1,9 @@
+*
+*     Copyright (c) 2023 Advanced Micro Devices, Inc.  All rights reserved.
+*
+*
+#include "SL_Context_fortran_include.h"
+*
       SUBROUTINE PDDBTRSV( UPLO, TRANS, N, BWL, BWU, NRHS, A, JA, DESCA,
      $                     B, IB, DESCB, AF, LAF, WORK, LWORK, INFO )
 *
@@ -5,6 +11,7 @@
 *     Univ. of Tennessee, Univ. of California Berkeley, Univ. of Colorado Denver
 *     May 1 2012
 *
+      USE LINK_TO_C_GLOBALS
 *     .. Scalar Arguments ..
       CHARACTER          TRANS, UPLO
       INTEGER            BWL, BWU, IB, INFO, JA, LAF, LWORK, N, NRHS
@@ -409,7 +416,27 @@
 *     .. Intrinsic Functions ..
       INTRINSIC          ICHAR, MAX, MIN, MOD
 *     ..
+*     .. DTL variables declaration ..
+      CHARACTER  BUFFER*512
+      CHARACTER*15, PARAMETER :: FILE_NAME = 'pddbtrsv.f'
 *     .. Executable Statements ..
+*
+      CALL AOCL_SCALAPACK_INIT( )
+*
+      IF( SCALAPACK_CONTEXT%IS_DTL_ENABLED.EQ.1 ) THEN
+*        .. Init DTL log Buffer to zero ..
+         BUFFER='0'
+         AOCL_DTL_TRACE_ENTRY_F
+         WRITE(BUFFER,102)  TRANS, UPLO, BWL, BWU,
+     $ IB, INFO, JA, LAF, LWORK, N, NRHS
+ 102     FORMAT('PDDBTRSV inputs:
+     $ TRANS: ', A5,'  UPLO: ', A5,'
+     $ BWL: ', I5,'  BWU: ', I5,'  IB: ', I5,'  INFO: ',
+     $ I5,'  JA: ', I5,'  LAF: ', I5,'  LWORK: ', I5,'  N
+     $ : ', I5,'  NRHS: ', I5)
+         CALL AOCL_SL_DTL_LOG_ENTRY( BUFFER )
+      END IF
+*
 *
 *     Test the input parameters
 *
@@ -556,6 +583,7 @@
          CALL PXERBLA( ICTXT,
      $                 'PDDBTRSV, D&C alg.: only 1 block per proc',
      $                 -INFO )
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
 *
@@ -563,6 +591,7 @@
          INFO = -( 9*100+4 )
          CALL PXERBLA( ICTXT, 'PDDBTRSV, D&C alg.: NB too small',
      $                 -INFO )
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
 *
@@ -576,6 +605,7 @@
             INFO = -16
             CALL PXERBLA( ICTXT, 'PDDBTRSV: worksize error', -INFO )
          END IF
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
 *
@@ -649,16 +679,21 @@
 *
       IF( INFO.LT.0 ) THEN
          CALL PXERBLA( ICTXT, 'PDDBTRSV', -INFO )
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
 *
 *     Quick return if possible
 *
-      IF( N.EQ.0 )
-     $   RETURN
+      IF( N.EQ.0 ) THEN
+         AOCL_DTL_TRACE_EXIT_F
+         RETURN
+      END IF
 *
-      IF( NRHS.EQ.0 )
-     $   RETURN
+      IF( NRHS.EQ.0 ) THEN
+         AOCL_DTL_TRACE_EXIT_F
+         RETURN
+      END IF
 *
 *
 *     Adjust addressing into matrix space to properly get into
@@ -1542,6 +1577,7 @@
       WORK( 1 ) = WORK_SIZE_MIN
 *
 *
+      AOCL_DTL_TRACE_EXIT_F
       RETURN
 *
 *     End of PDDBTRSV

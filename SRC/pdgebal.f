@@ -1,3 +1,9 @@
+*
+*     Copyright (c) 2023 Advanced Micro Devices, Inc.  All rights reserved.
+*
+*
+#include "SL_Context_fortran_include.h"
+*
       SUBROUTINE PDGEBAL( JOB, N, A, DESCA, ILO, IHI, SCALE, INFO )
 *
 *     Contribution from the Department of Computing Science and HPC2N,
@@ -8,6 +14,7 @@
 *     Univ. of Colorado Denver and University of California, Berkeley.
 *     January, 2012
 *
+      USE LINK_TO_C_GLOBALS
       IMPLICIT NONE
 *
 *     .. Scalar Arguments ..
@@ -206,7 +213,25 @@
 *     .. Intrinsic Functions ..
       INTRINSIC          ABS, MAX, MIN
 *     ..
+*     .. DTL variables declaration ..
+      CHARACTER  BUFFER*512
+      CHARACTER*15, PARAMETER :: FILE_NAME = 'pdgebal.f'
 *     .. Executable Statements ..
+*
+      CALL AOCL_SCALAPACK_INIT( )
+*
+      IF( SCALAPACK_CONTEXT%IS_DTL_ENABLED.EQ.1 ) THEN
+*        .. Init DTL log Buffer to zero ..
+         BUFFER='0'
+         AOCL_DTL_TRACE_ENTRY_F
+         WRITE(BUFFER,102)  JOB, IHI, ILO, INFO, N
+ 102     FORMAT('PDGEBAL inputs:
+     $ JOB: ', A5,'
+     $ IHI: ', I5,'  ILO: ', I5,'  INFO: ', I5,'  N: ', I
+     $ 5)
+         CALL AOCL_SL_DTL_LOG_ENTRY( BUFFER )
+      END IF
+*
       INFO = 0
       ICTXT = DESCA( CTXT_ )
       CALL BLACS_GRIDINFO( ICTXT, NPROW, NPCOL, MYROW, MYCOL )
@@ -223,6 +248,7 @@
       END IF
       IF( INFO.NE.0 ) THEN
          CALL PXERBLA( ICTXT, 'PDGEBAL', -INFO )
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
 *
@@ -384,6 +410,7 @@
 *
             INFO = -3
             CALL PXERBLA( ICTXT, 'PDGEBAL', -INFO )
+            AOCL_DTL_TRACE_EXIT_F
             RETURN
          END IF
          F = F*SCLFAC
@@ -436,6 +463,7 @@
       ILO = K
       IHI = L
 *
+      AOCL_DTL_TRACE_EXIT_F
       RETURN
 *
 *     End of PDGEBAL

@@ -1,11 +1,18 @@
+*
+*     Copyright (c) 2023 Advanced Micro Devices, Inc.  All rights reserved.
+*
+*
+#include "SL_Context_fortran_include.h"
+*
       SUBROUTINE PDGEBRD( M, N, A, IA, JA, DESCA, D, E, TAUQ, TAUP,
      $                    WORK, LWORK, INFO )
 *
 *  -- ScaLAPACK routine (version 1.7) --
 *     University of Tennessee, Knoxville, Oak Ridge National Laboratory,
 *     and University of California, Berkeley.
-*     May 25, 2001 
+*     May 25, 2001
 *
+      USE LINK_TO_C_GLOBALS
 *     .. Scalar Arguments ..
       INTEGER            IA, INFO, JA, LWORK, M, N
 *     ..
@@ -267,7 +274,25 @@
 *     .. Intrinsic Functions ..
       INTRINSIC          DBLE, MAX, MIN, MOD
 *     ..
+*     .. DTL variables declaration ..
+      CHARACTER  BUFFER*512
+      CHARACTER*15, PARAMETER :: FILE_NAME = 'pdgebrd.f'
 *     .. Executable Statements ..
+*
+      CALL AOCL_SCALAPACK_INIT( )
+*
+      IF( SCALAPACK_CONTEXT%IS_DTL_ENABLED.EQ.1 ) THEN
+*        .. Init DTL log Buffer to zero ..
+         BUFFER='0'
+         AOCL_DTL_TRACE_ENTRY_F
+         WRITE(BUFFER,102)  IA, INFO, JA, LWORK,
+     $ M, N
+ 102     FORMAT('PDGEBRD inputs:
+     $ IA: ', I5,'  INFO: ', I5,'  JA: ', I5,'  LWORK: ',
+     $  I5,'  M: ', I5,'  N: ', I5)
+         CALL AOCL_SL_DTL_LOG_ENTRY( BUFFER )
+      END IF
+*
 *
 *     Get grid parameters
 *
@@ -312,16 +337,20 @@
 *
       IF( INFO.LT.0 ) THEN
          CALL PXERBLA( ICTXT, 'PDGEBRD', -INFO )
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       ELSE IF( LQUERY ) THEN
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
 *
 *     Quick return if possible
 *
       MN = MIN( M, N )
-      IF( MN.EQ.0 )
-     $   RETURN
+      IF( MN.EQ.0 ) THEN
+         AOCL_DTL_TRACE_EXIT_F
+         RETURN
+      END IF
 *
 *     Initialize parameters.
 *
@@ -405,6 +434,7 @@
 *
       WORK( 1 ) = DBLE( LWMIN )
 *
+      AOCL_DTL_TRACE_EXIT_F
       RETURN
 *
 *     End of PDGEBRD

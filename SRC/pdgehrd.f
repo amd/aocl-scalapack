@@ -1,3 +1,9 @@
+*
+*     Copyright (c) 2023 Advanced Micro Devices, Inc.  All rights reserved.
+*
+*
+#include "SL_Context_fortran_include.h"
+*
       SUBROUTINE PDGEHRD( N, ILO, IHI, A, IA, JA, DESCA, TAU, WORK,
      $                    LWORK, INFO )
 *
@@ -6,6 +12,7 @@
 *     and University of California, Berkeley.
 *     May 25, 2001
 *
+      USE LINK_TO_C_GLOBALS
 *     .. Scalar Arguments ..
       INTEGER             IA, IHI, ILO, INFO, JA, LWORK, N
 *     ..
@@ -227,7 +234,25 @@
 *     .. Intrinsic Functions ..
       INTRINSIC          DBLE, MAX, MIN, MOD
 *     ..
+*     .. DTL variables declaration ..
+      CHARACTER  BUFFER*512
+      CHARACTER*15, PARAMETER :: FILE_NAME = 'pdgehrd.f'
 *     .. Executable Statements ..
+*
+      CALL AOCL_SCALAPACK_INIT( )
+*
+      IF( SCALAPACK_CONTEXT%IS_DTL_ENABLED.EQ.1 ) THEN
+*        .. Init DTL log Buffer to zero ..
+         BUFFER='0'
+         AOCL_DTL_TRACE_ENTRY_F
+         WRITE(BUFFER,102)  IA, IHI, ILO, INFO,
+     $ JA, LWORK, N
+ 102     FORMAT('PDGEHRD inputs:
+     $ IA: ', I5,'  IHI: ', I5,'  ILO: ', I5,'  INFO: ',
+     $ I5,'  JA: ', I5,'  LWORK: ', I5,'  N: ', I5)
+         CALL AOCL_SL_DTL_LOG_ENTRY( BUFFER )
+      END IF
+*
 *
 *     Get grid parameters
 *
@@ -288,8 +313,10 @@ C            ELSE IF( IROFFA.NE.ICOFFA .OR. IROFFA.NE.0 ) THEN
 *
       IF( INFO.NE.0 ) THEN
          CALL PXERBLA( ICTXT, 'PDGEHRD', -INFO )
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       ELSE IF( LQUERY ) THEN
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
 *
@@ -310,8 +337,10 @@ C            ELSE IF( IROFFA.NE.ICOFFA .OR. IROFFA.NE.0 ) THEN
 *
 *     Quick return if possible
 *
-      IF( IHI-ILO.LE.0 )
-     $   RETURN
+      IF( IHI-ILO.LE.0 ) THEN
+         AOCL_DTL_TRACE_EXIT_F
+         RETURN
+      END IF
 *
       CALL PB_TOPGET( ICTXT, 'Combine', 'Columnwise', COLCTOP )
       CALL PB_TOPGET( ICTXT, 'Combine', 'Rowwise',    ROWCTOP )
@@ -375,6 +404,7 @@ C            ELSE IF( IROFFA.NE.ICOFFA .OR. IROFFA.NE.0 ) THEN
 *
       WORK( 1 ) = DBLE( LWMIN )
 *
+      AOCL_DTL_TRACE_EXIT_F
       RETURN
 *
 *     End of PDGEHRD

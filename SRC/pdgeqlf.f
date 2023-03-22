@@ -1,3 +1,9 @@
+*
+*     Copyright (c) 2023 Advanced Micro Devices, Inc.  All rights reserved.
+*
+*
+#include "SL_Context_fortran_include.h"
+*
       SUBROUTINE PDGEQLF( M, N, A, IA, JA, DESCA, TAU, WORK, LWORK,
      $                    INFO )
 *
@@ -6,6 +12,7 @@
 *     and University of California, Berkeley.
 *     May 25, 2001
 *
+      USE LINK_TO_C_GLOBALS
 *     .. Scalar Arguments ..
       INTEGER            IA, INFO, JA, LWORK, M, N
 *     ..
@@ -190,7 +197,25 @@
 *     .. Intrinsic Functions ..
       INTRINSIC          DBLE, MIN, MOD
 *     ..
+*     .. DTL variables declaration ..
+      CHARACTER  BUFFER*512
+      CHARACTER*15, PARAMETER :: FILE_NAME = 'pdgeqlf.f'
 *     .. Executable Statements ..
+*
+      CALL AOCL_SCALAPACK_INIT( )
+*
+      IF( SCALAPACK_CONTEXT%IS_DTL_ENABLED.EQ.1 ) THEN
+*        .. Init DTL log Buffer to zero ..
+         BUFFER='0'
+         AOCL_DTL_TRACE_ENTRY_F
+         WRITE(BUFFER,102)  IA, INFO, JA, LWORK,
+     $ M, N
+ 102     FORMAT('PDGEQLF inputs:
+     $ IA: ', I5,'  INFO: ', I5,'  JA: ', I5,'  LWORK: ',
+     $  I5,'  M: ', I5,'  N: ', I5)
+         CALL AOCL_SL_DTL_LOG_ENTRY( BUFFER )
+      END IF
+*
 *
 *     Get grid parameters
 *
@@ -232,15 +257,19 @@
 *
       IF( INFO.NE.0 ) THEN
          CALL PXERBLA( ICTXT, 'PDGEQLF', -INFO )
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       ELSE IF( LQUERY ) THEN
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
 *
 *     Quick return if possible
 *
-      IF( M.EQ.0 .OR. N.EQ.0 )
-     $   RETURN
+      IF( M.EQ.0 .OR. N.EQ.0 ) THEN
+         AOCL_DTL_TRACE_EXIT_F
+         RETURN
+      END IF
 *
       K = MIN( M, N )
       IPW = DESCA( NB_ ) * DESCA( NB_ ) + 1
@@ -304,6 +333,7 @@
 *
       WORK( 1 ) = DBLE( LWMIN )
 *
+      AOCL_DTL_TRACE_EXIT_F
       RETURN
 *
 *     End of PDGEQLF

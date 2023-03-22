@@ -1,3 +1,9 @@
+*
+*     Copyright (c) 2023 Advanced Micro Devices, Inc.  All rights reserved.
+*
+*
+#include "SL_Context_fortran_include.h"
+*
       SUBROUTINE PDGECON( NORM, N, A, IA, JA, DESCA, ANORM, RCOND, WORK,
      $                    LWORK, IWORK, LIWORK, INFO )
 *
@@ -6,6 +12,7 @@
 *     and University of California, Berkeley.
 *     May 25, 2001
 *
+      USE LINK_TO_C_GLOBALS
 *     .. Scalar Arguments ..
       CHARACTER          NORM
       INTEGER            IA, INFO, JA, LIWORK, LWORK, N
@@ -208,7 +215,27 @@
 *     .. Intrinsic Functions ..
       INTRINSIC          ABS, DBLE, ICHAR, MAX, MOD
 *     ..
+*     .. DTL variables declaration ..
+      CHARACTER  BUFFER*512
+      CHARACTER*15, PARAMETER :: FILE_NAME = 'pdgecon.f'
 *     .. Executable Statements ..
+*
+      CALL AOCL_SCALAPACK_INIT( )
+*
+      IF( SCALAPACK_CONTEXT%IS_DTL_ENABLED.EQ.1 ) THEN
+*        .. Init DTL log Buffer to zero ..
+         BUFFER='0'
+         AOCL_DTL_TRACE_ENTRY_F
+         WRITE(BUFFER,102)  NORM, IA, INFO, JA,
+     $ LIWORK, LWORK, N, ANORM, RCOND
+ 102     FORMAT('PDGECON inputs:
+     $ NORM: ', A5,'
+     $ IA: ', I5,'  INFO: ', I5,'  JA: ', I5,'  LIWORK: '
+     $ , I5,'  LWORK: ', I5,'  N: ', I5,'
+     $ ANORM: ', F9.4,'  RCOND: ', F9.4)
+         CALL AOCL_SL_DTL_LOG_ENTRY( BUFFER )
+      END IF
+*
 *
 *     Get grid parameters
 *
@@ -277,8 +304,10 @@
 *
       IF( INFO.NE.0 ) THEN
          CALL PXERBLA( ICTXT, 'PDGECON', -INFO )
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       ELSE IF( LQUERY ) THEN
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
 *
@@ -287,11 +316,14 @@
       RCOND = ZERO
       IF( N.EQ.0 ) THEN
          RCOND = ONE
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       ELSE IF( ANORM.EQ.ZERO ) THEN
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       ELSE IF( N.EQ.1 ) THEN
          RCOND = ONE
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
 *
@@ -406,6 +438,7 @@
       CALL PB_TOPSET( ICTXT, 'Combine', 'Columnwise', COLCTOP )
       CALL PB_TOPSET( ICTXT, 'Combine', 'Rowwise',    ROWCTOP )
 *
+      AOCL_DTL_TRACE_EXIT_F
       RETURN
 *
 *     End of PDGECON

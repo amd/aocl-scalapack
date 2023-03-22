@@ -1,3 +1,9 @@
+*
+*     Copyright (c) 2023 Advanced Micro Devices, Inc.  All rights reserved.
+*
+*
+#include "SL_Context_fortran_include.h"
+*
       SUBROUTINE PDGEQPF( M, N, A, IA, JA, DESCA, IPIV, TAU, WORK,
      $                     LWORK, INFO )
 *
@@ -6,6 +12,7 @@
 *     and University of California, Berkeley.
 *     November 20, 2019
 *
+      USE LINK_TO_C_GLOBALS
 *     .. Scalar Arguments ..
       INTEGER            IA, JA, INFO, LWORK, M, N
 *     ..
@@ -172,9 +179,9 @@
 *
 *  References
 *  ==========
-*  
+*
 *  For modifications introduced in Scalapack 2.1
-*  LAWN 295 
+*  LAWN 295
 *  New robust ScaLAPACK routine for computing the QR factorization with column pivoting
 *  Zvonimir Bujanovic, Zlatko Drmac
 *  http://www.netlib.org/lapack/lawnspdf/lawn295.pdf
@@ -219,7 +226,25 @@
 *     .. Intrinsic Functions ..
       INTRINSIC          ABS, DBLE, IDINT, MAX, MIN, MOD, SQRT
 *     ..
+*     .. DTL variables declaration ..
+      CHARACTER  BUFFER*512
+      CHARACTER*15, PARAMETER :: FILE_NAME = 'pdgeqpf.f'
 *     .. Executable Statements ..
+*
+      CALL AOCL_SCALAPACK_INIT( )
+*
+      IF( SCALAPACK_CONTEXT%IS_DTL_ENABLED.EQ.1 ) THEN
+*        .. Init DTL log Buffer to zero ..
+         BUFFER='0'
+         AOCL_DTL_TRACE_ENTRY_F
+         WRITE(BUFFER,102)  IA, JA, INFO, LWORK,
+     $ M, N
+ 102     FORMAT('PDGEQPF inputs:
+     $ IA: ', I5,'  JA: ', I5,'  INFO: ', I5,'  LWORK: ',
+     $  I5,'  M: ', I5,'  N: ', I5)
+         CALL AOCL_SL_DTL_LOG_ENTRY( BUFFER )
+      END IF
+*
 *
 *     Get grid parameters
 *
@@ -263,15 +288,19 @@
 *
       IF( INFO.NE.0 ) THEN
          CALL PXERBLA( ICTXT, 'PDGEQPF', -INFO )
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       ELSE IF( LQUERY ) THEN
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
 *
 *     Quick return if possible
 *
-      IF( M.EQ.0 .OR. N.EQ.0 )
-     $   RETURN
+      IF( M.EQ.0 .OR. N.EQ.0 ) THEN
+         AOCL_DTL_TRACE_EXIT_F
+         RETURN
+      END IF
 *
       CALL INFOG2L( IA, JA, DESCA, NPROW, NPCOL, MYROW, MYCOL, IIA, JJA,
      $              IAROW, IACOL )
@@ -544,6 +573,7 @@
 *
       WORK( 1 ) = DBLE( LWMIN )
 *
+      AOCL_DTL_TRACE_EXIT_F
       RETURN
 *
 *     End of PDGEQPF

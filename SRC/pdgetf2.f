@@ -1,3 +1,9 @@
+*
+*     Copyright (c) 2020-23 Advanced Micro Devices, Inc.  All rights reserved.
+*
+*
+#include "SL_Context_fortran_include.h"
+*
       SUBROUTINE PDGETF2( M, N, A, IA, JA, DESCA, IPIV, INFO )
 *
 *  -- ScaLAPACK routine (version 1.7) --
@@ -5,6 +11,7 @@
 *     and University of California, Berkeley.
 *     May 1, 1997
 *
+      USE LINK_TO_C_GLOBALS
 *     .. Scalar Arguments ..
       INTEGER            IA, INFO, JA, M, N
 *     ..
@@ -157,12 +164,24 @@
 *     .. Intrinsic Functions ..
       INTRINSIC          MIN, MOD
 *     ..
+*     .. DTL variables declaration ..
+      CHARACTER  BUFFER*512
+      CHARACTER*15, PARAMETER :: FILE_NAME = 'pdgetf2.f'
 *     .. Executable Statements ..
 *
-*     .. Debug trace log capture if the DTL is enabled
-#ifdef AOCL_DTL
-      CALL AOCL_SL_DTL_TRACE_ENTRY(__FILE__, __LINE__, ' ')
-#endif
+      CALL AOCL_SCALAPACK_INIT( )
+*
+      IF( SCALAPACK_CONTEXT%IS_DTL_ENABLED.EQ.1 ) THEN
+*        .. Init DTL log Buffer to zero ..
+         BUFFER='0'
+         AOCL_DTL_TRACE_ENTRY_F
+         WRITE(BUFFER,102)  IA, INFO, JA, M, N
+ 102     FORMAT('PDGETF2 inputs:
+     $ IA: ', I5,'  INFO: ', I5,'  JA: ', I5,'  M: ', I5,
+     $ '  N: ', I5)
+         CALL AOCL_SL_DTL_LOG_ENTRY( BUFFER )
+      END IF
+*
 *
 *     Get grid parameters.
 *
@@ -195,18 +214,14 @@
          CALL PXERBLA( ICTXT, 'PDGETF2', -INFO )
          CALL BLACS_ABORT( ICTXT, 1 )
 *
-#ifdef AOCL_DTL
-         CALL AOCL_SL_DTL_TRACE_EXIT(__FILE__, __LINE__, ' ')
-#endif
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
 *
 *     Quick return if possible
 *
       IF( M.EQ.0 .OR. N.EQ.0 ) THEN
-#ifdef AOCL_DTL
-         CALL AOCL_SL_DTL_TRACE_EXIT(__FILE__, __LINE__, ' ')
-#endif
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
 *
@@ -259,9 +274,7 @@
       END IF
 *
 *
-#ifdef AOCL_DTL
-         CALL AOCL_SL_DTL_TRACE_EXIT(__FILE__, __LINE__, ' ')
-#endif
+      AOCL_DTL_TRACE_EXIT_F
       RETURN
 *
 *     End of PDGETF2
