@@ -24,6 +24,8 @@
 #include "SL_Context.h"
 #include <stdlib.h>
 #include <string.h>
+#include "../BLACS/SRC/Bdef.h"
+
 #if defined(SCALAPACK_NO_CONTEXT)
 // This branch defines a pthread-like API, scalapack_pthread_*(), and implements it
 // in terms of "dummy" code that doesn't depend on POSIX threads or any other
@@ -128,16 +130,27 @@ int scalapack_env_get_var(const char *env, int fallback)
 void scalapack_thread_init_rntm_from_env(aocl_scalapack_global_context *context)
 {
     int status;
-    /* Check whether DTL is set in the run-time environment */
-    status = scalapack_env_get_var("AOCL_SL_DTL", -1);
 
+    /* Check whether 'debug trace' is set in the run-time environment */
+    status = scalapack_env_get_var("AOCL_SL_TRACE", -1);
     if (status == -1)
     {
-        context->is_dtl_enabled = 0;
+        context->is_trace_enabled = 0;
     }
     else
     {
-        context->is_dtl_enabled = 1;
+        context->is_trace_enabled = 1;
+    }
+
+    /* Check whether 'debug trace' is set in the run-time environment */
+    status = scalapack_env_get_var("AOCL_SL_LOG", -1);
+    if (status == -1)
+    {
+        context->is_log_enabled = 0;
+    }
+    else
+    {
+        context->is_log_enabled = 1;
     }
 
     /* Check whether AOCL-progress requirement is set in the run-time environment */
@@ -151,6 +164,9 @@ void scalapack_thread_init_rntm_from_env(aocl_scalapack_global_context *context)
     {
         context->is_progress_enabled = 1;
     }
+
+    /* set the context MPI  rank, number of processes  */
+    Cblacs_pinfo(&(context->rank), &(context->num_procs) );
 
     /* Since multithreading support is not present in the aocl-scaLAPACK,
        we set the context number of threads to 1.

@@ -77,11 +77,16 @@ void scalapack_pthread_once(scalapack_pthread_once_t *once, void (*init)(void));
  *****************************************************************************************/
 typedef struct _aocl_scalapack_global_context
 {
-    int   num_threads; /* Number of Threads */
-    int  is_dtl_enabled;  /* DTL log */
+    int  num_threads; /* Number of threads */
+    int  is_trace_enabled;  /* Enable debug trace  */
+    int  is_log_enabled;  /* Enable debug log  */
     int  is_progress_enabled; /* AOCL-progress */
 
+    // MPI Variables related to rank, process info
+    int  rank;
+    int  num_procs;
 } aocl_scalapack_global_context;
+
 extern aocl_scalapack_global_context  scalapack_context;
 typedef aocl_scalapack_global_context aocl_scalapack_global_context_;
 typedef aocl_scalapack_global_context AOCL_SCALAPACK_GLOBAL_CONTEXT;
@@ -90,7 +95,7 @@ typedef aocl_scalapack_global_context AOCL_SCALAPACK_GLOBAL_CONTEXT;
  *    context
  *
  *  \retval none.
- 
+
 void aocl_scalapack_init(); */
 void aocl_scalapack_init_();
 void AOCL_SCALAPACK_INIT();

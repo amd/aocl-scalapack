@@ -215,32 +215,43 @@
 *     .. Intrinsic Functions ..
       INTRINSIC          ABS, DBLE, ICHAR, MAX, MOD
 *     ..
-*     .. DTL variables declaration ..
-      CHARACTER  BUFFER*512
-      CHARACTER*15, PARAMETER :: FILE_NAME = 'pdgecon.f'
+*     .. LOG variables declaration ..
+*     ..
+*     BUFFER size: Function name and Process grid info (128 Bytes) +
+*       Variable names + Variable values(num_vars *10)
+      CHARACTER  BUFFER*384
+      CHARACTER*2, PARAMETER :: eos_str = '' // C_NULL_CHAR
 *     .. Executable Statements ..
+*
+*     Initialize framework context structure if not initialized
+*
 *
       CALL AOCL_SCALAPACK_INIT( )
 *
-      IF( SCALAPACK_CONTEXT%IS_DTL_ENABLED.EQ.1 ) THEN
-*        .. Init DTL log Buffer to zero ..
-         BUFFER='0'
-         AOCL_DTL_TRACE_ENTRY_F
-         WRITE(BUFFER,102)  NORM, IA, INFO, JA,
-     $ LIWORK, LWORK, N, ANORM, RCOND
- 102     FORMAT('PDGECON inputs:
-     $ NORM: ', A5,'
-     $ IA: ', I5,'  INFO: ', I5,'  JA: ', I5,'  LIWORK: '
-     $ , I5,'  LWORK: ', I5,'  N: ', I5,'
-     $ ANORM: ', F9.4,'  RCOND: ', F9.4)
-         CALL AOCL_SL_DTL_LOG_ENTRY( BUFFER )
-      END IF
 *
+*     Capture the subroutine entry in the trace file
+*
+      AOCL_DTL_TRACE_ENTRY_F
 *
 *     Get grid parameters
 *
       ICTXT = DESCA( CTXT_ )
       CALL BLACS_GRIDINFO( ICTXT, NPROW, NPCOL, MYROW, MYCOL )
+*
+*     Update the log buffer with the scalar arguments details,
+*     MPI process grid information and write to the log file
+*
+      IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
+         WRITE(BUFFER,102)  NORM, IA, INFO, JA, LIWORK,
+     $            LWORK, N, ANORM, RCOND, NPROW, NPCOL,
+     $            MYROW, MYCOL, eos_str
+ 102     FORMAT('PDGECON inputs:,NORM:',A5,',IA:',I5,',INFO:',I5,
+     $           ',JA:',I5,',LIWORK:',I5,',LWORK:',I5,
+     $           ',N:',I5,',ANORM:',F9.4,',RCOND:',F9.4,
+     $           ',NPROW:',I5,',NPCOL:',I5 ,
+     $           ',MYROW:',I5,',MYCOL:',I5,A5)
+         AOCL_DTL_LOG_ENTRY_F
+      END IF
 *
 *     Test the input parameters
 *
@@ -304,9 +315,15 @@
 *
       IF( INFO.NE.0 ) THEN
          CALL PXERBLA( ICTXT, 'PDGECON', -INFO )
+*
+*        Capture the subroutine exit in the trace file
+*
          AOCL_DTL_TRACE_EXIT_F
          RETURN
       ELSE IF( LQUERY ) THEN
+*
+*        Capture the subroutine exit in the trace file
+*
          AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
@@ -316,13 +333,22 @@
       RCOND = ZERO
       IF( N.EQ.0 ) THEN
          RCOND = ONE
+*
+*        Capture the subroutine exit in the trace file
+*
          AOCL_DTL_TRACE_EXIT_F
          RETURN
       ELSE IF( ANORM.EQ.ZERO ) THEN
+*
+*        Capture the subroutine exit in the trace file
+*
          AOCL_DTL_TRACE_EXIT_F
          RETURN
       ELSE IF( N.EQ.1 ) THEN
          RCOND = ONE
+*
+*        Capture the subroutine exit in the trace file
+*
          AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
@@ -437,6 +463,9 @@
 *
       CALL PB_TOPSET( ICTXT, 'Combine', 'Columnwise', COLCTOP )
       CALL PB_TOPSET( ICTXT, 'Combine', 'Rowwise',    ROWCTOP )
+*
+*
+*     Capture the subroutine exit in the trace file
 *
       AOCL_DTL_TRACE_EXIT_F
       RETURN

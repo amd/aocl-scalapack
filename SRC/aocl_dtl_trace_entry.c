@@ -1,7 +1,7 @@
 /* ---------------------------------------------------------------------
 *
 *  -- AOCL ScaLAPACK routine --
-*     Copyright (c) 2020-2022 Advanced Micro Devices, Inc.  All rights reserved.
+*     Copyright (c) 2020-2023 Advanced Micro Devices, Inc.  All rights reserved.
 *
 *  ---------------------------------------------------------------------
 */
@@ -17,12 +17,15 @@
 
 
 /* Customized for Fortran calls from Scalapack code */
-void aocl_sl_dtl_log_entry_( char *buffer )
+void aocl_sl_dtl_log_entry_( const char *filename, const char *function_name,
+                             unsigned int *line_number, const char *buffer )
 {
-#if AOCL_DTL_LOG_ENABLE
-	/* Capture the contents to the DTL log file */
-	AOCL_DTL_LOG(AOCL_DTL_LEVEL_INFO, buffer);
-#endif
+  DTL_Trace(AOCL_DTL_LEVEL_INFO,
+              TRACE_TYPE_LOG,
+              filename,
+              function_name,
+              *line_number,
+              buffer);
 }
 
 void aocl_sl_dtl_trace_entry_( const char * fileName, unsigned int * lineNumber,

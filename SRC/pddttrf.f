@@ -398,25 +398,23 @@
 *     .. Intrinsic Functions ..
       INTRINSIC          DBLE, MOD
 *     ..
-*     .. DTL variables declaration ..
-      CHARACTER  BUFFER*512
-      CHARACTER*15, PARAMETER :: FILE_NAME = 'pddttrf.f'
+*     .. LOG variables declaration ..
+*     ..
+*     BUFFER size: Function name and Process grid info (128 Bytes) +
+*       Variable names + Variable values(num_vars *10)
+      CHARACTER  BUFFER*256
+      CHARACTER*2, PARAMETER :: eos_str = '' // C_NULL_CHAR
 *     .. Executable Statements ..
+*
+*     Initialize framework context structure if not initialized
+*
 *
       CALL AOCL_SCALAPACK_INIT( )
 *
-      IF( SCALAPACK_CONTEXT%IS_DTL_ENABLED.EQ.1 ) THEN
-*        .. Init DTL log Buffer to zero ..
-         BUFFER='0'
-         AOCL_DTL_TRACE_ENTRY_F
-         WRITE(BUFFER,102)  INFO, JA, LAF, LWORK,
-     $ N
- 102     FORMAT('PDDTTRF inputs:
-     $ INFO: ', I5,'  JA: ', I5,'  LAF: ', I5,'  LWORK: '
-     $ , I5,'  N: ', I5)
-         CALL AOCL_SL_DTL_LOG_ENTRY( BUFFER )
-      END IF
 *
+*     Capture the subroutine entry in the trace file
+*
+      AOCL_DTL_TRACE_ENTRY_F
 *
 *     Test the input parameters
 *
@@ -453,6 +451,18 @@
 *
 *
       CALL BLACS_GRIDINFO( ICTXT, NPROW, NPCOL, MYROW, MYCOL )
+*
+*     Update the log buffer with the scalar arguments details,
+*     MPI process grid information and write to the log file
+*
+      IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
+         WRITE(BUFFER,102)  INFO, JA, LAF, LWORK, N, NPROW,
+     $            NPCOL, MYROW, MYCOL, eos_str
+ 102     FORMAT('PDDTTRF inputs:,INFO:',I5,',JA:',I5,',LAF:',I5,
+     $           ',LWORK:',I5,',N:',I5,',NPROW:',I5,
+     $           ',NPCOL:',I5 ,',MYROW:',I5,',MYCOL:',I5,A5)
+         AOCL_DTL_LOG_ENTRY_F
+      END IF
       NP = NPROW*NPCOL
 *
 *
@@ -483,6 +493,9 @@
          INFO = -( 1 )
          CALL PXERBLA( ICTXT, 'PDDTTRF, D&C alg.: only 1 block per proc'
      $                 , -INFO )
+*
+*        Capture the subroutine exit in the trace file
+*
          AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
@@ -490,6 +503,9 @@
       IF( ( JA+N-1.GT.NB ) .AND. ( NB.LT.2*INT_ONE ) ) THEN
          INFO = -( 6*100+4 )
          CALL PXERBLA( ICTXT, 'PDDTTRF, D&C alg.: NB too small', -INFO )
+*
+*        Capture the subroutine exit in the trace file
+*
          AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
@@ -505,6 +521,9 @@
          AF( 1 ) = LAF_MIN
          CALL PXERBLA( ICTXT, 'PDDTTRF: auxiliary storage error ',
      $                 -INFO )
+*
+*        Capture the subroutine exit in the trace file
+*
          AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
@@ -520,6 +539,9 @@
             INFO = -10
             CALL PXERBLA( ICTXT, 'PDDTTRF: worksize error ', -INFO )
          END IF
+*
+*        Capture the subroutine exit in the trace file
+*
          AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
@@ -572,6 +594,9 @@
 *
       IF( INFO.LT.0 ) THEN
          CALL PXERBLA( ICTXT, 'PDDTTRF', -INFO )
+*
+*        Capture the subroutine exit in the trace file
+*
          AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
@@ -579,6 +604,9 @@
 *     Quick return if possible
 *
       IF( N.EQ.0 ) THEN
+*
+*        Capture the subroutine exit in the trace file
+*
          AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
@@ -1067,6 +1095,9 @@
          CALL IGEBR2D( ICTXT, 'A', ' ', 1, 1, INFO, 1, 0, 0 )
       END IF
 *
+*
+*
+*     Capture the subroutine exit in the trace file
 *
       AOCL_DTL_TRACE_EXIT_F
       RETURN

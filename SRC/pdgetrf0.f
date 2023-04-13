@@ -176,7 +176,6 @@
       INTRINSIC          MIN, MOD
 *     ..
 *     .. Executable Statements ..
-      CHARACTER*15, PARAMETER :: FILE_NAME = 'pdgetrf0.f' // C_NULL_CHAR
 *
 *     Get grid parameters
 *

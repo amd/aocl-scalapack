@@ -157,6 +157,18 @@ macro(SCALAPACK_install_library lib)
   )
 endmacro()
 
+#Function to add file name for DTL purpose
+function(custom_macros_for_each_scalapack_source  target_library_sources)
+    get_target_property(src_files_list "${target_library_sources}" SOURCES)
+    foreach(src_file ${src_files_list})
+        get_filename_component(src_file_name "${src_file}" NAME)
+        get_filename_component(function_name "${src_file}" NAME_WLE)
+        set_property(
+            SOURCE "${src_file}" APPEND
+            PROPERTY COMPILE_DEFINITIONS "FUNCTION_NAME=\"${function_name}\""  "FILE_NAME=\"${src_file_name}\"" )
+    endforeach()
+endfunction()
+
 # --------------------------------------------------
 # Testing
 SET(DART_TESTING_TIMEOUT 600)
@@ -313,15 +325,15 @@ else(LAPACK_FOUND)
       message(STATUS "--> LAPACK and BLAS were not found. Reference LAPACK and BLAS will be downloaded and installed")
       include(ExternalProject)
       ExternalProject_Add(
-		lapack
-		URL http://www.netlib.org/lapack/lapack.tgz
-		CMAKE_ARGS -DCMAKE_INSTALL_PREFIX:PATH=${SCALAPACK_BINARY_DIR}
+        lapack
+        URL http://www.netlib.org/lapack/lapack.tgz
+        CMAKE_ARGS -DCMAKE_INSTALL_PREFIX:PATH=${SCALAPACK_BINARY_DIR}
         PREFIX ${SCALAPACK_BINARY_DIR}/dependencies
       )
-	  if (UNIX)
+      if (UNIX)
          SET(LAPACK_LIBRARIES ${SCALAPACK_BINARY_DIR}/lib/liblapack.a CACHE STRING "LAPACK library" FORCE)
          SET(BLAS_LIBRARIES ${SCALAPACK_BINARY_DIR}/lib/libblas.a CACHE STRING "BLAS library" FORCE)
-	  else (UNIX) # On Windows
+      else (UNIX) # On Windows
          SET(LAPACK_LIBRARIES ${SCALAPACK_BINARY_DIR}/lib/liblapack.lib CACHE STRING "LAPACK library" FORCE)
          SET(BLAS_LIBRARIES ${SCALAPACK_BINARY_DIR}/lib/libblas.lib CACHE STRING "BLAS library" FORCE)
       endif (UNIX)
@@ -336,10 +348,8 @@ MESSAGE(STATUS "=========")
 #
 # AOCL_DTL
 #
-if (UNIX)
-   add_subdirectory(AOCL_DTL)
-   append_subdir_files(dtl "AOCL_DTL")
-endif()
+add_subdirectory(AOCL_DTL)
+append_subdir_files(dtl "AOCL_DTL")
 
 #
 # FRAMEWORK
@@ -391,10 +401,12 @@ endif ()
 if (UNIX)
   if(CUSTOM_BLACS_FOUND)
     add_library(scalapack ${dtl} ${framework} ${framework-C} ${tools} ${tools-C} ${extra_lapack} ${pblas} ${pblas-F} ${ptzblas} ${ptools} ${pbblas} ${redist} ${src} ${src-C})
+    custom_macros_for_each_scalapack_source (scalapack)
     target_link_libraries( scalapack ${BLACS_LIBRARY} ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES})
     scalapack_install_library(scalapack)
   else(CUSTOM_BLACS_FOUND)
     add_library(scalapack ${dtl} ${framework} ${framework-C} ${blacs} ${tools} ${tools-C} ${extra_lapack} ${pblas} ${pblas-F} ${ptzblas} ${ptools} ${pbblas} ${redist} ${src} ${src-C})
+    custom_macros_for_each_scalapack_source (scalapack)
     target_link_libraries( scalapack ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES})
     scalapack_install_library(scalapack)
   endif(CUSTOM_BLACS_FOUND)
@@ -403,13 +415,13 @@ else (UNIX) # Need to separate Fortran and C Code
         # create Fortran objects and add to scalapack library first
       if(CUSTOM_BLACS_FOUND)
         add_library(scalapack-F OBJECT  ${pblas-F} ${pbblas} ${ptzblas} ${tools} ${framework} ${src} ${extra_lapack} )
-        add_library(scalapack $<TARGET_OBJECTS:scalapack-F> ${tools-C} ${framework-C} ${pblas} ${ptools} ${redist} ${src-C})
+        add_library(scalapack $<TARGET_OBJECTS:scalapack-F> ${tools-C} ${dtl} ${framework-C} ${pblas} ${ptools} ${redist} ${src-C})
         target_link_libraries( scalapack ${BLACS_LIBRARY} ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES} ${MPI_LIBRARY})
         target_link_directories( scalapack PUBLIC ${CMAKE_IFORT_LIBDEPS_DIR})
         scalapack_install_library(scalapack)
       else(CUSTOM_BLACS_FOUND)
         add_library(scalapack-F OBJECT  ${pblas-F} ${pbblas} ${ptzblas} ${tools} ${framework} ${src} ${extra_lapack} )
-        add_library(scalapack $<TARGET_OBJECTS:scalapack-F> ${blacs} ${tools-C} ${framework-C} ${pblas} ${ptools} ${redist} ${src-C})
+        add_library(scalapack $<TARGET_OBJECTS:scalapack-F> ${blacs} ${tools-C}  ${dtl} ${framework-C} ${pblas} ${ptools} ${redist} ${src-C})
         target_link_libraries( scalapack ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES} ${MPI_LIBRARY})
         target_link_directories( scalapack PUBLIC ${CMAKE_IFORT_LIBDEPS_DIR})
         scalapack_install_library(scalapack)
@@ -417,15 +429,15 @@ else (UNIX) # Need to separate Fortran and C Code
     else (CMAKE_C_COMPILER_ID MATCHES Clang)
         # create C objects and add to scalapack library first
       if(CUSTOM_BLACS_FOUND)
-        add_library(scalapack-C OBJECT ${tools-C} ${framework-C} ${pblas} ${ptools} ${redist} ${src-C})
+        add_library(scalapack-C OBJECT ${tools-C} ${dtl} ${framework-C} ${pblas} ${ptools} ${redist} ${src-C})
         target_link_libraries( scalapack-C ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES} ${MPI_LIBRARY})
         target_link_directories( scalapack-C PUBLIC ${CMAKE_IFORT_LIBDEPS_DIR})
-        add_library(scalapack $<TARGET_OBJECTS:scalapack-C> ${pblas-F} ${pbblas} ${ptzblas} ${tools} ${framework} ${src} ${extra_lapack} )
+        add_library(scalapack $<TARGET_OBJECTS:scalapack-C> ${pblas-F} ${pbblas} ${ptzblas} ${tools} ${dtl} ${framework} ${src} ${extra_lapack} )
         target_link_libraries( scalapack ${BLACS_LIBRARY} ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES} ${MPI_LIBRARY})
         target_link_directories( scalapack PUBLIC ${CMAKE_IFORT_LIBDEPS_DIR})
         scalapack_install_library(scalapack)
       else(CUSTOM_BLACS_FOUND)
-        add_library(scalapack-C OBJECT ${blacs} ${tools-C} ${framework-C} ${pblas} ${ptools} ${redist} ${src-C})
+        add_library(scalapack-C OBJECT ${blacs} ${tools-C} ${dtl} ${framework-C} ${pblas} ${ptools} ${redist} ${src-C})
         target_link_libraries( scalapack-C ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES} ${MPI_LIBRARY})
         target_link_directories( scalapack-C PUBLIC ${CMAKE_IFORT_LIBDEPS_DIR})
         add_library(scalapack $<TARGET_OBJECTS:scalapack-C> ${pblas-F} ${pbblas} ${ptzblas} ${tools} ${framework} ${src} ${extra_lapack} )

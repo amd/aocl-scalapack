@@ -192,32 +192,43 @@
 *     .. Intrinsic Functions ..
       INTRINSIC          ABS, MAX, MIN, MOD
 *     ..
-*     .. DTL variables declaration ..
-      CHARACTER  BUFFER*512
-      CHARACTER*15, PARAMETER :: FILE_NAME = 'pdgeequ.f'
+*     .. LOG variables declaration ..
+*     ..
+*     BUFFER size: Function name and Process grid info (128 Bytes) +
+*       Variable names + Variable values(num_vars *10)
+      CHARACTER  BUFFER*320
+      CHARACTER*2, PARAMETER :: eos_str = '' // C_NULL_CHAR
 *     .. Executable Statements ..
+*
+*     Initialize framework context structure if not initialized
+*
 *
       CALL AOCL_SCALAPACK_INIT( )
 *
-      IF( SCALAPACK_CONTEXT%IS_DTL_ENABLED.EQ.1 ) THEN
-*        .. Init DTL log Buffer to zero ..
-         BUFFER='0'
-         AOCL_DTL_TRACE_ENTRY_F
-         WRITE(BUFFER,102)  IA, INFO, JA, M, N,
-     $ AMAX, COLCND, ROWCND
- 102     FORMAT('PDGEEQU inputs:
-     $ IA: ', I5,'  INFO: ', I5,'  JA: ', I5,'  M: ', I5,
-     $ '  N: ', I5,'
-     $ AMAX: ', F9.4,'  COLCND: ', F9.4,'  ROWCND: ', F9.
-     $ 4)
-         CALL AOCL_SL_DTL_LOG_ENTRY( BUFFER )
-      END IF
 *
+*     Capture the subroutine entry in the trace file
+*
+      AOCL_DTL_TRACE_ENTRY_F
 *
 *     Get grid parameters
 *
       ICTXT = DESCA( CTXT_ )
       CALL BLACS_GRIDINFO( ICTXT, NPROW, NPCOL, MYROW, MYCOL )
+*
+*     Update the log buffer with the scalar arguments details,
+*     MPI process grid information and write to the log file
+*
+      IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
+         WRITE(BUFFER,102)  IA, INFO, JA, M, N, AMAX, COLCND,
+     $            ROWCND, NPROW, NPCOL, MYROW, MYCOL,
+     $            eos_str
+ 102     FORMAT('PDGEEQU inputs:,IA:',I5,',INFO:',I5,',JA:',I5,
+     $           ',M:',I5,',N:',I5,',AMAX:',F9.4,
+     $           ',COLCND:',F9.4,',ROWCND:',F9.4,
+     $           ',NPROW:',I5,',NPCOL:',I5 ,',MYROW:',I5,
+     $           ',MYCOL:',I5,A5)
+         AOCL_DTL_LOG_ENTRY_F
+      END IF
 *
 *     Test the input parameters.
 *
@@ -232,6 +243,9 @@
 *
       IF( INFO.NE.0 ) THEN
          CALL PXERBLA( ICTXT, 'PDGEEQU', -INFO )
+*
+*        Capture the subroutine exit in the trace file
+*
          AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
@@ -242,6 +256,9 @@
          ROWCND = ONE
          COLCND = ONE
          AMAX = ZERO
+*
+*        Capture the subroutine exit in the trace file
+*
          AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
@@ -315,6 +332,9 @@
          CALL IGAMX2D( ICTXT, 'Columnwise', COLCTOP, 1, 1, INFO, 1,
      $                 IDUMM, IDUMM, -1, -1, MYCOL )
          IF( INFO.NE.0 ) THEN
+*
+*           Capture the subroutine exit in the trace file
+*
             AOCL_DTL_TRACE_EXIT_F
             RETURN
          END IF
@@ -376,6 +396,9 @@
          CALL IGAMX2D( ICTXT, 'Columnwise', COLCTOP, 1, 1, INFO, 1,
      $                 IDUMM, IDUMM, -1, -1, MYCOL )
          IF( INFO.NE.0 ) THEN
+*
+*           Capture the subroutine exit in the trace file
+*
             AOCL_DTL_TRACE_EXIT_F
             RETURN
          END IF
@@ -392,6 +415,9 @@
          COLCND = MAX( RCMIN, SMLNUM ) / MIN( RCMAX, BIGNUM )
 *
       END IF
+*
+*
+*     Capture the subroutine exit in the trace file
 *
       AOCL_DTL_TRACE_EXIT_F
       RETURN
