@@ -25,8 +25,11 @@
          USE, INTRINSIC::ISO_C_BINDING
          TYPE, BIND(C)::AOCL_SCALAPACK_GLOBAL_CONTEXT
            INTEGER(C_INT)::NUM_THREADS
-           INTEGER(C_INT)::IS_DTL_ENABLED
+           INTEGER(C_INT)::IS_TRACE_ENABLED
+           INTEGER(C_INT)::IS_LOG_ENABLED
            INTEGER(C_INT)::IS_PROGRESS_ENABLED
+           INTEGER(C_INT)::RANK
+           INTEGER(C_INT)::NUM_PROCS
          END TYPE
          TYPE(AOCL_SCALAPACK_GLOBAL_CONTEXT),BIND(C)::SCALAPACK_CONTEXT
 
@@ -44,7 +47,7 @@
 *  ..
 *  .. Array Arguments ..
       CHARACTER       FILENAME( * ), MESSAGE( * )
-      IF(SCALAPACK_CONTEXT%IS_DTL_ENABLED.EQ.1) THEN
+      IF(SCALAPACK_CONTEXT%IS_TRACE_ENABLED.EQ.1) THEN
          CALL AOCL_SL_DTL_TRACE_ENTRY(FILENAME, LINENUMBER, MESSAGE)
       END IF
       RETURN
@@ -64,7 +67,7 @@
 *  ..
 *  .. Array Arguments ..
       CHARACTER       FILENAME( * ), MESSAGE( * )
-      IF( SCALAPACK_CONTEXT%IS_DTL_ENABLED.EQ.1 ) THEN
+      IF( SCALAPACK_CONTEXT%IS_TRACE_ENABLED.EQ.1 ) THEN
          CALL AOCL_SL_DTL_TRACE_EXIT(FILENAME, LINENUMBER, MESSAGE)
       END IF
       RETURN
@@ -72,3 +75,24 @@
 *     End of SL_DTL_TRACE_ENTRY_F
 *
       END
+*
+*  =====================================================================
+*        SUBROUTINE SL_DTL_LOG_ENTRY_F
+*  =====================================================================
+      SUBROUTINE SL_DTL_LOG_ENTRY_F( FILENAME, LINENUMBER, MESSAGE )
+*
+      USE LINK_TO_C_GLOBALS
+*  .. Scalar Arguments ..
+      INTEGER         LINENUMBER
+*  ..
+*  .. Array Arguments ..
+      CHARACTER       FILENAME( * ), MESSAGE( * )
+      IF(SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1) THEN
+         CALL AOCL_SL_DTL_TRACE_ENTRY(FILENAME, LINENUMBER, MESSAGE)
+      END IF
+      RETURN
+*
+*     End of SL_DTL_TRACE_ENTRY_F
+*
+      END
+

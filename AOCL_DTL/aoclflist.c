@@ -1,12 +1,12 @@
 /*===================================================================
  * File Name :  aoclflist.c
- * 
- * Description : Linked list of open files assocaited with 
+ *
+ * Description : Linked list of open files assocaited with
  *               each thread. This is used to log the data
  *               to correct file as per the current thread id.
  *
- * Copyright (C) 2020, Advanced Micro Devices, Inc
- * 
+ * Copyright (C) 2020-23, Advanced Micro Devices, Inc
+ *
  *==================================================================*/
 
 #include "aocltpdef.h"
@@ -14,9 +14,9 @@
 #include "aoclfal.h"
 #include "aoclflist.h"
 #include "aoclos.h"
+#include "SL_Context.h"
 
-
-/* Disable instrumentation for following function, since they are called from 
+/* Disable instrumentation for following function, since they are called from
  * Auto Generated execution trace handlers. */
 Bool AOCL_FLIST_IsEmpty(
     AOCL_FLIST_Node *plist) __attribute__((no_instrument_function));
@@ -89,8 +89,7 @@ AOCL_FAL_FILE *AOCL_FLIST_AddFile(const int8 *pchFilePrefix, AOCL_FLIST_Node **p
     }
 
     /* We don't have exiting file, lets try to open new one */
-    sprintf(pchFileName, "P%d_T%d_%s", AOCL_getpid(), tid, pchFilePrefix);
-
+    sprintf(pchFileName, "P%d_T%d_Rank%d_%s", AOCL_getpid(), tid,scalapack_context.rank, pchFilePrefix);
     file = AOCL_FAL_Open(pchFileName, "wb");
     if (file == NULL)
     {

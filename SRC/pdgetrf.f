@@ -1,5 +1,5 @@
 *  -- ScaLAPACK routine --
-*     Copyright (c) 2022-2023 Advanced Micro Devices, Inc. All rights reserved.
+*     Copyright (c) 2020-2023 Advanced Micro Devices, Inc. All rights reserved.
 *
 *  -- ScaLAPACK routine (version 1.7) --
 *     University of Tennessee, Knoxville, Oak Ridge National Laboratory,
@@ -141,16 +141,19 @@
 *
 *  =====================================================================
 *
-      CHARACTER  BUFFER*450
-      CHARACTER*15, PARAMETER :: FILE_NAME = 'pdgetrf.f'
+*     ..
+*     BUFFER size: Function name and Process grid info (128 Bytes) +
+*       Variable names + Variable values(num_vars *10)
+      CHARACTER  BUFFER*256
+      CHARACTER*2, PARAMETER :: eos_str = '' // C_NULL_CHAR
       CALL AOCL_SCALAPACK_INIT( )
       AOCL_DTL_TRACE_ENTRY_F
 *
-      IF( SCALAPACK_CONTEXT%IS_DTL_ENABLED.EQ.1 ) THEN
-         WRITE(BUFFER,101) M, N, IA, JA
- 101     FORMAT('pdgetrf inputs: M: ', I2, '  N: ', I2 ,'
-     $               IA: ', I2,'  JA: ', I2 )
-         CALL AOCL_SL_DTL_LOG_ENTRY( BUFFER )
+      IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
+         WRITE(BUFFER,101) M, N, IA, JA, eos_str
+ 101     FORMAT('pdgetrf inputs:,M:',I9,',N:',I9,
+     $               ',IA:',I5,',JA:',I5,A5 )
+         AOCL_DTL_LOG_ENTRY_F
       END IF
 
 *

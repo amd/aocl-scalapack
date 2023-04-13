@@ -253,9 +253,8 @@ void DTL_Trace(
                 fprintf(pOutFile, "Out of %s() with error %s\n", pi8FunctionName, pi8Message);
             }
             break;
-
         case TRACE_TYPE_LOG:
-            fprintf(pOutFile, "%s:%d:%s\n", pi8FileName, ui32LineNumber, pi8Message);
+            fprintf(pOutFile, "%s:%d,%s\n", pi8FileName, ui32LineNumber, pi8Message);
             break;
 
         case TRACE_TYPE_RAW:

@@ -234,25 +234,23 @@
 *     .. Intrinsic Functions ..
       INTRINSIC          DBLE, MAX, MIN, MOD
 *     ..
-*     .. DTL variables declaration ..
-      CHARACTER  BUFFER*512
-      CHARACTER*15, PARAMETER :: FILE_NAME = 'pdgehrd.f'
+*     .. LOG variables declaration ..
+*     ..
+*     BUFFER size: Function name and Process grid info (128 Bytes) +
+*       Variable names + Variable values(num_vars *10)
+      CHARACTER  BUFFER*320
+      CHARACTER*2, PARAMETER :: eos_str = '' // C_NULL_CHAR
 *     .. Executable Statements ..
+*
+*     Initialize framework context structure if not initialized
+*
 *
       CALL AOCL_SCALAPACK_INIT( )
 *
-      IF( SCALAPACK_CONTEXT%IS_DTL_ENABLED.EQ.1 ) THEN
-*        .. Init DTL log Buffer to zero ..
-         BUFFER='0'
-         AOCL_DTL_TRACE_ENTRY_F
-         WRITE(BUFFER,102)  IA, IHI, ILO, INFO,
-     $ JA, LWORK, N
- 102     FORMAT('PDGEHRD inputs:
-     $ IA: ', I5,'  IHI: ', I5,'  ILO: ', I5,'  INFO: ',
-     $ I5,'  JA: ', I5,'  LWORK: ', I5,'  N: ', I5)
-         CALL AOCL_SL_DTL_LOG_ENTRY( BUFFER )
-      END IF
 *
+*     Capture the subroutine entry in the trace file
+*
+      AOCL_DTL_TRACE_ENTRY_F
 *
 *     Get grid parameters
 *
@@ -263,7 +261,7 @@
 *     MPI process grid information and write to the log file
 *
       IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
-         WRITE(LOG_BUF,102)  IA, IHI, ILO, INFO, JA, LWORK,
+         WRITE(BUFFER,102)  IA, IHI, ILO, INFO, JA, LWORK,
      $            N, NPROW, NPCOL, MYROW, MYCOL, eos_str
  102     FORMAT('PDGEHRD inputs:,IA:',I5,',IHI:',I5,',ILO:',I5,
      $           ',INFO:',I5,',JA:',I5,',LWORK:',I5,
@@ -326,9 +324,15 @@ C            ELSE IF( IROFFA.NE.ICOFFA .OR. IROFFA.NE.0 ) THEN
 *
       IF( INFO.NE.0 ) THEN
          CALL PXERBLA( ICTXT, 'PDGEHRD', -INFO )
+*
+*        Capture the subroutine exit in the trace file
+*
          AOCL_DTL_TRACE_EXIT_F
          RETURN
       ELSE IF( LQUERY ) THEN
+*
+*        Capture the subroutine exit in the trace file
+*
          AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
@@ -351,6 +355,9 @@ C            ELSE IF( IROFFA.NE.ICOFFA .OR. IROFFA.NE.0 ) THEN
 *     Quick return if possible
 *
       IF( IHI-ILO.LE.0 ) THEN
+*
+*        Capture the subroutine exit in the trace file
+*
          AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
@@ -416,6 +423,9 @@ C            ELSE IF( IROFFA.NE.ICOFFA .OR. IROFFA.NE.0 ) THEN
       CALL PB_TOPSET( ICTXT, 'Combine', 'Rowwise',    ROWCTOP )
 *
       WORK( 1 ) = DBLE( LWMIN )
+*
+*
+*     Capture the subroutine exit in the trace file
 *
       AOCL_DTL_TRACE_EXIT_F
       RETURN
