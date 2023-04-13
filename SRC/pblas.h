@@ -15,6 +15,9 @@
 *  ---------------------------------------------------------------------
 */
 
+#ifndef PBLAS_H
+#define PBLAS_H
+
 /*
 * This file includes the standard C libraries, as well as system
 * dependent include files.  All PBLAS routines include this file.
@@ -1150,3 +1153,11 @@ typedef char *          F_CHAR;
 #define blacs_pcoord_   blacs_pcoord__
 #define blacs_barrier_  blacs_barrier__
 #endif
+
+/*
+ * Prototypes declarations
+ */
+Int numroc_(Int *N, Int *NB, Int *IPROC, Int *ISRCPROC, Int *NPROCS);
+
+
+#endif /* PBLAS_H  */

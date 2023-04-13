@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include "../BLACS/SRC/Bdef.h"
 
 #ifndef Int
 #define Int int

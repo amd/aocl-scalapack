@@ -61,7 +61,7 @@ int scalapack_pthread_mutex_unlock(scalapack_pthread_mutex_t *mutex)
     return 0;
 }
 // -- pthread_once() --
-static bool
+static BOOL
     scalapack_init_once_wrapper(scalapack_pthread_once_t *once, void *param, void **context)
 {
     (void)once;

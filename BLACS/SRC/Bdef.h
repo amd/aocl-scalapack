@@ -30,7 +30,7 @@ typedef struct bLaCsCoNtExT BLACSCONTEXT;
 struct bLaCsCoNtExT
 {
    BLACSSCOPE rscp, cscp, ascp, pscp; /* row, column, all, and pt2pt scopes */
-#ifdef ENABLE_LOOK_AHEAD_FOR_LU 
+#ifdef ENABLE_LOOK_AHEAD_FOR_LU
    BLACSSCOPE lscp;                         /* row scope for look ahead panel */
 #endif /* ENABLE_LOOK_AHEAD_FOR_LU */
    BLACSSCOPE *scp;                   /* pointer to present scope */
@@ -77,7 +77,7 @@ struct bLaCbUfF
 #define    AOCL_KEEP_POLLING    2
 
 /*
- *  Definition of buffer type for 
+ *  Definition of buffer type for
  *  user defined datatype communications
  */
 typedef struct aOcLpBuFf AOCLPBUFF;
@@ -557,5 +557,22 @@ Int BI_ContxtNum(BLACSCONTEXT *ctxt);
 
 #endif
 
-
+/*
+ * Prototypes declarations
+ */
+void BI_imvcopy(Int m, Int n, Int *A, Int lda, Int *buff);
+void BI_ivmcopy(Int m, Int n, Int *A, Int lda, Int *buff);
+void BI_smvcopy(Int m, Int n, float *A, Int lda, float *buff);
+void BI_svmcopy(Int m, Int n, float *A, Int lda, float *buff);
+void BI_dmvcopy(Int m, Int n, double *A, Int lda, double *buff);
+void BI_dvmcopy(Int m, Int n, double *A, Int lda, double *buff);
+void BI_TransDist(BLACSCONTEXT *ctxt, char scope, Int m, Int n, Int *rA,
+                  Int *cA, Int ldrc, BI_DistType *dist, Int rdest, Int cdest);
+void Cblacs_pinfo(Int *mypnum, Int *nprocs);
+void blacs_gridmap_(Int *ConTxt, Int *usermap, Int *ldup, Int *nprow0,
+                           Int *npcol0);
+void Cblacs_gridinfo(Int ConTxt, Int *nprow, Int *npcol, Int *myrow, Int *mycol);
+void Cblacs_abort(Int ConTxt, Int ErrNo);
+void Cblacs_get(Int ConTxt, Int what, Int *val);
+void Cblacs_gridmap(Int *ConTxt, Int *usermap, Int ldup, Int nprow0, Int npcol0);
 #endif
