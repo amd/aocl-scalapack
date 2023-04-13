@@ -30,7 +30,7 @@ typedef struct bLaCsCoNtExT BLACSCONTEXT;
 struct bLaCsCoNtExT
 {
    BLACSSCOPE rscp, cscp, ascp, pscp; /* row, column, all, and pt2pt scopes */
-#ifdef ENABLE_LOOK_AHEAD_FOR_LU 
+#ifdef ENABLE_LOOK_AHEAD_FOR_LU
    BLACSSCOPE lscp;                         /* row scope for look ahead panel */
 #endif /* ENABLE_LOOK_AHEAD_FOR_LU */
    BLACSSCOPE *scp;                   /* pointer to present scope */
@@ -77,7 +77,7 @@ struct bLaCbUfF
 #define    AOCL_KEEP_POLLING    2
 
 /*
- *  Definition of buffer type for 
+ *  Definition of buffer type for
  *  user defined datatype communications
  */
 typedef struct aOcLpBuFf AOCLPBUFF;
