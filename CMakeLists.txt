@@ -29,6 +29,9 @@ option(ENABLE_AOCL_PROGRESS "Enable progress feature " OFF)
 # DTL option
 option(ENABLE_DTL "Enable DTL feature " OFF)
 
+# ASAN testing option
+option(ENABLE_ASAN_TESTS "Enable Address sanitizer tests " OFF)
+
 # Option: Include build number in the version string.
 option (ENABLE_SET_LIB_VERSION "Set library version" OFF)
 
@@ -45,6 +48,13 @@ endif()
 
 set(CMAKE_ICC_FLAGS " ")
 set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -cpp" )
+
+# set compile flags to enable address sanitizer (ASAN) tests
+if(ENABLE_ASAN_TESTS)
+   set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -fsanitize=address " )
+   set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fsanitize=address  ")
+   message(STATUS " ASAN testing enabled for the scaLAPACK build ")
+endif(ENABLE_ASAN_TESTS)
 
 # Option to enable the scaLAPACK test-suite with "Dynamic work buffer memory allocation".
 if(ENABLE_LARGE_MATRIX_TESTING)
