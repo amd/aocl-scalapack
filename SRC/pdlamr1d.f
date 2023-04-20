@@ -1,3 +1,9 @@
+*
+*     Copyright (c) 2023 Advanced Micro Devices, Inc.  All rights reserved.
+*
+*
+#include "SL_Context_fortran_include.h"
+*
       SUBROUTINE PDLAMR1D( N, A, IA, JA, DESCA, B, IB, JB, DESCB )
 *
 *  -- ScaLAPACK routine (version 1.7) --
@@ -5,6 +11,7 @@
 *     and University of California, Berkeley.
 *     October 15, 1999
 *
+      USE LINK_TO_C_GLOBALS
 *     .. Scalar Arguments ..
       INTEGER            IA, IB, JA, JB, N
 *     ..
@@ -105,15 +112,42 @@
       INTEGER            NUMROC
       EXTERNAL           NUMROC
 *     ..
+*     .. LOG variables declaration ..
+*     ..
+*     BUFFER size: Function name and Process grid info (128 Bytes) +
+*       Variable names + Variable values(num_vars *10)
+      CHARACTER  BUFFER*256
+      CHARACTER*2, PARAMETER :: eos_str = '' // C_NULL_CHAR
 *     .. Executable Statements ..
+*
+*     Initialize framework context structure if not initialized
+*
+*
+      CALL AOCL_SCALAPACK_INIT( )
+*
+*
+*     Capture the subroutine entry in the trace file
+*
+      AOCL_DTL_TRACE_ENTRY_F
 *       This is just to keep ftnchek and toolpack/1 happy
       IF( BLOCK_CYCLIC_2D*CSRC_*CTXT_*DLEN_*DTYPE_*LLD_*MB_*M_*NB_*N_*
-     $    RSRC_.LT.0 )RETURN
+     $    RSRC_.LT.0 )THEN
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
+         RETURN
+      END IF
 *
 *     Quick return if possible
 *
-      IF( N.LE.0 )
-     $   RETURN
+      IF( N.LE.0 ) THEN
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
+         RETURN
+      END IF
 *
       DO 10 I = 1, DLEN_
          DESCAA( I ) = DESCA( I )
@@ -129,6 +163,18 @@
       CALL PDGEMR2D( 1, N, A, IA, JA, DESCAA, B, IB, JB, DESCBB, ICTXT )
 *
       CALL BLACS_GRIDINFO( ICTXT, NPROW, NPCOL, MYROW, MYCOL )
+*
+*     Update the log buffer with the scalar arguments details,
+*     MPI process grid information and write to the log file
+*
+      IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
+         WRITE(BUFFER,102)  IA, IB, JA, JB, N, NPROW, NPCOL,
+     $            MYROW, MYCOL, eos_str
+ 102     FORMAT('PDLAMR1D inputs:,IA:',I5,',IB:',I5,',JA:',I5,
+     $           ',JB:',I5,',N:',I5,',NPROW:',I5,
+     $           ',NPCOL:',I5,',MYROW:',I5,',MYCOL:',I5,A1)
+         AOCL_DTL_LOG_ENTRY_F
+      END IF
       NQ = NUMROC( N, DESCB( NB_ ), MYCOL, 0, NPCOL )
 *
       IF( MYROW.EQ.0 ) THEN
@@ -137,6 +183,10 @@
          CALL DGEBR2D( ICTXT, 'C', ' ', NQ, 1, B, NQ, 0, MYCOL )
       END IF
 *
+*
+*     Capture the subroutine exit in the trace file
+*
+      AOCL_DTL_TRACE_EXIT_F
       RETURN
 *
 *     End of PDLAMR1D

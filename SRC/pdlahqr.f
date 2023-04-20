@@ -1,3 +1,9 @@
+*
+*     Copyright (c) 2023 Advanced Micro Devices, Inc.  All rights reserved.
+*
+*
+#include "SL_Context_fortran_include.h"
+*
       SUBROUTINE PDLAHQR( WANTT, WANTZ, N, ILO, IHI, A, DESCA, WR, WI,
      $                    ILOZ, IHIZ, Z, DESCZ, WORK, LWORK, IWORK,
      $                    ILWORK, INFO )
@@ -6,6 +12,7 @@
 *     Univ. of Tennessee, Univ. of California Berkeley, Univ. of Colorado Denver
 *     May 1 2012
 *
+      USE LINK_TO_C_GLOBALS
 *     .. Scalar Arguments ..
       LOGICAL            WANTT, WANTZ
       INTEGER            IHI, IHIZ, ILO, ILOZ, ILWORK, INFO, LWORK, N
@@ -279,14 +286,35 @@
 *     .. Intrinsic Functions ..
       INTRINSIC          ABS, MAX, MIN, MOD, SIGN, SQRT
 *     ..
+*     .. LOG variables declaration ..
+*     ..
+*     BUFFER size: Function name and Process grid info (128 Bytes) +
+*       Variable names + Variable values(num_vars *10)
+      CHARACTER  BUFFER*384
+      CHARACTER*2, PARAMETER :: eos_str = '' // C_NULL_CHAR
 *     .. Executable Statements ..
+*
+*     Initialize framework context structure if not initialized
+*
+*
+      CALL AOCL_SCALAPACK_INIT( )
+*
+*
+*     Capture the subroutine entry in the trace file
+*
+      AOCL_DTL_TRACE_ENTRY_F
 *
       INFO = 0
 *
       ITERMAX = 30*( IHI-ILO+1 )
 *     ITERMAX = 0
-      IF( N.EQ.0 )
-     $   RETURN
+      IF( N.EQ.0 ) THEN
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
+         RETURN
+      END IF
 *
 *     NODE (IAFIRST,JAFIRST) OWNS A(1,1)
 *
@@ -297,6 +325,21 @@
       JAFIRST = DESCA( CSRC_ )
       LDZ = DESCZ( LLD_ )
       CALL BLACS_GRIDINFO( CONTXT, NPROW, NPCOL, MYROW, MYCOL )
+*
+*     Update the log buffer with the scalar arguments details,
+*     MPI process grid information and write to the log file
+*
+      IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
+         WRITE(BUFFER,102)  WANTT, WANTZ, IHI, IHIZ, ILO,
+     $            ILOZ, ILWORK, INFO, LWORK, N, NPROW,
+     $            NPCOL, MYROW, MYCOL, eos_str
+ 102     FORMAT('PDLAHQR inputs:,WANTT:',L2,',WANTZ:',L2,
+     $           ',IHI:',I5,',IHIZ:',I5,',ILO:',I5,
+     $           ',ILOZ:',I5,',ILWORK:',I5,',INFO:',I5,
+     $           ',LWORK:',I5,',N:',I5,',NPROW:',I5,
+     $           ',NPCOL:',I5,',MYROW:',I5,',MYCOL:',I5,A1)
+         AOCL_DTL_LOG_ENTRY_F
+      END IF
       NODE = MYROW*NPCOL + MYCOL
       NUM = NPROW*NPCOL
       LEFT = MOD( MYCOL+NPCOL-1, NPCOL )
@@ -346,6 +389,10 @@
      $              -1, -1 )
       IF( INFO.LT.0 ) THEN
          CALL PXERBLA( CONTXT, 'PDLAHQR', -INFO )
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
 *
@@ -373,6 +420,10 @@
             WR( ILO ) = ZERO
          END IF
          WI( ILO ) = ZERO
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
 *
@@ -2002,6 +2053,10 @@ c     $                   WORK( IRBUF+1 ), LWORK-IRBUF )
 *     Failure to converge in remaining number of iterations
 *
       INFO = I
+*
+*     Capture the subroutine exit in the trace file
+*
+      AOCL_DTL_TRACE_EXIT_F
       RETURN
 *
   430 CONTINUE
@@ -2070,6 +2125,10 @@ c     $                   WORK( IRBUF+1 ), LWORK-IRBUF )
   450 CONTINUE
       CALL DGSUM2D( CONTXT, 'All', ' ', N, 1, WR, N, -1, -1 )
       CALL DGSUM2D( CONTXT, 'All', ' ', N, 1, WI, N, -1, -1 )
+*
+*     Capture the subroutine exit in the trace file
+*
+      AOCL_DTL_TRACE_EXIT_F
       RETURN
 *
 *     END OF PDLAHQR

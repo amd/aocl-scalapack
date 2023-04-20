@@ -1,3 +1,9 @@
+*
+*     Copyright (c) 2023 Advanced Micro Devices, Inc.  All rights reserved.
+*
+*
+#include "SL_Context_fortran_include.h"
+*
       SUBROUTINE PDLAQSY( UPLO, N, A, IA, JA, DESCA, SR, SC, SCOND,
      $                    AMAX, EQUED )
 *
@@ -6,6 +12,7 @@
 *     and University of California, Berkeley.
 *     May 1, 1997
 *
+      USE LINK_TO_C_GLOBALS
 *     .. Scalar Arguments ..
       CHARACTER          EQUED, UPLO
       INTEGER            IA, JA, N
@@ -179,12 +186,32 @@
 *     .. Intrinsic Functions ..
       INTRINSIC          MIN, MOD
 *     ..
+*     .. LOG variables declaration ..
+*     ..
+*     BUFFER size: Function name and Process grid info (128 Bytes) +
+*       Variable names + Variable values(num_vars *10)
+      CHARACTER  BUFFER*320
+      CHARACTER*2, PARAMETER :: eos_str = '' // C_NULL_CHAR
 *     .. Executable Statements ..
+*
+*     Initialize framework context structure if not initialized
+*
+*
+      CALL AOCL_SCALAPACK_INIT( )
+*
+*
+*     Capture the subroutine entry in the trace file
+*
+      AOCL_DTL_TRACE_ENTRY_F
 *
 *     Quick return if possible
 *
       IF( N.LE.0 ) THEN
          EQUED = 'N'
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
 *
@@ -192,6 +219,20 @@
 *
       ICTXT = DESCA( CTXT_ )
       CALL BLACS_GRIDINFO( ICTXT, NPROW, NPCOL, MYROW, MYCOL )
+*
+*     Update the log buffer with the scalar arguments details,
+*     MPI process grid information and write to the log file
+*
+      IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
+         WRITE(BUFFER,102)  EQUED, UPLO, IA, JA, N, AMAX,
+     $            SCOND, NPROW, NPCOL, MYROW, MYCOL,
+     $            eos_str
+ 102     FORMAT('PDLAQSY inputs:,EQUED:',A5,',UPLO:',A5,
+     $           ',IA:',I5,',JA:',I5,',N:',I5,',AMAX:',F9.4,
+     $           ',SCOND:',F9.4,',NPROW:',I5,
+     $           ',NPCOL:',I5,',MYROW:',I5,',MYCOL:',I5,A1)
+         AOCL_DTL_LOG_ENTRY_F
+      END IF
       CALL INFOG2L( IA, JA, DESCA, NPROW, NPCOL, MYROW, MYCOL, IIA, JJA,
      $              IAROW, IACOL )
       LDA = DESCA( LLD_ )
@@ -352,6 +393,10 @@
 *
       END IF
 *
+*
+*     Capture the subroutine exit in the trace file
+*
+      AOCL_DTL_TRACE_EXIT_F
       RETURN
 *
 *     End of PDLAQSY

@@ -1,3 +1,9 @@
+*
+*     Copyright (c) 2023 Advanced Micro Devices, Inc.  All rights reserved.
+*
+*
+#include "SL_Context_fortran_include.h"
+*
       SUBROUTINE PDLASET( UPLO, M, N, ALPHA, BETA, A, IA, JA, DESCA )
 *
 *  -- ScaLAPACK auxiliary routine (version 1.7) --
@@ -5,6 +11,7 @@
 *     and University of California, Berkeley.
 *     May 1, 1997
 *
+      USE LINK_TO_C_GLOBALS
 *     .. Scalar Arguments ..
       CHARACTER          UPLO
       INTEGER            IA, JA, M, N
@@ -149,10 +156,31 @@
 *     .. Intrinsic Functions ..
       INTRINSIC          MIN, MOD
 *     ..
+*     .. LOG variables declaration ..
+*     ..
+*     BUFFER size: Function name and Process grid info (128 Bytes) +
+*       Variable names + Variable values(num_vars *10)
+      CHARACTER  BUFFER*320
+      CHARACTER*2, PARAMETER :: eos_str = '' // C_NULL_CHAR
 *     .. Executable Statements ..
 *
-      IF( M.EQ.0 .OR. N.EQ.0 )
-     $   RETURN
+*     Initialize framework context structure if not initialized
+*
+*
+      CALL AOCL_SCALAPACK_INIT( )
+*
+*
+*     Capture the subroutine entry in the trace file
+*
+      AOCL_DTL_TRACE_ENTRY_F
+*
+      IF( M.EQ.0 .OR. N.EQ.0 ) THEN
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
+         RETURN
+      END IF
 *
       IF( M.LE.( DESCA( MB_ ) - MOD( IA-1, DESCA( MB_ ) ) ) .OR.
      $    N.LE.( DESCA( NB_ ) - MOD( JA-1, DESCA( NB_ ) ) ) ) THEN
@@ -213,6 +241,10 @@
 *
       END IF
 *
+*
+*     Capture the subroutine exit in the trace file
+*
+      AOCL_DTL_TRACE_EXIT_F
       RETURN
 *
 *     End of PDLASET

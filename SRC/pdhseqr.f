@@ -1,3 +1,9 @@
+*
+*     Copyright (c) 2023 Advanced Micro Devices, Inc.  All rights reserved.
+*
+*
+#include "SL_Context_fortran_include.h"
+*
       SUBROUTINE PDHSEQR( JOB, COMPZ, N, ILO, IHI, H, DESCH, WR, WI, Z,
      $                    DESCZ, WORK, LWORK, IWORK, LIWORK, INFO )
 *
@@ -9,6 +15,7 @@
 *     Univ. of Colorado Denver and University of California, Berkeley.
 *     January, 2012
 *
+      USE LINK_TO_C_GLOBALS
       IMPLICIT NONE
 *
 *     .. Scalar Arguments ..
@@ -277,13 +284,44 @@
 *     .. Intrinsic Functions ..
       INTRINSIC          DBLE, MAX, MIN
 *     ..
+*     .. LOG variables declaration ..
+*     ..
+*     BUFFER size: Function name and Process grid info (128 Bytes) +
+*       Variable names + Variable values(num_vars *10)
+      CHARACTER  BUFFER*320
+      CHARACTER*2, PARAMETER :: eos_str = '' // C_NULL_CHAR
 *     .. Executable Statements ..
+*
+*     Initialize framework context structure if not initialized
+*
+*
+      CALL AOCL_SCALAPACK_INIT( )
+*
+*
+*     Capture the subroutine entry in the trace file
+*
+      AOCL_DTL_TRACE_ENTRY_F
 *
 *     Decode and check the input parameters.
 *
       INFO = 0
       ICTXT = DESCH( CTXT_ )
       CALL BLACS_GRIDINFO( ICTXT, NPROW, NPCOL, MYROW, MYCOL )
+*
+*     Update the log buffer with the scalar arguments details,
+*     MPI process grid information and write to the log file
+*
+      IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
+         WRITE(BUFFER,102)  IHI, ILO, INFO, LWORK, LIWORK,
+     $            N, COMPZ, JOB, NPROW, NPCOL, MYROW,
+     $            MYCOL, eos_str
+ 102     FORMAT('PDHSEQR inputs:,IHI:',I5,',ILO:',I5,',INFO:',I5,
+     $           ',LWORK:',I5,',LIWORK:',I5,
+     $           ',N:',I5,',COMPZ:',A5,',JOB:',A5,',NPROW:',I5,
+     $           ',NPCOL:',I5,',MYROW:',I5,
+     $           ',MYCOL:',I5,A1)
+         AOCL_DTL_LOG_ENTRY_F
+      END IF
       NPROCS = NPROW*NPCOL
       IF( NPROW.EQ.-1 ) INFO = -(600+CTXT_)
       IF( INFO.EQ.0 ) THEN
@@ -356,18 +394,30 @@
 *        Quick return in case of invalid argument.
 *
          CALL PXERBLA( ICTXT, 'PDHSEQR', -INFO )
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
 *
       ELSE IF( N.EQ.0 ) THEN
 *
 *        Quick return in case N = 0; nothing to do.
 *
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
 *
       ELSE IF( LQUERY ) THEN
 *
 *        Quick return in case of a workspace query.
 *
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
 *
       ELSE
@@ -422,6 +472,10 @@
      $              1, HRSRC, HCSRC )
             END IF
             WI( ILO ) = ZERO
+*
+*           Capture the subroutine exit in the trace file
+*
+            AOCL_DTL_TRACE_EXIT_F
             RETURN
          END IF
 *
@@ -677,6 +731,10 @@
 *
       WORK(1) = LWKOPT
       IWORK(1) = LIWKOPT
+*
+*     Capture the subroutine exit in the trace file
+*
+      AOCL_DTL_TRACE_EXIT_F
       RETURN
 *
 *     End of PDHSEQR

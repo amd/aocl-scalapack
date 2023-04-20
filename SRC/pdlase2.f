@@ -1,3 +1,9 @@
+*
+*     Copyright (c) 2023 Advanced Micro Devices, Inc.  All rights reserved.
+*
+*
+#include "SL_Context_fortran_include.h"
+*
       SUBROUTINE PDLASE2( UPLO, M, N, ALPHA, BETA, A, IA, JA, DESCA )
 *
 *  -- ScaLAPACK auxiliary routine (version 1.7) --
@@ -5,6 +11,7 @@
 *     and University of California, Berkeley.
 *     May 1, 1997
 *
+      USE LINK_TO_C_GLOBALS
 *     .. Scalar Arguments ..
       CHARACTER          UPLO
       INTEGER            IA, JA, M, N
@@ -154,14 +161,48 @@
 *     .. Intrinsic Functions ..
       INTRINSIC          MAX, MIN, MOD
 *     ..
+*     .. LOG variables declaration ..
+*     ..
+*     BUFFER size: Function name and Process grid info (128 Bytes) +
+*       Variable names + Variable values(num_vars *10)
+      CHARACTER  BUFFER*320
+      CHARACTER*2, PARAMETER :: eos_str = '' // C_NULL_CHAR
 *     .. Executable Statements ..
 *
-      IF( M.EQ.0 .OR. N.EQ.0 )
-     $   RETURN
+*     Initialize framework context structure if not initialized
+*
+*
+      CALL AOCL_SCALAPACK_INIT( )
+*
+*
+*     Capture the subroutine entry in the trace file
+*
+      AOCL_DTL_TRACE_ENTRY_F
+*
+      IF( M.EQ.0 .OR. N.EQ.0 ) THEN
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
+         RETURN
+      END IF
 *
 *     Get grid parameters
 *
       CALL BLACS_GRIDINFO( DESCA( CTXT_ ), NPROW, NPCOL, MYROW, MYCOL )
+*
+*     Update the log buffer with the scalar arguments details,
+*     MPI process grid information and write to the log file
+*
+      IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
+         WRITE(BUFFER,102)  UPLO, IA, JA, M, N, ALPHA, BETA,
+     $            NPROW, NPCOL, MYROW, MYCOL, eos_str
+ 102     FORMAT('PDLASE2 inputs:,UPLO:',A5,',IA:',I5,',JA:',I5,
+     $           ',M:',I5,',N:',I5,',ALPHA:',F9.4,
+     $           ',BETA:',F9.4,',NPROW:',I5,',NPCOL:',I5,
+     $           ',MYROW:',I5,',MYCOL:',I5,A1)
+         AOCL_DTL_LOG_ENTRY_F
+      END IF
 *
       CALL INFOG2L( IA, JA, DESCA, NPROW, NPCOL, MYROW, MYCOL, IIA, JJA,
      $              IAROW, IACOL )
@@ -212,8 +253,13 @@
          IF( MYCOL.EQ.IACOL ) THEN
 *
             MPA = NUMROC( M+IROFFA, MBA, MYROW, IAROW, NPROW )
-            IF( MPA.LE.0 )
-     $         RETURN
+            IF( MPA.LE.0 ) THEN
+*
+*              Capture the subroutine exit in the trace file
+*
+               AOCL_DTL_TRACE_EXIT_F
+               RETURN
+            END IF
             IF( MYROW.EQ.IAROW )
      $         MPA = MPA - IROFFA
             MYDIST = MOD( MYROW-IAROW+NPROW, NPROW )
@@ -321,8 +367,13 @@
          IF( MYROW.EQ.IAROW ) THEN
 *
             NQA = NUMROC( N+ICOFFA, NBA, MYCOL, IACOL, NPCOL )
-            IF( NQA.LE.0 )
-     $         RETURN
+            IF( NQA.LE.0 ) THEN
+*
+*              Capture the subroutine exit in the trace file
+*
+               AOCL_DTL_TRACE_EXIT_F
+               RETURN
+            END IF
             IF( MYCOL.EQ.IACOL )
      $         NQA = NQA - ICOFFA
             MYDIST = MOD( MYCOL-IACOL+NPCOL, NPCOL )
@@ -404,6 +455,10 @@
 *
       END IF
 *
+*
+*     Capture the subroutine exit in the trace file
+*
+      AOCL_DTL_TRACE_EXIT_F
       RETURN
 *
 *     End of PDLASE2

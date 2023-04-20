@@ -1,3 +1,9 @@
+*
+*     Copyright (c) 2023 Advanced Micro Devices, Inc.  All rights reserved.
+*
+*
+#include "SL_Context_fortran_include.h"
+*
       SUBROUTINE PDLARED1D( N, IA, JA, DESC, BYCOL, BYALL, WORK, LWORK )
 *
 *  -- ScaLAPACK routine (version 1.7) --
@@ -5,6 +11,7 @@
 *     and University of California, Berkeley.
 *     December 12, 2005
 *
+      USE LINK_TO_C_GLOBALS
 *     .. Scalar Arguments ..
       INTEGER            IA, JA, LWORK, N
 *     ..
@@ -138,12 +145,46 @@
 *     .. Intrinsic Functions ..
       INTRINSIC          MIN
 *     ..
+*     .. LOG variables declaration ..
+*     ..
+*     BUFFER size: Function name and Process grid info (128 Bytes) +
+*       Variable names + Variable values(num_vars *10)
+      CHARACTER  BUFFER*256
+      CHARACTER*2, PARAMETER :: eos_str = '' // C_NULL_CHAR
 *     .. Executable Statements ..
+*
+*     Initialize framework context structure if not initialized
+*
+*
+      CALL AOCL_SCALAPACK_INIT( )
+*
+*
+*     Capture the subroutine entry in the trace file
+*
+      AOCL_DTL_TRACE_ENTRY_F
 *       This is just to keep ftnchek happy
       IF( BLOCK_CYCLIC_2D*CSRC_*CTXT_*DLEN_*DTYPE_*LLD_*MB_*M_*NB_*N_*
-     $    RSRC_.LT.0 )RETURN
+     $    RSRC_.LT.0 )THEN
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
+         RETURN
+      END IF
 *
       CALL BLACS_GRIDINFO( DESC( CTXT_ ), NPROW, NPCOL, MYROW, MYCOL )
+*
+*     Update the log buffer with the scalar arguments details,
+*     MPI process grid information and write to the log file
+*
+      IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
+         WRITE(BUFFER,102)  IA, JA, LWORK, N, NPROW, NPCOL,
+     $            MYROW, MYCOL, eos_str
+ 102     FORMAT('PDLARED1D inputs:,IA:',I5,',JA:',I5,',LWORK:',I5,
+     $           ',N:',I5,',NPROW:',I5,',NPCOL:',I5,
+     $           ',MYROW:',I5,',MYCOL:',I5,A1)
+         AOCL_DTL_LOG_ENTRY_F
+      END IF
       NB = DESC( MB_ )
 *
 *
@@ -166,6 +207,10 @@
    20    CONTINUE
    30 CONTINUE
 *
+*
+*     Capture the subroutine exit in the trace file
+*
+      AOCL_DTL_TRACE_EXIT_F
       RETURN
 *
 *     End of PDLARED1D

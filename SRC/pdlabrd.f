@@ -1,3 +1,9 @@
+*
+*     Copyright (c) 2023 Advanced Micro Devices, Inc.  All rights reserved.
+*
+*
+#include "SL_Context_fortran_include.h"
+*
       SUBROUTINE PDLABRD( M, N, NB, A, IA, JA, DESCA, D, E, TAUQ, TAUP,
      $                    X, IX, JX, DESCX, Y, IY, JY, DESCY, WORK )
 *
@@ -6,6 +12,7 @@
 *     and University of California, Berkeley.
 *     May 1, 1997
 *
+      USE LINK_TO_C_GLOBALS
 *     .. Scalar Arguments ..
       INTEGER             IA, IX, IY, JA, JX, JY, M, N, NB
 *     ..
@@ -269,15 +276,49 @@
 *     .. Intrinsic Functions ..
       INTRINSIC          MIN, MOD
 *     ..
+*     .. LOG variables declaration ..
+*     ..
+*     BUFFER size: Function name and Process grid info (128 Bytes) +
+*       Variable names + Variable values(num_vars *10)
+      CHARACTER  BUFFER*320
+      CHARACTER*2, PARAMETER :: eos_str = '' // C_NULL_CHAR
 *     .. Executable Statements ..
+*
+*     Initialize framework context structure if not initialized
+*
+*
+      CALL AOCL_SCALAPACK_INIT( )
+*
+*
+*     Capture the subroutine entry in the trace file
+*
+      AOCL_DTL_TRACE_ENTRY_F
 *
 *     Quick return if possible
 *
-      IF( M.LE.0 .OR. N.LE.0 )
-     $   RETURN
+      IF( M.LE.0 .OR. N.LE.0 ) THEN
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
+         RETURN
+      END IF
 *
       ICTXT = DESCA( CTXT_ )
       CALL BLACS_GRIDINFO( ICTXT, NPROW, NPCOL, MYROW, MYCOL )
+*
+*     Update the log buffer with the scalar arguments details,
+*     MPI process grid information and write to the log file
+*
+      IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
+         WRITE(BUFFER,102)  IA, IX, IY, JA, JX, JY, M, N,
+     $            NB, NPROW, NPCOL, MYROW, MYCOL, eos_str
+ 102     FORMAT('PDLABRD inputs:,IA:',I5,',IX:',I5,',IY:',I5,
+     $           ',JA:',I5,',JX:',I5,',JY:',I5,
+     $           ',M:',I5,',N:',I5,',NB:',I5,',NPROW:',I5,
+     $           ',NPCOL:',I5,',MYROW:',I5,',MYCOL:',I5,A1)
+         AOCL_DTL_LOG_ENTRY_F
+      END IF
       CALL INFOG2L( IA, JA, DESCA, NPROW, NPCOL, MYROW, MYCOL, II, JJ,
      $              IAROW, IACOL )
       IPY = DESCA( MB_ ) + 1
@@ -487,6 +528,10 @@
    20    CONTINUE
       END IF
 *
+*
+*     Capture the subroutine exit in the trace file
+*
+      AOCL_DTL_TRACE_EXIT_F
       RETURN
 *
 *     End of PDLABRD

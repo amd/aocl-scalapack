@@ -1,3 +1,9 @@
+*
+*     Copyright (c) 2023 Advanced Micro Devices, Inc.  All rights reserved.
+*
+*
+#include "SL_Context_fortran_include.h"
+*
       SUBROUTINE PDLAED2( ICTXT, K, N, N1, NB, D, DROW, DCOL, Q, LDQ,
      $                    RHO, Z, W, DLAMDA, Q2, LDQ2, QBUF, CTOT, PSM,
      $                    NPCOL, INDX, INDXC, INDXP, INDCOL, COLTYP, NN,
@@ -8,6 +14,7 @@
 *     and University of California, Berkeley.
 *     December 31, 1998
 *
+      USE LINK_TO_C_GLOBALS
 *     .. Scalar Arguments ..
       INTEGER            DCOL, DROW, IB1, IB2, ICTXT, K, LDQ, LDQ2, N,
      $                   N1, NB, NN, NN1, NN2, NPCOL
@@ -177,15 +184,53 @@
 *     .. Local Arrays ..
       INTEGER            PTT( 4 )
 *     ..
+*     .. LOG variables declaration ..
+*     ..
+*     BUFFER size: Function name and Process grid info (128 Bytes) +
+*       Variable names + Variable values(num_vars *10)
+      CHARACTER  BUFFER*448
+      CHARACTER*2, PARAMETER :: eos_str = '' // C_NULL_CHAR
 *     .. Executable Statements ..
+*
+*     Initialize framework context structure if not initialized
+*
+*
+      CALL AOCL_SCALAPACK_INIT( )
+*
+*
+*     Capture the subroutine entry in the trace file
+*
+      AOCL_DTL_TRACE_ENTRY_F
 *
 *     Quick return if possible
 *
-      IF( N.EQ.0 )
-     $   RETURN
+      IF( N.EQ.0 ) THEN
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
+         RETURN
+      END IF
 *
       CALL BLACS_PINFO( IAM, NPROCS )
       CALL BLACS_GRIDINFO( ICTXT, NPROW, NPCOL, MYROW, MYCOL )
+*
+*     Update the log buffer with the scalar arguments details,
+*     MPI process grid information and write to the log file
+*
+      IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
+         WRITE(BUFFER,102)  DCOL, DROW, IB1, IB2, ICTXT,
+     $            K, LDQ, LDQ2, N,                   N1,
+     $            NB, NN, NN1, NN2, NPCOL, RHO, NPROW,
+     $            NPCOL, MYROW, MYCOL, eos_str
+ 102     FORMAT('PDLAED2 inputs:,DCOL:',I5,',DROW:',I5,
+     $           ',IB1:',I5,',IB2:',I5,',ICTXT:',I5,',K:',I5,
+     $           ',LDQ:',I5,',LDQ2:',I5,',N:',I5,
+     $           ',N1:',I5,',NB:',I5,',NN:',I5,',NN1:',I5,
+     $           ',NN2:',I5,',NPCOL:',I5,',RHO:',F9.4,
+     $           ',NPROW:',I5,',NPCOL:',I5,',MYROW:',I5,',MYCOL:',I5,A1)
+         AOCL_DTL_LOG_ENTRY_F
+      END IF
       NP = NUMROC( N, NB, MYROW, DROW, NPROW )
 *
       N2 = N - N1
@@ -448,6 +493,10 @@
       NN2 = IE2 - IB2 + 1
       NN = MAX( IE1, IE2 ) - MIN( IB1, IB2 ) + 1
   220 CONTINUE
+*
+*     Capture the subroutine exit in the trace file
+*
+      AOCL_DTL_TRACE_EXIT_F
       RETURN
 *
 *     End of PDLAED2
