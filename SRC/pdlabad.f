@@ -60,6 +60,12 @@
 *     .. Intrinsic Functions ..
       INTRINSIC          LOG10, SQRT
 *     ..
+*     .. LOG variables declaration ..
+*     ..
+*     BUFFER size: Function name and Process grid info (128 Bytes) +
+*       Variable names + Variable values(num_vars *10)
+      CHARACTER  BUFFER*256
+      CHARACTER*2, PARAMETER :: eos_str = '' // C_NULL_CHAR
 *     .. Executable Statements ..
 *
 *     Initialize framework context structure if not initialized
@@ -71,16 +77,6 @@
 *     Capture the subroutine entry in the trace file
 *
       AOCL_DTL_TRACE_ENTRY_F
-*
-*     Update the log buffer with the scalar arguments details,
-*     MPI process grid information and write to the log file
-*
-      IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
-         WRITE(LOG_BUF,102)  ICTXT, LARGE, SMALL, eos_str
- 102     FORMAT('PDLABAD inputs: ,ICTXT:',I5,', LARGE:',F9.4,
-     $           ', SMALL:',F9.4, A1 )
-         AOCL_DTL_LOG_ENTRY_F
-      END IF
 *
 *     If it looks like we're on a Cray, take the square root of
 *     SMALL and LARGE to avoid overflow and underflow problems.

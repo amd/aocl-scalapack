@@ -187,7 +187,12 @@
 *     .. Save statement ..
       SAVE
 *     ..
+*     .. LOG variables declaration ..
 *     ..
+*     BUFFER size: Function name and Process grid info (128 Bytes) +
+*       Variable names + Variable values(num_vars *10)
+      CHARACTER  BUFFER*320
+      CHARACTER*2, PARAMETER :: eos_str = '' // C_NULL_CHAR
 *     .. Executable Statements ..
 *
 *     Initialize framework context structure if not initialized
@@ -210,7 +215,7 @@
 *     MPI process grid information and write to the log file
 *
       IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
-         WRITE(LOG_BUF,102)  IV, IX, JV, JX, KASE, N, EST,
+         WRITE(BUFFER,102)  IV, IX, JV, JX, KASE, N, EST,
      $            NPROW, NPCOL, MYROW, MYCOL, eos_str
  102     FORMAT('PDLACON inputs:,IV:',I5,',IX:',I5,',JV:',I5,
      $           ',JX:',I5,',KASE:',I5,',N:',I5,
@@ -437,6 +442,10 @@
       KASE = 0
 *
       EST = ESTWORK( 1 )
+*
+*     Capture the subroutine exit in the trace file
+*
+      AOCL_DTL_TRACE_EXIT_F
       RETURN
 *
 *     End of PDLACON

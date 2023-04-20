@@ -174,6 +174,12 @@
 *     .. Intrinsic Functions ..
       INTRINSIC          MIN, MOD
 *     ..
+*     .. LOG variables declaration ..
+*     ..
+*     BUFFER size: Function name and Process grid info (128 Bytes) +
+*       Variable names + Variable values(num_vars *10)
+      CHARACTER  BUFFER*320
+      CHARACTER*2, PARAMETER :: eos_str = '' // C_NULL_CHAR
 *     .. Executable Statements ..
 *
 *     Initialize framework context structure if not initialized
@@ -185,18 +191,6 @@
 *     Capture the subroutine entry in the trace file
 *
       AOCL_DTL_TRACE_ENTRY_F
-*
-*     Update the log buffer with the scalar arguments details,
-*     MPI process grid information and write to the log file
-*
-      IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
-         WRITE(LOG_BUF,102)  DIREC, ROWCOL, IA, IP, JA,
-     $            JP, M, N, eos_str
- 102     FORMAT('PDLAPV2 inputs: ,DIREC:',A5,', ROWCOL:',A5,
-     $           ', IA:',I5,', IP:',I5,', JA:',I5,
-     $           ', JP:',I5,', M:',I5,', N:',I5, A1 )
-         AOCL_DTL_LOG_ENTRY_F
-      END IF
 *
       ROWPVT = LSAME( ROWCOL, 'R' )
       IF( ROWPVT ) THEN
@@ -226,6 +220,20 @@
       NBA   = DESCA( NB_ )
       ICTXT = DESCA( CTXT_ )
       CALL BLACS_GRIDINFO( ICTXT, NPROW, NPCOL, MYROW, MYCOL )
+*
+*     Update the log buffer with the scalar arguments details,
+*     MPI process grid information and write to the log file
+*
+      IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
+         WRITE(BUFFER,102)  DIREC, ROWCOL, IA, IP, JA, JP,
+     $            M, N, NPROW, NPCOL, MYROW, MYCOL,
+     $            eos_str
+ 102     FORMAT('PDLAPV2 inputs:,DIREC:',A5,',ROWCOL:',A5,
+     $           ',IA:',I5,',IP:',I5,',JA:',I5,',JP:',I5,
+     $           ',M:',I5,',N:',I5,',NPROW:',I5,
+     $           ',NPCOL:',I5,',MYROW:',I5,',MYCOL:',I5,A1)
+         AOCL_DTL_LOG_ENTRY_F
+      END IF
 *
 *     If I'm applying pivots from beginning to end (e.g., repeating
 *     pivoting done earlier).  Thus this section computes P * sub( A ).

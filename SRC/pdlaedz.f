@@ -53,6 +53,12 @@
       INTEGER            NUMROC
       EXTERNAL           NUMROC
 *     ..
+*     .. LOG variables declaration ..
+*     ..
+*     BUFFER size: Function name and Process grid info (128 Bytes) +
+*       Variable names + Variable values(num_vars *10)
+      CHARACTER  BUFFER*256
+      CHARACTER*2, PARAMETER :: eos_str = '' // C_NULL_CHAR
 *     .. Executable Statements ..
 *
 *     Initialize framework context structure if not initialized
@@ -64,16 +70,6 @@
 *     Capture the subroutine entry in the trace file
 *
       AOCL_DTL_TRACE_ENTRY_F
-*
-*     Update the log buffer with the scalar arguments details,
-*     MPI process grid information and write to the log file
-*
-      IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
-         WRITE(LOG_BUF,102)  ID, IQ, JQ, LDQ, N, N1, eos_str
- 102     FORMAT('PDLAEDZ inputs: ,ID:',I5,', IQ:',I5,', JQ:',I5,
-     $           ', LDQ:',I5,', N:',I5,', N1:',I5, A1 )
-         AOCL_DTL_LOG_ENTRY_F
-      END IF
 *
 *       This is just to keep ftnchek and toolpack/1 happy
       IF( BLOCK_CYCLIC_2D*CSRC_*CTXT_*DLEN_*DTYPE_*LLD_*MB_*M_*NB_*N_*
@@ -88,6 +84,19 @@
       ICTXT = DESCQ( CTXT_ )
       NB = DESCQ( NB_ )
       CALL BLACS_GRIDINFO( ICTXT, NPROW, NPCOL, MYROW, MYCOL )
+*
+*     Update the log buffer with the scalar arguments details,
+*     MPI process grid information and write to the log file
+*
+      IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
+         WRITE(BUFFER,102)  ID, IQ, JQ, LDQ, N, N1, NPROW,
+     $            NPCOL, MYROW, MYCOL, eos_str
+ 102     FORMAT('PDLAEDZ inputs:,ID:',I5,',IQ:',I5,',JQ:',I5,
+     $           ',LDQ:',I5,',N:',I5,',N1:',I5,
+     $           ',NPROW:',I5,',NPCOL:',I5,',MYROW:',I5,
+     $           ',MYCOL:',I5,A1)
+         AOCL_DTL_LOG_ENTRY_F
+      END IF
       CALL INFOG2L( ID, ID, DESCQ, NPROW, NPCOL, MYROW, MYCOL, IIQ, JJQ,
      $              IQROW, IQCOL )
       N2 = N - N1

@@ -276,6 +276,12 @@
 *     .. Intrinsic Functions ..
       INTRINSIC          MIN, MOD
 *     ..
+*     .. LOG variables declaration ..
+*     ..
+*     BUFFER size: Function name and Process grid info (128 Bytes) +
+*       Variable names + Variable values(num_vars *10)
+      CHARACTER  BUFFER*320
+      CHARACTER*2, PARAMETER :: eos_str = '' // C_NULL_CHAR
 *     .. Executable Statements ..
 *
 *     Initialize framework context structure if not initialized
@@ -287,18 +293,6 @@
 *     Capture the subroutine entry in the trace file
 *
       AOCL_DTL_TRACE_ENTRY_F
-*
-*     Update the log buffer with the scalar arguments details,
-*     MPI process grid information and write to the log file
-*
-      IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
-         WRITE(LOG_BUF,102)  IA, IX, IY, JA, JX, JY, M,
-     $            N, NB, eos_str
- 102     FORMAT('PDLABRD inputs: ,IA:',I5,', IX:',I5,', IY:',I5,
-     $           ', JA:',I5,', JX:',I5,', JY:',I5,
-     $           ', M:',I5,', N:',I5,', NB:',I5, A1 )
-         AOCL_DTL_LOG_ENTRY_F
-      END IF
 *
 *     Quick return if possible
 *
@@ -312,6 +306,19 @@
 *
       ICTXT = DESCA( CTXT_ )
       CALL BLACS_GRIDINFO( ICTXT, NPROW, NPCOL, MYROW, MYCOL )
+*
+*     Update the log buffer with the scalar arguments details,
+*     MPI process grid information and write to the log file
+*
+      IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
+         WRITE(BUFFER,102)  IA, IX, IY, JA, JX, JY, M, N,
+     $            NB, NPROW, NPCOL, MYROW, MYCOL, eos_str
+ 102     FORMAT('PDLABRD inputs:,IA:',I5,',IX:',I5,',IY:',I5,
+     $           ',JA:',I5,',JX:',I5,',JY:',I5,
+     $           ',M:',I5,',N:',I5,',NB:',I5,',NPROW:',I5,
+     $           ',NPCOL:',I5,',MYROW:',I5,',MYCOL:',I5,A1)
+         AOCL_DTL_LOG_ENTRY_F
+      END IF
       CALL INFOG2L( IA, JA, DESCA, NPROW, NPCOL, MYROW, MYCOL, II, JJ,
      $              IAROW, IACOL )
       IPY = DESCA( MB_ ) + 1

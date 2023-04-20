@@ -69,6 +69,12 @@
       DOUBLE PRECISION   DLAMCH
       EXTERNAL           DLAMCH, LSAME
 *     ..
+*     .. LOG variables declaration ..
+*     ..
+*     BUFFER size: Function name and Process grid info (128 Bytes) +
+*       Variable names + Variable values(num_vars *10)
+      CHARACTER  BUFFER*256
+      CHARACTER*2, PARAMETER :: eos_str = '' // C_NULL_CHAR
 *     .. Executable Statements ..
 *
 *     Initialize framework context structure if not initialized
@@ -80,15 +86,6 @@
 *     Capture the subroutine entry in the trace file
 *
       AOCL_DTL_TRACE_ENTRY_F
-*
-*     Update the log buffer with the scalar arguments details,
-*     MPI process grid information and write to the log file
-*
-      IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
-         WRITE(LOG_BUF,102)  CMACH, ICTXT, eos_str
- 102     FORMAT('PDLAMCH inputs: ,CMACH:',A5,', ICTXT:',I5, A1 )
-         AOCL_DTL_LOG_ENTRY_F
-      END IF
 *
       TEMP = DLAMCH( CMACH )
       IDUMM = 0

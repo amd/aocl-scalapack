@@ -186,6 +186,12 @@
       EXTERNAL           DGEMM, DLABAD, DLAMOV, DLAQR1, DLARFG, DLASET,
      $                   DTRMM, DLAQR6
 *     ..
+*     .. LOG variables declaration ..
+*     ..
+*     BUFFER size: Function name and Process grid info (128 Bytes) +
+*       Variable names + Variable values(num_vars *10)
+      CHARACTER  BUFFER*384
+      CHARACTER*2, PARAMETER :: eos_str = '' // C_NULL_CHAR
 *     .. Executable Statements ..
 *
 *     Initialize framework context structure if not initialized
@@ -206,16 +212,16 @@
 *     MPI process grid information and write to the log file
 *
       IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
-         WRITE(LOG_BUF,102)  IHIZ, ILOZ, KACC22, KBOT, KTOP,
+         WRITE(BUFFER,102)  IHIZ, ILOZ, KACC22, KBOT, KTOP,
      $            N, NSHFTS,                   LWORK,
      $            LIWORK, WANTT, WANTZ, NPROW, NPCOL,
      $            MYROW, MYCOL, eos_str
- 102     FORMAT('PDLAQR5 inputs: ,IHIZ:',I5,', ILOZ:',I5,
-     $           ', KACC22:',I5,', KBOT:',I5,', KTOP:',I5,
-     $           ', N:',I5,', NSHFTS:',I5,', LWORK:',I5,
-     $           ', LIWORK:',I5,', WANTT:',L1,
-     $           ', WANTZ:',L1,',  NPROW: ', I5,', NPCOL: ', I5 ,
-     $           ', MYROW: ', I5,', MYCOL: ', I5, A1)
+ 102     FORMAT('PDLAQR5 inputs:,IHIZ:',I5,',ILOZ:',I5,
+     $           ',KACC22:',I5,',KBOT:',I5,',KTOP:',I5,
+     $           ',N:',I5,',NSHFTS:',I5,',LWORK:',I5,
+     $           ',LIWORK:',I5,',WANTT:',L2,',WANTZ:',L2,
+     $           ',NPROW:',I5,',NPCOL:',I5,',MYROW:',I5,
+     $           ',MYCOL:',I5,A1)
          AOCL_DTL_LOG_ENTRY_F
       END IF
       NPROCS = NPROW*NPCOL
