@@ -1,3 +1,9 @@
+*
+*     Copyright (c) 2023 Advanced Micro Devices, Inc.  All rights reserved.
+*
+*
+#include "SL_Context_fortran_include.h"
+*
       SUBROUTINE PDSTEIN( N, D, E, M, W, IBLOCK, ISPLIT, ORFAC, Z, IZ,
      $                    JZ, DESCZ, WORK, LWORK, IWORK, LIWORK, IFAIL,
      $                    ICLUSTR, GAP, INFO )
@@ -7,6 +13,7 @@
 *     and University of California, Berkeley.
 *     November 15, 1997
 *
+      USE LINK_TO_C_GLOBALS
 *     .. Scalar Arguments ..
       INTEGER            INFO, IZ, JZ, LIWORK, LWORK, M, N
       DOUBLE PRECISION   ORFAC
@@ -295,12 +302,48 @@
 *     .. Local Arrays ..
       INTEGER            IDUM1( 1 ), IDUM2( 1 )
 *     ..
+*     .. LOG variables declaration ..
+*     ..
+*     BUFFER size: Function name and Process grid info (128 Bytes) +
+*       Variable names + Variable values(num_vars *10)
+      CHARACTER  BUFFER*320
+      CHARACTER*2, PARAMETER :: eos_str = '' // C_NULL_CHAR
 *     .. Executable Statements ..
+*
+*     Initialize framework context structure if not initialized
+*
+*
+      CALL AOCL_SCALAPACK_INIT( )
+*
+*
+*     Capture the subroutine entry in the trace file
+*
+      AOCL_DTL_TRACE_ENTRY_F
 *       This is just to keep ftnchek happy
       IF( BLOCK_CYCLIC_2D*CSRC_*CTXT_*DLEN_*DTYPE_*LLD_*MB_*M_*NB_*N_*
-     $    RSRC_.LT.0 )RETURN
+     $    RSRC_.LT.0 )THEN
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
+         RETURN
+      END IF
 *
       CALL BLACS_GRIDINFO( DESCZ( CTXT_ ), NPROW, NPCOL, MYROW, MYCOL )
+*
+*     Update the log buffer with the scalar arguments details,
+*     MPI process grid information and write to the log file
+*
+      IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
+         WRITE(BUFFER,102)  INFO, IZ, JZ, LIWORK, LWORK,
+     $            M, N, ORFAC, NPROW, NPCOL, MYROW, MYCOL,
+     $            eos_str
+ 102     FORMAT('PDSTEIN inputs:,INFO:',I5,',IZ:',I5,',JZ:',I5,
+     $           ',LIWORK:',I5,',LWORK:',I5,',M:',I5,
+     $           ',N:',I5,',ORFAC:',F9.4,',NPROW:',I5,
+     $           ',NPCOL:',I5,',MYROW:',I5,',MYCOL:',I5,A1)
+         AOCL_DTL_LOG_ENTRY_F
+      END IF
       SELF = MYROW*NPCOL + MYCOL
 *
 *     Make sure that we belong to this context (before calling PCHK1MAT)
@@ -376,8 +419,16 @@
       END IF
       IF( INFO.NE.0 ) THEN
          CALL PXERBLA( DESCZ( CTXT_ ), 'PDSTEIN', -INFO )
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       ELSE IF( LWORK.EQ.-1 .OR. LIWORK.EQ.-1 ) THEN
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
 *
@@ -396,8 +447,13 @@
 *
 *     Quick return if possible
 *
-      IF( N.EQ.0 .OR. M.EQ.0 )
-     $   RETURN
+      IF( N.EQ.0 .OR. M.EQ.0 ) THEN
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
+         RETURN
+      END IF
 *
       IF( ORFAC.GE.ZERO ) THEN
          TMPFAC = ORFAC

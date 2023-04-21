@@ -1,3 +1,9 @@
+*
+*     Copyright (c) 2023 Advanced Micro Devices, Inc.  All rights reserved.
+*
+*
+#include "SL_Context_fortran_include.h"
+*
       SUBROUTINE PDSYEVX( JOBZ, RANGE, UPLO, N, A, IA, JA, DESCA, VL,
      $                    VU, IL, IU, ABSTOL, M, NZ, W, ORFAC, Z, IZ,
      $                    JZ, DESCZ, WORK, LWORK, IWORK, LIWORK, IFAIL,
@@ -8,6 +14,7 @@
 *     and University of California, Berkeley.
 *     May 25, 2001
 *
+      USE LINK_TO_C_GLOBALS
 *     .. Scalar Arguments ..
       CHARACTER          JOBZ, RANGE, UPLO
       INTEGER            IA, IL, INFO, IU, IZ, JA, JZ, LIWORK, LWORK, M,
@@ -351,7 +358,7 @@
 *          required for optimal performance for all work arrays. Each of
 *          these values is returned in the first entry of the
 *          corresponding work arrays, and no error message is issued by
-*          PXERBLA. 
+*          PXERBLA.
 *
 *  IWORK   (local workspace) INTEGER array
 *          On return, IWORK(1) contains the amount of integer workspace
@@ -508,17 +515,62 @@
 *     .. Intrinsic Functions ..
       INTRINSIC          ABS, DBLE, ICHAR, INT, MAX, MIN, MOD, SQRT
 *     ..
+*     .. LOG variables declaration ..
+*     ..
+*     BUFFER size: Function name and Process grid info (128 Bytes) +
+*       Variable names + Variable values(num_vars *10)
+      CHARACTER  BUFFER*512
+      CHARACTER*2, PARAMETER :: eos_str = '' // C_NULL_CHAR
 *     .. Executable Statements ..
+*
+*     Initialize framework context structure if not initialized
+*
+*
+      CALL AOCL_SCALAPACK_INIT( )
+*
+*
+*     Capture the subroutine entry in the trace file
+*
+      AOCL_DTL_TRACE_ENTRY_F
 *       This is just to keep ftnchek and toolpack/1 happy
       IF( BLOCK_CYCLIC_2D*CSRC_*CTXT_*DLEN_*DTYPE_*LLD_*MB_*M_*NB_*N_*
-     $    RSRC_.LT.0 )RETURN
+     $    RSRC_.LT.0 )THEN
 *
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
+         RETURN
+      END IF
+*
+*
+*     Capture the subroutine exit in the trace file
+*
+      AOCL_DTL_TRACE_EXIT_F
       QUICKRETURN = ( N.EQ.0 )
 *
 *     Test the input arguments.
 *
       ICTXT = DESCA( CTXT_ )
       CALL BLACS_GRIDINFO( ICTXT, NPROW, NPCOL, MYROW, MYCOL )
+*
+*     Update the log buffer with the scalar arguments details,
+*     MPI process grid information and write to the log file
+*
+      IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
+         WRITE(BUFFER,102)  JOBZ, RANGE, UPLO, IA, IL, INFO,
+     $            IU, IZ, JA, JZ, LIWORK, LWORK,
+     $            M,                   N, NZ, ABSTOL,
+     $            ORFAC, VL, VU, NPROW, NPCOL, MYROW,
+     $            MYCOL, eos_str
+ 102     FORMAT('PDSYEVX inputs:,JOBZ:',A5,',RANGE:',A5,
+     $           ',UPLO:',A5,',IA:',I5,',IL:',I5,',INFO:',I5,
+     $           ',IU:',I5,',IZ:',I5,',JA:',I5,
+     $           ',JZ:',I5,',LIWORK:',I5,',LWORK:',I5,
+     $           ',M:',I5,',N:',I5,',NZ:',I5,',ABSTOL:',F9.4,
+     $           ',ORFAC:',F9.4,',VL:',F9.4,
+     $           ',VU:',F9.4,',NPROW:',I5,',NPCOL:',I5,',MYROW:',I5,',MYCOL:',I5,A1)
+         AOCL_DTL_LOG_ENTRY_F
+      END IF
       INFO = 0
 *
       WANTZ = LSAME( JOBZ, 'V' )
@@ -739,13 +791,25 @@
 *
       IF( INFO.NE.0 ) THEN
          CALL PXERBLA( ICTXT, 'PDSYEVX', -INFO )
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       ELSE IF( LQUERY ) THEN
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
 *
 *     Quick return if possible
 *
+*
+*     Capture the subroutine exit in the trace file
+*
+      AOCL_DTL_TRACE_EXIT_F
       IF( QUICKRETURN ) THEN
          IF( WANTZ ) THEN
             NZ = 0
@@ -754,6 +818,10 @@
          M = 0
          WORK( 1 ) = DBLE( LWOPT )
          IWORK( 1 ) = LIWMIN
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
 *
@@ -971,6 +1039,10 @@
       WORK( 1 ) = DBLE( LWOPT )
       IWORK( 1 ) = LIWMIN
 *
+*
+*     Capture the subroutine exit in the trace file
+*
+      AOCL_DTL_TRACE_EXIT_F
       RETURN
 *
 *     End of PDSYEVX
