@@ -2,8 +2,12 @@
 *     Copyright (c) 2020-22 Advanced Micro Devices, Inc.  All rights reserved.
 *     June 20, 2022
 *
+#include "SL_Context_fortran_include.h"
+*
       SUBROUTINE PSGEQRF( M, N, A, IA, JA, DESCA, TAU, WORK, LWORK,
      $                    INFO )
+*
+      USE LINK_TO_C_GLOBALS
 *
 *  -- ScaLAPACK routine (version 1.7) --
 *     University of Tennessee, Knoxville, Oak Ridge National Laboratory,
@@ -171,10 +175,17 @@
      $                     CTXT_ = 2, M_ = 3, N_ = 4, MB_ = 5, NB_ = 6,
      $                     RSRC_ = 7, CSRC_ = 8, LLD_ = 9 )
 *
+*     ..
 #ifdef AOCL_PROGRESS
-      INTEGER TOTAL_MPI_PROCESSES, LSTAGE, CURRENT_RANK
-      CHARACTER*7 API_NAME
+*     .. AOCL Progress variables ..
+      INTEGER TOTAL_MPI_PROCESSES, CURRENT_RANK, PROGRESS
+*
+*     .. Declaring 'API NAME' and its length as const objects
+*     .. API_NAME string terminated with 'NULL' character.
+      CHARACTER*8, PARAMETER :: API_NAME = FUNCTION_NAME // C_NULL_CHAR
+      INTEGER, PARAMETER :: LEN_API_NAME = 8
 #endif
+*     ..
 *     ..
 *     .. Local Scalars ..
       LOGICAL            LQUERY
@@ -197,6 +208,12 @@
 *     .. Intrinsic Functions ..
       INTRINSIC          MIN, MOD, REAL
 *     ..
+*
+*     Initialize framework context structure if not initialized
+*
+*
+      CALL AOCL_SCALAPACK_INIT( )
+*
 *     .. Executable Statements ..
 *
 *     Get grid parameters
@@ -262,10 +279,12 @@
       JB = JN - JA + 1
 *
 #ifdef AOCL_PROGRESS
+*     Set the AOCL progress variables related to rank, processes
+*
+      IF( SCALAPACK_CONTEXT%IS_PROGRESS_ENABLED.EQ.1 ) THEN
          CURRENT_RANK = MYCOL+MYROW*NPCOL
          TOTAL_MPI_PROCESSES = NPROW*NPCOL
-         LSTAGE = 7
-         API_NAME = 'PSGEQRF'
+      END IF
 #endif
 *
 *
@@ -295,10 +314,18 @@
          I = IA + J - JA
 *
 #ifdef AOCL_PROGRESS
-            CALL AOCL_SCALAPACK_PROGRESS ( API_NAME, LSTAGE,
-     $                 J, CURRENT_RANK, TOTAL_MPI_PROCESSES )
-#endif
+*        Update the progress and callback if progress is enabled
 *
+         IF( SCALAPACK_CONTEXT%IS_PROGRESS_ENABLED.EQ.1 ) THEN
+*
+*           Capture the Loop count 'J' to a separate 'PROGRESS'
+*           variable to avoid the corruption at application side.
+*
+            PROGRESS = J
+            CALL AOCL_SCALAPACK_PROGRESS ( API_NAME, LEN_API_NAME,
+     $                PROGRESS, CURRENT_RANK, TOTAL_MPI_PROCESSES )
+         END IF
+#endif
 *
 *        Compute the QR factorization of the current block
 *        A(i:ia+m-1,j:j+jb-1)

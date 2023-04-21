@@ -2,7 +2,7 @@
 *     Copyright (c) 2020-23 Advanced Micro Devices, Inc.  All rights reserved.
 *
 #include "SL_Context_fortran_include.h"
-
+*
 *  =====================================================================
 *     SUBROUTINE PDGETRF0
 *  =====================================================================
@@ -150,13 +150,15 @@
       INTEGER            I, ICOFF, ICTXT, IINFO, IN, IROFF, J, JB, JN,
      $                   MN, MYCOL, MYROW, NPCOL, NPROW
 *     ..
+#ifdef AOCL_PROGRESS
 *     .. AOCL Progress variables ..
-      INTEGER TOTAL_MPI_PROCESSES, CURRENT_RANK, PROGRESS, RET
- 
-*     .. Declaring below 'API NAME' string and its length as const objects
+      INTEGER TOTAL_MPI_PROCESSES, CURRENT_RANK, PROGRESS
+
+*     .. Declaring 'API NAME' and its length as const objects
 *     .. API_NAME string terminated with 'NULL' character.
       CHARACTER*8, PARAMETER :: API_NAME = 'PDGETRF' // C_NULL_CHAR
-      INTEGER, PARAMETER :: LSTAGE = 8
+      INTEGER, PARAMETER :: LEN_API_NAME = 8
+#endif
 *     ..
 *     .. Local Arrays ..
       INTEGER            IDUM1( 1 ), IDUM2( 1 )
@@ -233,12 +235,15 @@
       IN = MIN( ICEIL( IA, DESCA( MB_ ) )*DESCA( MB_ ), IA+M-1 )
       JN = MIN( ICEIL( JA, DESCA( NB_ ) )*DESCA( NB_ ), JA+MN-1 )
       JB = JN - JA + 1
+#ifdef AOCL_PROGRESS
+*
+*     Set the AOCL progress variables related to rank, processes
 *
       IF( SCALAPACK_CONTEXT%IS_PROGRESS_ENABLED.EQ.1 ) THEN
          CURRENT_RANK = MYCOL+MYROW*NPCOL
          TOTAL_MPI_PROCESSES = NPROW*NPCOL
       END IF
-
+#endif
 *     Factor diagonal and subdiagonal blocks and test for exact
 *     singularity.
 *
@@ -272,13 +277,20 @@
       DO 10 J = JN+1, JA+MN-1, DESCA( NB_ )
          JB = MIN( MN-J+JA, DESCA( NB_ ) )
          I = IA + J - JA
+#ifdef AOCL_PROGRESS
+*
+*        Update the progress and callback if progress is enabled
+*
          IF( SCALAPACK_CONTEXT%IS_PROGRESS_ENABLED.EQ.1 ) THEN
-*           Capture the Loop count 'J' to a separate 'PROGRESS' variable
-*           to avoid the corruption at application side.
+*
+*           Capture the Loop count 'J' to a separate 'PROGRESS'
+*           variable to avoid the corruption at application side.
+*
             PROGRESS = J
-            RET = AOCL_SCALAPACK_PROGRESS ( API_NAME, LSTAGE,
+            RET = AOCL_SCALAPACK_PROGRESS ( API_NAME, LEN_API_NAME,
      $                 PROGRESS, CURRENT_RANK, TOTAL_MPI_PROCESSES )
          END IF
+#endif
 *
 *        Factor diagonal and subdiagonal blocks and test for exact
 *        singularity.
