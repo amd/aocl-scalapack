@@ -580,7 +580,8 @@
      $           ',JZ:',I5,',LIWORK:',I5,',LWORK:',I5,
      $           ',M:',I5,',N:',I5,',NZ:',I5,',ABSTOL:',F9.4,
      $           ',ORFAC:',F9.4,',VL:',F9.4,
-     $           ',VU:',F9.4,',NPROW:',I5,',NPCOL:',I5,',MYROW:',I5,',MYCOL:',I5,A1)
+     $           ',VU:',F9.4,',NPROW:',I5,',NPCOL:',I5,
+     $           ',MYROW:',I5,',MYCOL:',I5,A1)
          AOCL_DTL_LOG_ENTRY_F
       END IF
 *

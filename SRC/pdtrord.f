@@ -2369,8 +2369,8 @@
      $                    NPCOL.GT.1 ) THEN
                         INT_BUFFER = PDTRAF
                         BUFFLEN = DLEN + ILEN
-                        CALL DGEBR2D( ICTXT, 'Row', TOP, BUFFLEN,
-     $                       1, WORK(INT_BUFFER), BUFFLEN, RSRC4, CSRC4 )
+                        CALL DGEBR2D( ICTXT, 'Row', TOP, BUFFLEN, 1,
+     $                       WORK(INT_BUFFER), BUFFLEN, RSRC4, CSRC4 )
                         DO 400 INDX = 1, ILEN
                            IWORK(IPIW+INDX-1) =
      $                          INT( WORK( INT_BUFFER+INDX-1 ) )
