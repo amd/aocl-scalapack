@@ -86,20 +86,11 @@
      $                     RSRC_ = 7, CSRC_ = 8, LLD_ = 9 )
 *
       REAL               ZERO
-#ifndef DYNAMIC_WORK_MEM_ALLOC
       INTEGER            MEMSIZ, NTESTS, REALSZ
       REAL               PADVAL
       PARAMETER          ( REALSZ = 4,
      $                     MEMSIZ = TOTMEM / REALSZ, NTESTS = 20,
      $                     PADVAL = -9923.0E+0, ZERO = 0.0E+0 )
-#else
-      INTEGER            NTESTS, REALSZ
-	  INTEGER, PARAMETER ::  MEMSIZ = 2100000000
-      REAL               PADVAL
-      PARAMETER          ( REALSZ = 4,
-     $                      NTESTS = 20,
-     $                     PADVAL = -9923.0E+0, ZERO = 0.0E+0 )
-#endif
       INTEGER            INT_ONE
       PARAMETER          ( INT_ONE = 1 )
 *     ..

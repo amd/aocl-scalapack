@@ -61,13 +61,14 @@
 *     .. Parameters ..
 *
       INTEGER            TOTMEM, REALSZ, NIN
-      PARAMETER          ( TOTMEM = 2000000, REALSZ = 8, NIN = 11 )
 #ifndef DYNAMIC_WORK_MEM_ALLOC
+      PARAMETER          ( TOTMEM = 2000000 )
+#else
+      PARAMETER          ( TOTMEM = 21000000 )
+#endif
+      PARAMETER          ( REALSZ = 8, NIN = 11 )
       INTEGER            MEMSIZ
       PARAMETER          ( MEMSIZ = TOTMEM / REALSZ )
-#else
-      INTEGER, PARAMETER ::  MEMSIZ = 21000000
-#endif
 *     ..
 *     .. Local Scalars ..
       CHARACTER          HETERO
@@ -100,7 +101,7 @@
 *
 #ifdef DYNAMIC_WORK_MEM_ALLOC
       allocate(MEM(MEMSIZ))
-	  MEM(:) = 0
+      MEM(:) = 0
 #endif
       CALL BLACS_PINFO( IAM, NPROCS )
 *

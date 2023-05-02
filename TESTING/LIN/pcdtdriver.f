@@ -86,7 +86,6 @@
      $                     CTXT_ = 2, M_ = 3, N_ = 4, MB_ = 5, NB_ = 6,
      $                     RSRC_ = 7, CSRC_ = 8, LLD_ = 9 )
 *
-#ifndef DYNAMIC_WORK_MEM_ALLOC
       REAL               ZERO
       INTEGER            CPLXSZ, MEMSIZ, NTESTS
       COMPLEX            PADVAL
@@ -94,16 +93,6 @@
      $                     MEMSIZ = TOTMEM / CPLXSZ, NTESTS = 20,
      $                     PADVAL = ( -9923.0E+0, -9923.0E+0 ),
      $                     ZERO = 0.0E+0 )
-#else
-      REAL               ZERO
-      INTEGER            CPLXSZ, NTESTS
-	  INTEGER, PARAMETER ::  MEMSIZ = 2100000000
-      COMPLEX            PADVAL
-      PARAMETER          ( CPLXSZ = 8,
-     $                      NTESTS = 20,
-     $                     PADVAL = ( -9923.0E+0, -9923.0E+0 ),
-     $                     ZERO = 0.0E+0 )
-#endif
       INTEGER            INT_ONE
       PARAMETER          ( INT_ONE = 1 )
 *     ..
@@ -131,7 +120,7 @@
      $                   NRVAL( NTESTS ), NVAL( NTESTS ),
      $                   PVAL( NTESTS ), QVAL( NTESTS )
       DOUBLE PRECISION   CTIME( 2 ), WTIME( 2 )
-#ifndef DYNAMIC_WORK_MEM_ALLOC      
+#ifndef DYNAMIC_WORK_MEM_ALLOC
       COMPLEX            MEM( MEMSIZ )
 #else
       COMPLEX, allocatable :: MEM (:)

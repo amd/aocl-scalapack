@@ -48,7 +48,6 @@
       REAL               THRESH
 *     ..
 *     .. Parameters ..
-#ifndef DYNAMIC_WORK_MEM_ALLOC
       INTEGER            MAXSETSIZE, NIN, DBLSIZ, TOTMEM, MEMSIZ
 #ifndef DYNAMIC_WORK_MEM_ALLOC
       PARAMETER          ( TOTMEM = 2000000 )
@@ -66,16 +65,6 @@
 #ifndef DYNAMIC_WORK_MEM_ALLOC
       REAL               WORK( MEMSIZ )
 #else
-      INTEGER            MAXSETSIZE, NIN, DBLSIZ, TOTMEM
-	  INTEGER, PARAMETER ::  MEMSIZ = 2100000000
-      PARAMETER          ( MAXSETSIZE = 50, NIN = 11, DBLSIZ = 8,
-     $                   TOTMEM = 2000000 )
-*     ..
-*     .. Local Arrays ..
-      INTEGER            ISEED( 4 ), MM( MAXSETSIZE ),
-     $                   NBS( MAXSETSIZE ), NN( MAXSETSIZE ),
-     $                   NPCOLS( MAXSETSIZE ), NPROWS( MAXSETSIZE ),
-     $                   RESULT( 9 )
       REAL, allocatable :: WORK (:)
 #endif
 *     ..
