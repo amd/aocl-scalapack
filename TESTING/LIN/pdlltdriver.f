@@ -78,20 +78,16 @@
       PARAMETER          ( INTGSZ = 4 )
 #endif
 *
-#ifndef DYNAMIC_WORK_MEM_ALLOC
       INTEGER            DBLESZ, MEMSIZ, NTESTS, TOTMEM
+#ifndef DYNAMIC_WORK_MEM_ALLOC
+      PARAMETER          ( TOTMEM = 2000000 )
+#else
+      PARAMETER          ( TOTMEM = 2100000000 )
+#endif
       DOUBLE PRECISION   PADVAL, ZERO
-      PARAMETER          ( DBLESZ = 8, TOTMEM = 2000000,
+      PARAMETER          ( DBLESZ = 8,
      $                     MEMSIZ = TOTMEM / DBLESZ, NTESTS = 20,
      $                     PADVAL = -9923.0D+0, ZERO = 0.0D+0 )
-#else
-      INTEGER            DBLESZ, NTESTS, TOTMEM
-	  INTEGER, PARAMETER ::  MEMSIZ = 2100000000
-      DOUBLE PRECISION   PADVAL, ZERO
-      PARAMETER          ( DBLESZ = 8, TOTMEM = 2000000,
-     $                      NTESTS = 20,
-     $                     PADVAL = -9923.0D+0, ZERO = 0.0D+0 )
-#endif
 *     ..
 *     .. Local Scalars ..
       LOGICAL            CHECK, EST
@@ -114,11 +110,11 @@
      $                   NBRVAL( NTESTS ), NBVAL( NTESTS ),
      $                   NRVAL( NTESTS ), NVAL( NTESTS ),
      $                   PVAL( NTESTS ), QVAL( NTESTS )
-#ifndef DYNAMIC_WORK_MEM_ALLOC     
+#ifndef DYNAMIC_WORK_MEM_ALLOC
       DOUBLE PRECISION   MEM( MEMSIZ ), CTIME( 2 ), WTIME( 2 )
 #else
       DOUBLE PRECISION   CTIME( 2 ), WTIME( 2 )
-	  DOUBLE PRECISION, allocatable :: MEM (:)
+      DOUBLE PRECISION, allocatable :: MEM (:)
 #endif
 *     ..
 *     .. External Subroutines ..

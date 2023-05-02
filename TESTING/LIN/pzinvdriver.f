@@ -74,24 +74,18 @@
       PARAMETER          ( INTGSZ = 4 )
 #endif
 *
-#ifndef DYNAMIC_WORK_MEM_ALLOC
       INTEGER            DBLESZ, MEMSIZ, NTESTS, TOTMEM, ZPLXSZ
+#ifndef DYNAMIC_WORK_MEM_ALLOC
+      PARAMETER          ( TOTMEM = 2000000 )
+#else
+      PARAMETER          ( TOTMEM = 2100000000 )
+#endif
       COMPLEX*16         PADVAL, ZERO
-      PARAMETER          ( DBLESZ = 8, TOTMEM = 2000000,
+      PARAMETER          ( DBLESZ = 8,
      $                     ZPLXSZ = 16, MEMSIZ = TOTMEM / ZPLXSZ,
      $                     NTESTS = 20,
      $                     PADVAL = ( -9923.0D+0, -9923.0D+0 ),
      $                     ZERO = ( 0.0D+0, 0.0D+0 ) )
-#else
-      INTEGER            DBLESZ, NTESTS, TOTMEM, ZPLXSZ
-	  INTEGER, PARAMETER ::  MEMSIZ = 2100000000
-      COMPLEX*16         PADVAL, ZERO
-      PARAMETER          ( DBLESZ = 8, TOTMEM = 2000000,
-     $                     ZPLXSZ = 16, 
-     $                     NTESTS = 20,
-     $                     PADVAL = ( -9923.0D+0, -9923.0D+0 ),
-     $                     ZERO = ( 0.0D+0, 0.0D+0 ) )
-#endif
 *     ..
 *     .. Local Scalars ..
       CHARACTER          UPLO

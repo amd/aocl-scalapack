@@ -57,8 +57,12 @@
 *     .. Parameters ..
 *
       INTEGER            TOTMEM, DBLESZ, NIN
-      PARAMETER          ( TOTMEM = 2000000, DBLESZ = 8, NIN = 11 )
 #ifndef DYNAMIC_WORK_MEM_ALLOC
+      PARAMETER          ( TOTMEM = 2000000 )
+#else
+      PARAMETER          ( TOTMEM = 2100000000 )
+#endif
+      PARAMETER          (DBLESZ = 8, NIN = 11 )
       INTEGER            MEMSIZ
       PARAMETER          ( MEMSIZ = TOTMEM / DBLESZ )
 *     ..
@@ -71,19 +75,9 @@
 *     .. Local Arrays ..
 *
       INTEGER            ISEED( 4 )
+#ifndef DYNAMIC_WORK_MEM_ALLOC
       DOUBLE PRECISION   MEM( MEMSIZ )
 #else
-      INTEGER, PARAMETER ::  MEMSIZ = 2100000000
-*     ..
-*     .. Local Scalars ..
-      CHARACTER          HETERO
-      CHARACTER*80       SUMMRY, USRINFO
-      INTEGER            CONTEXT, IAM, INFO, ISIEEE, MAXNODES, NNOCHECK,
-     $                   NOUT, NPASSED, NPROCS, NSKIPPED, NTESTS
-*     ..
-*     .. Local Arrays ..
-*
-      INTEGER            ISEED( 4 )
       DOUBLE PRECISION, allocatable :: MEM (:)
 #endif
 *     ..

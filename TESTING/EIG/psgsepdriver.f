@@ -57,13 +57,14 @@
 *     .. Parameters ..
 *
       INTEGER            TOTMEM, REALSZ, NIN
-      PARAMETER          ( TOTMEM = 2000000, REALSZ = 4, NIN = 11 )
 #ifndef DYNAMIC_WORK_MEM_ALLOC
+      PARAMETER          ( TOTMEM = 2000000 )
+#else
+      PARAMETER          ( TOTMEM = 2100000000 )
+#endif
+      PARAMETER          ( REALSZ = 4, NIN = 11 )
       INTEGER            MEMSIZ
       PARAMETER          ( MEMSIZ = TOTMEM / REALSZ )
-#else
-      INTEGER, PARAMETER ::  MEMSIZ = 2100000000
-#endif
 *     ..
 *     .. Local Scalars ..
       CHARACTER          HETERO
@@ -259,6 +260,9 @@
 *
       CALL BLACS_GRIDEXIT( CONTEXT )
 *
+#ifdef DYNAMIC_WORK_MEM_ALLOC
+      deallocate(MEM)
+#endif
       CALL BLACS_EXIT( 0 )
       STOP
 *

@@ -64,20 +64,17 @@
       PARAMETER          ( BLOCK_CYCLIC_2D = 1, DLEN_ = 9, DTYPE_ = 1,
      $                     CTXT_ = 2, M_ = 3, N_ = 4, MB_ = 5, NB_ = 6,
      $                     RSRC_ = 7, CSRC_ = 8, LLD_ = 9 )
-#ifndef DYNAMIC_WORK_MEM_ALLOC
+
       INTEGER            CPLXSZ, MEMSIZ, NTESTS, TOTMEM, REALSZ
+#ifndef DYNAMIC_WORK_MEM_ALLOC
+      PARAMETER         ( TOTMEM = 2000000 )
+#else
+      PARAMETER         ( TOTMEM = 2100000000 )
+#endif
       COMPLEX            PADVAL
-      PARAMETER          ( CPLXSZ = 8, TOTMEM = 2000000, REALSZ = 8,
+      PARAMETER          ( CPLXSZ = 8, REALSZ = 8,
      $                     MEMSIZ = TOTMEM / CPLXSZ, NTESTS = 20,
      $                     PADVAL = ( -9923.0E+0, -9923.0E+0 ) )
-#else
-      INTEGER            CPLXSZ, NTESTS, TOTMEM, REALSZ
-	  INTEGER, PARAMETER ::  MEMSIZ = 2100000000
-      COMPLEX            PADVAL
-      PARAMETER          ( CPLXSZ = 8, TOTMEM = 2000000, REALSZ = 8,
-     $                      NTESTS = 20,
-     $                     PADVAL = ( -9923.0E+0, -9923.0E+0 ) )
-#endif
 *     ..
 *     .. Local Scalars ..
       LOGICAL            CHECK
@@ -522,6 +519,9 @@
          IF( NOUT.NE.6 .AND. NOUT.NE.0 ) CLOSE ( NOUT )
       END IF
 *
+#ifdef DYNAMIC_WORK_MEM_ALLOC
+      deallocate(MEM)
+#endif
       CALL BLACS_EXIT( 0 )
 *
  9999 FORMAT( 'ILLEGAL ', A6, ': ', A5, ' = ', I3,

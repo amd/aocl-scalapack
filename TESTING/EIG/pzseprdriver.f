@@ -43,13 +43,14 @@
 *     .. Parameters ..
 *
       INTEGER            TOTMEM, DBLESZ, NIN
-      PARAMETER          ( TOTMEM = 100000000, DBLESZ = 16, NIN = 11 )
 #ifndef DYNAMIC_WORK_MEM_ALLOC
+      PARAMETER          ( TOTMEM = 100000000 )
+#else
+      PARAMETER          ( TOTMEM = 1000000000 )
+#endif
+      PARAMETER          ( DBLESZ = 16, NIN = 11 )
       INTEGER            MEMSIZ
       PARAMETER          ( MEMSIZ = TOTMEM / DBLESZ )
-#else
-      INTEGER, PARAMETER ::  MEMSIZ = 21000000
-#endif
 *     ..
 *     .. Local Scalars ..
       CHARACTER          HETERO

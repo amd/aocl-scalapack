@@ -65,25 +65,22 @@
      $                     CTXT_ = 2, M_ = 3, N_ = 4, MB_ = 5, NB_ = 6,
      $                     RSRC_ = 7, CSRC_ = 8, LLD_ = 9 )
       INTEGER            DBLESZ, INTGSZ, NTESTS, TOTMEM
+#ifndef DYNAMIC_WORK_MEM_ALLOC
+      PARAMETER          ( TOTMEM = 2000000 )
+#else
+      PARAMETER          ( TOTMEM = WORK_BUFFER_SIZE )
+#endif
 #ifdef ENABLE_ILP64
       PARAMETER          ( INTGSZ = 8 )
 #else
       PARAMETER          ( INTGSZ = 4 )
 #endif
 *
-#ifndef DYNAMIC_WORK_MEM_ALLOC
       INTEGER            MEMSIZ
       DOUBLE PRECISION   PADVAL, ZERO
-      PARAMETER          ( DBLESZ = 8, TOTMEM = 2000000,
+      PARAMETER          ( DBLESZ = 8,
      $                     MEMSIZ = TOTMEM / DBLESZ, NTESTS = 20,
      $                     PADVAL = -9923.0D+0, ZERO = 0.0D+0 )
-#else
-      INTEGER, PARAMETER ::  MEMSIZ = WORK_BUFFER_SIZE
-      DOUBLE PRECISION   PADVAL, ZERO
-      PARAMETER          ( DBLESZ = 8, TOTMEM = 2000000,
-     $                      NTESTS = 20,
-     $                     PADVAL = -9923.0D+0, ZERO = 0.0D+0 )
-#endif
 *     ..
 *     .. Local Scalars ..
       CHARACTER          UPLO
@@ -105,11 +102,11 @@
       INTEGER            DESCA( DLEN_ ), IERR( 1 ), NBVAL( NTESTS ),
      $                   NVAL( NTESTS ), PVAL( NTESTS ),
      $                   QVAL( NTESTS )
-#ifndef DYNAMIC_WORK_MEM_ALLOC     
+#ifndef DYNAMIC_WORK_MEM_ALLOC
       DOUBLE PRECISION   MEM( MEMSIZ ), CTIME( 2 ), WTIME( 2 )
 #else
       DOUBLE PRECISION   CTIME( 2 ), WTIME( 2 )
-	  DOUBLE PRECISION, allocatable :: MEM (:)
+      DOUBLE PRECISION, allocatable :: MEM (:)
 #endif
 *     ..
 *     .. External Subroutines ..

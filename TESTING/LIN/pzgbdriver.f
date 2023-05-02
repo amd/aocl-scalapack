@@ -77,8 +77,12 @@
 *  =====================================================================
 *
 *     .. Parameters ..
-      INTEGER            TOTMEM
-      PARAMETER          ( TOTMEM = 3000000 )
+      INTEGER            TOTMEM, INTMEM
+#ifndef DYNAMIC_WORK_MEM_ALLOC
+      PARAMETER          ( TOTMEM = 3000000, INTMEM = 2048 )
+#else
+      PARAMETER          ( TOTMEM = 2100000000, INTMEM = 80000 )
+#endif
       INTEGER            BLOCK_CYCLIC_2D, CSRC_, CTXT_, DLEN_, DTYPE_,
      $                   LLD_, MB_, M_, NB_, N_, RSRC_
       PARAMETER          ( BLOCK_CYCLIC_2D = 1, DLEN_ = 9, DTYPE_ = 1,
@@ -86,26 +90,12 @@
      $                     RSRC_ = 7, CSRC_ = 8, LLD_ = 9 )
 *
       DOUBLE PRECISION   ZERO
-#ifndef DYNAMIC_WORK_MEM_ALLOC
-      INTEGER            INTMEM
-      PARAMETER          ( INTMEM = 2048 )
       INTEGER            MEMSIZ, NTESTS, ZPLXSZ
       COMPLEX*16         PADVAL
       PARAMETER          ( ZPLXSZ = 16,
      $                     MEMSIZ = TOTMEM / ZPLXSZ, NTESTS = 20,
      $                     PADVAL = ( -9923.0D+0, -9923.0D+0 ),
      $                     ZERO = 0.0D+0 )
-#else
-      INTEGER            INTMEM
-      PARAMETER          ( INTMEM = 80000 )
-      INTEGER            NTESTS, ZPLXSZ
-	  INTEGER, PARAMETER ::  MEMSIZ = 2100000000
-      COMPLEX*16         PADVAL
-      PARAMETER          ( ZPLXSZ = 16,
-     $                      NTESTS = 20,
-     $                     PADVAL = ( -9923.0D+0, -9923.0D+0 ),
-     $                     ZERO = 0.0D+0 )
-#endif
       INTEGER            INT_ONE
       PARAMETER          ( INT_ONE = 1 )
 *     ..

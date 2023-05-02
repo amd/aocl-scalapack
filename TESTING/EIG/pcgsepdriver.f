@@ -51,8 +51,12 @@
 *     .. Parameters ..
 *
       INTEGER            TOTMEM, CPLXSZ, NIN
-      PARAMETER          ( TOTMEM = 2000000, CPLXSZ = 8, NIN = 11 )
 #ifndef DYNAMIC_WORK_MEM_ALLOC
+      PARAMETER          ( TOTMEM = 2000000 )
+#else
+      PARAMETER          ( TOTMEM = 21000000 )
+#endif
+      PARAMETER          ( CPLXSZ = 8, NIN = 11 )
       INTEGER            MEMSIZ
       PARAMETER          ( MEMSIZ = TOTMEM / CPLXSZ )
 *     ..
@@ -65,19 +69,9 @@
 *     .. Local Arrays ..
 *
       INTEGER            ISEED( 4 )
+#ifndef DYNAMIC_WORK_MEM_ALLOC
       COMPLEX            MEM( MEMSIZ )
 #else
-	  INTEGER, PARAMETER ::  MEMSIZ = 21000000
-*     ..
-*     .. Local Scalars ..
-      CHARACTER          HETERO
-      CHARACTER*80       SUMMRY, USRINFO
-      INTEGER            CONTEXT, IAM, INFO, ISIEEE, MAXNODES, NNOCHECK,
-     $                   NOUT, NPASSED, NPROCS, NSKIPPED, NTESTS
-*     ..
-*     .. Local Arrays ..
-*
-      INTEGER            ISEED( 4 )
       COMPLEX, allocatable :: MEM (:)
 #endif
 *     ..

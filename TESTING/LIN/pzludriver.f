@@ -80,26 +80,19 @@
       PARAMETER          ( INTGSZ = 4 )
 #endif
 *
-#ifndef DYNAMIC_WORK_MEM_ALLOC
       INTEGER            DBLESZ, MEMSIZ, NTESTS, TOTMEM, ZPLXSZ
+#ifndef DYNAMIC_WORK_MEM_ALLOC
+      PARAMETER          ( TOTMEM = 8000000 )
+#else
+      PARAMETER          ( TOTMEM = 2100000000 )
+#endif
       DOUBLE PRECISION   ZERO
       COMPLEX*16         PADVAL
-      PARAMETER          ( DBLESZ = 8, TOTMEM = 8000000,
+      PARAMETER          ( DBLESZ = 8,
      $                     ZPLXSZ = 16, MEMSIZ = TOTMEM / ZPLXSZ,
      $                     NTESTS = 20,
      $                     PADVAL = ( -9923.0D+0, -9923.0D+0 ),
      $                     ZERO = 0.0D+0 )
-#else
-      INTEGER            DBLESZ, NTESTS, TOTMEM, ZPLXSZ
-	  INTEGER, PARAMETER ::  MEMSIZ = 2100000000
-      DOUBLE PRECISION   ZERO
-      COMPLEX*16         PADVAL
-      PARAMETER          ( DBLESZ = 8, TOTMEM = 8000000,
-     $                     ZPLXSZ = 16, 
-     $                     NTESTS = 20,
-     $                     PADVAL = ( -9923.0D+0, -9923.0D+0 ),
-     $                     ZERO = 0.0D+0 )
-#endif
 *     ..
 *     .. Local Scalars ..
       LOGICAL            CHECK, EST

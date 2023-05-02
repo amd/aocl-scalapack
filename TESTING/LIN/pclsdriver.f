@@ -66,27 +66,19 @@
       PARAMETER          ( BLOCK_CYCLIC_2D = 1, DLEN_ = 9, DTYPE_ = 1,
      $                     CTXT_ = 2, M_ = 3, N_ = 4, MB_ = 5, NB_ = 6,
      $                     RSRC_ = 7, CSRC_ = 8, LLD_ = 9 )
-#ifndef DYNAMIC_WORK_MEM_ALLOC
       INTEGER            CPLXSZ, MEMSIZ, NTESTS, REALSZ, TOTMEM
+#ifndef DYNAMIC_WORK_MEM_ALLOC
+      PARAMETER          ( TOTMEM = 2000000 )
+#else
+      PARAMETER          ( TOTMEM = 2100000000 )
+#endif
       REAL               RZERO, RONE
       COMPLEX            ONE, PADVAL, ZERO
-      PARAMETER          ( CPLXSZ = 8, REALSZ = 8, TOTMEM = 2000000,
+      PARAMETER          ( CPLXSZ = 8, REALSZ = 8,
      $                     MEMSIZ = TOTMEM / CPLXSZ, NTESTS = 20,
      $                     PADVAL = ( -9923.0E+0, -9923.0E+0 ) )
       PARAMETER          ( ONE = ( 1.0E+0, 0.0E+0 ), RZERO = 0.0E+0,
      $                     RONE = 1.0E+0, ZERO = ( 0.0E+0, 0.0E+0 ) )
-#else
-      INTEGER            CPLXSZ, NTESTS, REALSZ, TOTMEM
-	  INTEGER, PARAMETER ::  MEMSIZ = 2100000000
-
-      REAL               RZERO, RONE
-      COMPLEX            ONE, PADVAL, ZERO
-      PARAMETER          ( CPLXSZ = 8, REALSZ = 8, TOTMEM = 2000000,
-     $                      NTESTS = 20,
-     $                     PADVAL = ( -9923.0E+0, -9923.0E+0 ) )
-      PARAMETER          ( ONE = ( 1.0E+0, 0.0E+0 ), RZERO = 0.0E+0,
-     $                     RONE = 1.0E+0, ZERO = ( 0.0E+0, 0.0E+0 ) )
-#endif     
 *     ..
 *     .. Local Scalars ..
       LOGICAL            CHECK, TPSD

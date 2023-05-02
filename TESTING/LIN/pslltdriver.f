@@ -78,20 +78,16 @@
       PARAMETER          ( INTGSZ = 4 )
 #endif
 *
-#ifndef DYNAMIC_WORK_MEM_ALLOC
       INTEGER            MEMSIZ, NTESTS, REALSZ, TOTMEM
+#ifndef DYNAMIC_WORK_MEM_ALLOC
+      PARAMETER          ( TOTMEM = 2000000 )
+#else
+      PARAMETER          ( TOTMEM = 2100000000 )
+#endif
       REAL               PADVAL, ZERO
-      PARAMETER          ( REALSZ = 4, TOTMEM = 2000000,
+      PARAMETER          ( REALSZ = 4,
      $                     MEMSIZ = TOTMEM / REALSZ, NTESTS = 20,
      $                     PADVAL = -9923.0E+0, ZERO = 0.0E+0 )
-#else
-      INTEGER            NTESTS, REALSZ, TOTMEM
-	  INTEGER, PARAMETER ::  MEMSIZ = 2100000000
-      REAL               PADVAL, ZERO
-      PARAMETER          ( REALSZ = 4, TOTMEM = 2000000,
-     $                      NTESTS = 20,
-     $                     PADVAL = -9923.0E+0, ZERO = 0.0E+0 )
-#endif
 *     ..
 *     .. Local Scalars ..
       LOGICAL            CHECK, EST
