@@ -102,7 +102,7 @@ void scalapack_pthread_once(scalapack_pthread_once_t *once, void (*init)(void))
 **/
 aocl_scalapack_global_context scalapack_context = {0,0,0};
 /* A mutex to allow synchronous access to global_thread. */
-scalapack_pthread_mutex_t global_thread_mutex = SL_PTHREAD_MUTEX_INITIALIZER;
+scalapack_pthread_mutex_t sl_global_thread_mutex = SL_PTHREAD_MUTEX_INITIALIZER;
 /********************************************************************************
  * \brief scalapack_env_get_var is a function used to query the environment
  * variable and convert the string into integer and return the same
@@ -216,8 +216,8 @@ void scalapack_thread_set_num_threads(int n_threads)
     // We must ensure that global_thread has been initialized.
     aocl_scalapack_init_();
     // Acquire the mutex protecting global_thread.
-    scalapack_pthread_mutex_lock(&global_thread_mutex);
+    scalapack_pthread_mutex_lock(&sl_global_thread_mutex);
     scalapack_context.num_threads = n_threads;
     // Release the mutex protecting global_thread.
-    scalapack_pthread_mutex_unlock(&global_thread_mutex);
+    scalapack_pthread_mutex_unlock(&sl_global_thread_mutex);
 }
