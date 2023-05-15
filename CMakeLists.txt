@@ -526,3 +526,4 @@ install(FILES
 install(EXPORT scalapack-targets
   DESTINATION lib/cmake/scalapack-${SCALAPACK_VERSION})
 
+file(COPY scalapack_test.sh DESTINATION ${SCALAPACK_BINARY_DIR})
