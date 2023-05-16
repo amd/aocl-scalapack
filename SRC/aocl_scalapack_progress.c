@@ -20,7 +20,7 @@ void aocl_scalapack_set_progress_( aocl_scalapack_progress_callback func )
     aocl_scalapack_progress_ptr_ = func;
 }
 
-aocl_scalapack_progress_(const char* const api, const integer *lenapi, const integer* progress,
+integer aocl_scalapack_progress_(const char* const api, const integer *lenapi, const integer* progress,
                                      const integer* current_process, const integer *total_processes)
 {
    integer ret = 0;
@@ -30,7 +30,7 @@ aocl_scalapack_progress_(const char* const api, const integer *lenapi, const int
 
    return ret;
 }
-AOCL_SCALAPACK_PROGRESS(const char* const api, const integer* lenapi, const integer* progress,
+integer AOCL_SCALAPACK_PROGRESS(const char* const api, const integer* lenapi, const integer* progress,
     const integer* current_process, const integer* total_processes)
 {
     integer ret = 0;
