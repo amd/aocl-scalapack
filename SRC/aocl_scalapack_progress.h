@@ -30,14 +30,14 @@ const integer  *total_processes
 );
 
 
-aocl_scalapack_progress_(
+integer aocl_scalapack_progress_(
     const char* const api,
     const integer* lenapi,
     const integer* progress,
     const integer* current_process,
     const integer* total_processes
 );
-AOCL_SCALAPACK_PROGRESS(
+integer AOCL_SCALAPACK_PROGRESS(
     const char* const api,
     const integer* lenapi,
     const integer* progress,
