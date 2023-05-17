@@ -1,50 +1,22 @@
 
-AOCL-ScaLAPACK
-===============================================================================
-ScaLAPACK, or Scalable LAPACK, is a library of high performance linear algebra
-routines for distributed memory computers supporting MPI.
+# AOCL-ScaLAPACK
 
-AOCL-ScaLAPACK is the optimized version of ScaLAPACK for AMD EPYC family of
-processors.
+AOCL-ScaLAPACK is a library of high-performance linear algebra routines for 
+parallel distributed memory machines. It can be used to solve linear systems, 
+least squares problems, eigenvalue problems, and singular value problems. 
 
-===============================================================================
+AOCL-ScaLAPACK is forked from upstream Netlib ScaLAPACK GitHub 
+[repository](https://github.com/Reference-ScaLAPACK/scalapack). This fork has 
+ScaLAPACK optimized for AMD “Zen” core based processors. It depends on external 
+libraries BLAS and LAPACK. For AMD CPUs, use of AOCL-BLIS and AOCL-libFLAME is 
+recommended.
 
-1. Install MPI library and set the PATH and LD_LIBRARY_PATH environment
-    variables to point to installed binaries.
-   eg. export PATH=<path to MPI install directory>/bin:$PATH
-   eg. export LD_LIBRARY_PATH=<path to MPI install directory>/lib:$LD_LIBRARY_PATH
+For detailed instructions on how to configure, build, install, and link against
+AOCL-ScaLAPACK on AMD CPUs, please refer to the AOCL User Guide located on AMD
+developer [portal](https://www.amd.com/en/developer/aocl.html).
 
-2. Download AMD optimized versions of BLIS and libFLAME from following link
-   https://developer.amd.com/amd-aocl/
+For any issues/suggestion in the "amd" fork of ScaLAPACK, please email
+toolchainsupport@amd.com.
 
-3. Install latest CMAKE tool.
-
-4. Install AOCL-BLIS and AOCL-libFLAME libraries either using pre-built binaries or build
-   from source.
-   To build AOCL-BLIS and AOCL-libFLAME from source, clone from following github links
-   BLIS: https://github.com/amd/blis
-   libFLAME: https://github.com/amd/libflame
-
-5. Steps to build the AOCL-ScaLAPACK library and the test suite:
-
-   a. Create a new directory. For example, build:
-      $ mkdir build
-      $ cd build
-
-   b. Set PATH and LD_LIBRARY_PATH appropriately to the MPI installation.
-
-   c. To Build the AOCL-ScaLAPACK library and the test suite, Run the below commands:
-       $ cmake .. -DBUILD_SHARED_LIBS=OFF -DBLAS_LIBRARIES="-fopenmp <path to AOCL-BLIS library>/libblis-mt.a"
-         -DLAPACK_LIBRARIES="-lstdc++ <path to AOCL-libFLAME library>/libflame.a"
-         -DCMAKE_C_COMPILER=mpicc -DCMAKE_Fortran_COMPILER=mpif90
-         -DUSE_OPTIMIZED_LAPACK_BLAS=OFF [-D DENABLE_ILP64=ON]
-       $ make -j
-
-       This command generates the AOCL-ScaLAPACK library in the 'build/lib' folder
-       and test applications in the 'build/TESTING' folder.
-
-4. To execute the AOCL-ScaLAPACK test suite, run scalapack_test.sh from
-   'build/' directory:
-
-   $ ./scalapack_test.sh
-   Refer TESTING/README.txt to know more about scalapack_test.sh
+Also, please read the LICENSE file for information on copying and distributing
+this software.
