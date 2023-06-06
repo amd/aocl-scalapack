@@ -47,7 +47,7 @@ if (WIN32 AND CMAKE_Fortran_COMPILER_ID MATCHES "Intel")
 endif()
 
 set(CMAKE_ICC_FLAGS " ")
-set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -cpp" )
+set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -cpp -fopenmp" )
 
 # set compile flags to enable address sanitizer (ASAN) tests
 if(ENABLE_ASAN_TESTS)

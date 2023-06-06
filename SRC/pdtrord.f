@@ -326,7 +326,7 @@
      $                   PITRAF, PDW, WINEIG, WINSIZ, LLDQ,
      $                   RSRC, CSRC, ILILO, ILIHI, ILSEL, IRSRC,
      $                   ICSRC, IPIW, IPW1, IPW2, IPW3, TIHI, TILO,
-     $                   LIHI, WINDOW, LILO, LSEL, INT_BUFFER,
+     $                   LIHI, WINDOW, LILO, LSEL, BUFFER,
      $                   NMWIN2, BUFFLEN, LROWS, LCOLS, ILOC2, JLOC2,
      $                   WNEICR, WINDOW0, RSRC4, CSRC4, LIHI4, RSRC3,
      $                   CSRC3, RSRC2, CSRC2, LIHIC, LIHI1, ILEN4,
@@ -361,12 +361,7 @@
 *     .. Local Functions ..
       INTEGER            ICEIL
 *     ..
-*     .. LOG variables declaration ..
 *     ..
-*     BUFFER size: Function name and Process grid info (128 Bytes) +
-*       Variable names + Variable values(num_vars *10)
-      CHARACTER  BUFFER*384
-      CHARACTER*2, PARAMETER :: eos_str = '' // C_NULL_CHAR
 *     .. Executable Statements ..
 *
 *     Initialize framework context structure if not initialized
@@ -388,7 +383,7 @@
 *     MPI process grid information and write to the log file
 *
       IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
-         WRITE(BUFFER,102)  COMPQ, INFO, LIWORK, LWORK,
+         WRITE(LOG_BUF,102)  COMPQ, INFO, LIWORK, LWORK,
      $            M, N,                   IT, JT, IQ,
      $            JQ, NPROW, NPCOL, MYROW, MYCOL, eos_str
  102     FORMAT('PDTRORD inputs:,COMPQ:',A5,',INFO:',I5,
@@ -1034,41 +1029,41 @@
 *              BUFFLEN = 0.
 *
                IF( MYROW.EQ.RSRC .AND. MYCOL.EQ.CSRC ) THEN
-                  INT_BUFFER = PDTRAF
+                  BUFFER = PDTRAF
                   BUFFLEN = DLEN + ILEN
                   IF( BUFFLEN.NE.0 ) THEN
                      DO 180 INDX = 1, ILEN
-                        WORK( INT_BUFFER+INDX-1 ) =
+                        WORK( BUFFER+INDX-1 ) =
      $                       DBLE( IWORK(IPIW+INDX-1) )
  180                 CONTINUE
                      CALL DLAMOV( 'All', DLEN, 1, WORK( IPW2 ),
-     $                    DLEN, WORK(INT_BUFFER+ILEN), DLEN )
+     $                    DLEN, WORK(BUFFER+ILEN), DLEN )
                      IF( NPCOL.GT.1 .AND. DIR.EQ.1 ) THEN
                         CALL DGEBS2D( ICTXT, 'Row', TOP, BUFFLEN, 1,
-     $                       WORK(INT_BUFFER), BUFFLEN )
+     $                       WORK(BUFFER), BUFFLEN )
                      END IF
                      IF( NPROW.GT.1 .AND. DIR.EQ.2 ) THEN
                         CALL DGEBS2D( ICTXT, 'Col', TOP, BUFFLEN, 1,
-     $                       WORK(INT_BUFFER), BUFFLEN )
+     $                       WORK(BUFFER), BUFFLEN )
                      END IF
                   END IF
                ELSEIF( MYROW.EQ.RSRC .OR. MYCOL.EQ.CSRC ) THEN
                   IF( NPCOL.GT.1 .AND. DIR.EQ.1 .AND. MYROW.EQ.RSRC )
      $                 THEN
-                     INT_BUFFER = PDTRAF
+                     BUFFER = PDTRAF
                      BUFFLEN = DLEN + ILEN
                      IF( BUFFLEN.NE.0 ) THEN
                         CALL DGEBR2D( ICTXT, 'Row', TOP, BUFFLEN, 1,
-     $                       WORK(INT_BUFFER), BUFFLEN, RSRC, CSRC )
+     $                       WORK(BUFFER), BUFFLEN, RSRC, CSRC )
                      END IF
                   END IF
                   IF( NPROW.GT.1 .AND. DIR.EQ.2 .AND. MYCOL.EQ.CSRC )
      $                 THEN
-                     INT_BUFFER = PDTRAF
+                     BUFFER = PDTRAF
                      BUFFLEN = DLEN + ILEN
                      IF( BUFFLEN.NE.0 ) THEN
                         CALL DGEBR2D( ICTXT, 'Col', TOP, BUFFLEN, 1,
-     $                       WORK(INT_BUFFER), BUFFLEN, RSRC, CSRC )
+     $                       WORK(BUFFER), BUFFLEN, RSRC, CSRC )
                      END IF
                   END IF
                   IF((NPCOL.GT.1.AND.DIR.EQ.1.AND.MYROW.EQ.RSRC).OR.
@@ -1077,10 +1072,10 @@
                      IF( BUFFLEN.NE.0 ) THEN
                         DO 190 INDX = 1, ILEN
                            IWORK(IPIW+INDX-1) =
-     $                          INT(WORK( INT_BUFFER+INDX-1 ))
+     $                          INT(WORK( BUFFER+INDX-1 ))
  190                    CONTINUE
                         CALL DLAMOV( 'All', DLEN, 1,
-     $                       WORK( INT_BUFFER+ILEN ), DLEN,
+     $                       WORK( BUFFER+ILEN ), DLEN,
      $                       WORK( IPW2 ), DLEN )
                      END IF
                   END IF
@@ -1125,7 +1120,7 @@
 *                 Compute amount of work space necessary for performing
 *                 matrix-matrix multiplications.
 *
-                  PDW = INT_BUFFER
+                  PDW = BUFFER
                   IPW3 = PDW + NWIN*NWIN
                ELSE
                   FLOPS = 0
@@ -2305,107 +2300,107 @@
 *                 Broadcast the orthogonal transformations.
 *
                   IF( MYROW.EQ.RSRC1 .AND. MYCOL.EQ.CSRC1 ) THEN
-                     INT_BUFFER = PDTRAF
+                     BUFFER = PDTRAF
                      BUFFLEN = DLEN + ILEN
                      IF( (NPROW.GT.1 .AND. DIR.EQ.2) .OR.
      $                   (NPCOL.GT.1 .AND. DIR.EQ.1) ) THEN
                         DO 370 INDX = 1, ILEN
-                           WORK( INT_BUFFER+INDX-1 ) =
+                           WORK( BUFFER+INDX-1 ) =
      $                          DBLE( IWORK(IPIW+INDX-1) )
  370                    CONTINUE
                         CALL DLAMOV( 'All', DLEN, 1, WORK( IPW3 ),
-     $                       DLEN, WORK(INT_BUFFER+ILEN), DLEN )
+     $                       DLEN, WORK(BUFFER+ILEN), DLEN )
                      END IF
                      IF( NPCOL.GT.1 .AND. DIR.EQ.1 ) THEN
                         CALL DGEBS2D( ICTXT, 'Row', TOP, BUFFLEN, 1,
-     $                       WORK(INT_BUFFER), BUFFLEN )
+     $                       WORK(BUFFER), BUFFLEN )
                      END IF
                      IF( NPROW.GT.1 .AND. DIR.EQ.2 ) THEN
                         CALL DGEBS2D( ICTXT, 'Col', TOP, BUFFLEN, 1,
-     $                       WORK(INT_BUFFER), BUFFLEN )
+     $                       WORK(BUFFER), BUFFLEN )
                      END IF
                   ELSEIF( MYROW.EQ.RSRC1 .OR. MYCOL.EQ.CSRC1 ) THEN
                      IF( NPCOL.GT.1 .AND. DIR.EQ.1 .AND.
      $                    MYROW.EQ.RSRC1 ) THEN
-                        INT_BUFFER = PDTRAF
+                        BUFFER = PDTRAF
                         BUFFLEN = DLEN + ILEN
                         CALL DGEBR2D( ICTXT, 'Row', TOP, BUFFLEN, 1,
-     $                       WORK(INT_BUFFER), BUFFLEN, RSRC1, CSRC1 )
+     $                       WORK(BUFFER), BUFFLEN, RSRC1, CSRC1 )
                      END IF
                      IF( NPROW.GT.1 .AND. DIR.EQ.2 .AND.
      $                    MYCOL.EQ.CSRC1 ) THEN
-                        INT_BUFFER = PDTRAF
+                        BUFFER = PDTRAF
                         BUFFLEN = DLEN + ILEN
                         CALL DGEBR2D( ICTXT, 'Col', TOP, BUFFLEN, 1,
-     $                       WORK(INT_BUFFER), BUFFLEN, RSRC1, CSRC1 )
+     $                       WORK(BUFFER), BUFFLEN, RSRC1, CSRC1 )
                      END IF
                      IF( (NPCOL.GT.1.AND.DIR.EQ.1.AND.MYROW.EQ.RSRC1)
      $                    .OR. (NPROW.GT.1.AND.DIR.EQ.2.AND.
      $                    MYCOL.EQ.CSRC1) ) THEN
                         DO 380 INDX = 1, ILEN
                            IWORK(IPIW+INDX-1) =
-     $                          INT( WORK( INT_BUFFER+INDX-1 ) )
+     $                          INT( WORK( BUFFER+INDX-1 ) )
  380                    CONTINUE
                         CALL DLAMOV( 'All', DLEN, 1,
-     $                       WORK( INT_BUFFER+ILEN ), DLEN,
+     $                       WORK( BUFFER+ILEN ), DLEN,
      $                       WORK( IPW3 ), DLEN )
                      END IF
                   END IF
                   IF( RSRC1.NE.RSRC4 ) THEN
                      IF( MYROW.EQ.RSRC4 .AND. MYCOL.EQ.CSRC4 ) THEN
-                        INT_BUFFER = PDTRAF
+                        BUFFER = PDTRAF
                         BUFFLEN = DLEN + ILEN
                         IF( NPCOL.GT.1 .AND. DIR.EQ.1 ) THEN
                            DO 390 INDX = 1, ILEN
-                              WORK( INT_BUFFER+INDX-1 ) =
+                              WORK( BUFFER+INDX-1 ) =
      $                             DBLE( IWORK(IPIW+INDX-1) )
  390                       CONTINUE
                            CALL DLAMOV( 'All', DLEN, 1, WORK( IPW3 ),
-     $                          DLEN, WORK(INT_BUFFER+ILEN), DLEN )
+     $                          DLEN, WORK(BUFFER+ILEN), DLEN )
                            CALL DGEBS2D( ICTXT, 'Row', TOP, BUFFLEN,
-     $                          1, WORK(INT_BUFFER), BUFFLEN )
+     $                          1, WORK(BUFFER), BUFFLEN )
                         END IF
                      ELSEIF( MYROW.EQ.RSRC4 .AND. DIR.EQ.1 .AND.
      $                    NPCOL.GT.1 ) THEN
-                        INT_BUFFER = PDTRAF
+                        BUFFER = PDTRAF
                         BUFFLEN = DLEN + ILEN
-                        CALL DGEBR2D( ICTXT, 'Row', TOP, BUFFLEN, 1,
-     $                       WORK(INT_BUFFER), BUFFLEN, RSRC4, CSRC4 )
+                        CALL DGEBR2D( ICTXT, 'Row', TOP, BUFFLEN,
+     $                       1, WORK(BUFFER), BUFFLEN, RSRC4, CSRC4 )
                         DO 400 INDX = 1, ILEN
                            IWORK(IPIW+INDX-1) =
-     $                          INT( WORK( INT_BUFFER+INDX-1 ) )
+     $                          INT( WORK( BUFFER+INDX-1 ) )
  400                    CONTINUE
                         CALL DLAMOV( 'All', DLEN, 1,
-     $                       WORK( INT_BUFFER+ILEN ), DLEN,
+     $                       WORK( BUFFER+ILEN ), DLEN,
      $                       WORK( IPW3 ), DLEN )
                      END IF
                   END IF
                   IF( CSRC1.NE.CSRC4 ) THEN
                      IF( MYROW.EQ.RSRC4 .AND. MYCOL.EQ.CSRC4 ) THEN
-                        INT_BUFFER = PDTRAF
+                        BUFFER = PDTRAF
                         BUFFLEN = DLEN + ILEN
                         IF( NPROW.GT.1 .AND. DIR.EQ.2 ) THEN
                            DO 395 INDX = 1, ILEN
-                              WORK( INT_BUFFER+INDX-1 ) =
+                              WORK( BUFFER+INDX-1 ) =
      $                             DBLE( IWORK(IPIW+INDX-1) )
  395                       CONTINUE
                            CALL DLAMOV( 'All', DLEN, 1, WORK( IPW3 ),
-     $                          DLEN, WORK(INT_BUFFER+ILEN), DLEN )
+     $                          DLEN, WORK(BUFFER+ILEN), DLEN )
                            CALL DGEBS2D( ICTXT, 'Col', TOP, BUFFLEN,
-     $                          1, WORK(INT_BUFFER), BUFFLEN )
+     $                          1, WORK(BUFFER), BUFFLEN )
                         END IF
                      ELSEIF( MYCOL.EQ.CSRC4 .AND. DIR.EQ.2 .AND.
      $                    NPROW.GT.1 ) THEN
-                        INT_BUFFER = PDTRAF
+                        BUFFER = PDTRAF
                         BUFFLEN = DLEN + ILEN
                         CALL DGEBR2D( ICTXT, 'Col', TOP, BUFFLEN, 1,
-     $                       WORK(INT_BUFFER), BUFFLEN, RSRC4, CSRC4 )
+     $                       WORK(BUFFER), BUFFLEN, RSRC4, CSRC4 )
                         DO 402 INDX = 1, ILEN
                            IWORK(IPIW+INDX-1) =
-     $                          INT( WORK( INT_BUFFER+INDX-1 ) )
+     $                          INT( WORK( BUFFER+INDX-1 ) )
  402                    CONTINUE
                         CALL DLAMOV( 'All', DLEN, 1,
-     $                       WORK( INT_BUFFER+ILEN ), DLEN,
+     $                       WORK( BUFFER+ILEN ), DLEN,
      $                       WORK( IPW3 ), DLEN )
                      END IF
                   END IF
@@ -2436,7 +2431,7 @@
                   IF( ((MYCOL.EQ.CSRC1.OR.MYCOL.EQ.CSRC4).AND.DIR.EQ.2)
      $                 .OR. ((MYROW.EQ.RSRC1.OR.MYROW.EQ.RSRC4).AND.
      $                 DIR.EQ.1)) THEN
-                     IPW4 = INT_BUFFER
+                     IPW4 = BUFFER
                      IF( DIR.EQ.2 ) THEN
                         IF( WANTQ ) THEN
                            QROWS = NUMROC( N, NB, MYROW, DESCQ( RSRC_ ),

@@ -264,12 +264,7 @@
 *     .. Intrinsic Functions ..
       INTRINSIC          MIN, MOD
 *     ..
-*     .. LOG variables declaration ..
 *     ..
-*     BUFFER size: Function name and Process grid info (128 Bytes) +
-*       Variable names + Variable values(num_vars *10)
-      CHARACTER  BUFFER*320
-      CHARACTER*2, PARAMETER :: eos_str = '' // C_NULL_CHAR
 *     .. Executable Statements ..
 *
 *     Initialize framework context structure if not initialized
@@ -301,7 +296,7 @@
 *     MPI process grid information and write to the log file
 *
       IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
-         WRITE(BUFFER,102)  SIDE, IC, INCV, IV, JC, JV,
+         WRITE(LOG_BUF,102)  SIDE, IC, INCV, IV, JC, JV,
      $            M, N, NPROW, NPCOL, MYROW, MYCOL, eos_str
  102     FORMAT('PDLARF inputs:,SIDE:',A5,',IC:',I5,',INCV:',I5,
      $           ',IV:',I5,',JC:',I5,',JV:',I5,

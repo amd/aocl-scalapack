@@ -32,7 +32,17 @@
            INTEGER(C_INT)::NUM_PROCS
          END TYPE
          TYPE(AOCL_SCALAPACK_GLOBAL_CONTEXT),BIND(C)::SCALAPACK_CONTEXT
-
+*  ..
+*  ..    LOG variables declaration ..
+*  ..    LOG BUFFER size is large enough to capture the scalar argument
+*  ..    values..
+         CHARACTER LOG_BUF*1024
+!$omp threadprivate(LOG_BUF)
+*  ..
+*  ..    Variable to hold the 'End of string' character in C language
+         CHARACTER*2, PARAMETER :: eos_str = '' // C_NULL_CHAR
+*  ..
+*  ..
       END MODULE LINK_TO_C_GLOBALS
 
 *

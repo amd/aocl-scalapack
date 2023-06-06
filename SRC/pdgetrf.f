@@ -142,15 +142,11 @@
 *  =====================================================================
 *
 *     ..
-*     BUFFER size: Function name and Process grid info (128 Bytes) +
-*       Variable names + Variable values(num_vars *10)
-      CHARACTER  BUFFER*256
-      CHARACTER*2, PARAMETER :: eos_str = '' // C_NULL_CHAR
       CALL AOCL_SCALAPACK_INIT( )
       AOCL_DTL_TRACE_ENTRY_F
 *
       IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
-         WRITE(BUFFER,101) M, N, IA, JA, eos_str
+         WRITE(LOG_BUF,101) M, N, IA, JA, eos_str
  101     FORMAT('pdgetrf inputs:,M:',I9,',N:',I9,
      $               ',IA:',I5,',JA:',I5,A5 )
          AOCL_DTL_LOG_ENTRY_F

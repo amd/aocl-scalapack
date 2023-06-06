@@ -156,12 +156,7 @@
 *     .. Intrinsic Functions ..
       INTRINSIC          MIN, MOD
 *     ..
-*     .. LOG variables declaration ..
 *     ..
-*     BUFFER size: Function name and Process grid info (128 Bytes) +
-*       Variable names + Variable values(num_vars *10)
-      CHARACTER  BUFFER*320
-      CHARACTER*2, PARAMETER :: eos_str = '' // C_NULL_CHAR
 *     .. Executable Statements ..
 *
 *     Initialize framework context structure if not initialized
@@ -173,6 +168,16 @@
 *     Capture the subroutine entry in the trace file
 *
       AOCL_DTL_TRACE_ENTRY_F
+*
+*     Update the log buffer with the scalar arguments details,
+*
+      IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
+         WRITE(LOG_BUF,102)  UPLO, IA, JA, M, N, ALPHA, BETA eos_str
+ 102     FORMAT('PDLASET inputs:,UPLO:',A5,',IA:',I5,',JA:',I5,
+     $           ',M:',I5,',N:',I5,',ALPHA:',F9.4,',BETA:',F9.4,A1)
+         AOCL_DTL_LOG_ENTRY_F
+      END IF
+*
 *
       IF( M.EQ.0 .OR. N.EQ.0 ) THEN
 *

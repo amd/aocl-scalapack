@@ -203,12 +203,7 @@
       INTEGER            ICEIL, INDXG2P
       EXTERNAL           LSAME, ICEIL, INDXG2P
 *     ..
-*     .. LOG variables declaration ..
 *     ..
-*     BUFFER size: Function name and Process grid info (128 Bytes) +
-*       Variable names + Variable values(num_vars *10)
-      CHARACTER  BUFFER*320
-      CHARACTER*2, PARAMETER :: eos_str = '' // C_NULL_CHAR
 *     .. Executable Statements ..
 *
 *     Initialize framework context structure if not initialized
@@ -241,7 +236,7 @@
 *     MPI process grid information and write to the log file
 *
       IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
-         WRITE(BUFFER,102)  UPLO, IA, IB, IBTYPE, INFO,
+         WRITE(LOG_BUF,102)  UPLO, IA, IB, IBTYPE, INFO,
      $            JA, JB, N, SCALE, NPROW, NPCOL, MYROW,
      $            MYCOL, eos_str
  102     FORMAT('PDSYGST inputs:,UPLO:',A5,',IA:',I5,',IB:',I5,
