@@ -184,12 +184,7 @@
 *     .. Local Arrays ..
       INTEGER            PTT( 4 )
 *     ..
-*     .. LOG variables declaration ..
 *     ..
-*     BUFFER size: Function name and Process grid info (128 Bytes) +
-*       Variable names + Variable values(num_vars *10)
-      CHARACTER  BUFFER*448
-      CHARACTER*2, PARAMETER :: eos_str = '' // C_NULL_CHAR
 *     .. Executable Statements ..
 *
 *     Initialize framework context structure if not initialized
@@ -219,7 +214,7 @@
 *     MPI process grid information and write to the log file
 *
       IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
-         WRITE(BUFFER,102)  DCOL, DROW, IB1, IB2, ICTXT,
+         WRITE(LOG_BUF,102)  DCOL, DROW, IB1, IB2, ICTXT,
      $            K, LDQ, LDQ2, N,                   N1,
      $            NB, NN, NN1, NN2, NPCOL, RHO, NPROW,
      $            NPCOL, MYROW, MYCOL, eos_str

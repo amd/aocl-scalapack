@@ -54,12 +54,7 @@
       EXTERNAL           BLACS_GRIDINFO, DGEBR2D, DGEBS2D, INFOG2L,
      $                   PDTRSV
 *     ..
-*     .. LOG variables declaration ..
 *     ..
-*     BUFFER size: Function name and Process grid info (128 Bytes) +
-*       Variable names + Variable values(num_vars *10)
-      CHARACTER  BUFFER*384
-      CHARACTER*2, PARAMETER :: eos_str = '' // C_NULL_CHAR
 *     .. Executable Statements ..
 *
 *     Initialize framework context structure if not initialized
@@ -81,7 +76,7 @@
 *     MPI process grid information and write to the log file
 *
       IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
-         WRITE(BUFFER,102)  DIAG, NORMIN, TRANS, UPLO, IA,
+         WRITE(LOG_BUF,102)  DIAG, NORMIN, TRANS, UPLO, IA,
      $            IX, JA, JX, N, SCALE, NPROW, NPCOL,
      $            MYROW, MYCOL, eos_str
  102     FORMAT('PDLATRS inputs:,DIAG:',A5,',NORMIN:',A5,
