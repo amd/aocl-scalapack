@@ -36,12 +36,12 @@ void pdpanel_lcast_( pd_panel * panel, Int *N )
    if( panel->myrow == panel->iarow )
    {
       type->Cgebs2d( panel->ictxt, COLUMN, " " /*top*/,
-                     *N, *N, panel->lmem, *N );
+                     *N, *N, (char *)panel->lmem, *N );
    }
    else
    {
       type->Cgebr2d( panel->ictxt, COLUMN, " " /*top*/,
-                     *N, *N, panel->lmem, *N,
+                     *N, *N, (char *)panel->lmem, *N,
                      panel->iarow, panel->mycol );
    }
    return;

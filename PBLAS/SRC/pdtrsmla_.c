@@ -130,8 +130,8 @@ void pdtrsmla_( SIDE, UPLO, TRANS, DIAG, M, N, ALPHA, PANEL )
    Bptr = Mptr( ( ( char * ) PANEL->umem ), 0,
                 PANEL->uoff, PANEL->ldu, type->size );
    type->Ftrsm( SIDE, UPLO, TRANS, DIAG,
-                &PANEL->JB, &ln, ALPHA,
-                PANEL->lmem, &PANEL->JB,
+                &PANEL->JB, &ln, (char *)ALPHA,
+                (char *)PANEL->lmem, &PANEL->JB,
                 Bptr, &PANEL->ldu );
    return;
 /*
