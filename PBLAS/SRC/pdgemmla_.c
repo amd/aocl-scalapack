@@ -129,8 +129,8 @@ void pdgemmla_( TRANSA, TRANSB, M, N, K, ALPHA,
                 PANEL->Xjj, PANEL->lda, type->size );
    if( PANEL->brows > 0 )
       type->Fgemm( TRANSA, TRANSB, &PANEL->brows, &ln, &PANEL->JB,
-                   ALPHA, PANEL->pmem, &PANEL->ldm, Bptr, &PANEL->ldu,
-                   BETA,  Cptr, &PANEL->lda );
+                   (char *)ALPHA, (char *)PANEL->pmem, &PANEL->ldm, Bptr, &PANEL->ldu,
+                   (char *)BETA,  Cptr, &PANEL->lda );
    return;
 /*
 *  End of PDGEMMLA
