@@ -196,9 +196,21 @@ void aocl_scalapack_init_()
 {
     scalapack_pthread_once(&once_init, scalapack_context_init);
 }
+
+/** Wrapper Functions for 'aocl_scalapack_init_'
+    To enable Fortran to C calls
+**/
+void aocl_scalapack_init()
+{
+    aocl_scalapack_init_();
+}
 void AOCL_SCALAPACK_INIT()
 {
-    scalapack_pthread_once(&once_init, scalapack_context_init);
+    aocl_scalapack_init_();
+}
+void AOCL_SCALAPACK_INIT_()
+{
+    aocl_scalapack_init_();
 }
 
 void aocl_scalapack_finalize(void)

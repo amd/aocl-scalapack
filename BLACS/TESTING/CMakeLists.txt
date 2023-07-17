@@ -12,11 +12,6 @@ target_link_libraries(xFbtest scalapack)
 set(CTestObj
    Cbt.c)
 
-# SCALAPACK_BUILD_TESTS flag determines whether to compile the test framework.
-if(SCALAPACK_BUILD_TESTS)
-  add_executable(xFbtest ${FTestObj})
-  target_link_libraries(xFbtest scalapack)
-
 if (UNIX)
     add_executable(xCbtest ${CTestObj} ${FTestObj})
     target_link_libraries(xCbtest scalapack)

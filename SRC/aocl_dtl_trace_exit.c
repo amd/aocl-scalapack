@@ -19,7 +19,7 @@
 void aocl_sl_dtl_trace_exit_( const char * fileName, unsigned int * lineNumber,
                            const char * message )
 {
-#if AOCL_DTL_TRACE_ENABLE 
+#if AOCL_DTL_TRACE_ENABLE
   char * funcName = NULL;
   Int    i, fnlen, cval;
 
@@ -29,7 +29,7 @@ void aocl_sl_dtl_trace_exit_( const char * fileName, unsigned int * lineNumber,
   if( funcName != NULL)
   {
     strncpy( funcName, fileName, fnlen );
-  
+
     funcName[ fnlen - 2 ] = '\0';
 
     i = 0;
@@ -47,7 +47,7 @@ void aocl_sl_dtl_trace_exit_( const char * fileName, unsigned int * lineNumber,
 
     DTL_Trace( AOCL_DTL_TRACE_LEVEL, TRACE_TYPE_FEXIT, fileName, funcName,
                *lineNumber, NULL );
-  
+
     free( funcName );
   }
   else
@@ -58,5 +58,24 @@ void aocl_sl_dtl_trace_exit_( const char * fileName, unsigned int * lineNumber,
 #endif
   return;
 }
+/**
+    Wrapper functions for 'aocl_sl_dtl_trace_exit_' function
+    to enable Fortran to C calls.
+**/
+void aocl_sl_dtl_trace_exit( const char * fileName, unsigned int * lineNumber,
+                           const char * message )
+{
+   aocl_sl_dtl_trace_exit_( fileName, lineNumber, message );
+}
 
+void AOCL_SL_DTL_TRACE_EXIT( const char * fileName, unsigned int * lineNumber,
+                           const char * message )
+{
+   aocl_sl_dtl_trace_exit_( fileName, lineNumber, message );
+}
 
+void AOCL_SL_DTL_TRACE_EXIT_( const char * fileName, unsigned int * lineNumber,
+                           const char * message )
+{
+   aocl_sl_dtl_trace_exit_( fileName, lineNumber, message );
+}

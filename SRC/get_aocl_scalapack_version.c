@@ -57,3 +57,22 @@ void get_aocl_scalapack_version_( version )
 return;
 }
 
+/**
+    Wrapper functions for 'get_aocl_scalapack_version_' function
+    to enable Fortran to C calls.
+**/
+void get_aocl_scalapack_version( char * version )
+{
+	get_aocl_scalapack_version_( version );
+}
+
+void GET_AOCL_SCALAPACK_VERSION( char * version )
+{
+	get_aocl_scalapack_version_( version );
+}
+
+void GET_AOCL_SCALAPACK_VERSION_( char * version )
+{
+	get_aocl_scalapack_version_( version );
+}
+

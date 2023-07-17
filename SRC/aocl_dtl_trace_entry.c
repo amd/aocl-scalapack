@@ -28,6 +28,28 @@ void aocl_sl_dtl_log_entry_( const char *filename, const char *function_name,
               buffer);
 }
 
+/**
+    Wrapper functions for 'aocl_sl_dtl_log_entry_' function
+    to enable Fortran to C calls.
+**/
+void aocl_sl_dtl_log_entry( const char *filename, const char *function_name,
+                             unsigned int *line_number, const char *buffer )
+{
+    aocl_sl_dtl_log_entry_(filename, function_name, line_number, buffer);
+}
+
+void AOCL_SL_DTL_LOG_ENTRY( const char *filename, const char *function_name,
+                             unsigned int *line_number, const char *buffer )
+{
+    aocl_sl_dtl_log_entry_(filename, function_name, line_number, buffer);
+}
+
+void AOCL_SL_DTL_LOG_ENTRY_( const char *filename, const char *function_name,
+                             unsigned int *line_number, const char *buffer )
+{
+    aocl_sl_dtl_log_entry_(filename, function_name, line_number, buffer);
+}
+
 void aocl_sl_dtl_trace_entry_( const char * fileName, unsigned int * lineNumber,
                             const char * message )
 {
@@ -71,4 +93,26 @@ void aocl_sl_dtl_trace_entry_( const char * fileName, unsigned int * lineNumber,
   return;
 }
 
+/**
+    Wrapper functions for 'aocl_sl_dtl_trace_entry_' function
+    to enable Fortran to C calls.
+**/
+
+void aocl_sl_dtl_trace_entry( const char * fileName, unsigned int * lineNumber,
+                            const char * message )
+{
+   aocl_sl_dtl_trace_entry_( fileName, lineNumber, message );
+}
+
+void AOCL_SL_DTL_TRACE_ENTRY( const char * fileName, unsigned int * lineNumber,
+                            const char * message )
+{
+   aocl_sl_dtl_trace_entry_( fileName, lineNumber, message );
+}
+
+void AOCL_SL_DTL_TRACE_ENTRY_( const char * fileName, unsigned int * lineNumber,
+                            const char * message )
+{
+   aocl_sl_dtl_trace_entry_( fileName, lineNumber, message );
+}
 
