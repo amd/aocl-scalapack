@@ -112,3 +112,24 @@ F_VOID_FUNC itrsd2d_(Int *ConTxt, F_CHAR uplo, F_CHAR diag, Int *m, Int *n,
    BI_UpdateBuffs(bp);
 #endif
 }  /* end of itrsd2d */
+#if (INTFACE != C_CALL)
+/** Wrapper functions to support Fortran to C calls **/
+
+F_VOID_FUNC itrsd2d(Int *ConTxt, F_CHAR uplo, F_CHAR diag, Int *m, Int *n,
+                     Int *A, Int *lda, Int *rdest, Int *cdest)
+{
+   itrsd2d_( ConTxt, uplo, diag, m, n, A, lda, rdest, cdest);
+}
+
+F_VOID_FUNC ITRSD2D(Int *ConTxt, F_CHAR uplo, F_CHAR diag, Int *m, Int *n,
+                     Int *A, Int *lda, Int *rdest, Int *cdest)
+{
+   itrsd2d_( ConTxt, uplo, diag, m, n, A, lda, rdest, cdest);
+}
+
+F_VOID_FUNC ITRSD2D_(Int *ConTxt, F_CHAR uplo, F_CHAR diag, Int *m, Int *n,
+                     Int *A, Int *lda, Int *rdest, Int *cdest)
+{
+   itrsd2d_( ConTxt, uplo, diag, m, n, A, lda, rdest, cdest);
+}
+#endif

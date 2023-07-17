@@ -373,3 +373,27 @@ F_VOID_FUNC dgamx2d_(Int *ConTxt, F_CHAR scope, F_CHAR top, Int *m, Int *n,
       if (bp != &BI_AuxBuff) BI_dvmcopy(Mpval(m), Mpval(n), A, tlda, (double *)bp->Buff);
    }
 }
+#if (INTFACE != C_CALL)
+/** Wrapper functions to support Fortran to C calls **/
+
+F_VOID_FUNC dgamx2d(Int *ConTxt, F_CHAR scope, F_CHAR top, Int *m, Int *n,
+                     double *A, Int *lda, Int *rA, Int *cA, Int *ldia,
+                     Int *rdest, Int *cdest)
+{
+   dgamx2d_( ConTxt, scope, top, m, n, A, lda, rA, cA, ldia, rdest, cdest);
+}
+
+F_VOID_FUNC DGAMX2D(Int *ConTxt, F_CHAR scope, F_CHAR top, Int *m, Int *n,
+                     double *A, Int *lda, Int *rA, Int *cA, Int *ldia,
+                     Int *rdest, Int *cdest)
+{
+   dgamx2d_( ConTxt, scope, top, m, n, A, lda, rA, cA, ldia, rdest, cdest);
+}
+
+F_VOID_FUNC DGAMX2D_(Int *ConTxt, F_CHAR scope, F_CHAR top, Int *m, Int *n,
+                     double *A, Int *lda, Int *rA, Int *cA, Int *ldia,
+                     Int *rdest, Int *cdest)
+{
+   dgamx2d_( ConTxt, scope, top, m, n, A, lda, rA, cA, ldia, rdest, cdest);
+}
+#endif

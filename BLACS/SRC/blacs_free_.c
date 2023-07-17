@@ -22,3 +22,21 @@ F_VOID_FUNC blacs_freebuff_(Int *ConTxt, Int *Wait)
       BI_ReadyB = NULL;
    }
 }
+#if (INTFACE != C_CALL)
+/** Wrapper functions to support Fortran to C calls **/
+
+F_VOID_FUNC blacs_freebuff(Int *ConTxt, Int *Wait)
+{
+   blacs_freebuff_( ConTxt, Wait);
+}
+
+F_VOID_FUNC BLACS_FREEBUFF(Int *ConTxt, Int *Wait)
+{
+   blacs_freebuff_( ConTxt, Wait);
+}
+
+F_VOID_FUNC BLACS_FREEBUFF_(Int *ConTxt, Int *Wait)
+{
+   blacs_freebuff_( ConTxt, Wait);
+}
+#endif

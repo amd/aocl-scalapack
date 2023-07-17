@@ -224,3 +224,24 @@ F_VOID_FUNC cgebr2d_(Int *ConTxt, F_CHAR scope, F_CHAR top, Int *m, Int *n,
       if (BI_ActiveQ) BI_UpdateBuffs(NULL);
    }
 }
+#if (INTFACE != C_CALL)
+/** Wrapper functions to support Fortran to C calls **/
+
+F_VOID_FUNC cgebr2d(Int *ConTxt, F_CHAR scope, F_CHAR top, Int *m, Int *n,
+                     float *A, Int *lda, Int *rsrc, Int *csrc)
+{
+   cgebr2d_( ConTxt, scope, top, m, n, A, lda, rsrc, csrc);
+}
+
+F_VOID_FUNC CGEBR2D(Int *ConTxt, F_CHAR scope, F_CHAR top, Int *m, Int *n,
+                     float *A, Int *lda, Int *rsrc, Int *csrc)
+{
+   cgebr2d_( ConTxt, scope, top, m, n, A, lda, rsrc, csrc);
+}
+
+F_VOID_FUNC CGEBR2D_(Int *ConTxt, F_CHAR scope, F_CHAR top, Int *m, Int *n,
+                     float *A, Int *lda, Int *rsrc, Int *csrc)
+{
+   cgebr2d_( ConTxt, scope, top, m, n, A, lda, rsrc, csrc);
+}
+#endif

@@ -235,3 +235,24 @@ F_VOID_FUNC igsum2d_(Int *ConTxt, F_CHAR scope, F_CHAR top, Int *m, Int *n,
       BI_BuffIsFree(bp, 1);
    }
 }
+#if (INTFACE != C_CALL)
+/** Wrapper functions to support Fortran to C calls **/
+
+F_VOID_FUNC igsum2d(Int *ConTxt, F_CHAR scope, F_CHAR top, Int *m, Int *n,
+                     Int *A, Int *lda, Int *rdest, Int *cdest)
+{
+   igsum2d_( ConTxt, scope, top, m, n, A, lda, rdest, cdest);
+}
+
+F_VOID_FUNC IGSUM2D(Int *ConTxt, F_CHAR scope, F_CHAR top, Int *m, Int *n,
+                     Int *A, Int *lda, Int *rdest, Int *cdest)
+{
+   igsum2d_( ConTxt, scope, top, m, n, A, lda, rdest, cdest);
+}
+
+F_VOID_FUNC IGSUM2D_(Int *ConTxt, F_CHAR scope, F_CHAR top, Int *m, Int *n,
+                     Int *A, Int *lda, Int *rdest, Int *cdest)
+{
+   igsum2d_( ConTxt, scope, top, m, n, A, lda, rdest, cdest);
+}
+#endif

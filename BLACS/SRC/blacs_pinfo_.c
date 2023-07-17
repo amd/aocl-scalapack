@@ -26,3 +26,21 @@ F_VOID_FUNC blacs_pinfo_(Int *mypnum, Int *nprocs)
    *mypnum = BI_Iam = Iam;
    *nprocs = BI_Np  = Np;
 }
+#if (INTFACE != C_CALL)
+/** Wrapper functions to support Fortran to C calls **/
+
+F_VOID_FUNC blacs_pinfo(Int *mypnum, Int *nprocs)
+{
+   blacs_pinfo_( mypnum, nprocs);
+}
+
+F_VOID_FUNC BLACS_PINFO(Int *mypnum, Int *nprocs)
+{
+   blacs_pinfo_( mypnum, nprocs);
+}
+
+F_VOID_FUNC BLACS_PINFO_(Int *mypnum, Int *nprocs)
+{
+   blacs_pinfo_( mypnum, nprocs);
+}
+#endif

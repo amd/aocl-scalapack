@@ -93,3 +93,24 @@ F_VOID_FUNC zgesd2d_(Int *ConTxt, Int *m, Int *n, double *A, Int *lda,
    BI_UpdateBuffs(bp);
 #endif
 }  /* end of zgesd2d */
+#if (INTFACE != C_CALL)
+/** Wrapper functions to support Fortran to C calls **/
+
+F_VOID_FUNC zgesd2d(Int *ConTxt, Int *m, Int *n, double *A, Int *lda,
+                     Int *rdest, Int *cdest)
+{
+   zgesd2d_( ConTxt, m, n, A, lda, rdest, cdest);
+}
+
+F_VOID_FUNC ZGESD2D(Int *ConTxt, Int *m, Int *n, double *A, Int *lda,
+                     Int *rdest, Int *cdest)
+{
+   zgesd2d_( ConTxt, m, n, A, lda, rdest, cdest);
+}
+
+F_VOID_FUNC ZGESD2D_(Int *ConTxt, Int *m, Int *n, double *A, Int *lda,
+                     Int *rdest, Int *cdest)
+{
+   zgesd2d_( ConTxt, m, n, A, lda, rdest, cdest);
+}
+#endif

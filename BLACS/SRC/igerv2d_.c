@@ -81,3 +81,24 @@ F_VOID_FUNC igerv2d_(Int *ConTxt, Int *m, Int *n, Int *A, Int *lda,
    ierr=BI_MPI_TYPE_FREE(&MatTyp);
    if (BI_ActiveQ) BI_UpdateBuffs(NULL);
 }
+#if (INTFACE != C_CALL)
+/** Wrapper functions to support Fortran to C calls **/
+
+F_VOID_FUNC igerv2d(Int *ConTxt, Int *m, Int *n, Int *A, Int *lda,
+                     Int *rsrc, Int *csrc)
+{
+   igerv2d_( ConTxt, m, n, A, lda, rsrc, csrc);
+}
+
+F_VOID_FUNC IGERV2D(Int *ConTxt, Int *m, Int *n, Int *A, Int *lda,
+                     Int *rsrc, Int *csrc)
+{
+   igerv2d_( ConTxt, m, n, A, lda, rsrc, csrc);
+}
+
+F_VOID_FUNC IGERV2D_(Int *ConTxt, Int *m, Int *n, Int *A, Int *lda,
+                     Int *rsrc, Int *csrc)
+{
+   igerv2d_( ConTxt, m, n, A, lda, rsrc, csrc);
+}
+#endif

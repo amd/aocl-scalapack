@@ -42,3 +42,21 @@ F_VOID_FUNC blacs_gridexit_(Int *ConTxt)
    free(ctxt);
    BI_MyContxts[Mpval(ConTxt)] = NULL;
 }
+#if (INTFACE != C_CALL)
+/** Wrapper functions to support Fortran to C calls **/
+
+F_VOID_FUNC blacs_gridexit(Int *ConTxt)
+{
+   blacs_gridexit_( ConTxt);
+}
+
+F_VOID_FUNC BLACS_GRIDEXIT(Int *ConTxt)
+{
+   blacs_gridexit_( ConTxt);
+}
+
+F_VOID_FUNC BLACS_GRIDEXIT_(Int *ConTxt)
+{
+   blacs_gridexit_( ConTxt);
+}
+#endif

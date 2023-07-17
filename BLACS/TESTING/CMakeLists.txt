@@ -12,11 +12,6 @@ target_link_libraries(xFbtest scalapack)
 set(CTestObj
    Cbt.c)
 
-set_property(
-   SOURCE Cbt.c
-   APPEND PROPERTY COMPILE_DEFINITIONS BTCINTFACE
-   )
-
 if (UNIX)
     add_executable(xCbtest ${CTestObj} ${FTestObj})
     target_link_libraries(xCbtest scalapack)

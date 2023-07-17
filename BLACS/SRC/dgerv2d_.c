@@ -80,3 +80,24 @@ F_VOID_FUNC dgerv2d_(Int *ConTxt, Int *m, Int *n, double *A, Int *lda,
    ierr=BI_MPI_TYPE_FREE(&MatTyp);
    if (BI_ActiveQ) BI_UpdateBuffs(NULL);
 }
+#if (INTFACE != C_CALL)
+/** Wrapper functions to support Fortran to C calls **/
+
+F_VOID_FUNC dgerv2d(Int *ConTxt, Int *m, Int *n, double *A, Int *lda,
+                     Int *rsrc, Int *csrc)
+{
+   dgerv2d_( ConTxt, m, n, A, lda, rsrc, csrc);
+}
+
+F_VOID_FUNC DGERV2D(Int *ConTxt, Int *m, Int *n, double *A, Int *lda,
+                     Int *rsrc, Int *csrc)
+{
+   dgerv2d_( ConTxt, m, n, A, lda, rsrc, csrc);
+}
+
+F_VOID_FUNC DGERV2D_(Int *ConTxt, Int *m, Int *n, double *A, Int *lda,
+                     Int *rsrc, Int *csrc)
+{
+   dgerv2d_( ConTxt, m, n, A, lda, rsrc, csrc);
+}
+#endif

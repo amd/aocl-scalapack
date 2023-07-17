@@ -18,3 +18,21 @@ F_VOID_FUNC blacs_abort_(Int *ConTxt, Int *ErrNo)
 
    BI_BlacsAbort(Mpval(ErrNo));
 }
+#if (INTFACE != C_CALL)
+/** Wrapper functions to support Fortran to C calls **/
+
+F_VOID_FUNC blacs_abort(Int *ConTxt, Int *ErrNo)
+{
+   blacs_abort_( ConTxt, ErrNo);
+}
+
+F_VOID_FUNC BLACS_ABORT(Int *ConTxt, Int *ErrNo)
+{
+   blacs_abort_( ConTxt, ErrNo);
+}
+
+F_VOID_FUNC BLACS_ABORT_(Int *ConTxt, Int *ErrNo)
+{
+   blacs_abort_( ConTxt, ErrNo);
+}
+#endif

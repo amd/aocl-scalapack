@@ -30,3 +30,24 @@ F_VOID_FUNC blacs_gridinfo_(Int *ConTxt, Int *nprow, Int *npcol,
    }
    else *nprow = *npcol = *myrow = *mycol = -1;
 }
+#if (INTFACE != C_CALL)
+/** Wrapper functions to support Fortran to C calls **/
+
+F_VOID_FUNC blacs_gridinfo(Int *ConTxt, Int *nprow, Int *npcol,
+                            Int *myrow, Int *mycol)
+{
+   blacs_gridinfo_( ConTxt, nprow, npcol, myrow, mycol);
+}
+
+F_VOID_FUNC BLACS_GRIDINFO(Int *ConTxt, Int *nprow, Int *npcol,
+                            Int *myrow, Int *mycol)
+{
+   blacs_gridinfo_( ConTxt, nprow, npcol, myrow, mycol);
+}
+
+F_VOID_FUNC BLACS_GRIDINFO_(Int *ConTxt, Int *nprow, Int *npcol,
+                            Int *myrow, Int *mycol)
+{
+   blacs_gridinfo_( ConTxt, nprow, npcol, myrow, mycol);
+}
+#endif

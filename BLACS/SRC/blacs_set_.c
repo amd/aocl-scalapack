@@ -65,3 +65,21 @@ F_VOID_FUNC blacs_set_(Int *ConTxt, Int *what, Int *val)
                    Mpval(what));
    }
 }
+#if (INTFACE != C_CALL)
+/** Wrapper functions to support Fortran to C calls **/
+
+F_VOID_FUNC blacs_set(Int *ConTxt, Int *what, Int *val)
+{
+   blacs_set_( ConTxt, what, val);
+}
+
+F_VOID_FUNC BLACS_SET(Int *ConTxt, Int *what, Int *val)
+{
+   blacs_set_( ConTxt, what, val);
+}
+
+F_VOID_FUNC BLACS_SET_(Int *ConTxt, Int *what, Int *val)
+{
+   blacs_set_( ConTxt, what, val);
+}
+#endif

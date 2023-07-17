@@ -204,3 +204,24 @@ F_VOID_FUNC ctrbs2d_(Int *ConTxt, F_CHAR scope, F_CHAR top, F_CHAR uplo,
    }
    else BI_UpdateBuffs(bp);
 }  /* end  ctrbs2d_  */
+#if (INTFACE != C_CALL)
+/** Wrapper functions to support Fortran to C calls **/
+
+F_VOID_FUNC ctrbs2d(Int *ConTxt, F_CHAR scope, F_CHAR top, F_CHAR uplo,
+                     F_CHAR diag, Int *m, Int *n, float *A, Int *lda)
+{
+   ctrbs2d_( ConTxt, scope, top, uplo, diag, m, n, A, lda);
+}
+
+F_VOID_FUNC CTRBS2D(Int *ConTxt, F_CHAR scope, F_CHAR top, F_CHAR uplo,
+                     F_CHAR diag, Int *m, Int *n, float *A, Int *lda)
+{
+   ctrbs2d_( ConTxt, scope, top, uplo, diag, m, n, A, lda);
+}
+
+F_VOID_FUNC CTRBS2D_(Int *ConTxt, F_CHAR scope, F_CHAR top, F_CHAR uplo,
+                     F_CHAR diag, Int *m, Int *n, float *A, Int *lda)
+{
+   ctrbs2d_( ConTxt, scope, top, uplo, diag, m, n, A, lda);
+}
+#endif

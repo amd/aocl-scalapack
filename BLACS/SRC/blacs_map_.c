@@ -164,3 +164,24 @@ F_VOID_FUNC blacs_gridmap_(Int *ConTxt, Int *usermap, Int *ldup, Int *nprow0,
    free(iptr);
 
 }
+#if (INTFACE != C_CALL)
+/** Wrapper functions to support Fortran to C calls **/
+
+F_VOID_FUNC blacs_gridmap(Int *ConTxt, Int *usermap, Int *ldup, Int *nprow0,
+                           Int *npcol0)
+{
+   blacs_gridmap_( ConTxt, usermap, ldup, nprow0, npcol0);
+}
+
+F_VOID_FUNC BLACS_GRIDMAP(Int *ConTxt, Int *usermap, Int *ldup, Int *nprow0,
+                           Int *npcol0)
+{
+   blacs_gridmap_( ConTxt, usermap, ldup, nprow0, npcol0);
+}
+
+F_VOID_FUNC BLACS_GRIDMAP_(Int *ConTxt, Int *usermap, Int *ldup, Int *nprow0,
+                           Int *npcol0)
+{
+   blacs_gridmap_( ConTxt, usermap, ldup, nprow0, npcol0);
+}
+#endif

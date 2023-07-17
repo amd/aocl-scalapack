@@ -93,3 +93,24 @@ F_VOID_FUNC cgesd2d_(Int *ConTxt, Int *m, Int *n, float *A, Int *lda,
    BI_UpdateBuffs(bp);
 #endif
 }  /* end of cgesd2d */
+#if (INTFACE != C_CALL)
+/** Wrapper functions to support Fortran to C calls **/
+
+F_VOID_FUNC cgesd2d(Int *ConTxt, Int *m, Int *n, float *A, Int *lda,
+                     Int *rdest, Int *cdest)
+{
+   cgesd2d_( ConTxt, m, n, A, lda, rdest, cdest);
+}
+
+F_VOID_FUNC CGESD2D(Int *ConTxt, Int *m, Int *n, float *A, Int *lda,
+                     Int *rdest, Int *cdest)
+{
+   cgesd2d_( ConTxt, m, n, A, lda, rdest, cdest);
+}
+
+F_VOID_FUNC CGESD2D_(Int *ConTxt, Int *m, Int *n, float *A, Int *lda,
+                     Int *rdest, Int *cdest)
+{
+   cgesd2d_( ConTxt, m, n, A, lda, rdest, cdest);
+}
+#endif

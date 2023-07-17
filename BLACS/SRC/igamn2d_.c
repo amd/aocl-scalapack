@@ -370,3 +370,27 @@ F_VOID_FUNC igamn2d_(Int *ConTxt, F_CHAR scope, F_CHAR top, Int *m, Int *n,
       if (bp != &BI_AuxBuff) BI_ivmcopy(Mpval(m), Mpval(n), A, tlda, (int *)bp->Buff);
    }
 }
+#if (INTFACE != C_CALL)
+/** Wrapper functions to support Fortran to C calls **/
+
+F_VOID_FUNC igamn2d(Int *ConTxt, F_CHAR scope, F_CHAR top, Int *m, Int *n,
+                     Int *A, Int *lda, Int *rA, Int *cA, Int *ldia,
+                     Int *rdest, Int *cdest)
+{
+   igamn2d_( ConTxt, scope, top, m, n, A, lda, rA, cA, ldia, rdest, cdest);
+}
+
+F_VOID_FUNC IGAMN2D(Int *ConTxt, F_CHAR scope, F_CHAR top, Int *m, Int *n,
+                     Int *A, Int *lda, Int *rA, Int *cA, Int *ldia,
+                     Int *rdest, Int *cdest)
+{
+   igamn2d_( ConTxt, scope, top, m, n, A, lda, rA, cA, ldia, rdest, cdest);
+}
+
+F_VOID_FUNC IGAMN2D_(Int *ConTxt, F_CHAR scope, F_CHAR top, Int *m, Int *n,
+                     Int *A, Int *lda, Int *rA, Int *cA, Int *ldia,
+                     Int *rdest, Int *cdest)
+{
+   igamn2d_( ConTxt, scope, top, m, n, A, lda, rA, cA, ldia, rdest, cdest);
+}
+#endif

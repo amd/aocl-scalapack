@@ -193,3 +193,24 @@ F_VOID_FUNC zgebs2d_(Int *ConTxt, F_CHAR scope, F_CHAR top, Int *m, Int *n,
    }
    else BI_UpdateBuffs(bp);
 }  /* end  zgebs2d_  */
+#if (INTFACE != C_CALL)
+/** Wrapper functions to support Fortran to C calls **/
+
+F_VOID_FUNC zgebs2d(Int *ConTxt, F_CHAR scope, F_CHAR top, Int *m, Int *n,
+                     double *A, Int *lda)
+{
+   zgebs2d_( ConTxt, scope, top, m, n, A, lda);
+}
+
+F_VOID_FUNC ZGEBS2D(Int *ConTxt, F_CHAR scope, F_CHAR top, Int *m, Int *n,
+                     double *A, Int *lda)
+{
+   zgebs2d_( ConTxt, scope, top, m, n, A, lda);
+}
+
+F_VOID_FUNC ZGEBS2D_(Int *ConTxt, F_CHAR scope, F_CHAR top, Int *m, Int *n,
+                     double *A, Int *lda)
+{
+   zgebs2d_( ConTxt, scope, top, m, n, A, lda);
+}
+#endif

@@ -26,3 +26,21 @@ F_VOID_FUNC blacs_barrier_(Int *ConTxt, F_CHAR scope)
       break;
    }
 }
+#if (INTFACE != C_CALL)
+/** Wrapper functions to support Fortran to C calls **/
+
+F_VOID_FUNC blacs_barrier(Int *ConTxt, F_CHAR scope)
+{
+   blacs_barrier_( ConTxt, scope);
+}
+
+F_VOID_FUNC BLACS_BARRIER(Int *ConTxt, F_CHAR scope)
+{
+   blacs_barrier_( ConTxt, scope);
+}
+
+F_VOID_FUNC BLACS_BARRIER_(Int *ConTxt, F_CHAR scope)
+{
+   blacs_barrier_( ConTxt, scope);
+}
+#endif

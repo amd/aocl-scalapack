@@ -373,3 +373,27 @@ F_VOID_FUNC zgamn2d_(Int *ConTxt, F_CHAR scope, F_CHAR top, Int *m, Int *n,
       if (bp != &BI_AuxBuff) BI_zvmcopy(Mpval(m), Mpval(n), A, tlda, bp->Buff);
    }
 }
+#if (INTFACE != C_CALL)
+/** Wrapper functions to support Fortran to C calls **/
+
+F_VOID_FUNC zgamn2d(Int *ConTxt, F_CHAR scope, F_CHAR top, Int *m, Int *n,
+                     double *A, Int *lda, Int *rA, Int *cA, Int *ldia,
+                     Int *rdest, Int *cdest)
+{
+   zgamn2d_( ConTxt, scope, top, m, n, A, lda, rA, cA, ldia, rdest, cdest);
+}
+
+F_VOID_FUNC ZGAMN2D(Int *ConTxt, F_CHAR scope, F_CHAR top, Int *m, Int *n,
+                     double *A, Int *lda, Int *rA, Int *cA, Int *ldia,
+                     Int *rdest, Int *cdest)
+{
+   zgamn2d_( ConTxt, scope, top, m, n, A, lda, rA, cA, ldia, rdest, cdest);
+}
+
+F_VOID_FUNC ZGAMN2D_(Int *ConTxt, F_CHAR scope, F_CHAR top, Int *m, Int *n,
+                     double *A, Int *lda, Int *rA, Int *cA, Int *ldia,
+                     Int *rdest, Int *cdest)
+{
+   zgamn2d_( ConTxt, scope, top, m, n, A, lda, rA, cA, ldia, rdest, cdest);
+}
+#endif

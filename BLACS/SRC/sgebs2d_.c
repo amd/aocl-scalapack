@@ -193,3 +193,24 @@ F_VOID_FUNC sgebs2d_(Int *ConTxt, F_CHAR scope, F_CHAR top, Int *m, Int *n,
    }
    else BI_UpdateBuffs(bp);
 }  /* end  sgebs2d_  */
+#if (INTFACE != C_CALL)
+/** Wrapper functions to support Fortran to C calls **/
+
+F_VOID_FUNC sgebs2d(Int *ConTxt, F_CHAR scope, F_CHAR top, Int *m, Int *n,
+                     float *A, Int *lda)
+{
+   sgebs2d_( ConTxt, scope, top, m, n, A, lda);
+}
+
+F_VOID_FUNC SGEBS2D(Int *ConTxt, F_CHAR scope, F_CHAR top, Int *m, Int *n,
+                     float *A, Int *lda)
+{
+   sgebs2d_( ConTxt, scope, top, m, n, A, lda);
+}
+
+F_VOID_FUNC SGEBS2D_(Int *ConTxt, F_CHAR scope, F_CHAR top, Int *m, Int *n,
+                     float *A, Int *lda)
+{
+   sgebs2d_( ConTxt, scope, top, m, n, A, lda);
+}
+#endif

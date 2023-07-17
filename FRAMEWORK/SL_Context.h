@@ -95,14 +95,16 @@ typedef aocl_scalapack_global_context AOCL_SCALAPACK_GLOBAL_CONTEXT;
  *    context
  *
  *  \retval none.
-
-void aocl_scalapack_init(); */
+*/
 void aocl_scalapack_init_();
+/******************************************************************************************
+ * \brief Wrapper functions for 'aocl_scalapack_init_'
+       to enable F2C calls.
+
+ *****************************************************************************************/
+void aocl_scalapack_init();
 void AOCL_SCALAPACK_INIT();
-/* Alias Declarations to enable F2C calls
-#define aocl_scalapack_init_ aocl_scalapack_init
-#define AOCL_SCALAPACK_INIT_ aocl_scalapack_init
-#define AOCL_SCALAPACK_INIT  aocl_scalapack_init*/
+void AOCL_SCALAPACK_INIT_();
 
 /*! \ingroup aux_module
  *  \brief Deallocate and clean all initalized buffers

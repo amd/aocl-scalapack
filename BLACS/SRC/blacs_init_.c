@@ -36,3 +36,21 @@ F_VOID_FUNC blacs_gridinit_(Int *ConTxt, F_CHAR order, Int *nprow, Int *npcol)
 #endif
    free(tmpgrid);
 }
+#if (INTFACE != C_CALL)
+/** Wrapper functions to support Fortran to C calls **/
+
+F_VOID_FUNC blacs_gridinit(Int *ConTxt, F_CHAR order, Int *nprow, Int *npcol)
+{
+   blacs_gridinit_( ConTxt, order, nprow, npcol);
+}
+
+F_VOID_FUNC BLACS_GRIDINIT(Int *ConTxt, F_CHAR order, Int *nprow, Int *npcol)
+{
+   blacs_gridinit_( ConTxt, order, nprow, npcol);
+}
+
+F_VOID_FUNC BLACS_GRIDINIT_(Int *ConTxt, F_CHAR order, Int *nprow, Int *npcol)
+{
+   blacs_gridinit_( ConTxt, order, nprow, npcol);
+}
+#endif

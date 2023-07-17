@@ -50,3 +50,21 @@ F_VOID_FUNC blacs_exit_(Int *NotDone)
    BI_AuxBuff.Aops = NULL;
    BI_Stats = NULL;
 }
+#if (INTFACE != C_CALL)
+/** Wrapper functions to support Fortran to C calls **/
+
+F_VOID_FUNC blacs_exit(Int *NotDone)
+{
+   blacs_exit_( NotDone);
+}
+
+F_VOID_FUNC BLACS_EXIT(Int *NotDone)
+{
+   blacs_exit_( NotDone);
+}
+
+F_VOID_FUNC BLACS_EXIT_(Int *NotDone)
+{
+   blacs_exit_( NotDone);
+}
+#endif

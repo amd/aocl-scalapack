@@ -12,3 +12,21 @@ F_VOID_FUNC blacs_setup_(Int *mypnum, Int *nprocs)
    void Cblacs_pinfo(Int *, Int *);
    Cblacs_pinfo(mypnum, nprocs);
 }
+#if (INTFACE != C_CALL)
+/** Wrapper functions to support Fortran to C calls **/
+
+F_VOID_FUNC blacs_setup(Int *mypnum, Int *nprocs)
+{
+   blacs_setup_( mypnum, nprocs);
+}
+
+F_VOID_FUNC BLACS_SETUP(Int *mypnum, Int *nprocs)
+{
+   blacs_setup_( mypnum, nprocs);
+}
+
+F_VOID_FUNC BLACS_SETUP_(Int *mypnum, Int *nprocs)
+{
+   blacs_setup_( mypnum, nprocs);
+}
+#endif
