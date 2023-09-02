@@ -179,9 +179,9 @@
 *
 *  References
 *  ==========
-*  
+*
 *  For modifications introduced in Scalapack 2.1
-*  LAWN 295 
+*  LAWN 295
 *  New robust ScaLAPACK routine for computing the QR factorization with column pivoting
 *  Zvonimir Bujanovic, Zlatko Drmac
 *  http://www.netlib.org/lapack/lawnspdf/lawn295.pdf

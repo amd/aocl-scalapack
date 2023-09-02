@@ -161,6 +161,7 @@
 *
 *     .. Declaring 'API NAME' and its length as const objects
 *     .. API_NAME string terminated with 'NULL' character.
+*
       CHARACTER*8, PARAMETER :: API_NAME = FUNCTION_NAME // C_NULL_CHAR
       INTEGER, PARAMETER :: LEN_API_NAME = 8
 #endif
@@ -182,12 +183,16 @@
       INTRINSIC          MIN, MOD
 *     ..
 *
-*     Initialize framework context structure if not initialized
+*     .. Executable Statements ..
 *
+*     Initialize framework context structure if not initialized
 *
       CALL AOCL_SCALAPACK_INIT( )
 *
-*     .. Executable Statements ..
+*
+*     Capture the subroutine entry in the trace file
+*
+      AOCL_DTL_TRACE_ENTRY_F
 *
 *     Initialize framework context structure if not initialized
 *
