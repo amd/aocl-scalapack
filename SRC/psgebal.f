@@ -1,3 +1,9 @@
+*
+*     Copyright (c) 2023 Advanced Micro Devices, Inc.  All rights reserved.
+*
+*
+#include "SL_Context_fortran_include.h"
+*
       SUBROUTINE PSGEBAL( JOB, N, A, DESCA, ILO, IHI, SCALE, INFO )
 *
 *     Contribution from the Department of Computing Science and HPC2N,
@@ -8,6 +14,7 @@
 *     Univ. of Colorado Denver and University of California, Berkeley.
 *     January, 2012
 *
+      USE LINK_TO_C_GLOBALS
       IMPLICIT NONE
 *
 *     .. Scalar Arguments ..
@@ -207,9 +214,32 @@
       INTRINSIC          ABS, MAX, MIN
 *     ..
 *     .. Executable Statements ..
+*
+*     Initialize framework context structure if not initialized
+*
+*
+      CALL AOCL_SCALAPACK_INIT( )
+*
+*
+*     Capture the subroutine entry in the trace file
+*
+      AOCL_DTL_TRACE_ENTRY_F
       INFO = 0
       ICTXT = DESCA( CTXT_ )
       CALL BLACS_GRIDINFO( ICTXT, NPROW, NPCOL, MYROW, MYCOL )
+*
+*     Update the log buffer with the scalar arguments details,
+*     MPI process grid information and write to the log file
+*
+      IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
+         WRITE(LOG_BUF,102)  JOB, IHI, ILO, INFO, N, NPROW,
+     $            NPCOL, MYROW, MYCOL, eos_str
+ 102     FORMAT('PSGEBAL inputs: ,JOB:',A5,', IHI:',I5,
+     $           ', ILO:',I5,', INFO:',I5,', N:',I5,',  NPROW: ', I5,
+     $           ', NPCOL: ', I5 ,', MYROW: ', I5,
+     $           ', MYCOL: ', I5, A1)
+         AOCL_DTL_LOG_ENTRY_F
+      END IF
 *
 *     Test the input parameters.
 *
@@ -223,6 +253,10 @@
       END IF
       IF( INFO.NE.0 ) THEN
          CALL PXERBLA( ICTXT, 'PSGEBAL', -INFO )
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
 *
@@ -384,6 +418,10 @@
 *
             INFO = -3
             CALL PXERBLA( ICTXT, 'PDGEBAL', -INFO )
+*
+*           Capture the subroutine exit in the trace file
+*
+            AOCL_DTL_TRACE_EXIT_F
             RETURN
          END IF
          F = F*SCLFAC
@@ -436,6 +474,10 @@
       ILO = K
       IHI = L
 *
+*
+*     Capture the subroutine exit in the trace file
+*
+      AOCL_DTL_TRACE_EXIT_F
       RETURN
 *
 *     End of PSGEBAL

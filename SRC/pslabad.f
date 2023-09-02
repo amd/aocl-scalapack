@@ -1,3 +1,9 @@
+*
+*     Copyright (c) 2023 Advanced Micro Devices, Inc.  All rights reserved.
+*
+*
+#include "SL_Context_fortran_include.h"
+*
       SUBROUTINE PSLABAD( ICTXT, SMALL, LARGE )
 *
 *  -- ScaLAPACK auxiliary routine (version 1.7) --
@@ -5,6 +11,7 @@
 *     and University of California, Berkeley.
 *     May 1, 1997
 *
+      USE LINK_TO_C_GLOBALS
 *     .. Scalar Arguments ..
       INTEGER            ICTXT
       REAL               LARGE, SMALL
@@ -55,6 +62,16 @@
 *     ..
 *     .. Executable Statements ..
 *
+*     Initialize framework context structure if not initialized
+*
+*
+      CALL AOCL_SCALAPACK_INIT( )
+*
+*
+*     Capture the subroutine entry in the trace file
+*
+      AOCL_DTL_TRACE_ENTRY_F
+*
 *     If it looks like we're on a Cray, take the square root of
 *     SMALL and LARGE to avoid overflow and underflow problems.
 *
@@ -69,6 +86,10 @@
       CALL SGAMN2D( ICTXT, 'All', ' ', 1, 1, LARGE, 1, IDUMM,
      $              IDUMM, -1, -1, IDUMM )
 *
+*
+*     Capture the subroutine exit in the trace file
+*
+      AOCL_DTL_TRACE_EXIT_F
       RETURN
 *
 *     End of PSLABAD

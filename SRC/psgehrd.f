@@ -1,3 +1,9 @@
+*
+*     Copyright (c) 2023 Advanced Micro Devices, Inc.  All rights reserved.
+*
+*
+#include "SL_Context_fortran_include.h"
+*
       SUBROUTINE PSGEHRD( N, ILO, IHI, A, IA, JA, DESCA, TAU, WORK,
      $                    LWORK, INFO )
 *
@@ -6,6 +12,7 @@
 *     and University of California, Berkeley.
 *     May 25, 2001
 *
+      USE LINK_TO_C_GLOBALS
 *     .. Scalar Arguments ..
       INTEGER             IA, IHI, ILO, INFO, JA, LWORK, N
 *     ..
@@ -229,10 +236,34 @@
 *     ..
 *     .. Executable Statements ..
 *
+*     Initialize framework context structure if not initialized
+*
+*
+      CALL AOCL_SCALAPACK_INIT( )
+*
+*
+*     Capture the subroutine entry in the trace file
+*
+      AOCL_DTL_TRACE_ENTRY_F
+*
 *     Get grid parameters
 *
       ICTXT = DESCA( CTXT_ )
       CALL BLACS_GRIDINFO( ICTXT, NPROW, NPCOL, MYROW, MYCOL )
+*
+*     Update the log buffer with the scalar arguments details,
+*     MPI process grid information and write to the log file
+*
+      IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
+         WRITE(LOG_BUF,102)  IA, IHI, ILO, INFO, JA, LWORK,
+     $            N, NPROW, NPCOL, MYROW, MYCOL, eos_str
+ 102     FORMAT('PSGEHRD inputs: ,IA:',I5,', IHI:',I5,', ILO:',I5,
+     $           ', INFO:',I5,', JA:',I5,', LWORK:',I5,
+     $           ', N:',I5,',  NPROW: ', I5,
+     $           ', NPCOL: ', I5 ,', MYROW: ', I5,
+     $           ', MYCOL: ', I5, A1)
+         AOCL_DTL_LOG_ENTRY_F
+      END IF
 *
 *     Test the input parameters
 *
@@ -288,8 +319,16 @@ C            ELSE IF( IROFFA.NE.ICOFFA .OR. IROFFA.NE.0 ) THEN
 *
       IF( INFO.NE.0 ) THEN
          CALL PXERBLA( ICTXT, 'PSGEHRD', -INFO )
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       ELSE IF( LQUERY ) THEN
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
 *
@@ -310,8 +349,13 @@ C            ELSE IF( IROFFA.NE.ICOFFA .OR. IROFFA.NE.0 ) THEN
 *
 *     Quick return if possible
 *
-      IF( IHI-ILO.LE.0 )
-     $   RETURN
+      IF( IHI-ILO.LE.0 ) THEN
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
+         RETURN
+      END IF
 *
       CALL PB_TOPGET( ICTXT, 'Combine', 'Columnwise', COLCTOP )
       CALL PB_TOPGET( ICTXT, 'Combine', 'Rowwise',    ROWCTOP )
@@ -375,6 +419,10 @@ C            ELSE IF( IROFFA.NE.ICOFFA .OR. IROFFA.NE.0 ) THEN
 *
       WORK( 1 ) = FLOAT( LWMIN )
 *
+*
+*     Capture the subroutine exit in the trace file
+*
+      AOCL_DTL_TRACE_EXIT_F
       RETURN
 *
 *     End of PSGEHRD

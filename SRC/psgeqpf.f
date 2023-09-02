@@ -1,3 +1,9 @@
+*
+*     Copyright (c) 2023 Advanced Micro Devices, Inc.  All rights reserved.
+*
+*
+#include "SL_Context_fortran_include.h"
+*
       SUBROUTINE PSGEQPF( M, N, A, IA, JA, DESCA, IPIV, TAU, WORK,
      $                    LWORK, INFO )
 *
@@ -6,6 +12,7 @@
 *     and University of California, Berkeley.
 *     November 20, 2019
 *
+      USE LINK_TO_C_GLOBALS
 *     .. Scalar Arguments ..
       INTEGER            IA, JA, INFO, LWORK, M, N
 *     ..
@@ -172,9 +179,9 @@
 *
 *  References
 *  ==========
-*  
+*
 *  For modifications introduced in Scalapack 2.1
-*  LAWN 295 
+*  LAWN 295
 *  New robust ScaLAPACK routine for computing the QR factorization with column pivoting
 *  Zvonimir Bujanovic, Zlatko Drmac
 *  http://www.netlib.org/lapack/lawnspdf/lawn295.pdf
@@ -221,10 +228,33 @@
 *     ..
 *     .. Executable Statements ..
 *
+*     Initialize framework context structure if not initialized
+*
+*
+      CALL AOCL_SCALAPACK_INIT( )
+*
+*
+*     Capture the subroutine entry in the trace file
+*
+      AOCL_DTL_TRACE_ENTRY_F
+*
 *     Get grid parameters
 *
       ICTXT = DESCA( CTXT_ )
       CALL BLACS_GRIDINFO( ICTXT, NPROW, NPCOL, MYROW, MYCOL )
+*
+*     Update the log buffer with the scalar arguments details,
+*     MPI process grid information and write to the log file
+*
+      IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
+         WRITE(LOG_BUF,102)  IA, JA, INFO, LWORK, M, N,
+     $            NPROW, NPCOL, MYROW, MYCOL, eos_str
+ 102     FORMAT('PSGEQPF inputs: ,IA:',I5,', JA:',I5,', INFO:',I5,
+     $           ', LWORK:',I5,', M:',I5,', N:',I5,
+     $           ',  NPROW: ', I5,', NPCOL: ', I5 ,
+     $           ', MYROW: ', I5,', MYCOL: ', I5, A1)
+         AOCL_DTL_LOG_ENTRY_F
+      END IF
 *
 *     Test the input parameters
 *
@@ -263,15 +293,28 @@
 *
       IF( INFO.NE.0 ) THEN
          CALL PXERBLA( ICTXT, 'PSGEQPF', -INFO )
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       ELSE IF( LQUERY ) THEN
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
 *
 *     Quick return if possible
 *
-      IF( M.EQ.0 .OR. N.EQ.0 )
-     $   RETURN
+      IF( M.EQ.0 .OR. N.EQ.0 ) THEN
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
+         RETURN
+      END IF
 *
       CALL INFOG2L( IA, JA, DESCA, NPROW, NPCOL, MYROW, MYCOL, IIA, JJA,
      $              IAROW, IACOL )
@@ -544,6 +587,10 @@
 *
       WORK( 1 ) = REAL( LWMIN )
 *
+*
+*     Capture the subroutine exit in the trace file
+*
+      AOCL_DTL_TRACE_EXIT_F
       RETURN
 *
 *     End of PSGEQPF

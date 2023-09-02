@@ -1,4 +1,10 @@
+*
+*     Copyright (c) 2023 Advanced Micro Devices, Inc.  All rights reserved.
+*
 
+*
+#include "SL_Context_fortran_include.h"
+*
       SUBROUTINE PSGESVD(JOBU,JOBVT,M,N,A,IA,JA,DESCA,S,U,IU,JU,DESCU,
      +                   VT,IVT,JVT,DESCVT,WORK,LWORK,INFO)
 *
@@ -8,6 +14,7 @@
 *     Jan 2006
 
 *
+      USE LINK_TO_C_GLOBALS
 *     .. Scalar Arguments ..
       CHARACTER JOBU,JOBVT
       INTEGER IA,INFO,IU,IVT,JA,JU,JVT,LWORK,M,N
@@ -321,10 +328,40 @@
       INTRINSIC MAX,MIN,SQRT,REAL
 *     ..
 *     .. Executable Statements ..
+*
+*     Initialize framework context structure if not initialized
+*
+*
+      CALL AOCL_SCALAPACK_INIT( )
+*
+*
+*     Capture the subroutine entry in the trace file
+*
+      AOCL_DTL_TRACE_ENTRY_F
 *     This is just to keep ftnchek happy
+*
+*     Capture the subroutine exit in the trace file
+*
+      AOCL_DTL_TRACE_EXIT_F
       IF (BLOCK_CYCLIC_2D*DTYPE_*LLD_*MB_*M_*NB_*N_.LT.0) RETURN
 *
       CALL BLACS_GRIDINFO(DESCA(CTXT_),NPROW,NPCOL,MYPROW,MYPCOL)
+*
+*     Update the log buffer with the scalar arguments details,
+*     MPI process grid information and write to the log file
+*
+      IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
+         WRITE(LOG_BUF,102)  JOBU,JOBVT, IA,INFO,IU,IVT,
+     $           JA,JU,JVT,LWORK,M,N, NPROW, NPCOL, MYROW,
+     $            MYCOL, eos_str
+ 102     FORMAT('PSGESVD inputs: ,JOBU:',A5,', JOBVT:',A5,
+     $           ', IA:',I5,', INFO:',I5,', IU:',I5,
+     $           ', IVT:',I5,', JA:',I5,', JU:',I5,
+     $           ', JVT:',I5,', LWORK:',I5,', M:',I5,
+     $           ', N:',I5,',  NPROW: ', I5,', NPCOL: ', I5 ,
+     $           ', MYROW: ', I5,', MYCOL: ', I5, A1)
+         AOCL_DTL_LOG_ENTRY_F
+      END IF
       ISCALE = 0
       INFO = 0
 *
@@ -472,6 +509,10 @@
 *
       IF (INFO.NE.0) THEN
           CALL PXERBLA(DESCA(CTXT_),'PSGESVD',-INFO)
+*
+*         Capture the subroutine exit in the trace file
+*
+          AOCL_DTL_TRACE_EXIT_F
           RETURN
       ELSE IF (LWORK.EQ.-1) THEN
           GO TO 40
@@ -636,5 +677,9 @@
 *
 *     End of PSGESVD
 *
+*
+*     Capture the subroutine exit in the trace file
+*
+      AOCL_DTL_TRACE_EXIT_F
       RETURN
       END
