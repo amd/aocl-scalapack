@@ -241,8 +241,8 @@
      $            MYROW, MYCOL, eos_str
  102     FORMAT('PSGECON inputs: ,NORM:',A5,', IA:',I5,
      $           ', INFO:',I5,', JA:',I5,', LIWORK:',I5,
-     $           ', LWORK:',I5,', N:',I5,', ANORM:',I5,
-     $           ', RCOND:',I5,',  NPROW: ', I5,
+     $           ', LWORK:',I5,', N:',I5,', ANORM:',F9.4,
+     $           ', RCOND:',F9.4,',  NPROW: ', I5,
      $           ', NPCOL: ', I5 ,', MYROW: ', I5,', MYCOL: ', I5, A1)
          AOCL_DTL_LOG_ENTRY_F
       END IF
