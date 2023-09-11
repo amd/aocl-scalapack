@@ -1,3 +1,9 @@
+*
+*     Copyright (c) 2023 Advanced Micro Devices, Inc.  All rights reserved.
+*
+*
+#include "SL_Context_fortran_include.h"
+*
       SUBROUTINE PSLAQR2( WANTT, WANTZ, N, KTOP, KBOT, NW, A, DESCA,
      $                    ILOZ, IHIZ, Z, DESCZ, NS, ND, SR, SI, T, LDT,
      $                    V, LDV, WR, WI, WORK, LWORK )
@@ -9,6 +15,7 @@
 *     Univ. of Tennessee, Univ. of California Berkeley, Univ. of Colorado Denver
 *     May 1 2012
 *
+      USE LINK_TO_C_GLOBALS
       IMPLICIT NONE
 *
 *     .. Scalar Arguments ..
@@ -243,10 +250,40 @@
 *     ..
 *     .. Executable Statements ..
 *
+*     Initialize framework context structure if not initialized
+*
+*
+      CALL AOCL_SCALAPACK_INIT( )
+*
+*
+*     Capture the subroutine entry in the trace file
+*
+      AOCL_DTL_TRACE_ENTRY_F
+*
+*     Update the log buffer with the scalar arguments details,
+*     MPI process grid information and write to the log file
+*
+      IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
+         WRITE(LOG_BUF,102)  IHIZ, ILOZ, KBOT, KTOP, LDT,
+     $            LDV, LWORK, N, ND,                   NS,
+     $            NW, WANTT, WANTZ, eos_str
+ 102     FORMAT('PSLAQR2 inputs: ,IHIZ:',I5,', ILOZ:',I5,
+     $           ', KBOT:',I5,', KTOP:',I5,', LDT:',I5,
+     $           ', LDV:',I5,', LWORK:',I5,', N:',I5,
+     $           ', ND:',I5,', NS:',I5,', NW:',I5,
+     $           ', WANTT:',L1,', WANTZ:',L1, A1 )
+         AOCL_DTL_LOG_ENTRY_F
+      END IF
+*
       INFO = 0
 *
-      IF( N.EQ.0 )
-     $   RETURN
+      IF( N.EQ.0 ) THEN
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
+         RETURN
+      END IF
 *
 *     NODE (IAFIRST,JAFIRST) OWNS A(1,1)
 *
@@ -665,6 +702,10 @@
             END IF
          IF( II .LT. ND ) GOTO 160
       END IF
+*
+*     Capture the subroutine exit in the trace file
+*
+      AOCL_DTL_TRACE_EXIT_F
 *
 *     END OF PSLAQR2
 *

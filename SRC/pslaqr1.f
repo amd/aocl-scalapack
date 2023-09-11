@@ -1,3 +1,9 @@
+*
+*     Copyright (c) 2023 Advanced Micro Devices, Inc.  All rights reserved.
+*
+*
+#include "SL_Context_fortran_include.h"
+*
       RECURSIVE SUBROUTINE PSLAQR1( WANTT, WANTZ, N, ILO, IHI, A,
      $                              DESCA, WR, WI, ILOZ, IHIZ, Z,
      $                              DESCZ, WORK, LWORK, IWORK,
@@ -11,6 +17,7 @@
 *     Univ. of Colorado Denver and University of California, Berkeley.
 *     January, 2012
 *
+      USE LINK_TO_C_GLOBALS
       IMPLICIT NONE
 *
 *     .. Scalar Arguments ..
@@ -303,11 +310,39 @@
 *     ..
 *     .. Executable Statements ..
 *
+*     Initialize framework context structure if not initialized
+*
+*
+      CALL AOCL_SCALAPACK_INIT( )
+*
+*
+*     Capture the subroutine entry in the trace file
+*
+      AOCL_DTL_TRACE_ENTRY_F
+*
+*     Update the log buffer with the scalar arguments details,
+*     MPI process grid information and write to the log file
+*
+      IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
+         WRITE(LOG_BUF,102)  WANTT, WANTZ, IHI, IHIZ, ILO,
+     $            ILOZ, ILWORK, INFO, LWORK, N, eos_str
+ 102     FORMAT('PSLAQR1 inputs: ,WANTT:',L1,', WANTZ:',L1,
+     $           ', IHI:',I5,', IHIZ:',I5,', ILO:',I5,
+     $           ', ILOZ:',I5,', ILWORK:',I5,', INFO:',I5,
+     $           ', LWORK:',I5,', N:',I5, A1 )
+         AOCL_DTL_LOG_ENTRY_F
+      END IF
+*
       INFO = 0
 *
       ITERMAX = 30*( IHI-ILO+1 )
-      IF( N.EQ.0 )
-     $   RETURN
+      IF( N.EQ.0 ) THEN
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
+         RETURN
+      END IF
 *
 *     NODE (IAFIRST,JAFIRST) OWNS A(1,1)
 *
@@ -341,6 +376,10 @@
       IF( LWORK.EQ.-1 .OR. ILWORK.EQ.-1 ) THEN
          WORK( 1 ) = FLOAT( LWKOPT )
          IWORK( 1 ) = 3
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       ELSEIF( LWORK.LT.LWKOPT ) THEN
          INFO = -15
@@ -371,6 +410,10 @@
       IF( INFO.LT.0 ) THEN
          CALL PXERBLA( CONTXT, 'PSLAQR1', -INFO )
          WORK( 1 ) = FLOAT( LWKOPT )
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
 *
@@ -400,6 +443,10 @@
          END IF
          WI( ILO ) = ZERO
          WORK( 1 ) = FLOAT( LWKOPT )
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
 *
@@ -415,6 +462,10 @@
      $                 WORK( S2+1 ), NH, WORK( S3+1 ), 4*LDS*LDS,
      $                 INFO )
          WORK( 1 ) = FLOAT( LWKOPT )
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
 *
@@ -1326,7 +1377,7 @@
      $             ( MOD( ISTART-1, HBL ).LT.HBL-2 ) .AND.
      $             ( ICURROW( KI ).EQ.MYROW ) ) THEN
                   IROW1 = MIN( K2( KI )+1, I-1 ) + 1
-                  CALL INFOG1L( IROW1, HBL, NPCOL, MYCOL, DESCA(CSRC_), 
+                  CALL INFOG1L( IROW1, HBL, NPCOL, MYCOL, DESCA(CSRC_),
      $                          ITMP1, ITMP2 )
                   ITMP2 = NUMROC( I2, HBL, MYCOL, DESCA(CSRC_), NPCOL )
                   II = KROW( KI )
@@ -1373,7 +1424,7 @@
 *
                         IROW1 = KROW( KI )
                         IROW2 = KP2ROW( KI )
-                        CALL INFOG1L( ITMP1, HBL, NPCOL, MYCOL, 
+                        CALL INFOG1L( ITMP1, HBL, NPCOL, MYCOL,
      $                       DESCA(CSRC_), ICOL1, ICOL2 )
                         ICOL2 = NUMROC(I2,HBL,MYCOL,DESCA(CSRC_),NPCOL )
                         IF( ( MOD( K-1, HBL ).LT.HBL-2 ) .OR.
@@ -1441,7 +1492,7 @@
 *
                         IROW1 = KROW( KI ) + K - ISTART
                         IROW2 = KP2ROW( KI ) + K - ISTART
-                        CALL INFOG1L( ITMP1, HBL, NPCOL, MYCOL, 
+                        CALL INFOG1L( ITMP1, HBL, NPCOL, MYCOL,
      $                       DESCA(CSRC_),ICOL1, ICOL2 )
                         ICOL2 = NUMROC(I2,HBL,MYCOL,DESCA(CSRC_),NPCOL )
                         IF( ( MOD( K-1, HBL ).EQ.HBL-2 ) .AND.
@@ -1531,7 +1582,7 @@
 *
                         IROW1 = KROW( KI ) + K - ISTART
                         IROW2 = KP2ROW( KI ) + K - ISTART
-                        CALL INFOG1L( ITMP1, HBL, NPCOL, MYCOL, 
+                        CALL INFOG1L( ITMP1, HBL, NPCOL, MYCOL,
      $                       DESCA(CSRC_), ICOL1, ICOL2 )
                         ICOL2 = NUMROC(I2,HBL,MYCOL,DESCA(CSRC_),NPCOL )
                         IF( ( MOD( K-1, HBL ).EQ.HBL-2 ) .AND.
@@ -1972,9 +2023,9 @@
                            CALL SGESD2D( CONTXT, LIHIH-LILOH+1, 1,
      $                                   A( ( ITMP1-1 )*LDA+LILOH ),
      $                                   LDA, MYROW, RIGHT )
-                           CALL INFOG1L( K, HBL, NPCOL, MYCOL, 
+                           CALL INFOG1L( K, HBL, NPCOL, MYCOL,
      $                          DESCA(CSRC_), ITMP1, ITMP2 )
-                           ITMP2 = NUMROC( K+1, HBL, MYCOL, 
+                           ITMP2 = NUMROC( K+1, HBL, MYCOL,
      $                          DESCA(CSRC_), NPCOL )
                            CALL SGERV2D( CONTXT, LIHIH-LILOH+1, 1,
      $                                   A( ( ITMP1-1 )*LDA+LILOH ),
@@ -2090,7 +2141,7 @@
                IF( ( MOD( K1( KI )-1, HBL ).GE.HBL-2 ) .AND.
      $             ( ( MYCOL.EQ.ICURCOL( KI ) ) .OR. ( RIGHT.EQ.
      $             ICURCOL( KI ) ) ) .AND. ( NPCOL.GT.1 ) ) THEN
-                  CALL INFOG1L( K2( KI )+1, HBL, NPCOL, MYCOL, 
+                  CALL INFOG1L( K2( KI )+1, HBL, NPCOL, MYCOL,
      $                 DESCA(CSRC_), KCOL( KI ), ITMP2 )
                   ITMP2 = NUMROC( N, HBL, MYCOL, DESCA(CSRC_), NPCOL )
                END IF
@@ -2099,7 +2150,7 @@
      $             ICURCOL( KI ) ) ) .AND. ( NPCOL.GT.1 ) ) THEN
                   CALL INFOG1L( 1, HBL, NPCOL, MYCOL,DESCA(CSRC_),ITMP2,
      $                          KP2COL( KI ) )
-                  KP2COL( KI ) = NUMROC( K2( KI )+3, HBL, MYCOL, 
+                  KP2COL( KI ) = NUMROC( K2( KI )+3, HBL, MYCOL,
      $                 DESCA(CSRC_), NPCOL )
                END IF
                K1( KI ) = K2( KI ) + 1
@@ -2131,6 +2182,10 @@
 *
       INFO = I
       WORK( 1 ) = FLOAT( LWKOPT )
+*
+*     Capture the subroutine exit in the trace file
+*
+      AOCL_DTL_TRACE_EXIT_F
       RETURN
 *
   430 CONTINUE
@@ -2200,6 +2255,10 @@
      $                    INFO )
             IF( INFO.NE.0 ) THEN
                WORK( 1 ) = FLOAT( LWKOPT )
+*
+*              Capture the subroutine exit in the trace file
+*
+               AOCL_DTL_TRACE_EXIT_F
                RETURN
             END IF
             IF( NODE.NE.0 ) THEN
@@ -2239,6 +2298,10 @@
       IWORK( 1 ) = TOTIT
       IWORK( 2 ) = TOTSW
       IWORK( 3 ) = TOTNS
+*
+*     Capture the subroutine exit in the trace file
+*
+      AOCL_DTL_TRACE_EXIT_F
       RETURN
 *
 *     END OF PSLAQR1

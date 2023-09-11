@@ -1,3 +1,9 @@
+*
+*     Copyright (c) 2023 Advanced Micro Devices, Inc.  All rights reserved.
+*
+*
+#include "SL_Context_fortran_include.h"
+*
       SUBROUTINE PSLAMVE( UPLO, M, N, A, IA, JA, DESCA, B, IB, JB,
      $                    DESCB, DWORK )
 *
@@ -8,6 +14,7 @@
 *     Univ. of Tennessee, Univ. of California Berkeley, Univ. of Colorado Denver
 *     May 1 2012
 *
+      USE LINK_TO_C_GLOBALS
       IMPLICIT NONE
 *
 *     .. Scalar Arguments ..
@@ -167,10 +174,33 @@
 *     ..
 *     .. Executable Statements ..
 *
+*     Initialize framework context structure if not initialized
+*
+*
+      CALL AOCL_SCALAPACK_INIT( )
+*
+*
+*     Capture the subroutine entry in the trace file
+*
+      AOCL_DTL_TRACE_ENTRY_F
+*
 *     Find underlying mesh properties.
 *
       ICTXT = DESCA( CTXT_ )
       CALL BLACS_GRIDINFO( ICTXT, NPROW, NPCOL, MYROW, MYCOL )
+*
+*     Update the log buffer with the scalar arguments details,
+*     MPI process grid information and write to the log file
+*
+      IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
+         WRITE(LOG_BUF,102)  UPLO, IA, IB, JA, JB, M, N,
+     $            NPROW, NPCOL, MYROW, MYCOL, eos_str
+ 102     FORMAT('PSLAMVE inputs: ,UPLO:',A5,', IA:',I5,
+     $           ', IB:',I5,', JA:',I5,', JB:',I5,', M:',I5,
+     $           ', N:',I5,',  NPROW: ', I5,', NPCOL: ', I5 ,
+     $           ', MYROW: ', I5,', MYCOL: ', I5, A1)
+         AOCL_DTL_LOG_ENTRY_F
+      END IF
 *
 *     Decode input parameters.
 *
@@ -198,6 +228,10 @@
      $        DESCB )
       END IF
 *
+*
+*     Capture the subroutine exit in the trace file
+*
+      AOCL_DTL_TRACE_EXIT_F
       RETURN
 *
 *     End of PSLAMVE

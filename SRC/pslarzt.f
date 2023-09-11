@@ -1,3 +1,9 @@
+*
+*     Copyright (c) 2023 Advanced Micro Devices, Inc.  All rights reserved.
+*
+*
+#include "SL_Context_fortran_include.h"
+*
       SUBROUTINE PSLARZT( DIRECT, STOREV, N, K, V, IV, JV, DESCV, TAU,
      $                    T, WORK )
 *
@@ -6,6 +12,7 @@
 *     and University of California, Berkeley.
 *     May 1, 1997
 *
+      USE LINK_TO_C_GLOBALS
 *     .. Scalar Arguments ..
       CHARACTER          DIRECT, STOREV
       INTEGER            IV, JV, K, N
@@ -211,6 +218,28 @@
 *     ..
 *     .. Executable Statements ..
 *
+*     Initialize framework context structure if not initialized
+*
+*
+      CALL AOCL_SCALAPACK_INIT( )
+*
+*
+*     Capture the subroutine entry in the trace file
+*
+      AOCL_DTL_TRACE_ENTRY_F
+*
+*     Update the log buffer with the scalar arguments details,
+*     MPI process grid information and write to the log file
+*
+      IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
+         WRITE(LOG_BUF,102)  DIRECT, STOREV, IV, JV, K,
+     $            N, eos_str
+ 102     FORMAT('PSLARZT inputs: ,DIRECT:',A5,', STOREV:',A5,
+     $           ', IV:',I5,', JV:',I5,', K:',I5,
+     $           ', N:',I5, A1 )
+         AOCL_DTL_LOG_ENTRY_F
+      END IF
+*
 *     Get grid parameters
 *
       ICTXT = DESCV( CTXT_ )
@@ -227,6 +256,10 @@
       IF( INFO.NE.0 ) THEN
          CALL PXERBLA( ICTXT, 'PSLARZT', -INFO )
          CALL BLACS_ABORT( ICTXT, 1 )
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
 *
@@ -292,6 +325,10 @@
 *
       END IF
 *
+*
+*     Capture the subroutine exit in the trace file
+*
+      AOCL_DTL_TRACE_EXIT_F
       RETURN
 *
 *     End of PSLARZT

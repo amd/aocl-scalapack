@@ -1,3 +1,9 @@
+*
+*     Copyright (c) 2023 Advanced Micro Devices, Inc.  All rights reserved.
+*
+*
+#include "SL_Context_fortran_include.h"
+*
       SUBROUTINE PSLAQR5( WANTT, WANTZ, KACC22, N, KTOP, KBOT, NSHFTS,
      $                    SR, SI, H, DESCH, ILOZ, IHIZ, Z, DESCZ, WORK,
      $                    LWORK, IWORK, LIWORK )
@@ -9,6 +15,7 @@
 *     Univ. of Tennessee, Univ. of California Berkeley, Univ. of Colorado Denver
 *     May 1 2012
 *
+      USE LINK_TO_C_GLOBALS
       IMPLICIT NONE
 *
 *     .. Scalar Arguments ..
@@ -69,7 +76,7 @@
 *          parts of the NSHFTS shifts of origin that define the
 *          multi-shift QR sweep.
 *
-*   H      (local input/output) REAL             array of size 
+*   H      (local input/output) REAL             array of size
 *          (DESCH(LLD_),*)
 *          On input H contains a Hessenberg matrix.  On output a
 *          multi-shift QR sweep with shifts SR(J)+i*SI(J) is applied
@@ -181,9 +188,36 @@
 *     ..
 *     .. Executable Statements ..
 *
+*     Initialize framework context structure if not initialized
+*
+*
+      CALL AOCL_SCALAPACK_INIT( )
+*
+*
+*     Capture the subroutine entry in the trace file
+*
+      AOCL_DTL_TRACE_ENTRY_F
+*
       INFO = 0
       ICTXT = DESCH( CTXT_ )
       CALL BLACS_GRIDINFO( ICTXT, NPROW, NPCOL, MYROW, MYCOL )
+*
+*     Update the log buffer with the scalar arguments details,
+*     MPI process grid information and write to the log file
+*
+      IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
+         WRITE(LOG_BUF,102)  IHIZ, ILOZ, KACC22, KBOT, KTOP,
+     $            N, NSHFTS,                   LWORK,
+     $            LIWORK, WANTT, WANTZ, NPROW, NPCOL,
+     $            MYROW, MYCOL, eos_str
+ 102     FORMAT('PSLAQR5 inputs: ,IHIZ:',I5,', ILOZ:',I5,
+     $           ', KACC22:',I5,', KBOT:',I5,', KTOP:',I5,
+     $           ', N:',I5,', NSHFTS:',I5,', LWORK:',I5,
+     $           ', LIWORK:',I5,', WANTT:',L1,
+     $           ', WANTZ:',L1,',  NPROW: ', I5,', NPCOL: ', I5 ,
+     $           ', MYROW: ', I5,', MYCOL: ', I5, A1)
+         AOCL_DTL_LOG_ENTRY_F
+      END IF
       NPROCS = NPROW*NPCOL
       LLDH = DESCH( LLD_ )
       LLDZ = DESCZ( LLD_ )
@@ -193,14 +227,24 @@
 *
 *     If there are no shifts, then there is nothing to do.
 *
-      IF( .NOT. LQUERY .AND. NSHFTS.LT.2 )
-     $   RETURN
+      IF( .NOT. LQUERY .AND. NSHFTS.LT.2 ) THEN
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
+         RETURN
+      END IF
 *
 *     If the active block is empty or 1-by-1, then there
 *     is nothing to do.
 *
-      IF( .NOT. LQUERY .AND. KTOP.GE.KBOT )
-     $   RETURN
+      IF( .NOT. LQUERY .AND. KTOP.GE.KBOT ) THEN
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
+         RETURN
+      END IF
 *
 *     Shuffle shifts into pairs of real shifts and pairs of
 *     complex conjugate shifts assuming complex conjugate
@@ -307,12 +351,22 @@
      $        MAX( HROWS*NB, HCOLS*NB )
          WORK(1)  = FLOAT(LWKOPT)
          IWORK(1) = 5*NUMWIN
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
 *
 *     Check if KTOP and KBOT are valid.
 *
-      IF( KTOP.LT.1 .OR. KBOT.GT.N ) RETURN
+      IF( KTOP.LT.1 .OR. KBOT.GT.N ) THEN
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
+	     RETURN
+      END IF
 *
 *     Create and chase NUMWIN chains of NBMPS bulges.
 *
@@ -941,7 +995,13 @@
 *
 *        If we have no more windows, return.
 *
-         IF( ANMWIN.LT.1 ) RETURN
+         IF( ANMWIN.LT.1 ) THEN
+*
+*           Capture the subroutine exit in the trace file
+*
+            AOCL_DTL_TRACE_EXIT_F
+	        RETURN
+         END IF
 *
       ELSE
 *
@@ -2247,7 +2307,13 @@
 *
 *        If we have no more windows, return.
 *
-         IF( ANMWIN.LT.1 ) RETURN
+         IF( ANMWIN.LT.1 ) THEN
+*
+*           Capture the subroutine exit in the trace file
+*
+            AOCL_DTL_TRACE_EXIT_F
+	        RETURN
+         END IF
 *
 *        Check for any more windows to bring over the border.
 *
@@ -2269,6 +2335,10 @@
 *     Go back to local bulge-chase and see if there is more work to do.
 *
       GO TO 20
+*
+*     Capture the subroutine exit in the trace file
+*
+      AOCL_DTL_TRACE_EXIT_F
 *
 *     End of PSLAQR5
 *

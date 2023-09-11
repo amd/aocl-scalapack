@@ -1,3 +1,9 @@
+*
+*     Copyright (c) 2023 Advanced Micro Devices, Inc.  All rights reserved.
+*
+*
+#include "SL_Context_fortran_include.h"
+*
       SUBROUTINE PSLAED1( N, N1, D, ID, Q, IQ, JQ, DESCQ, RHO, WORK,
      $                    IWORK, INFO )
 *
@@ -6,6 +12,7 @@
 *     and University of California, Berkeley.
 *     December 31, 1998
 *
+      USE LINK_TO_C_GLOBALS
 *     .. Scalar Arguments ..
       INTEGER            ID, INFO, IQ, JQ, N, N1
       REAL               RHO
@@ -138,9 +145,37 @@
 *     ..
 *     .. Executable Statements ..
 *
+*     Initialize framework context structure if not initialized
+*
+*
+      CALL AOCL_SCALAPACK_INIT( )
+*
+*
+*     Capture the subroutine entry in the trace file
+*
+      AOCL_DTL_TRACE_ENTRY_F
+*
+*     Update the log buffer with the scalar arguments details,
+*     MPI process grid information and write to the log file
+*
+      IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
+         WRITE(LOG_BUF,102)  ID, INFO, IQ, JQ, N, N1, RHO,
+     $            eos_str
+ 102     FORMAT('PSLAED1 inputs: ,ID:',I5,', INFO:',I5,
+     $           ', IQ:',I5,', JQ:',I5,', N:',I5,', N1:',I5,
+     $           ', RHO:',F9.4, A1 )
+         AOCL_DTL_LOG_ENTRY_F
+      END IF
+*
 *       This is just to keep ftnchek and toolpack/1 happy
       IF( BLOCK_CYCLIC_2D*CSRC_*CTXT_*DLEN_*DTYPE_*LLD_*MB_*M_*NB_*N_*
-     $    RSRC_.LT.0 )RETURN
+     $    RSRC_.LT.0 )THEN
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
+         RETURN
+      END IF
 *
 *
 *     Test the input parameters.
@@ -158,13 +193,22 @@
       END IF
       IF( INFO.NE.0 ) THEN
          CALL PXERBLA( DESCQ( CTXT_ ), 'PSLAED1', -INFO )
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
 *
 *     Quick return if possible
 *
-      IF( N.EQ.0 )
-     $   RETURN
+      IF( N.EQ.0 ) THEN
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
+         RETURN
+      END IF
 *
 *     The following values are  integer pointers which indicate
 *     the portion of the workspace used by a particular array
@@ -264,6 +308,10 @@
       END IF
 *
    20 CONTINUE
+*
+*     Capture the subroutine exit in the trace file
+*
+      AOCL_DTL_TRACE_EXIT_F
       RETURN
 *
 *     End of PSLAED1

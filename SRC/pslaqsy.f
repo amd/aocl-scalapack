@@ -1,3 +1,9 @@
+*
+*     Copyright (c) 2023 Advanced Micro Devices, Inc.  All rights reserved.
+*
+*
+#include "SL_Context_fortran_include.h"
+*
       SUBROUTINE PSLAQSY( UPLO, N, A, IA, JA, DESCA, SR, SC, SCOND,
      $                    AMAX, EQUED )
 *
@@ -6,6 +12,7 @@
 *     and University of California, Berkeley.
 *     May 1, 1997
 *
+      USE LINK_TO_C_GLOBALS
 *     .. Scalar Arguments ..
       CHARACTER          EQUED, UPLO
       INTEGER            IA, JA, N
@@ -181,10 +188,36 @@
 *     ..
 *     .. Executable Statements ..
 *
+*     Initialize framework context structure if not initialized
+*
+*
+      CALL AOCL_SCALAPACK_INIT( )
+*
+*
+*     Capture the subroutine entry in the trace file
+*
+      AOCL_DTL_TRACE_ENTRY_F
+*
+*     Update the log buffer with the scalar arguments details,
+*     MPI process grid information and write to the log file
+*
+      IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
+         WRITE(LOG_BUF,102)  EQUED, UPLO, IA, JA, N, AMAX,
+     $            SCOND, eos_str
+ 102     FORMAT('PSLAQSY inputs: ,EQUED:',A5,', UPLO:',A5,
+     $           ', IA:',I5,', JA:',I5,', N:',I5,', AMAX:',F9.4,
+     $           ', SCOND:',F9.4, A1 )
+         AOCL_DTL_LOG_ENTRY_F
+      END IF
+*
 *     Quick return if possible
 *
       IF( N.LE.0 ) THEN
          EQUED = 'N'
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
 *
@@ -352,6 +385,10 @@
 *
       END IF
 *
+*
+*     Capture the subroutine exit in the trace file
+*
+      AOCL_DTL_TRACE_EXIT_F
       RETURN
 *
 *     End of PSLAQSY

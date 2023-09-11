@@ -1,3 +1,9 @@
+*
+*     Copyright (c) 2023 Advanced Micro Devices, Inc.  All rights reserved.
+*
+*
+#include "SL_Context_fortran_include.h"
+*
       SUBROUTINE PSLAED3( ICTXT, K, N, NB, D, DROW, DCOL, RHO, DLAMDA,
      $                    W, Z, U, LDU, BUF, INDX, INDCOL, INDROW,
      $                    INDXR, INDXC, CTOT, NPCOL, INFO )
@@ -7,6 +13,7 @@
 *     and University of California, Berkeley.
 *     December 31, 1998
 *
+      USE LINK_TO_C_GLOBALS
 *     .. Scalar Arguments ..
       INTEGER            DCOL, DROW, ICTXT, INFO, K, LDU, N, NB, NPCOL
       REAL               RHO
@@ -150,14 +157,42 @@
 *     ..
 *     .. Executable Statements ..
 *
+*     Initialize framework context structure if not initialized
+*
+*
+      CALL AOCL_SCALAPACK_INIT( )
+*
+*
+*     Capture the subroutine entry in the trace file
+*
+      AOCL_DTL_TRACE_ENTRY_F
+*
+*     Update the log buffer with the scalar arguments details,
+*     MPI process grid information and write to the log file
+*
+      IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
+         WRITE(LOG_BUF,102)  DCOL, DROW, ICTXT, INFO, K,
+     $            LDU, N, NB, NPCOL, RHO, eos_str
+ 102     FORMAT('PSLAED3 inputs: ,DCOL:',I5,', DROW:',I5,
+     $           ', ICTXT:',I5,', INFO:',I5,', K:',I5,
+     $           ', LDU:',I5,', N:',I5,', NB:',I5,
+     $           ', NPCOL:',I5,', RHO:',F9.4, A1 )
+         AOCL_DTL_LOG_ENTRY_F
+      END IF
+*
 *     Test the input parameters.
 *
       IINFO = 0
 *
 *     Quick return if possible
 *
-      IF( K.EQ.0 )
-     $   RETURN
+      IF( K.EQ.0 ) THEN
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
+         RETURN
+      END IF
 *
       CALL BLACS_GRIDINFO( ICTXT, NPROW, NPCOL, MYROW, MYCOL )
 *
@@ -340,6 +375,10 @@
       END IF
 *
   190 CONTINUE
+*
+*     Capture the subroutine exit in the trace file
+*
+      AOCL_DTL_TRACE_EXIT_F
       RETURN
 *
 *     End of PSLAED3

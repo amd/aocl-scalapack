@@ -104,6 +104,10 @@
 *
       PDLAMCH = TEMP
 *
+*     Capture the subroutine exit in the trace file
+*
+      AOCL_DTL_TRACE_EXIT_F
+*
 *     End of PDLAMCH
 *
       END

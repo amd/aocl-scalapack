@@ -1,10 +1,17 @@
-      SUBROUTINE PSLASRT( ID, N, D, Q, IQ, JQ, DESCQ, WORK, LWORK, 
+*
+*     Copyright (c) 2023 Advanced Micro Devices, Inc.  All rights reserved.
+*
+*
+#include "SL_Context_fortran_include.h"
+*
+      SUBROUTINE PSLASRT( ID, N, D, Q, IQ, JQ, DESCQ, WORK, LWORK,
      $                    IWORK, LIWORK, INFO )
 *
 *  -- ScaLAPACK auxiliary routine (version 2.0.2) --
 *     Univ. of Tennessee, Univ. of California Berkeley, Univ. of Colorado Denver
 *     May 1 2012
 *
+      USE LINK_TO_C_GLOBALS
 *     .. Scalar Arguments ..
       CHARACTER          ID
       INTEGER            INFO, IQ, JQ, LIWORK, LWORK, N
@@ -103,12 +110,45 @@
 *     ..
 *     .. Executable Statements ..
 *
+*     Initialize framework context structure if not initialized
+*
+*
+      CALL AOCL_SCALAPACK_INIT( )
+*
+*
+*     Capture the subroutine entry in the trace file
+*
+      AOCL_DTL_TRACE_ENTRY_F
+*
+*     Update the log buffer with the scalar arguments details,
+*     MPI process grid information and write to the log file
+*
+      IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
+         WRITE(LOG_BUF,102)  ID, INFO, IQ, JQ, LIWORK, LWORK,
+     $            N, eos_str
+ 102     FORMAT('PSLASRT inputs: ,ID:',A5,', INFO:',I5,
+     $           ', IQ:',I5,', JQ:',I5,', LIWORK:',I5,
+     $           ', LWORK:',I5,', N:',I5, A1 )
+         AOCL_DTL_LOG_ENTRY_F
+      END IF
+*
 *       This is just to keep ftnchek and toolpack/1 happy
       IF( BLOCK_CYCLIC_2D*CSRC_*CTXT_*DLEN_*DTYPE_*LLD_*MB_*M_*NB_*N_*
-     $    RSRC_.LT.0 )RETURN
+     $    RSRC_.LT.0 )THEN
 *
-      IF( N.EQ.0 )
-     $   RETURN
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
+         RETURN
+      END IF
+*
+      IF( N.EQ.0 ) THEN
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
+         RETURN
+      END IF
 *
       ICTXT = DESCQ( CTXT_ )
       CALL BLACS_GRIDINFO( ICTXT, NPROW, NPCOL, MYROW, MYCOL )
@@ -141,6 +181,10 @@
 *
       IF( INFO.NE.0 ) THEN
          CALL PXERBLA( ICTXT, 'PSLASRT', -INFO )
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
 *
@@ -248,6 +292,10 @@
          GO TO 20
       END IF
       CALL SLAMOV( 'Full', NP, NQ, WORK, NP, Q( IIQ ), LDQ )
+*
+*     Capture the subroutine exit in the trace file
+*
+      AOCL_DTL_TRACE_EXIT_F
 *
 *     End of PSLASRT
 *

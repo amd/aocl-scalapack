@@ -1,3 +1,9 @@
+*
+*     Copyright (c) 2023 Advanced Micro Devices, Inc.  All rights reserved.
+*
+*
+#include "SL_Context_fortran_include.h"
+*
       SUBROUTINE PSLACON( N, V, IV, JV, DESCV, X, IX, JX, DESCX, ISGN,
      $                    EST, KASE )
 *
@@ -6,6 +12,7 @@
 *     and University of California, Berkeley.
 *     May 1, 1997
 *
+      USE LINK_TO_C_GLOBALS
 *     .. Scalar Arguments ..
       INTEGER            IV, IX, JV, JX, KASE, N
       REAL               EST
@@ -184,6 +191,28 @@
 *     ..
 *     .. Executable Statements ..
 *
+*     Initialize framework context structure if not initialized
+*
+*
+      CALL AOCL_SCALAPACK_INIT( )
+*
+*
+*     Capture the subroutine entry in the trace file
+*
+      AOCL_DTL_TRACE_ENTRY_F
+*
+*     Update the log buffer with the scalar arguments details,
+*     MPI process grid information and write to the log file
+*
+      IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
+         WRITE(LOG_BUF,102)  IV, IX, JV, JX, KASE, N, EST,
+     $            eos_str
+ 102     FORMAT('PSLACON inputs: ,IV:',I5,', IX:',I5,', JV:',I5,
+     $           ', JX:',I5,', KASE:',I5,', N:',I5,
+     $           ', EST:',F9.4, A1 )
+         AOCL_DTL_LOG_ENTRY_F
+      END IF
+*
 *     Get grid parameters.
 *
       ESTWORK( 1 ) = EST
@@ -192,8 +221,13 @@
 *
       CALL INFOG2L( IX, JX, DESCX, NPROW, NPCOL, MYROW, MYCOL,
      $              IIVX, JJVX, IVXROW, IVXCOL )
-      IF( MYCOL.NE.IVXCOL )
-     $   RETURN
+      IF( MYCOL.NE.IVXCOL ) THEN
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
+         RETURN
+      END IF
       IROFF = MOD( IX-1, DESCX( MB_ ) )
       NP = NUMROC( N+IROFF, DESCX( MB_ ), MYROW, IVXROW, NPROW )
       IF( MYROW.EQ.IVXROW )
@@ -206,6 +240,10 @@
    10    CONTINUE
          KASE = 1
          JUMP = 1
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
 *
@@ -243,6 +281,10 @@
    30 CONTINUE
       KASE = 2
       JUMP = 2
+*
+*     Capture the subroutine exit in the trace file
+*
+      AOCL_DTL_TRACE_EXIT_F
       RETURN
 *
 *     ................ ENTRY   (JUMP = 2)
@@ -277,6 +319,10 @@
       END IF
       KASE = 1
       JUMP = 3
+*
+*     Capture the subroutine exit in the trace file
+*
+      AOCL_DTL_TRACE_EXIT_F
       RETURN
 *
 *     ................ ENTRY   (JUMP = 3)
@@ -317,6 +363,10 @@
   100 CONTINUE
       KASE = 2
       JUMP = 4
+*
+*     Capture the subroutine exit in the trace file
+*
+      AOCL_DTL_TRACE_EXIT_F
       RETURN
 *
 *     ................ ENTRY   (JUMP = 4)
@@ -358,6 +408,10 @@
   130 CONTINUE
       KASE = 1
       JUMP = 5
+*
+*     Capture the subroutine exit in the trace file
+*
+      AOCL_DTL_TRACE_EXIT_F
       RETURN
 *
 *     ................ ENTRY   (JUMP = 5)
@@ -383,6 +437,10 @@
       KASE = 0
 *
       EST = ESTWORK( 1 )
+*
+*     Capture the subroutine exit in the trace file
+*
+      AOCL_DTL_TRACE_EXIT_F
       RETURN
 *
 *     End of PSLACON

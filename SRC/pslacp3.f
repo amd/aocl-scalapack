@@ -1,4 +1,11 @@
+*
+*     Copyright (c) 2023 Advanced Micro Devices, Inc.  All rights reserved.
+*
+*
+#include "SL_Context_fortran_include.h"
+*
       SUBROUTINE PSLACP3( M, I, A, DESCA, B, LDB, II, JJ, REV )
+      USE LINK_TO_C_GLOBALS
       IMPLICIT NONE
 *
 *  -- ScaLAPACK routine (version 1.7) --
@@ -109,7 +116,7 @@
 *  II      (global input) INTEGER
 *          By using REV 0 & 1, data can be sent out and returned again.
 *          If REV=0, then II is destination row index for the node(s)
-*             receiving the replicated B.  
+*             receiving the replicated B.
 *             If II>=0,JJ>=0, then node (II,JJ) receives the data
 *             If II=-1,JJ>=0, then all rows in column JJ receive the
 *                             data
@@ -122,7 +129,7 @@
 *          Similar description as II above
 *
 *  REV     (global input) INTEGER
-*          Use REV = 0 to send global A into locally replicated B 
+*          Use REV = 0 to send global A into locally replicated B
 *             (on node (II,JJ)).
 *          Use REV <> 0 to send locally replicated B from node (II,JJ)
 *             to its owner (which changes depending on its location in
@@ -160,8 +167,33 @@
 *     ..
 *     .. Executable Statements ..
 *
-      IF( M.LE.0 )
-     $   RETURN
+*     Initialize framework context structure if not initialized
+*
+*
+      CALL AOCL_SCALAPACK_INIT( )
+*
+*
+*     Capture the subroutine entry in the trace file
+*
+      AOCL_DTL_TRACE_ENTRY_F
+*
+*     Update the log buffer with the scalar arguments details,
+*     MPI process grid information and write to the log file
+*
+      IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
+         WRITE(LOG_BUF,102)  I, II, JJ, LDB, M, REV, eos_str
+ 102     FORMAT('PSLACP3 inputs: ,I:',I5,', II:',I5,', JJ:',I5,
+     $           ', LDB:',I5,', M:',I5,', REV:',I5, A1 )
+         AOCL_DTL_LOG_ENTRY_F
+      END IF
+*
+      IF( M.LE.0 ) THEN
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
+         RETURN
+      END IF
 *
       HBL = DESCA( MB_ )
       CONTXT = DESCA( CTXT_ )
@@ -306,6 +338,10 @@
          IF( IDJ.LE.IFIN )
      $      GO TO 30
       END IF
+*
+*     Capture the subroutine exit in the trace file
+*
+      AOCL_DTL_TRACE_EXIT_F
       RETURN
 *
 *     End of PSLACP3

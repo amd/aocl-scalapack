@@ -1,3 +1,9 @@
+*
+*     Copyright (c) 2023 Advanced Micro Devices, Inc.  All rights reserved.
+*
+*
+#include "SL_Context_fortran_include.h"
+*
       SUBROUTINE PSLAED2( ICTXT, K, N, N1, NB, D, DROW, DCOL, Q, LDQ,
      $                    RHO, Z, W, DLAMDA, Q2, LDQ2, QBUF, CTOT, PSM,
      $                    NPCOL, INDX, INDXC, INDXP, INDCOL, COLTYP, NN,
@@ -8,6 +14,7 @@
 *     and University of California, Berkeley.
 *     December 31, 1998
 *
+      USE LINK_TO_C_GLOBALS
 *     .. Scalar Arguments ..
       INTEGER            DCOL, DROW, IB1, IB2, ICTXT, K, LDQ, LDQ2, N,
      $                   N1, NB, NN, NN1, NN2, NPCOL
@@ -179,10 +186,41 @@
 *     ..
 *     .. Executable Statements ..
 *
+*     Initialize framework context structure if not initialized
+*
+*
+      CALL AOCL_SCALAPACK_INIT( )
+*
+*
+*     Capture the subroutine entry in the trace file
+*
+      AOCL_DTL_TRACE_ENTRY_F
+*
+*     Update the log buffer with the scalar arguments details,
+*     MPI process grid information and write to the log file
+*
+      IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
+         WRITE(LOG_BUF,102)  DCOL, DROW, IB1, IB2, ICTXT,
+     $            K, LDQ, LDQ2, N,                   N1,
+     $            NB, NN, NN1, NN2, NPCOL, RHO, eos_str
+ 102     FORMAT('PSLAED2 inputs: ,DCOL:',I5,', DROW:',I5,
+     $           ', IB1:',I5,', IB2:',I5,', ICTXT:',I5,
+     $           ', K:',I5,', LDQ:',I5,', LDQ2:',I5,
+     $           ', N:',I5,', N1:',I5,', NB:',I5,', NN:',I5,
+     $           ', NN1:',I5,', NN2:',I5,', NPCOL:',I5,
+     $           ', RHO:',F9.4, A1 )
+         AOCL_DTL_LOG_ENTRY_F
+      END IF
+*
 *     Quick return if possible
 *
-      IF( N.EQ.0 )
-     $   RETURN
+      IF( N.EQ.0 ) THEN
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
+         RETURN
+      END IF
 *
       CALL BLACS_PINFO( IAM, NPROCS )
       CALL BLACS_GRIDINFO( ICTXT, NPROW, NPCOL, MYROW, MYCOL )
@@ -446,6 +484,10 @@
       NN2 = IE2 - IB2 + 1
       NN = MAX( IE1, IE2 ) - MIN( IB1, IB2 ) + 1
   220 CONTINUE
+*
+*     Capture the subroutine exit in the trace file
+*
+      AOCL_DTL_TRACE_EXIT_F
       RETURN
 *
 *     End of PSLAED2

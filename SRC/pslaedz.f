@@ -1,3 +1,9 @@
+*
+*     Copyright (c) 2023 Advanced Micro Devices, Inc.  All rights reserved.
+*
+*
+#include "SL_Context_fortran_include.h"
+*
       SUBROUTINE PSLAEDZ( N, N1, ID, Q, IQ, JQ, LDQ, DESCQ, Z, WORK )
 *
 *  -- ScaLAPACK auxiliary routine (version 1.7) --
@@ -5,6 +11,7 @@
 *     and University of California, Berkeley.
 *     December 31, 1998
 *
+      USE LINK_TO_C_GLOBALS
 *     .. Scalar Arguments ..
       INTEGER            ID, IQ, JQ, LDQ, N, N1
 *     ..
@@ -48,9 +55,35 @@
 *     ..
 *     .. Executable Statements ..
 *
+*     Initialize framework context structure if not initialized
+*
+*
+      CALL AOCL_SCALAPACK_INIT( )
+*
+*
+*     Capture the subroutine entry in the trace file
+*
+      AOCL_DTL_TRACE_ENTRY_F
+*
+*     Update the log buffer with the scalar arguments details,
+*     MPI process grid information and write to the log file
+*
+      IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
+         WRITE(LOG_BUF,102)  ID, IQ, JQ, LDQ, N, N1, eos_str
+ 102     FORMAT('PSLAEDZ inputs: ,ID:',I5,', IQ:',I5,', JQ:',I5,
+     $           ', LDQ:',I5,', N:',I5,', N1:',I5, A1 )
+         AOCL_DTL_LOG_ENTRY_F
+      END IF
+*
 *       This is just to keep ftnchek and toolpack/1 happy
       IF( BLOCK_CYCLIC_2D*CSRC_*CTXT_*DLEN_*DTYPE_*LLD_*MB_*M_*NB_*N_*
-     $    RSRC_.LT.0 )RETURN
+     $    RSRC_.LT.0 )THEN
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
+         RETURN
+      END IF
 *
       ICTXT = DESCQ( CTXT_ )
       NB = DESCQ( NB_ )
@@ -145,6 +178,10 @@
          CALL SGEBR2D( ICTXT, 'All', ' ', N, 1, Z, N, IQROW, IQCOL )
       END IF
 *
+*
+*     Capture the subroutine exit in the trace file
+*
+      AOCL_DTL_TRACE_EXIT_F
       RETURN
 *
 *     End of PSLAEDZ
