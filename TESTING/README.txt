@@ -5,8 +5,13 @@ To execute AOCL-ScaLAPACK test suite against different
 MPI configurations (ranks, binding, etc) you can use the script called
 '<aocl-scalapack>/scalapack_test.sh'
 
-Upon running scalapack_test.sh the results will be saved in the
-directory $HOME/aocl_scalapack_testing_results. The script provides
+Ensure that the run time environment is configured for the maximum stack size:
+
+Eg: For Linux, execute the below command before running the tests:
+"ulimit -s unlimited"
+
+Upon running 'scalapack_test.sh' the results will be saved in the
+directory '$HOME/aocl_scalapack_testing_results'. The script provides
 several command line options, and if no arguments are given, the
 following default options will be used:
 
@@ -24,6 +29,9 @@ Below are some helpful examples demonstrating different options:
 Eg: To test only single precision cholesky transformation for all
     the MPI mapping for ranks between 4 to 16 use
     $ scalapack_test.sh -t xsllt -s 4 -i 1 -e 16 -c all
+
+Eg: To test all the programs on a machine with 'n' cores
+    $ scalapack_test.sh -t all -s <n>
 
 Eg: To test all the programs with maximum avialable ranks
     with MPI mapping "map-by l3cache"
