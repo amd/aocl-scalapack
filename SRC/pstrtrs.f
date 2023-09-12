@@ -1,3 +1,9 @@
+*
+*     Copyright (c) 2023 Advanced Micro Devices, Inc.  All rights reserved.
+*
+*
+#include "SL_Context_fortran_include.h"
+*
       SUBROUTINE PSTRTRS( UPLO, TRANS, DIAG, N, NRHS, A, IA, JA, DESCA,
      $                    B, IB, JB, DESCB, INFO )
 *
@@ -6,6 +12,7 @@
 *     and University of California, Berkeley.
 *     May 1, 1997
 *
+      USE LINK_TO_C_GLOBALS
 *     .. Scalar Arguments ..
       CHARACTER          DIAG, TRANS, UPLO
       INTEGER            IA, IB, INFO, JA, JB, N, NRHS
@@ -192,10 +199,36 @@
 *     ..
 *     .. Executable Statements ..
 *
+*     Initialize framework context structure if not initialized
+*
+*
+      CALL AOCL_SCALAPACK_INIT( )
+*
+*
+*     Capture the subroutine entry in the trace file
+*
+      AOCL_DTL_TRACE_ENTRY_F
+*
 *     Get grid parameters
 *
       ICTXT = DESCA( CTXT_ )
       CALL BLACS_GRIDINFO( ICTXT, NPROW, NPCOL, MYROW, MYCOL )
+*
+*     Update the log buffer with the scalar arguments details,
+*     MPI process grid information and write to the log file
+*
+      IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
+         WRITE(LOG_BUF,102)  DIAG, TRANS, UPLO, IA, IB,
+     $            INFO, JA, JB, N, NRHS, NPROW, NPCOL,
+     $            MYROW, MYCOL, eos_str
+ 102     FORMAT('PSTRTRS inputs: ,DIAG:',A5,', TRANS:',A5,
+     $           ', UPLO:',A5,', IA:',I5,', IB:',I5,
+     $           ', INFO:',I5,', JA:',I5,', JB:',I5,
+     $           ', N:',I5,', NRHS:',I5,',  NPROW: ', I5,
+     $           ', NPCOL: ', I5 ,', MYROW: ', I5,
+     $           ', MYCOL: ', I5, A1)
+         AOCL_DTL_LOG_ENTRY_F
+      END IF
 *
 *     Test input parameters
 *
@@ -261,13 +294,22 @@
 *
       IF( INFO.NE.0 ) THEN
          CALL PXERBLA( ICTXT, 'PSTRTRS', -INFO )
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
 *
 *     Quick return if possible
 *
-      IF( N.EQ.0 .OR. NRHS.EQ.0 )
-     $   RETURN
+      IF( N.EQ.0 .OR. NRHS.EQ.0 ) THEN
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
+         RETURN
+      END IF
 *
 *     Check for singularity if non-unit.
 *
@@ -317,8 +359,13 @@
    30     CONTINUE
           CALL IGAMX2D( ICTXT, 'All', ' ', 1, 1, INFO, 1, IDUM, IDUM,
      $                  -1, -1, MYCOL )
-          IF( INFO.NE.0 )
-     $       RETURN
+          IF( INFO.NE.0 ) THEN
+*
+*            Capture the subroutine exit in the trace file
+*
+             AOCL_DTL_TRACE_EXIT_F
+             RETURN
+          END IF
       END IF
 *
 *     Solve A * x = b  or  A' * x = b.
@@ -326,6 +373,10 @@
       CALL PSTRSM( 'Left', UPLO, TRANS, DIAG, N, NRHS, ONE, A, IA, JA,
      $             DESCA, B, IB, JB, DESCB )
 *
+*
+*     Capture the subroutine exit in the trace file
+*
+      AOCL_DTL_TRACE_EXIT_F
       RETURN
 *
 *     End of PSTRTRS

@@ -1,3 +1,9 @@
+*
+*     Copyright (c) 2023 Advanced Micro Devices, Inc.  All rights reserved.
+*
+*
+#include "SL_Context_fortran_include.h"
+*
       SUBROUTINE PSTRSEN( JOB, COMPQ, SELECT, PARA, N, T, IT, JT,
      $     DESCT, Q, IQ, JQ, DESCQ, WR, WI, M, S, SEP, WORK, LWORK,
      $     IWORK, LIWORK, INFO )
@@ -10,6 +16,7 @@
 *     Univ. of Colorado Denver and University of California, Berkeley.
 *     January, 2012
 *
+      USE LINK_TO_C_GLOBALS
       IMPLICIT NONE
 *
 *     .. Scalar Arguments ..
@@ -381,10 +388,38 @@
 *     ..
 *     .. Executable Statements ..
 *
+*     Initialize framework context structure if not initialized
+*
+*
+      CALL AOCL_SCALAPACK_INIT( )
+*
+*
+*     Capture the subroutine entry in the trace file
+*
+      AOCL_DTL_TRACE_ENTRY_F
+*
 *     Get grid parameters
 *
       ICTXT = DESCT( CTXT_ )
       CALL BLACS_GRIDINFO( ICTXT, NPROW, NPCOL, MYROW, MYCOL )
+*
+*     Update the log buffer with the scalar arguments details,
+*     MPI process grid information and write to the log file
+*
+      IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
+         WRITE(LOG_BUF,102)  COMPQ, JOB, INFO, LIWORK, LWORK,
+     $            M, N,                   IT, JT,
+     $            IQ, JQ, S, SEP, NPROW, NPCOL, MYROW,
+     $            MYCOL, eos_str
+ 102     FORMAT('PSTRSEN inputs: ,COMPQ:',A5,', JOB:',A5,
+     $           ', INFO:',I5,', LIWORK:',I5,', LWORK:',I5,
+     $           ', M:',I5,', N:',I5,', IT:',I5,
+     $           ', JT:',I5,', IQ:',I5,', JQ:',I5,
+     $           ', S:',F9.4,', SEP:',F9.4,',  NPROW: ', I5,
+     $           ', NPCOL: ', I5 ,', MYROW: ', I5,
+     $           ', MYCOL: ', I5, A1)
+         AOCL_DTL_LOG_ENTRY_F
+      END IF
       NPROCS = NPROW*NPCOL
 *
 *     Test if grid is O.K., i.e., the context is valid
@@ -617,10 +652,18 @@ c     $              IERR )
          S = ONE
          SEP = ZERO
          CALL PXERBLA( ICTXT, 'PSTRSEN', -INFO )
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       ELSEIF( LQUERY ) THEN
          WORK( 1 ) = FLOAT(LWMIN)
          IWORK( 1 ) = LIWMIN
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
 *
@@ -705,6 +748,10 @@ c     $        LWORK, IWORK(N+1), LIWORK-N, EST, ITER, IERR )
 *
  50   CONTINUE
 *
+*
+*     Capture the subroutine exit in the trace file
+*
+      AOCL_DTL_TRACE_EXIT_F
       RETURN
 *
 *     End of PSTRSEN

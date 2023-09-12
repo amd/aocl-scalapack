@@ -1,3 +1,9 @@
+*
+*     Copyright (c) 2023 Advanced Micro Devices, Inc.  All rights reserved.
+*
+*
+#include "SL_Context_fortran_include.h"
+*
       SUBROUTINE PSSTEDC( COMPZ, N, D, E, Q, IQ, JQ, DESCQ, WORK, LWORK,
      $                    IWORK, LIWORK, INFO )
 *
@@ -6,6 +12,7 @@
 *     and University of California, Berkeley.
 *     March 13, 2000
 *
+      USE LINK_TO_C_GLOBALS
 *     .. Scalar Arguments ..
       CHARACTER          COMPZ
       INTEGER            INFO, IQ, JQ, LIWORK, LWORK, N
@@ -147,9 +154,37 @@
 *     ..
 *     .. Executable Statements ..
 *
+*     Initialize framework context structure if not initialized
+*
+*
+      CALL AOCL_SCALAPACK_INIT( )
+*
+*
+*     Capture the subroutine entry in the trace file
+*
+      AOCL_DTL_TRACE_ENTRY_F
+*
+*     Update the log buffer with the scalar arguments details,
+*     MPI process grid information and write to the log file
+*
+      IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
+         WRITE(LOG_BUF,102)  COMPZ, INFO, IQ, JQ, LIWORK,
+     $            LWORK, N, eos_str
+ 102     FORMAT('PSSTEDC inputs: ,COMPZ:',A5,', INFO:',I5,
+     $           ', IQ:',I5,', JQ:',I5,', LIWORK:',I5,
+     $           ', LWORK:',I5,', N:',I5, A1 )
+         AOCL_DTL_LOG_ENTRY_F
+      END IF
+*
 *       This is just to keep ftnchek and toolpack/1 happy
       IF( BLOCK_CYCLIC_2D*CSRC_*CTXT_*DLEN_*DTYPE_*LLD_*MB_*M_*NB_*N_*
-     $    RSRC_.LT.0 )RETURN
+     $    RSRC_.LT.0 )THEN
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
+         RETURN
+      END IF
 *
 *     Test the input parameters.
 *
@@ -191,8 +226,16 @@
       END IF
       IF( INFO.NE.0 ) THEN
          CALL PXERBLA( DESCQ( CTXT_ ), 'PSSTEDC', -INFO )
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       ELSE IF( LQUERY ) THEN
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
 *
@@ -260,6 +303,10 @@
      $   WORK( 1 ) = REAL( LWMIN )
       IF( LIWORK.GT.0 )
      $   IWORK( 1 ) = LIWMIN
+*
+*     Capture the subroutine exit in the trace file
+*
+      AOCL_DTL_TRACE_EXIT_F
       RETURN
 *
 *     End of PSSTEDC

@@ -1,11 +1,18 @@
+*
+*     Copyright (c) 2023 Advanced Micro Devices, Inc.  All rights reserved.
+*
+*
+#include "SL_Context_fortran_include.h"
+*
       SUBROUTINE PSSYEV( JOBZ, UPLO, N, A, IA, JA, DESCA, W,
      $                   Z, IZ, JZ, DESCZ, WORK, LWORK, INFO )
 *
 *  -- ScaLAPACK routine (version 1.7) --
 *     University of Tennessee, Knoxville, Oak Ridge National Laboratory,
 *     and University of California, Berkeley.
-*     May 25, 2001 
+*     May 25, 2001
 *
+      USE LINK_TO_C_GLOBALS
 *     .. Scalar Arguments ..
       CHARACTER          JOBZ, UPLO
       INTEGER            IA, INFO, IZ, JA, JZ, LWORK, N
@@ -248,15 +255,15 @@
 *     ..
 *     .. Local Scalars ..
       LOGICAL            LOWER, WANTZ
-      INTEGER            CONTEXTC, CSRC_A, I, IACOL, IAROW, ICOFFA, 
-     $                   IINFO, INDD, INDD2, INDE, INDE2, INDTAU, 
-     $                   INDWORK, INDWORK2, IROFFA, IROFFZ, ISCALE, 
-     $                   IZROW, J, K, LDC, LLWORK, LWMIN, MB_A, MB_Z, 
+      INTEGER            CONTEXTC, CSRC_A, I, IACOL, IAROW, ICOFFA,
+     $                   IINFO, INDD, INDD2, INDE, INDE2, INDTAU,
+     $                   INDWORK, INDWORK2, IROFFA, IROFFZ, ISCALE,
+     $                   IZROW, J, K, LDC, LLWORK, LWMIN, MB_A, MB_Z,
      $                   MYCOL, MYPCOLC, MYPROWC, MYROW, NB, NB_A, NB_Z,
-     $                   NP, NPCOL, NPCOLC, NPROCS, NPROW, NPROWC, NQ, 
-     $                   NRC, QRMEM, RSRC_A, RSRC_Z, SIZEMQRLEFT, 
+     $                   NP, NPCOL, NPCOLC, NPROCS, NPROW, NPROWC, NQ,
+     $                   NRC, QRMEM, RSRC_A, RSRC_Z, SIZEMQRLEFT,
      $                   SIZESYTRD
-      REAL               ANRM, BIGNUM, EPS, RMAX, RMIN, SAFMIN, SIGMA, 
+      REAL               ANRM, BIGNUM, EPS, RMAX, RMIN, SAFMIN, SIGMA,
      $                   SMLNUM
 *     ..
 *     .. Local Arrays ..
@@ -279,12 +286,45 @@
       INTRINSIC          ABS, ICHAR, INT, MAX, MIN, MOD, REAL, SQRT
 *     ..
 *     .. Executable Statements ..
+*
+*     Initialize framework context structure if not initialized
+*
+*
+      CALL AOCL_SCALAPACK_INIT( )
+*
+*
+*     Capture the subroutine entry in the trace file
+*
+      AOCL_DTL_TRACE_ENTRY_F
+*
+*     Update the log buffer with the scalar arguments details,
+*     MPI process grid information and write to the log file
+*
+      IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
+         WRITE(LOG_BUF,102)  JOBZ, UPLO, IA, INFO, IZ, JA,
+     $            JZ, LWORK, N, eos_str
+ 102     FORMAT('PSSYEV inputs: ,JOBZ:',A5,', UPLO:',A5,
+     $           ', IA:',I5,', INFO:',I5,', IZ:',I5,
+     $           ', JA:',I5,', JZ:',I5,', LWORK:',I5,
+     $           ', N:',I5, A1 )
+         AOCL_DTL_LOG_ENTRY_F
+      END IF
 *       This is just to keep ftnchek and toolpack/1 happy
       IF( BLOCK_CYCLIC_2D*CSRC_*CTXT_*DLEN_*DTYPE_*LLD_*MB_*M_*NB_*N_*
-     $    RSRC_.LT.0 )RETURN
+     $    RSRC_.LT.0 )THEN
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
+         RETURN
+      END IF
 *
 *     Quick return
 *
+*
+*     Capture the subroutine exit in the trace file
+*
+      AOCL_DTL_TRACE_EXIT_F
       IF( N.EQ.0 ) RETURN
 *
 *     Test the input arguments.
@@ -452,9 +492,17 @@
       IF( INFO.NE.0 ) THEN
          CALL PXERBLA( DESCA( CTXT_ ), 'PSSYEV', -INFO )
          IF( WANTZ ) CALL BLACS_GRIDEXIT( CONTEXTC )
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       ELSE IF( LWORK .EQ. -1 ) THEN
          IF( WANTZ ) CALL BLACS_GRIDEXIT( CONTEXTC )
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
 *
@@ -491,7 +539,7 @@
  10   CONTINUE
       IF( LSAME( UPLO, 'U') ) THEN
           DO 20 I=1,N-1
-             CALL PSELGET( 'A', ' ', WORK(INDE2+I-1), A, 
+             CALL PSELGET( 'A', ' ', WORK(INDE2+I-1), A,
      $                     I+IA-1, I+JA, DESCA )
  20       CONTINUE
       ELSE
@@ -511,7 +559,7 @@
 *        to matrix Q.
 *
          CALL SSTEQR2( 'I', N, WORK( INDD2 ), WORK( INDE2 ),
-     $                 WORK( INDWORK ), LDC, NRC, WORK( INDWORK2 ), 
+     $                 WORK( INDWORK ), LDC, NRC, WORK( INDWORK2 ),
      $                 INFO )
 *
          CALL PSGEMR2D( N, N, WORK( INDWORK ), 1, 1, DESCQR, Z, IA, JA,
@@ -567,11 +615,15 @@
 *
       DO 50 I = 1, J
          IF( INFO.EQ.0 .AND. ( WORK( I+INDTAU )-WORK( I+INDE )
-     $        .NE. ZERO ) )THEN 
+     $        .NE. ZERO ) )THEN
             INFO = N+1
          END IF
  50   CONTINUE
 *
+*
+*     Capture the subroutine exit in the trace file
+*
+      AOCL_DTL_TRACE_EXIT_F
       RETURN
 *
 *     End of PSSYEV

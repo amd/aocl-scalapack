@@ -1,4 +1,10 @@
 *
+*     Copyright (c) 2023 Advanced Micro Devices, Inc.  All rights reserved.
+*
+*
+*
+*
+#include "SL_Context_fortran_include.h"
 *
       SUBROUTINE PSSYGST( IBTYPE, UPLO, N, A, IA, JA, DESCA, B, IB, JB,
      $                    DESCB, SCALE, INFO )
@@ -8,6 +14,7 @@
 *     and University of California, Berkeley.
 *     May 1, 1997
 *
+      USE LINK_TO_C_GLOBALS
 *     .. Scalar Arguments ..
       CHARACTER          UPLO
       INTEGER            IA, IB, IBTYPE, INFO, JA, JB, N
@@ -197,9 +204,37 @@
       EXTERNAL           LSAME, ICEIL, INDXG2P
 *     ..
 *     .. Executable Statements ..
+*
+*     Initialize framework context structure if not initialized
+*
+*
+      CALL AOCL_SCALAPACK_INIT( )
+*
+*
+*     Capture the subroutine entry in the trace file
+*
+      AOCL_DTL_TRACE_ENTRY_F
+*
+*     Update the log buffer with the scalar arguments details,
+*     MPI process grid information and write to the log file
+*
+      IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
+         WRITE(LOG_BUF,102)  UPLO, IA, IB, IBTYPE, INFO,
+     $            JA, JB, N, SCALE, eos_str
+ 102     FORMAT('PSSYGST inputs: ,UPLO:',A5,', IA:',I5,
+     $           ', IB:',I5,', IBTYPE:',I5,', INFO:',I5,
+     $           ', JA:',I5,', JB:',I5,', N:',I5,', SCALE:',F9.4, A1 )
+         AOCL_DTL_LOG_ENTRY_F
+      END IF
 *       This is just to keep ftnchek happy
       IF( BLOCK_CYCLIC_2D*CSRC_*CTXT_*DLEN_*DTYPE_*LLD_*MB_*M_*NB_*N_*
-     $    RSRC_.LT.0 )RETURN
+     $    RSRC_.LT.0 )THEN
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
+         RETURN
+      END IF
 *
 *     Get grid parameters
 *
@@ -268,13 +303,22 @@
 *
       IF( INFO.NE.0 ) THEN
          CALL PXERBLA( ICTXT, 'PSSYGST', -INFO )
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
 *
 *     Quick return if possible
 *
-      IF( N.EQ.0 )
-     $   RETURN
+      IF( N.EQ.0 ) THEN
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
+         RETURN
+      END IF
 *
       IF( IBTYPE.EQ.1 ) THEN
          IF( UPPER ) THEN
@@ -433,6 +477,10 @@
 *
       END IF
 *
+*
+*     Capture the subroutine exit in the trace file
+*
+      AOCL_DTL_TRACE_EXIT_F
       RETURN
 *
 *     End of PSSYGST

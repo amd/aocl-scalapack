@@ -1,3 +1,9 @@
+*
+*     Copyright (c) 2023 Advanced Micro Devices, Inc.  All rights reserved.
+*
+*
+#include "SL_Context_fortran_include.h"
+*
       SUBROUTINE PSPTSV( N, NRHS, D, E, JA, DESCA, B, IB, DESCB, WORK,
      $                   LWORK, INFO )
 *
@@ -8,6 +14,7 @@
 *     and University of California, Berkeley.
 *     November 15, 1997
 *
+      USE LINK_TO_C_GLOBALS
 *     .. Scalar Arguments ..
       INTEGER            IB, INFO, JA, LWORK, N, NRHS
 *     ..
@@ -385,6 +392,27 @@
 *     ..
 *     .. Executable Statements ..
 *
+*     Initialize framework context structure if not initialized
+*
+*
+      CALL AOCL_SCALAPACK_INIT( )
+*
+*
+*     Capture the subroutine entry in the trace file
+*
+      AOCL_DTL_TRACE_ENTRY_F
+*
+*     Update the log buffer with the scalar arguments details,
+*     MPI process grid information and write to the log file
+*
+      IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
+         WRITE(LOG_BUF,102)  IB, INFO, JA, LWORK, N, NRHS,
+     $            eos_str
+ 102     FORMAT('PSPTSV inputs: ,IB:',I5,', INFO:',I5,', JA:',I5,
+     $           ', LWORK:',I5,', N:',I5,', NRHS:',I5, A1 )
+         AOCL_DTL_LOG_ENTRY_F
+      END IF
+*
 *     Note: to avoid duplication, most error checking is not performed
 *           in this routine and is left to routines
 *           PSPTTRF and PSPTTRS.
@@ -409,6 +437,10 @@
          CALL PXERBLA( ICTXT,
      $      'PSPTSV',
      $      -INFO )
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       ENDIF
 *
@@ -430,6 +462,10 @@
          IF( INFO .LT. 0 ) THEN
             CALL PXERBLA( ICTXT, 'PSPTSV', -INFO )
          ENDIF
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
 *
@@ -443,9 +479,17 @@
 *
       IF( INFO.NE.0 ) THEN
          CALL PXERBLA( ICTXT, 'PSPTSV', -INFO )
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
 *
+*
+*     Capture the subroutine exit in the trace file
+*
+      AOCL_DTL_TRACE_EXIT_F
       RETURN
 *
 *     End of PSPTSV
