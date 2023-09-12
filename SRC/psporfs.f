@@ -305,6 +305,16 @@
       INTRINSIC          ABS, ICHAR, MAX, MIN, MOD, REAL
 *     ..
 *     .. Executable Statements ..
+*
+*     Initialize framework context structure if not initialized
+*
+*
+      CALL AOCL_SCALAPACK_INIT( )
+*
+*
+*     Capture the subroutine entry in the trace file
+*
+      AOCL_DTL_TRACE_ENTRY_F
 *     .. Initialize EST
       EST = 0.0
 *
