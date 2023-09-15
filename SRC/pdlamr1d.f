@@ -112,7 +112,6 @@
       INTEGER            NUMROC
       EXTERNAL           NUMROC
 *     ..
-*     ..
 *     .. Executable Statements ..
 *
 *     Initialize framework context structure if not initialized
@@ -124,6 +123,16 @@
 *     Capture the subroutine entry in the trace file
 *
       AOCL_DTL_TRACE_ENTRY_F
+*
+*     Update the log buffer with the scalar arguments details,
+*     MPI process grid information and write to the log file
+*
+      IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
+         WRITE(LOG_BUF,102)  IA, IB, JA, JB, N, eos_str
+ 102     FORMAT('PDLAMR1D inputs: ,IA:',I5,', IB:',I5,', JA:',I5,
+     $           ', JB:',I5,', N:',I5, A1 )
+         AOCL_DTL_LOG_ENTRY_F
+      END IF
 *       This is just to keep ftnchek and toolpack/1 happy
       IF( BLOCK_CYCLIC_2D*CSRC_*CTXT_*DLEN_*DTYPE_*LLD_*MB_*M_*NB_*N_*
      $    RSRC_.LT.0 )THEN
@@ -158,18 +167,6 @@
       CALL PDGEMR2D( 1, N, A, IA, JA, DESCAA, B, IB, JB, DESCBB, ICTXT )
 *
       CALL BLACS_GRIDINFO( ICTXT, NPROW, NPCOL, MYROW, MYCOL )
-*
-*     Update the log buffer with the scalar arguments details,
-*     MPI process grid information and write to the log file
-*
-      IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
-         WRITE(LOG_BUF,102)  IA, IB, JA, JB, N, NPROW, NPCOL,
-     $            MYROW, MYCOL, eos_str
- 102     FORMAT('PDLAMR1D inputs:,IA:',I5,',IB:',I5,',JA:',I5,
-     $           ',JB:',I5,',N:',I5,',NPROW:',I5,
-     $           ',NPCOL:',I5,',MYROW:',I5,',MYCOL:',I5,A1)
-         AOCL_DTL_LOG_ENTRY_F
-      END IF
       NQ = NUMROC( N, DESCB( NB_ ), MYCOL, 0, NPCOL )
 *
       IF( MYROW.EQ.0 ) THEN

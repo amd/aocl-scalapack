@@ -302,7 +302,6 @@
 *     .. Local Arrays ..
       INTEGER            IDUM1( 1 ), IDUM2( 1 )
 *     ..
-*     ..
 *     .. Executable Statements ..
 *
 *     Initialize framework context structure if not initialized
@@ -314,6 +313,18 @@
 *     Capture the subroutine entry in the trace file
 *
       AOCL_DTL_TRACE_ENTRY_F
+*
+*     Update the log buffer with the scalar arguments details,
+*     MPI process grid information and write to the log file
+*
+      IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
+         WRITE(LOG_BUF,102)  INFO, IZ, JZ, LIWORK, LWORK,
+     $            M, N, ORFAC, eos_str
+ 102     FORMAT('PDSTEIN inputs: ,INFO:',I5,', IZ:',I5,
+     $           ', JZ:',I5,', LIWORK:',I5,', LWORK:',I5,
+     $           ', M:',I5,', N:',I5,', ORFAC:',F9.4, A1 )
+         AOCL_DTL_LOG_ENTRY_F
+      END IF
 *       This is just to keep ftnchek happy
       IF( BLOCK_CYCLIC_2D*CSRC_*CTXT_*DLEN_*DTYPE_*LLD_*MB_*M_*NB_*N_*
      $    RSRC_.LT.0 )THEN
@@ -325,20 +336,6 @@
       END IF
 *
       CALL BLACS_GRIDINFO( DESCZ( CTXT_ ), NPROW, NPCOL, MYROW, MYCOL )
-*
-*     Update the log buffer with the scalar arguments details,
-*     MPI process grid information and write to the log file
-*
-      IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
-         WRITE(LOG_BUF,102)  INFO, IZ, JZ, LIWORK, LWORK,
-     $            M, N, ORFAC, NPROW, NPCOL, MYROW, MYCOL,
-     $            eos_str
- 102     FORMAT('PDSTEIN inputs:,INFO:',I5,',IZ:',I5,',JZ:',I5,
-     $           ',LIWORK:',I5,',LWORK:',I5,',M:',I5,
-     $           ',N:',I5,',ORFAC:',F9.4,',NPROW:',I5,
-     $           ',NPCOL:',I5,',MYROW:',I5,',MYCOL:',I5,A1)
-         AOCL_DTL_LOG_ENTRY_F
-      END IF
       SELF = MYROW*NPCOL + MYCOL
 *
 *     Make sure that we belong to this context (before calling PCHK1MAT)
@@ -688,6 +685,10 @@
 *
       WORK( 1 ) = ( LGCLSIZ+LOAD-1 )*N + INDRW
       IWORK( 1 ) = 3*N + P + 1
+*
+*     Capture the subroutine exit in the trace file
+*
+      AOCL_DTL_TRACE_EXIT_F
 *
 *     End of PDSTEIN
 *

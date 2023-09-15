@@ -165,7 +165,6 @@
 *     .. Intrinsic Functions ..
       INTRINSIC          MIN, MOD
 *     ..
-*     ..
 *     .. Executable Statements ..
 *
 *     Initialize framework context structure if not initialized
@@ -177,6 +176,16 @@
 *     Capture the subroutine entry in the trace file
 *
       AOCL_DTL_TRACE_ENTRY_F
+*
+*     Update the log buffer with the scalar arguments details,
+*     MPI process grid information and write to the log file
+*
+      IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
+         WRITE(LOG_BUF,102)  I, II, JJ, LDB, M, REV, eos_str
+ 102     FORMAT('PDLACP3 inputs: ,I:',I5,', II:',I5,', JJ:',I5,
+     $           ', LDB:',I5,', M:',I5,', REV:',I5, A1 )
+         AOCL_DTL_LOG_ENTRY_F
+      END IF
 *
       IF( M.LE.0 ) THEN
 *
@@ -193,19 +202,6 @@
       JAFIRST = DESCA( CSRC_ )
 *
       CALL BLACS_GRIDINFO( CONTXT, NPROW, NPCOL, MYROW, MYCOL )
-*
-*     Update the log buffer with the scalar arguments details,
-*     MPI process grid information and write to the log file
-*
-      IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
-         WRITE(LOG_BUF,102)  I, II, JJ, LDB, M, REV, NPROW,
-     $            NPCOL, MYROW, MYCOL, eos_str
- 102     FORMAT('PDLACP3 inputs:,I:',I5,',II:',I5,',JJ:',I5,
-     $           ',LDB:',I5,',M:',I5,',REV:',I5,
-     $           ',NPROW:',I5,',NPCOL:',I5,',MYROW:',I5,
-     $           ',MYCOL:',I5,A1)
-         AOCL_DTL_LOG_ENTRY_F
-      END IF
 *
       IF( REV.EQ.0 ) THEN
          DO 20 IDI = 1, M

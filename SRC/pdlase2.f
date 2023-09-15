@@ -161,7 +161,6 @@
 *     .. Intrinsic Functions ..
       INTRINSIC          MAX, MIN, MOD
 *     ..
-*     ..
 *     .. Executable Statements ..
 *
 *     Initialize framework context structure if not initialized
@@ -174,6 +173,18 @@
 *
       AOCL_DTL_TRACE_ENTRY_F
 *
+*     Update the log buffer with the scalar arguments details,
+*     MPI process grid information and write to the log file
+*
+      IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
+         WRITE(LOG_BUF,102)  UPLO, IA, JA, M, N, ALPHA,
+     $            BETA, eos_str
+ 102     FORMAT('PDLASE2 inputs: ,UPLO:',A5,', IA:',I5,
+     $           ', JA:',I5,', M:',I5,', N:',I5,', ALPHA:',F9.4,
+     $           ', BETA:',F9.4, A1 )
+         AOCL_DTL_LOG_ENTRY_F
+      END IF
+*
       IF( M.EQ.0 .OR. N.EQ.0 ) THEN
 *
 *        Capture the subroutine exit in the trace file
@@ -185,19 +196,6 @@
 *     Get grid parameters
 *
       CALL BLACS_GRIDINFO( DESCA( CTXT_ ), NPROW, NPCOL, MYROW, MYCOL )
-*
-*     Update the log buffer with the scalar arguments details,
-*     MPI process grid information and write to the log file
-*
-      IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
-         WRITE(LOG_BUF,102)  UPLO, IA, JA, M, N, ALPHA, BETA,
-     $            NPROW, NPCOL, MYROW, MYCOL, eos_str
- 102     FORMAT('PDLASE2 inputs:,UPLO:',A5,',IA:',I5,',JA:',I5,
-     $           ',M:',I5,',N:',I5,',ALPHA:',F9.4,
-     $           ',BETA:',F9.4,',NPROW:',I5,',NPCOL:',I5,
-     $           ',MYROW:',I5,',MYCOL:',I5,A1)
-         AOCL_DTL_LOG_ENTRY_F
-      END IF
 *
       CALL INFOG2L( IA, JA, DESCA, NPROW, NPCOL, MYROW, MYCOL, IIA, JJA,
      $              IAROW, IACOL )

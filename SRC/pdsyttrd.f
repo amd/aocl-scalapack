@@ -463,7 +463,6 @@
 *     ..
 *
 *
-*     ..
 *     .. Executable Statements ..
 *
 *     Initialize framework context structure if not initialized
@@ -475,6 +474,18 @@
 *     Capture the subroutine entry in the trace file
 *
       AOCL_DTL_TRACE_ENTRY_F
+*
+*     Update the log buffer with the scalar arguments details,
+*     MPI process grid information and write to the log file
+*
+      IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
+         WRITE(LOG_BUF,102)  UPLO, IA, INFO, JA, LWORK,
+     $            N, eos_str
+ 102     FORMAT('PDSYTTRD inputs: ,UPLO:',A5,', IA:',I5,
+     $           ', INFO:',I5,', JA:',I5,', LWORK:',I5,
+     $           ', N:',I5, A1 )
+         AOCL_DTL_LOG_ENTRY_F
+      END IF
 *       This is just to keep ftnchek and toolpack/1 happy
       IF( BLOCK_CYCLIC_2D*CSRC_*CTXT_*DLEN_*DTYPE_*LLD_*MB_*M_*NB_*N_*
      $    RSRC_.LT.0 )THEN
@@ -507,19 +518,6 @@
 *
       ICTXT = DESCA( CTXT_ )
       CALL BLACS_GRIDINFO( ICTXT, NPROW, NPCOL, MYROW, MYCOL )
-*
-*     Update the log buffer with the scalar arguments details,
-*     MPI process grid information and write to the log file
-*
-      IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
-         WRITE(LOG_BUF,102)  UPLO, IA, INFO, JA, LWORK, N,
-     $            NPROW, NPCOL, MYROW, MYCOL, eos_str
- 102     FORMAT('PDSYTTRD inputs:,UPLO:',A5,',IA:',I5,',INFO:',I5,
-     $           ',JA:',I5,',LWORK:',I5,',N:',I5,
-     $           ',NPROW:',I5,',NPCOL:',I5,',MYROW:',I5,
-     $           ',MYCOL:',I5,A1)
-         AOCL_DTL_LOG_ENTRY_F
-      END IF
 *
       SAFMAX = SQRT( PDLAMCH( ICTXT, 'O' ) ) / N
       SAFMIN = SQRT( PDLAMCH( ICTXT, 'S' ) )

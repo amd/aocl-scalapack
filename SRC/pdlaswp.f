@@ -159,7 +159,6 @@
       LOGICAL            LSAME
       EXTERNAL           LSAME
 *     ..
-*     ..
 *     .. Executable Statements ..
 *
 *     Initialize framework context structure if not initialized
@@ -172,9 +171,27 @@
 *
       AOCL_DTL_TRACE_ENTRY_F
 *
+*     Update the log buffer with the scalar arguments details,
+*     MPI process grid information and write to the log file
+*
+      IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
+         WRITE(LOG_BUF,102)  DIREC, ROWCOL, IA, JA, K1,
+     $            K2, N, eos_str
+ 102     FORMAT('PDLASWP inputs: ,DIREC:',A5,', ROWCOL:',A5,
+     $           ', IA:',I5,', JA:',I5,', K1:',I5,
+     $           ', K2:',I5,', N:',I5, A1 )
+         AOCL_DTL_LOG_ENTRY_F
+      END IF
+*
+#ifdef AOCL_DTL
+      CALL AOCL_SL_DTL_TRACE_ENTRY(__FILE__, __LINE__, ' ')
+#endif
 *     Quick return if possible
 *
       IF( N.EQ.0 ) THEN
+#ifdef AOCL_DTL
+         CALL AOCL_SL_DTL_TRACE_EXIT(__FILE__, __LINE__, ' ')
+#endif
 *
 *        Capture the subroutine exit in the trace file
 *
@@ -183,19 +200,6 @@
       END IF
 *
       CALL BLACS_GRIDINFO( DESCA( CTXT_ ), NPROW, NPCOL, MYROW, MYCOL )
-*
-*     Update the log buffer with the scalar arguments details,
-*     MPI process grid information and write to the log file
-*
-      IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
-         WRITE(LOG_BUF,102)  DIREC, ROWCOL, IA, JA, K1, K2,
-     $            N, NPROW, NPCOL, MYROW, MYCOL, eos_str
- 102     FORMAT('PDLASWP inputs:,DIREC:',A5,',ROWCOL:',A5,
-     $           ',IA:',I5,',JA:',I5,',K1:',I5,',K2:',I5,
-     $           ',N:',I5,',NPROW:',I5,',NPCOL:',I5 ,
-     $           ',MYROW:',I5,',MYCOL:',I5,A5)
-         AOCL_DTL_LOG_ENTRY_F
-      END IF
 *
       IF( LSAME( ROWCOL, 'R' ) ) THEN
          IF( LSAME( DIREC, 'F' ) ) THEN
@@ -239,6 +243,9 @@
          END IF
       END IF
 *
+#ifdef AOCL_DTL
+      CALL AOCL_SL_DTL_TRACE_EXIT(__FILE__, __LINE__, ' ')
+#endif
 *
 *     Capture the subroutine exit in the trace file
 *

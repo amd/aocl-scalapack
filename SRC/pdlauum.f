@@ -146,7 +146,6 @@
 *     .. Intrinsic Functions ..
       INTRINSIC          MIN
 *     ..
-*     ..
 *     .. Executable Statements ..
 *
 *     Initialize framework context structure if not initialized
@@ -163,11 +162,10 @@
 *
       IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
          WRITE(LOG_BUF,102)  UPLO, IA, JA, N, eos_str
- 102     FORMAT('PDLACPY inputs:,UPLO:',A5,',IA:',I5,',JA:',I5,
-     $           ',N:',I5,A1)
+ 102     FORMAT('PDLAUUM inputs: ,UPLO:',A5,', IA:',I5,
+     $           ', JA:',I5,', N:',I5, A1 )
          AOCL_DTL_LOG_ENTRY_F
       END IF
-*
 *
 *     Quick return if possible
 *

@@ -1,3 +1,9 @@
+*
+*     Copyright (c) 2023 Advanced Micro Devices, Inc.  All rights reserved.
+*
+*
+#include "SL_Context_fortran_include.h"
+*
       SUBROUTINE PDSTEBZ( ICTXT, RANGE, ORDER, N, VL, VU, IL, IU,
      $                    ABSTOL, D, E, M, NSPLIT, W, IBLOCK, ISPLIT,
      $                    WORK, LWORK, IWORK, LIWORK, INFO )
@@ -7,6 +13,7 @@
 *     and University of California, Berkeley.
 *     November 15, 1997
 *
+      USE LINK_TO_C_GLOBALS
 *     .. Scalar Arguments ..
       CHARACTER          ORDER, RANGE
       INTEGER            ICTXT, IL, INFO, IU, LIWORK, LWORK, M, N,
@@ -256,9 +263,42 @@
       INTEGER            TORECV( 1, 1 )
 *     ..
 *     .. Executable Statements ..
+*
+*     Initialize framework context structure if not initialized
+*
+*
+      CALL AOCL_SCALAPACK_INIT( )
+*
+*
+*     Capture the subroutine entry in the trace file
+*
+      AOCL_DTL_TRACE_ENTRY_F
+*
+*     Update the log buffer with the scalar arguments details,
+*     MPI process grid information and write to the log file
+*
+      IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
+         WRITE(LOG_BUF,102)  ORDER, RANGE, ICTXT, IL, INFO,
+     $            IU, LIWORK, LWORK, M, N,                   NSPLIT,
+     $            ABSTOL, VL, VU, eos_str
+ 102     FORMAT('PDSTEBZ inputs: ,ORDER:',A5,', RANGE:',A5,
+     $           ', ICTXT:',I5,', IL:',I5,', INFO:',I5,
+     $           ', IU:',I5,', LIWORK:',I5,', LWORK:',I5,
+     $           ', M:',I5,', N:',I5,', NSPLIT:',I5,
+     $           ', ABSTOL:',F9.4,', VL:',F9.4,
+     $           ', VU:',F9.4, A1)
+         AOCL_DTL_LOG_ENTRY_F
+      END IF
+*
 *       This is just to keep ftnchek happy
       IF( BLOCK_CYCLIC_2D*CSRC_*CTXT_*DLEN_*DTYPE_*LLD_*MB_*M_*NB_*N_*
-     $    RSRC_.LT.0 )RETURN
+     $    RSRC_.LT.0 )THEN
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
+         RETURN
+      END IF
 *
 *     Set up process grid
 *
@@ -377,16 +417,29 @@
 *
       IF( INFO.NE.0 ) THEN
          CALL PXERBLA( ICTXT, 'PDSTEBZ', -INFO )
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       ELSE IF( LWORK.EQ.-1 .AND. LIWORK.EQ.-1 ) THEN
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
 *
 *
 *     Quick return if possible
 *
-      IF( N.EQ.0 )
-     $   RETURN
+      IF( N.EQ.0 ) THEN
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
+         RETURN
+      END IF
 *
       K = 1
       DO 20 I = 0, NPROW - 1
@@ -874,6 +927,10 @@
   230 CONTINUE
       CALL BLACS_FREEBUFF( ONEDCONTEXT, 1 )
       CALL BLACS_GRIDEXIT( ONEDCONTEXT )
+*
+*     Capture the subroutine exit in the trace file
+*
+      AOCL_DTL_TRACE_EXIT_F
       RETURN
 *
 *     End of PDSTEBZ
@@ -890,6 +947,7 @@
 *     November 15, 1997
 *
 *
+      USE LINK_TO_C_GLOBALS
 *     .. Scalar Arguments ..
       INTEGER            IEFLAG, IJOB, INFO, MINP, MMAX, MOUT, N
       DOUBLE PRECISION   ABSTOL, LSAVE, PIVMIN, RELTOL
@@ -1031,12 +1089,40 @@
 *     ..
 *     .. Executable Statements ..
 *
+*     Initialize framework context structure if not initialized
+*
+*
+      CALL AOCL_SCALAPACK_INIT( )
+*
+*
+*     Capture the subroutine entry in the trace file
+*
+      AOCL_DTL_TRACE_ENTRY_F
+*
+*     Update the log buffer with the scalar arguments details
+*
+      IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
+         WRITE(LOG_BUF,102)  IEFLAG, IJOB, INFO, MINP, MMAX,
+     $            MOUT, N, ABSTOL, LSAVE, PIVMIN,
+     $            RELTOL, eos_str
+ 102     FORMAT('PDLAEBZ inputs: ,IEFLAG:',I5,', IJOB:',I5,
+     $           ', INFO:',I5,', MINP:',I5,', MMAX:',I5,
+     $           ', MOUT:',I5,', N:',I5,', ABSTOL:',F9.4,
+     $           ', LSAVE:',F9.4,', PIVMIN:',F9.4,
+     $           ', RELTOL:',F9.4, A1)
+         AOCL_DTL_LOG_ENTRY_F
+      END IF
+*
       KF = 1
       KL = MINP + 1
       INFO = 0
       IF( INTVL( 2 )-INTVL( 1 ).LE.ZERO ) THEN
          INFO = MINP
          MOUT = KF
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
       IF( IJOB.EQ.0 ) THEN
@@ -1192,6 +1278,10 @@
                   KLNEW = KLNEW + 1
                ELSE
                   INFO = MMAX + 1
+*
+*                 Capture the subroutine exit in the trace file
+*
+                  AOCL_DTL_TRACE_EXIT_F
                   RETURN
                END IF
    40       CONTINUE
@@ -1205,6 +1295,10 @@
    60 CONTINUE
       INFO = MAX( KL-KF, 0 )
       MOUT = KL - 1
+*
+*     Capture the subroutine exit in the trace file
+*
+      AOCL_DTL_TRACE_EXIT_F
       RETURN
 *
 *     End of PDLAEBZ
@@ -1221,6 +1315,7 @@
 *     November 15, 1997
 *
 *
+      USE LINK_TO_C_GLOBALS
 *     .. Scalar Arguments ..
       INTEGER            IJOB, KF, KL
       DOUBLE PRECISION   ABSTOL, RELTOL
@@ -1313,6 +1408,27 @@
 *     ..
 *     .. Executable Statements ..
 *
+*     Initialize framework context structure if not initialized
+*
+*
+      CALL AOCL_SCALAPACK_INIT( )
+*
+*
+*     Capture the subroutine entry in the trace file
+*
+      AOCL_DTL_TRACE_ENTRY_F
+*
+*     Update the log buffer with the scalar arguments details
+*
+      IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
+         WRITE(LOG_BUF,102)  IJOB, KF, KL, ABSTOL, RELTOL,
+     $            eos_str
+ 102     FORMAT('PDLAECV inputs: ,IJOB:',I5,', KF:',I5,
+     $           ', KL:',I5,', ABSTOL:',F9.4,', RELTOL:',F9.4,
+     $           A1)
+         AOCL_DTL_LOG_ENTRY_F
+      END IF
+*
       KFNEW = KF
       DO 10 I = KF, KL - 1
          K = 2*I
@@ -1355,6 +1471,10 @@
          END IF
    10 CONTINUE
       KF = KFNEW
+*
+*     Capture the subroutine exit in the trace file
+*
+      AOCL_DTL_TRACE_EXIT_F
       RETURN
 *
 *     End of PDLAECV
@@ -1369,6 +1489,7 @@
 *     November 15, 1997
 *
 *
+      USE LINK_TO_C_GLOBALS
 *     .. Scalar Arguments ..
       INTEGER            COUNT, N
       DOUBLE PRECISION   PIVMIN, SIGMA
@@ -1437,6 +1558,26 @@
 *     ..
 *     .. Executable Statements ..
 *
+*     Initialize framework context structure if not initialized
+*
+*
+      CALL AOCL_SCALAPACK_INIT( )
+*
+*
+*     Capture the subroutine entry in the trace file
+*
+      AOCL_DTL_TRACE_ENTRY_F
+*
+*     Update the log buffer with the scalar arguments details
+*
+      IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
+         WRITE(LOG_BUF,102)  COUNT, N, PIVMIN, SIGMA,
+     $            eos_str
+ 102     FORMAT('PDLAPDCT inputs: ,COUNT:',I5,', N:',I5,
+     $           ', PIVMIN:',F9.4,', SIGMA:',F9.4, A1)
+         AOCL_DTL_LOG_ENTRY_F
+      END IF
+*
       TMP = D( 1 ) - SIGMA
       IF( ABS( TMP ).LE.PIVMIN )
      $   TMP = -PIVMIN
@@ -1451,6 +1592,10 @@
      $      COUNT = COUNT + 1
    10 CONTINUE
 *
+*
+*     Capture the subroutine exit in the trace file
+*
+      AOCL_DTL_TRACE_EXIT_F
       RETURN
 *
 *     End of PDLAPDCT
