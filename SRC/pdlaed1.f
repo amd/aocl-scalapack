@@ -143,7 +143,6 @@
 *     .. Intrinsic Functions ..
       INTRINSIC          MAX, MIN
 *     ..
-*     ..
 *     .. Executable Statements ..
 *
 *     Initialize framework context structure if not initialized
@@ -155,6 +154,18 @@
 *     Capture the subroutine entry in the trace file
 *
       AOCL_DTL_TRACE_ENTRY_F
+*
+*     Update the log buffer with the scalar arguments details,
+*     MPI process grid information and write to the log file
+*
+      IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
+         WRITE(LOG_BUF,102)  ID, INFO, IQ, JQ, N, N1, RHO,
+     $            eos_str
+ 102     FORMAT('PDLAED1 inputs: ,ID:',I5,', INFO:',I5,
+     $           ', IQ:',I5,', JQ:',I5,', N:',I5,', N1:',I5,
+     $           ', RHO:',F9.4, A1 )
+         AOCL_DTL_LOG_ENTRY_F
+      END IF
 *
 *       This is just to keep ftnchek and toolpack/1 happy
       IF( BLOCK_CYCLIC_2D*CSRC_*CTXT_*DLEN_*DTYPE_*LLD_*MB_*M_*NB_*N_*
@@ -170,19 +181,6 @@
 *     Test the input parameters.
 *
       CALL BLACS_GRIDINFO( DESCQ( CTXT_ ), NPROW, NPCOL, MYROW, MYCOL )
-*
-*     Update the log buffer with the scalar arguments details,
-*     MPI process grid information and write to the log file
-*
-      IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
-         WRITE(LOG_BUF,102)  ID, INFO, IQ, JQ, N, N1, RHO,
-     $            NPROW, NPCOL, MYROW, MYCOL, eos_str
- 102     FORMAT('PDLAED1 inputs:,ID:',I5,',INFO:',I5,',IQ:',I5,
-     $           ',JQ:',I5,',N:',I5,',N1:',I5,
-     $           ',RHO:',F9.4,',NPROW:',I5,',NPCOL:',I5,
-     $           ',MYROW:',I5,',MYCOL:',I5,A1)
-         AOCL_DTL_LOG_ENTRY_F
-      END IF
       INFO = 0
       IF( NPROW.EQ.-1 ) THEN
          INFO = -( 600+CTXT_ )

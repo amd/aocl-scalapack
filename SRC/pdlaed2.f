@@ -184,7 +184,6 @@
 *     .. Local Arrays ..
       INTEGER            PTT( 4 )
 *     ..
-*     ..
 *     .. Executable Statements ..
 *
 *     Initialize framework context structure if not initialized
@@ -196,6 +195,22 @@
 *     Capture the subroutine entry in the trace file
 *
       AOCL_DTL_TRACE_ENTRY_F
+*
+*     Update the log buffer with the scalar arguments details,
+*     MPI process grid information and write to the log file
+*
+      IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
+         WRITE(LOG_BUF,102)  DCOL, DROW, IB1, IB2, ICTXT,
+     $            K, LDQ, LDQ2, N,                   N1,
+     $            NB, NN, NN1, NN2, NPCOL, RHO, eos_str
+ 102     FORMAT('PDLAED2 inputs: ,DCOL:',I5,', DROW:',I5,
+     $           ', IB1:',I5,', IB2:',I5,', ICTXT:',I5,
+     $           ', K:',I5,', LDQ:',I5,', LDQ2:',I5,
+     $           ', N:',I5,', N1:',I5,', NB:',I5,', NN:',I5,
+     $           ', NN1:',I5,', NN2:',I5,', NPCOL:',I5,
+     $           ', RHO:',F9.4, A1 )
+         AOCL_DTL_LOG_ENTRY_F
+      END IF
 *
 *     Quick return if possible
 *
@@ -209,23 +224,6 @@
 *
       CALL BLACS_PINFO( IAM, NPROCS )
       CALL BLACS_GRIDINFO( ICTXT, NPROW, NPCOL, MYROW, MYCOL )
-*
-*     Update the log buffer with the scalar arguments details,
-*     MPI process grid information and write to the log file
-*
-      IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
-         WRITE(LOG_BUF,102)  DCOL, DROW, IB1, IB2, ICTXT,
-     $            K, LDQ, LDQ2, N,                   N1,
-     $            NB, NN, NN1, NN2, NPCOL, RHO, NPROW,
-     $            NPCOL, MYROW, MYCOL, eos_str
- 102     FORMAT('PDLAED2 inputs:,DCOL:',I5,',DROW:',I5,
-     $           ',IB1:',I5,',IB2:',I5,',ICTXT:',I5,',K:',I5,
-     $           ',LDQ:',I5,',LDQ2:',I5,',N:',I5,
-     $           ',N1:',I5,',NB:',I5,',NN:',I5,',NN1:',I5,
-     $           ',NN2:',I5,',NPCOL:',I5,',RHO:',F9.4,
-     $           ',NPROW:',I5,',NPCOL:',I5,',MYROW:',I5,',MYCOL:',I5,A1)
-         AOCL_DTL_LOG_ENTRY_F
-      END IF
       NP = NUMROC( N, NB, MYROW, DROW, NPROW )
 *
       N2 = N - N1

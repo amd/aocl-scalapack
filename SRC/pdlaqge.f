@@ -184,7 +184,6 @@
 *     .. Intrinsic Functions ..
       INTRINSIC          MOD
 *     ..
-*     ..
 *     .. Executable Statements ..
 *
 *     Initialize framework context structure if not initialized
@@ -196,6 +195,18 @@
 *     Capture the subroutine entry in the trace file
 *
       AOCL_DTL_TRACE_ENTRY_F
+*
+*     Update the log buffer with the scalar arguments details,
+*     MPI process grid information and write to the log file
+*
+      IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
+         WRITE(LOG_BUF,102)  EQUED, IA, JA, M, N, AMAX,
+     $            COLCND, ROWCND, eos_str
+ 102     FORMAT('PDLAQGE inputs: ,EQUED:',A5,', IA:',I5,
+     $           ', JA:',I5,', M:',I5,', N:',I5,', AMAX:',F9.4,
+     $           ', COLCND:',F9.4,', ROWCND:',F9.4, A1 )
+         AOCL_DTL_LOG_ENTRY_F
+      END IF
 *
 *     Quick return if possible
 *
@@ -212,21 +223,6 @@
 *
       ICTXT = DESCA( CTXT_ )
       CALL BLACS_GRIDINFO( ICTXT, NPROW, NPCOL, MYROW, MYCOL )
-*
-*     Update the log buffer with the scalar arguments details,
-*     MPI process grid information and write to the log file
-*
-      IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
-         WRITE(LOG_BUF,102)  EQUED, IA, JA, M, N, AMAX, COLCND,
-     $            ROWCND, NPROW, NPCOL, MYROW,
-     $            MYCOL, eos_str
- 102     FORMAT('PDLAQGE inputs:,EQUED:',A5,',IA:',I5,',JA:',I5,
-     $           ',M:',I5,',N:',I5,',AMAX:',F9.4,
-     $           ',COLCND:',F9.4,',ROWCND:',F9.4,
-     $           ',NPROW:',I5,',NPCOL:',I5,',MYROW:',I5,
-     $           ',MYCOL:',I5,A1)
-         AOCL_DTL_LOG_ENTRY_F
-      END IF
       CALL INFOG2L( IA, JA, DESCA, NPROW, NPCOL, MYROW, MYCOL, IIA, JJA,
      $              IAROW, IACOL )
       IROFF = MOD( IA-1, DESCA( MB_ ) )

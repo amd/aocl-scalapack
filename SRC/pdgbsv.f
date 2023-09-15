@@ -394,7 +394,6 @@
 *     .. External Subroutines ..
       EXTERNAL           PDGBTRF, PDGBTRS, PXERBLA
 *     ..
-*     ..
 *     .. Executable Statements ..
 *
 *     Initialize framework context structure if not initialized
@@ -406,6 +405,18 @@
 *     Capture the subroutine entry in the trace file
 *
       AOCL_DTL_TRACE_ENTRY_F
+*
+*     Update the log buffer with the scalar arguments details,
+*     MPI process grid information and write to the log file
+*
+      IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
+         WRITE(LOG_BUF,102)  BWL, BWU, IB, INFO, JA, LWORK,
+     $            N, NRHS, eos_str
+ 102     FORMAT('PDGBSV inputs: ,BWL:',I5,', BWU:',I5,', IB:',I5,
+     $           ', INFO:',I5,', JA:',I5,', LWORK:',I5,
+     $           ', N:',I5,', NRHS:',I5, A1 )
+         AOCL_DTL_LOG_ENTRY_F
+      END IF
 *
 *     Note: to avoid duplication, most error checking is not performed
 *           in this routine and is left to routines
@@ -436,20 +447,6 @@
       ENDIF
 *
       CALL BLACS_GRIDINFO( ICTXT, NPROW, NPCOL, MYROW, MYCOL )
-*
-*     Update the log buffer with the scalar arguments details,
-*     MPI process grid information and write to the log file
-*
-      IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
-         WRITE(LOG_BUF,102)  BWL, BWU, IB, INFO, JA, LWORK,
-     $            N, NRHS, NPROW, NPCOL, MYROW, MYCOL,
-     $            eos_str
- 102     FORMAT('PDGBSV inputs:,BWL:',I5,',BWU:',I5,',IB:',I5,
-     $           ',INFO:',I5,',JA:',I5,',LWORK:',I5,
-     $           ',N:',I5,',NRHS:',I5,',NPROW:',I5,
-     $           ',NPCOL:',I5 ,',MYROW:',I5,',MYCOL:',I5,A5)
-         AOCL_DTL_LOG_ENTRY_F
-      END IF
 *
 *
 *     Size needed for AF in factorization

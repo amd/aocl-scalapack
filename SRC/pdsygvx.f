@@ -532,7 +532,6 @@
 *     .. Intrinsic Functions ..
       INTRINSIC          ABS, DBLE, ICHAR, INT, MAX, MIN, MOD, SQRT
 *     ..
-*     ..
 *     .. Executable Statements ..
 *
 *     Initialize framework context structure if not initialized
@@ -544,6 +543,25 @@
 *     Capture the subroutine entry in the trace file
 *
       AOCL_DTL_TRACE_ENTRY_F
+*
+*     Update the log buffer with the scalar arguments details,
+*     MPI process grid information and write to the log file
+*
+      IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
+         WRITE(LOG_BUF,102)  JOBZ, RANGE, UPLO, IA, IB,
+     $            IBTYPE, IL, INFO, IU, IZ, JA, JB, JZ,
+     $                              LIWORK, LWORK, M,
+     $            N, NZ, ABSTOL, ORFAC, VL, VU, eos_str
+ 102     FORMAT('PDSYGVX inputs: ,JOBZ:',A5,', RANGE:',A5,
+     $           ', UPLO:',A5,', IA:',I5,', IB:',I5,
+     $           ', IBTYPE:',I5,', IL:',I5,', INFO:',I5,
+     $           ', IU:',I5,', IZ:',I5,', JA:',I5,
+     $           ', JB:',I5,', JZ:',I5,', LIWORK:',I5,
+     $           ', LWORK:',I5,', M:',I5,', N:',I5,
+     $           ', NZ:',I5,', ABSTOL:',F9.4,', ORFAC:',F9.4,
+     $           ', VL:',F9.4,', VU:',F9.4, A1 )
+         AOCL_DTL_LOG_ENTRY_F
+      END IF
 *       This is just to keep ftnchek and toolpack/1 happy
       IF( BLOCK_CYCLIC_2D*CSRC_*CTXT_*DLEN_*DTYPE_*LLD_*MB_*M_*NB_*N_*
      $    RSRC_.LT.0 )THEN
@@ -558,27 +576,6 @@
 *
       ICTXT = DESCA( CTXT_ )
       CALL BLACS_GRIDINFO( ICTXT, NPROW, NPCOL, MYROW, MYCOL )
-*
-*     Update the log buffer with the scalar arguments details,
-*     MPI process grid information and write to the log file
-*
-      IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
-         WRITE(LOG_BUF,102)  JOBZ, RANGE, UPLO, IA, IB, IBTYPE,
-     $            IL, INFO, IU, IZ, JA, JB, JZ,
-     $                              LIWORK, LWORK, M,
-     $            N, NZ, ABSTOL, ORFAC, VL, VU, NPROW,
-     $            NPCOL, MYROW, MYCOL, eos_str
- 102     FORMAT('PDSYGVX inputs:,JOBZ:',A5,',RANGE:',A5,
-     $           ',UPLO:',A5,',IA:',I5,',IB:',I5,',IBTYPE:',I5,
-     $           ',IL:',I5,',INFO:',I5,',IU:',I5,
-     $           ',IZ:',I5,',JA:',I5,',JB:',I5,
-     $           ',JZ:',I5,',LIWORK:',I5,',LWORK:',I5,
-     $           ',M:',I5,',N:',I5,',NZ:',I5,',ABSTOL:',F9.4,
-     $           ',ORFAC:',F9.4,',VL:',F9.4,
-     $           ',VU:',F9.4,',NPROW:',I5,',NPCOL:',I5,
-     $           ',MYROW:',I5,',MYCOL:',I5,A1)
-         AOCL_DTL_LOG_ENTRY_F
-      END IF
 *
 *     Test the input parameters
 *

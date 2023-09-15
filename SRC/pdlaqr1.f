@@ -308,7 +308,6 @@
 *     .. Intrinsic Functions ..
       INTRINSIC          ABS, DBLE, MAX, MIN, MOD, SIGN, SQRT
 *     ..
-*     ..
 *     .. Executable Statements ..
 *
 *     Initialize framework context structure if not initialized
@@ -320,6 +319,19 @@
 *     Capture the subroutine entry in the trace file
 *
       AOCL_DTL_TRACE_ENTRY_F
+*
+*     Update the log buffer with the scalar arguments details,
+*     MPI process grid information and write to the log file
+*
+      IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
+         WRITE(LOG_BUF,102)  WANTT, WANTZ, IHI, IHIZ, ILO,
+     $            ILOZ, ILWORK, INFO, LWORK, N, eos_str
+ 102     FORMAT('PDLAQR1 inputs: ,WANTT:',L1,', WANTZ:',L1,
+     $           ', IHI:',I5,', IHIZ:',I5,', ILO:',I5,
+     $           ', ILOZ:',I5,', ILWORK:',I5,', INFO:',I5,
+     $           ', LWORK:',I5,', N:',I5, A1 )
+         AOCL_DTL_LOG_ENTRY_F
+      END IF
 *
       INFO = 0
 *
@@ -341,21 +353,6 @@
       JAFIRST = DESCA( CSRC_ )
       LDZ = DESCZ( LLD_ )
       CALL BLACS_GRIDINFO( CONTXT, NPROW, NPCOL, MYROW, MYCOL )
-*
-*     Update the log buffer with the scalar arguments details,
-*     MPI process grid information and write to the log file
-*
-      IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
-         WRITE(LOG_BUF,102)  WANTT, WANTZ, IHI, IHIZ, ILO,
-     $            ILOZ, ILWORK, INFO, LWORK, N, NPROW,
-     $            NPCOL, MYROW, MYCOL, eos_str
- 102     FORMAT('PDLAQR1 inputs:,WANTT:',L2,',WANTZ:',L2,
-     $           ',IHI:',I5,',IHIZ:',I5,',ILO:',I5,
-     $           ',ILOZ:',I5,',ILWORK:',I5,',INFO:',I5,
-     $           ',LWORK:',I5,',N:',I5,',NPROW:',I5,
-     $           ',NPCOL:',I5,',MYROW:',I5,',MYCOL:',I5,A1)
-         AOCL_DTL_LOG_ENTRY_F
-      END IF
       NODE = MYROW*NPCOL + MYCOL
       NUM = NPROW*NPCOL
       LEFT = MOD( MYCOL+NPCOL-1, NPCOL )
