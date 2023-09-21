@@ -803,7 +803,7 @@
 *         Calculate the update block for previous proc, E_i = GL_i{GU_i}
 *
 #ifdef F2C
-           CALL CDOTC( TMP, ODD_SIZE, AF( 1 ), 1, 
+           CALL CDOTC( TMP, ODD_SIZE, AF( 1 ), 1,
      $                     AF( WORK_U+1 ), 1 )
            AF( ODD_SIZE+3 ) = -CONE * TMP
 #else

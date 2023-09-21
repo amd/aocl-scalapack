@@ -1,6 +1,10 @@
+*     Modifications Copyright (c) 2023 Advanced Micro Devices, Inc.  All rights reserved.
+*
+*
 *  -- ScaLAPACK routine --
-*     Copyright (c) 2020-22 Advanced Micro Devices, Inc.  All rights reserved.
+*     Copyright (c) 2022-23 Advanced Micro Devices, Inc.  All rights reserved.
 *     June 10, 2022
+*
 *
 #include "SL_Context_fortran_include.h"
 *
@@ -162,6 +166,7 @@
 *
 *     .. Declaring 'API NAME' and its length as const objects
 *     .. API_NAME string terminated with 'NULL' character.
+*
       CHARACTER*8, PARAMETER :: API_NAME = FUNCTION_NAME // C_NULL_CHAR
       INTEGER, PARAMETER :: LEN_API_NAME = 8
 #endif
@@ -183,12 +188,16 @@
       INTRINSIC          MIN, MOD
 *     ..
 *
+*     .. Executable Statements ..
+*
 *     Initialize framework context structure if not initialized
 *
 *
       CALL AOCL_SCALAPACK_INIT( )
 *
-*     .. Executable Statements ..
+*     Capture the subroutine entry in the trace file
+*
+      AOCL_DTL_TRACE_ENTRY_F
 *
 *     Initialize framework context structure if not initialized
 *
