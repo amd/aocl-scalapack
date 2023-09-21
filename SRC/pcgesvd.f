@@ -1,4 +1,10 @@
+*     Modifications Copyright (c) 2023 Advanced Micro Devices, Inc.  All rights reserved.
+*
+*
 
+*
+#include "SL_Context_fortran_include.h"
+*
       SUBROUTINE PCGESVD(JOBU,JOBVT,M,N,A,IA,JA,DESCA,S,U,IU,JU,DESCU,
      +                   VT,IVT,JVT,DESCVT,WORK,LWORK,RWORK,INFO)
 *
@@ -8,6 +14,7 @@
 *     Jan 2006
 
 *
+      USE LINK_TO_C_GLOBALS
 *     .. Scalar Arguments ..
       CHARACTER JOBU,JOBVT
       INTEGER IA,INFO,IU,IVT,JA,JU,JVT,LWORK,M,N
@@ -328,7 +335,34 @@
       INTRINSIC CMPLX
 *     ..
 *     .. Executable Statements ..
+*
+*     Initialize framework context structure if not initialized
+*
+*
+      CALL AOCL_SCALAPACK_INIT( )
+*
+*
+*     Capture the subroutine entry in the trace file
+*
+      AOCL_DTL_TRACE_ENTRY_F
+*
+*     Update the log buffer with the scalar arguments details
+*
+      IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
+         WRITE(LOG_BUF,102)  JOBU,JOBVT, IA,INFO,IU,IVT,
+     $           JA,JU,JVT,LWORK,M,N, eos_str
+ 102     FORMAT('PCGESVD inputs: ,JOBU:',A5,', JOBVT:',A5,
+     $           ', IA:',I5,', INFO:',I5,', IU:',I5,
+     $           ', IVT:',I5,', JA:',I5,', JU:',I5,
+     $           ', JVT:',I5,', LWORK:',I5,', M:',I5,
+     $           ', N:',I5, A1 )
+         AOCL_DTL_LOG_ENTRY_F
+      END IF
 *     This is just to keep ftnchek happy
+*
+*     Capture the subroutine exit in the trace file
+*
+      AOCL_DTL_TRACE_EXIT_F
       IF (BLOCK_CYCLIC_2D*DTYPE_*LLD_*MB_*M_*NB_*N_.LT.0) RETURN
 *
       CALL BLACS_GRIDINFO(DESCA(CTXT_),NPROW,NPCOL,MYPROW,MYPCOL)
@@ -480,6 +514,10 @@
 *
       IF (INFO.NE.0) THEN
           CALL PXERBLA(DESCA(CTXT_),'PCGESVD',-INFO)
+*
+*         Capture the subroutine exit in the trace file
+*
+          AOCL_DTL_TRACE_EXIT_F
           RETURN
       ELSE IF (LWORK.EQ.-1) THEN
           GO TO 40
@@ -645,5 +683,9 @@
 *
 *     End of PCGESVD
 *
+*
+*     Capture the subroutine exit in the trace file
+*
+      AOCL_DTL_TRACE_EXIT_F
       RETURN
       END

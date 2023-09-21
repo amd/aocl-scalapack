@@ -1,3 +1,9 @@
+*     Modifications Copyright (c) 2023 Advanced Micro Devices, Inc.  All rights reserved.
+*
+*
+*
+#include "SL_Context_fortran_include.h"
+*
       SUBROUTINE PCLACP3( M, I, A, DESCA, B, LDB, II, JJ, REV )
 *
 *  -- ScaLAPACK routine (version 1.7) --
@@ -5,6 +11,7 @@
 *     and University of California, Berkeley.
 *     July 31, 2001
 *
+      USE LINK_TO_C_GLOBALS
 *     .. Scalar Arguments ..
       INTEGER            I, II, JJ, LDB, M, REV
 *     ..
@@ -161,8 +168,32 @@
 *     ..
 *     .. Executable Statements ..
 *
-      IF( M.LE.0 )
-     $   RETURN
+*     Initialize framework context structure if not initialized
+*
+*
+      CALL AOCL_SCALAPACK_INIT( )
+*
+*
+*     Capture the subroutine entry in the trace file
+*
+      AOCL_DTL_TRACE_ENTRY_F
+*
+*     Update the log buffer with the scalar arguments details
+*
+      IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
+         WRITE(LOG_BUF,102)  I, II, JJ, LDB, M, REV, eos_str
+ 102     FORMAT('PCLACP3 inputs: ,I:',I5,', II:',I5,', JJ:',I5,
+     $           ', LDB:',I5,', M:',I5,', REV:',I5, A1 )
+         AOCL_DTL_LOG_ENTRY_F
+      END IF
+*
+      IF( M.LE.0 ) THEN
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
+         RETURN
+      END IF
 *
       HBL = DESCA( MB_ )
       CONTXT = DESCA( CTXT_ )
@@ -305,6 +336,10 @@
          IF( IDJ.LE.IFIN )
      $      GO TO 30
       END IF
+*
+*     Capture the subroutine exit in the trace file
+*
+      AOCL_DTL_TRACE_EXIT_F
       RETURN
 *
 *     End of PCLACP3
