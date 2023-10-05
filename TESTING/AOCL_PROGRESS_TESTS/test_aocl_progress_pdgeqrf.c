@@ -10,21 +10,32 @@
 #endif
 #include "mpi.h"
 
+/** Typedefs  **/
+typedef Int ( *aocl_scalapack_progress_callback )(
+const char * const api,
+const Int  *lenapi,
+const Int  *progress,
+const Int  *current_process,
+const Int  *total_processes
+);
+
+/** Function prototype declarations  **/
 void blacs_get_(Int*, Int*, Int*);
 void blacs_pinfo_(Int*, Int*);
 void blacs_gridinit_(Int*, char*, Int*, Int*);
 void blacs_gridinfo_(Int*, Int*, Int*, Int*, Int*);
 void descinit_(Int*, Int*, Int*, Int*, Int*, Int*, Int*, Int*, Int*, Int*);
-void pdgerqf_(Int*, Int*, double*, Int*, Int*, Int*, double*, double*, Int*, Int*);
+void pdgeqrf_(Int*, Int*, double*, Int*, Int*, Int*, double*, double*, Int*, Int*);
 void blacs_gridexit_(Int*);
+void aocl_scalapack_set_progress(aocl_scalapack_progress_callback AOCL_progress_ptr);
+Int AOCL_progress(const char* const api, const Int *lenapi, const Int *progress, const Int *mpi_rank, const Int *total_mpi_processes);
 Int numroc_(Int*, Int*, Int*, Int*, Int*);
+/** Prototype declaration end  **/
 
-Int AOCL_progress(char* api, Int *lenapi, Int *progress, Int *mpi_rank, Int *total_mpi_processes);
-
-Int AOCL_progress(char* api, Int *lenapi, Int *progress, Int *mpi_rank, Int *total_mpi_processes)
+Int AOCL_progress(const char* const api, const Int *lenapi, const Int *progress, const Int *mpi_rank, const Int *total_mpi_processes)
 {
-	char api_name[20];
-	memcpy(api_name, api, *lenapi);
+    char api_name[20];
+    memcpy(api_name, api, *lenapi);
     printf( "In AOCL Progress MPI Rank: %i    API: %s   progress: %i   MPI processes: %i\n", *mpi_rank, api_name, *progress,*total_mpi_processes );
     return 0;
 }
@@ -92,10 +103,10 @@ int main(int argc, char **argv) {
     double *A;
     A = (double *)calloc(mpA*nqA,sizeof(double)) ;
     if (A==NULL){ printf("Error of memory allocation A on proc %dx%d\n",myrow,mycol); exit(0); }
-	double work_buffer_size;
-	double *work, *tau;
-	Int lwork = -1;
-	tau = (double *)calloc((mpA+nqA),sizeof(double)) ;
+    double work_buffer_size;
+    double *work, *tau;
+    Int lwork = -1;
+    tau = (double *)calloc((mpA+nqA),sizeof(double)) ;
 
     Int k = 0;
     for (Int j = 0; j < nqA; j++) { // local col
@@ -129,10 +140,10 @@ int main(int argc, char **argv) {
 
     pdgeqrf_(&m, &n, A, &ione, &jone, descA, tau, &work_buffer_size, &lwork, &info);
 
-	work = (double *)calloc(work_buffer_size, sizeof(double)) ;
-	lwork = work_buffer_size;
+    work = (double *)calloc(work_buffer_size, sizeof(double)) ;
+    lwork = work_buffer_size;
 
-    // Run pdpotrf and time
+    // Run pdgeqrf_ and measure time
     float MPIt1 = MPI_Wtime();
     printf("[%dx%d] Starting pdgeqrf\n", myrow, mycol);
     aocl_scalapack_set_progress(&AOCL_progress);

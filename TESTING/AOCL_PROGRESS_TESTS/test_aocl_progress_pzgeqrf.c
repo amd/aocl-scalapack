@@ -12,24 +12,32 @@
 
 #define SL_complex_double    double _Complex
 
+/** Typedefs  **/
+typedef Int ( *aocl_scalapack_progress_callback )(
+const char * const api,
+const Int  *lenapi,
+const Int  *progress,
+const Int  *current_process,
+const Int  *total_processes
+);
+
+/** Function prototype declarations  **/
 void blacs_get_(Int*, Int*, Int*);
 void blacs_pinfo_(Int*, Int*);
 void blacs_gridinit_(Int*, char*, Int*, Int*);
 void blacs_gridinfo_(Int*, Int*, Int*, Int*, Int*);
 void descinit_(Int*, Int*, Int*, Int*, Int*, Int*, Int*, Int*, Int*, Int*);
-
-/* Target API Prototype */
-void pzgerqf_(Int*, Int*, SL_complex_double*, Int*, Int*, Int*, SL_complex_double*, SL_complex_double*, Int*, Int*);
-
+void pzgeqrf_(Int*, Int*, SL_complex_double*, Int*, Int*, Int*, SL_complex_double*, SL_complex_double*, Int*, Int*);
 void blacs_gridexit_(Int*);
+void aocl_scalapack_set_progress(aocl_scalapack_progress_callback AOCL_progress_ptr);
+Int AOCL_progress(const char* const api, const Int *lenapi, const Int *progress, const Int *mpi_rank, const Int *total_mpi_processes);
 Int numroc_(Int*, Int*, Int*, Int*, Int*);
+/** Prototype declaration end  **/
 
-Int AOCL_progress(char* api, Int *lenapi, Int *progress, Int *mpi_rank, Int *total_mpi_processes);
-
-Int AOCL_progress(char* api, Int *lenapi, Int *progress, Int *mpi_rank, Int *total_mpi_processes)
+Int AOCL_progress(const char* const api, const Int *lenapi, const Int *progress, const Int *mpi_rank, const Int *total_mpi_processes)
 {
-	char api_name[20];
-	memcpy(api_name, api, *lenapi);
+    char api_name[20];
+    memcpy(api_name, api, *lenapi);
     printf( "In AOCL Progress MPI Rank: %i    API: %s   progress: %i   MPI processes: %i\n", *mpi_rank, api_name, *progress,*total_mpi_processes );
     return 0;
 }
@@ -97,10 +105,10 @@ int main(int argc, char **argv) {
     SL_complex_double *A;
     A = (SL_complex_double *)calloc(mpA*nqA,sizeof(SL_complex_double)) ;
     if (A==NULL){ printf("Error of memory allocation A on proc %dx%d\n",myrow,mycol); exit(0); }
-	SL_complex_double work_buffer_size;
-	SL_complex_double *work, *tau;
-	Int lwork = -1;
-	tau = (SL_complex_double *)calloc((mpA+nqA),sizeof(SL_complex_double)) ;
+    SL_complex_double work_buffer_size;
+    SL_complex_double *work, *tau;
+    Int lwork = -1;
+    tau = (SL_complex_double *)calloc((mpA+nqA),sizeof(SL_complex_double)) ;
 
     Int k = 0;
     for (Int j = 0; j < nqA; j++) { // local col
@@ -132,16 +140,16 @@ int main(int argc, char **argv) {
         printf("Error in descinit, info = %i\n", info);
     }
 
-    pzgerqf_(&m, &n, A, &ione, &jone, descA, tau, &work_buffer_size, &lwork, &info);
+    pzgeqrf_(&m, &n, A, &ione, &jone, descA, tau, &work_buffer_size, &lwork, &info);
 
-	work = (SL_complex_double *)calloc(work_buffer_size, sizeof(SL_complex_double)) ;
-	lwork = work_buffer_size;
+    work = (SL_complex_double *)calloc(work_buffer_size, sizeof(SL_complex_double)) ;
+    lwork = work_buffer_size;
 
-    // Run pdpotrf and time
+    // Run pzgeqrf_ and time
     float MPIt1 = MPI_Wtime();
     printf("[%dx%d] Starting pzgeqrf\n", myrow, mycol);
     aocl_scalapack_set_progress(&AOCL_progress);
-    pzgerqf_(&m, &n, A, &ione, &jone, descA, tau, work, &lwork, &info);
+    pzgeqrf_(&m, &n, A, &ione, &jone, descA, tau, work, &lwork, &info);
     if (info != 0) {
         printf("Error in pzgeqrf, info = %i\n", info);
     }
