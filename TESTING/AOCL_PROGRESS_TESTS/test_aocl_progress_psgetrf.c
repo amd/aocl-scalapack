@@ -10,6 +10,16 @@
 #endif
 #include "mpi.h"
 
+/** Typedefs  **/
+typedef Int ( *aocl_scalapack_progress_callback )(
+const char * const api,
+const Int  *lenapi,
+const Int  *progress,
+const Int  *current_process,
+const Int  *total_processes
+);
+
+/** Function prototype declarations  **/
 void blacs_get_(Int*, Int*, Int*);
 void blacs_pinfo_(Int*, Int*);
 void blacs_gridinit_(Int*, char*, Int*, Int*);
@@ -17,11 +27,12 @@ void blacs_gridinfo_(Int*, Int*, Int*, Int*, Int*);
 void descinit_(Int*, Int*, Int*, Int*, Int*, Int*, Int*, Int*, Int*, Int*);
 void psgetrf_(Int*, Int*, float*, Int*, Int*, Int*, Int*, Int*);
 void blacs_gridexit_(Int*);
+void aocl_scalapack_set_progress(aocl_scalapack_progress_callback AOCL_progress_ptr);
+Int AOCL_progress(const char* const api, const Int *lenapi, const Int *progress, const Int *mpi_rank, const Int *total_mpi_processes);
 Int numroc_(Int*, Int*, Int*, Int*, Int*);
+/** Prototype declaration end  **/
 
-Int AOCL_progress(char* api, Int *lenapi, Int *progress, Int *mpi_rank, Int *total_mpi_processes);
-
-Int AOCL_progress(char* api, Int *lenapi, Int *progress, Int *mpi_rank, Int *total_mpi_processes)
+Int AOCL_progress(const char* const api, const Int *lenapi, const Int *progress, const Int *mpi_rank, const Int *total_mpi_processes)
 {
     char api_name[20];
     memcpy(api_name, api, *lenapi);
@@ -82,13 +93,13 @@ int main(int argc, char **argv) {
     // Allocate and fill the matrices A and B
     // A[I,J] = (I == J ? 5*n : I+J)
     float *A;
-	Int *IPPIV;
+    Int *IPPIV;
     A = (float *)calloc(mpA*nqA,sizeof(float)) ;
     if (A==NULL){ printf("Error of memory allocation A on proc %dx%d\n",myrow,mycol); exit(0); }
-	
+
     IPPIV = (Int *)calloc(2*n,sizeof(Int)) ;
     if (IPPIV==NULL){ printf("Error of memory allocation IPPIV %d\n",2*n); exit(0); }
-	
+
     Int k = 0;
     for (Int j = 0; j < nqA; j++) { // local col
         Int l_j = j / nb; // which block
@@ -119,7 +130,7 @@ int main(int argc, char **argv) {
         printf("Error in descinit, info = %i\n", info);
     }
 
-    // Run psgetrf and time
+    // Run psgetrf and measure time
     float MPIt1 = MPI_Wtime();
     printf("[%dx%d] Starting psgetrf\n", myrow, mycol);
     aocl_scalapack_set_progress(&AOCL_progress);

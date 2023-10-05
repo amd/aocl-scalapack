@@ -10,6 +10,16 @@
 #endif
 #include "mpi.h"
 
+/** Typedefs  **/
+typedef Int ( *aocl_scalapack_progress_callback )(
+const char * const api,
+const Int  *lenapi,
+const Int  *progress,
+const Int  *current_process,
+const Int  *total_processes
+);
+
+/** Function prototype declarations  **/
 void blacs_get_(Int*, Int*, Int*);
 void blacs_pinfo_(Int*, Int*);
 void blacs_gridinit_(Int*, char*, Int*, Int*);
@@ -17,9 +27,10 @@ void blacs_gridinfo_(Int*, Int*, Int*, Int*, Int*);
 void descinit_(Int*, Int*, Int*, Int*, Int*, Int*, Int*, Int*, Int*, Int*);
 void pdgetrf_(Int*, Int*, double*, Int*, Int*, Int*, Int*, Int*);
 void blacs_gridexit_(Int*);
-Int numroc_(Int*, Int*, Int*, Int*, Int*);
-
+void aocl_scalapack_set_progress(aocl_scalapack_progress_callback AOCL_progress_ptr);
 Int AOCL_progress(const char* const api, const Int *lenapi, const Int *progress, const Int *mpi_rank, const Int *total_mpi_processes);
+Int numroc_(Int*, Int*, Int*, Int*, Int*);
+/** Prototype declaration end  **/
 
 Int AOCL_progress(const char* const api, const Int *lenapi, const Int *progress, const Int *mpi_rank, const Int *total_mpi_processes)
 {
@@ -118,7 +129,7 @@ int main(int argc, char **argv) {
         printf("Error in descinit, info = %i\n", info);
     }
 
-    // Run pdgetrf and time
+    // Run pdgetrf and measure time
     double MPIt1 = MPI_Wtime();
     printf("[%dx%d] Starting pdgetrf\n", myrow, mycol);
     aocl_scalapack_set_progress(&AOCL_progress);
