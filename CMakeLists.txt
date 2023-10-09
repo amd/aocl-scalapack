@@ -44,6 +44,9 @@ option (ENABLE_LARGE_MATRIX_TESTING "Dynamic allocation of work buffer memory in
 
 if (WIN32 AND CMAKE_Fortran_COMPILER_ID MATCHES "Intel")
     set (CMAKE_IFORT_LIBDEPS_DIR "C:/Program Files (x86)/IntelSWTools/compilers_and_libraries/windows/compiler/lib/intel64_win" CACHE STRING "")
+    # set the "FORCE:MULTIPLE" option to handle linker errors due to some
+    # of the common functions of scalapack and lapack in case of static build.
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /FORCE:MULTIPLE")
 endif()
 
 set(CMAKE_ICC_FLAGS " ")
