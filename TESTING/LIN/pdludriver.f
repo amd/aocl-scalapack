@@ -610,7 +610,7 @@
 *
 *                 Loop over the different values for NRHS
 *
-                  DO 20 HH = 1, NNR
+                  DO HH = 1, NNR
 *
                      NRHS = NRVAL( HH )
 *
@@ -986,7 +986,7 @@
      $                               PASSED
                         END IF
    10                CONTINUE
-   20             CONTINUE
+   20             END DO
 *
                   IF( CHECK.AND.( SRESID.GT.THRESH ) ) THEN
 *

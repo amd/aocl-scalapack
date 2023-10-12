@@ -3524,7 +3524,7 @@
 *
       IF( MYCOL.EQ.ICURCOL .OR. COLREP ) THEN
 *
-         DO 40 H = 0, JB-1
+         DO H = 0, JB-1
             IB = DESCA( IMB_ ) - IA  + 1
             IF( IB.LE.0 )
      $         IB = ( ( -IB ) / DESCA( MB_ ) + 1 ) * DESCA( MB_ ) + IB
@@ -3555,7 +3555,7 @@
 *
             II = IIA
             ICURROW = IAROW
-   40    CONTINUE
+   40    END DO
 *
          JJ = JJ + JB
 *
@@ -3568,7 +3568,7 @@
       DO 90 J = JN+1, JA+N-1, DESCA( NB_ )
          JB = MIN(  DESCA( NB_ ), JA+N-J )
          IF( MYCOL.EQ.ICURCOL .OR. COLREP ) THEN
-            DO 80 H = 0, JB-1
+            DO H = 0, JB-1
                IB = DESCA( IMB_ ) - IA  + 1
                IF( IB.LE.0 )
      $            IB = ( ( -IB ) / DESCA( MB_ ) + 1 )*DESCA( MB_ ) + IB
@@ -3600,7 +3600,7 @@
 *
                II = IIA
                ICURROW = IAROW
-   80       CONTINUE
+   80       END DO
 *
             JJ = JJ + JB
          END IF
@@ -8918,7 +8918,7 @@
      $   JB = ( (-JB) / DESCA( NB_ ) + 1 ) * DESCA( NB_ ) + JB
       JB = MIN( JB, N )
       JN = JA+JB-1
-      DO 60 H = 0, JB-1
+      DO H = 0, JB-1
          IB = DESCA( IMB_ ) - IA + 1
          IF( IB.LE.0 )
      $      IB = ( (-IB) / DESCA( MB_ ) + 1 ) * DESCA( MB_ ) + IB
@@ -8982,7 +8982,7 @@
 *
          II = IIA
          ICURROW = IAROW
-   60 CONTINUE
+   60 END DO
 *
       IF( MYCOL.EQ.ICURCOL )
      $   JJ = JJ + JB
@@ -8994,7 +8994,7 @@
 *
       DO 130 J = JN+1, JA+N-1, DESCA( NB_ )
          JB = MIN(  DESCA( NB_ ), JA+N-J )
-         DO 120 H = 0, JB-1
+         DO H = 0, JB-1
             IB = DESCA( IMB_ )-IA+1
             IF( IB.LE.0 )
      $         IB = ( (-IB) / DESCA( MB_ ) + 1 ) * DESCA( MB_ ) + IB
@@ -9058,7 +9058,7 @@
 *
             II = IIA
             ICURROW = IAROW
-  120    CONTINUE
+  120    END DO
 *
          IF( MYCOL.EQ.ICURCOL )
      $      JJ = JJ + JB

@@ -364,7 +364,7 @@
 *
 *                    Loop over the different values for NRHS
 *
-                     DO 40 HH =  1, NNR
+                     DO HH =  1, NNR
 *
                         NRHS = NRVAL( HH )
 *
@@ -1026,7 +1026,7 @@
      $                                  TMFLOPS, PASSED
                            END IF
    30                   CONTINUE
-   40                CONTINUE
+   40                END DO
    50             CONTINUE
    60          CONTINUE
    70       CONTINUE

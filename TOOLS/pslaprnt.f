@@ -162,7 +162,7 @@
 *
       JN = MIN( ICEIL( JA, DESCA( NB_ ) ) * DESCA( NB_ ), JA+N-1 )
       JB = JN-JA+1
-      DO 60 H = 0, JB-1
+      DO H = 0, JB-1
          IN = MIN( ICEIL( IA, DESCA( MB_ ) ) * DESCA( MB_ ), IA+M-1 )
          IB = IN-IA+1
          IF( ICURROW.EQ.IRPRNT .AND. ICURCOL.EQ.ICPRNT ) THEN
@@ -222,7 +222,7 @@
 *
         II = IIA
         ICURROW = IAROW
-   60 CONTINUE
+   60 END DO
 *
       IF( MYCOL.EQ.ICURCOL )
      $   JJ = JJ + JB
@@ -233,7 +233,7 @@
 *
       DO 130 J = JN+1, JA+N-1, DESCA( NB_ )
          JB = MIN(  DESCA( NB_ ), JA+N-J )
-         DO 120 H = 0, JB-1
+         DO H = 0, JB-1
             IN = MIN( ICEIL( IA, DESCA( MB_ ) ) * DESCA( MB_ ), IA+M-1 )
             IB = IN-IA+1
             IF( ICURROW.EQ.IRPRNT .AND. ICURCOL.EQ.ICPRNT ) THEN
@@ -293,7 +293,7 @@
 *
             II = IIA
             ICURROW = IAROW
-  120    CONTINUE
+  120    END DO
 *
          IF( MYCOL.EQ.ICURCOL )
      $      JJ = JJ + JB

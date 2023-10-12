@@ -94,7 +94,7 @@
 *
       DO 50 J = 1, N, DESCA( NB_ )
          JB = MIN(  DESCA( NB_ ), N-J+1 )
-         DO 40 H = 0, JB-1
+         DO H = 0, JB-1
 *
 *           Loop over block of rows
 *
@@ -125,7 +125,7 @@
 *
             II = 1
             ICURROW = DESCA( RSRC_ )
-   40    CONTINUE
+   40    END DO
 *
          IF( MYCOL.EQ.ICURCOL )
      $      JJ = JJ + JB

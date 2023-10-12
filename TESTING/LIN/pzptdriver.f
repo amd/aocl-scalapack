@@ -498,10 +498,10 @@
 *              For SPD Tridiagonal complex matrices, diagonal is stored
 *                as a real. Thus, compact D into half the space
 *
-        DO 10  H=1, NUMROC(N,NB,MYCOL,0,NPCOL)/2
+        DO H=1, NUMROC(N,NB,MYCOL,0,NPCOL)/2
                   MEM( IPA+INT_TEMP+H-1 ) = MEM( IPA+INT_TEMP+2*H-2 )
      $               +MEM( IPA+INT_TEMP+2*H-1 )*( 0.0D+0, 1.0D+0 )
-   10   CONTINUE
+   10   END DO
                IF( 2*(NUMROC(N,NB,MYCOL,0,NPCOL)/2).NE.
      $               NUMROC(N,NB,MYCOL,0,NPCOL) ) THEN
                   H=NUMROC(N,NB,MYCOL,0,NPCOL)/2+1
@@ -543,7 +543,7 @@
 *
 *              Loop over the different values for NRHS
 *
-               DO 20 HH = 1, NNR
+               DO HH = 1, NNR
 *
                   IERR( 1 ) = 0
 *
@@ -853,7 +853,7 @@
      $                            TMFLOPS2, PASSED
 *
                      END IF
-   20          CONTINUE
+   20          END DO
 *
 *
    30       CONTINUE

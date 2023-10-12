@@ -555,7 +555,7 @@
 *
 *              Loop over the different values for NRHS
 *
-               DO 20 HH = 1, NNR
+               DO HH = 1, NNR
 *
                   IERR( 1 ) = 0
 *
@@ -879,7 +879,7 @@
      $                            TMFLOPS2, PASSED
 *
                      END IF
-   20          CONTINUE
+   20          END DO
 *
 *
    30       CONTINUE
