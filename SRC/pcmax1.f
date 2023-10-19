@@ -1,3 +1,9 @@
+*
+*     Modifications Copyright (c) 2023 Advanced Micro Devices, Inc.  All rights reserved.
+*
+*
+#include "SL_Context_fortran_include.h"
+*
       SUBROUTINE PCMAX1( N, AMAX, INDX, X, IX, JX, DESCX, INCX )
 *
 *  -- ScaLAPACK auxiliary routine (version 1.7) --
@@ -5,6 +11,7 @@
 *     and University of California, Berkeley.
 *     May 25, 2001
 *
+      USE LINK_TO_C_GLOBALS
 *     .. Scalar Arguments ..
       INTEGER            INDX, INCX, IX, JX, N
       COMPLEX            AMAX
@@ -177,17 +184,47 @@
 *     ..
 *     .. Executable Statements ..
 *
+*     Initialize framework context structure if not initialized
+*
+*
+      CALL AOCL_SCALAPACK_INIT( )
+*
+*
+*     Capture the subroutine entry in the trace file
+*
+      AOCL_DTL_TRACE_ENTRY_F
+*
 *     Get grid parameters
 *
       ICTXT = DESCX( CTXT_ )
       CALL BLACS_GRIDINFO( ICTXT, NPROW, NPCOL, MYROW, MYCOL )
 *
+*     Update the log buffer with the scalar arguments details,
+*     MPI process grid information and write to the log file
+*
+      IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
+         WRITE(LOG_BUF,102)  INDX, INCX, IX, JX, N, real(AMAX),
+     $           ' + i ',aimag(AMAX), NPROW, NPCOL,
+     $            MYROW, MYCOL, eos_str
+ 102     FORMAT('PCMAX1 inputs: ,INDX:',I5,', INCX:',I5,
+     $           ', IX:',I5,', JX:',I5,', N:',I5,
+     $           ', AMAX:',F9.4, A, F9.4,',  NPROW: ', I5,
+     $           ', NPCOL: ', I5 ,', MYROW: ', I5,', MYCOL: ', I5,A1)
+
+         AOCL_DTL_LOG_ENTRY_F
+      END IF
+*
 *     Quick return if possible.
 *
       INDX = 0
       AMAX = ZERO
-      IF( N.LE.0 )
-     $   RETURN
+      IF( N.LE.0 ) THEN
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
+         RETURN
+      END IF
 *
 *     Retrieve local information for vector X.
 *
@@ -198,6 +235,10 @@
       IF( INCX.EQ.1 .AND. DESCX( M_ ).EQ.1 .AND. N.EQ.1 ) THEN
          INDX = JX
          AMAX = X( IIX+(JJX-1)*LDX )
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
 *
@@ -351,11 +392,18 @@
 *
       END IF
 *
+*
+*     Capture the subroutine exit in the trace file
+*
+      AOCL_DTL_TRACE_EXIT_F
       RETURN
 *
 *     End of PCMAX1
 *
       END
+*
+*
+#include "SL_Context_fortran_include.h"
 *
       SUBROUTINE CCOMBAMAX1 ( V1, V2 )
 *
@@ -392,11 +440,25 @@
 *     ..
 *     .. Executable Statements ..
 *
+*     Initialize framework context structure if not initialized
+*
+*
+      CALL AOCL_SCALAPACK_INIT( )
+*
+*
+*     Capture the subroutine entry in the trace file
+*
+      AOCL_DTL_TRACE_ENTRY_F
+*
       IF( ABS( REAL( V1( 1 ) ) ).LT.ABS( REAL( V2( 1 ) ) ) ) THEN
          V1( 1 ) = V2( 1 )
          V1( 2 ) = V2( 2 )
       END IF
 *
+*
+*     Capture the subroutine exit in the trace file
+*
+      AOCL_DTL_TRACE_EXIT_F
       RETURN
 *
 *     End of CCOMBAMAX1

@@ -1,9 +1,15 @@
-      SUBROUTINE PCHEEVR( JOBZ, RANGE, UPLO, N, A, IA, JA, 
+*
+*     Modifications Copyright (c) 2023 Advanced Micro Devices, Inc.  All rights reserved.
+*
+#include "SL_Context_fortran_include.h"
+*
+      SUBROUTINE PCHEEVR( JOBZ, RANGE, UPLO, N, A, IA, JA,
      $                    DESCA, VL, VU, IL, IU, M, NZ, W, Z, IZ,
-     $                    JZ, DESCZ, 
+     $                    JZ, DESCZ,
      $                    WORK, LWORK, RWORK, LRWORK, IWORK, LIWORK,
      $                    INFO )
 
+      USE LINK_TO_C_GLOBALS
       IMPLICIT NONE
 *
 *  -- ScaLAPACK routine (version 2.0.2) --
@@ -12,7 +18,6 @@
 *
 *     .. Scalar Arguments ..
       CHARACTER          JOBZ, RANGE, UPLO
-
       INTEGER            IA, IL, INFO, IU, IZ, JA, JZ, LIWORK, LRWORK,
      $                   LWORK, M, N, NZ
       REAL             VL, VU
@@ -28,14 +33,14 @@
 *
 *  PCHEEVR computes selected eigenvalues and, optionally, eigenvectors
 *  of a complex Hermitian matrix A distributed in 2D blockcyclic format
-*  by calling the recommended sequence of ScaLAPACK routines.  
+*  by calling the recommended sequence of ScaLAPACK routines.
 *
 *  First, the matrix A is reduced to real symmetric tridiagonal form.
 *  Then, the eigenproblem is solved using the parallel MRRR algorithm.
 *  Last, if eigenvectors have been computed, a backtransformation is done.
 *
 *  Upon successful completion, each processor stores a copy of all computed
-*  eigenvalues in W. The eigenvector matrix Z is stored in 
+*  eigenvalues in W. The eigenvector matrix Z is stored in
 *  2D blockcyclic format distributed over all processors.
 *
 *  For constructive feedback and comments, please contact cvoemel@lbl.gov
@@ -67,7 +72,7 @@
 *  A       (local input/workspace) 2D block cyclic COMPLEX array,
 *          global dimension (N, N),
 *          local dimension ( LLD_A, LOCc(JA+N-1) )
-*          (see Notes below for more detailed explanation of 2d arrays)  
+*          (see Notes below for more detailed explanation of 2d arrays)
 *
 *          On entry, the symmetric matrix A.  If UPLO = 'U', only the
 *          upper triangular part of A is used to define the elements of
@@ -92,16 +97,16 @@
 *  DESCA   (global and local input) INTEGER array of dimension DLEN_.
 *          (The ScaLAPACK descriptor length is DLEN_ = 9.)
 *          The array descriptor for the distributed matrix A.
-*          The descriptor stores details about the 2D block-cyclic 
-*          storage, see the notes below. 
+*          The descriptor stores details about the 2D block-cyclic
+*          storage, see the notes below.
 *          If DESCA is incorrect, PCHEEVR cannot work correctly.
 *          Also note the array alignment requirements specified below
 *
-*  VL      (global input) REAL 
+*  VL      (global input) REAL
 *          If RANGE='V', the lower bound of the interval to be searched
 *          for eigenvalues.  Not referenced if RANGE = 'A' or 'I'.
 *
-*  VU      (global input) REAL 
+*  VU      (global input) REAL
 *          If RANGE='V', the upper bound of the interval to be searched
 *          for eigenvalues.  Not referenced if RANGE = 'A' or 'I'.
 *
@@ -122,7 +127,7 @@
 *          Total number of eigenvectors computed.  0 <= NZ <= M.
 *          The number of columns of Z that are filled.
 *          If JOBZ .NE. 'V', NZ is not referenced.
-*          If JOBZ .EQ. 'V', NZ = M 
+*          If JOBZ .EQ. 'V', NZ = M
 *
 *  W       (global output) REAL array, dimension (N)
 *          On normal exit, the first M entries contain the selected
@@ -161,7 +166,7 @@
 *            LWORK >= N + MAX( NB * ( NP00 + 1 ), NB * 3 )
 *          If eigenvectors are requested:
 *            LWORK >= N + ( NP00 + MQ00 + NB ) * NB
-*          For definitions of NP00 & MQ00, see LRWORK. 
+*          For definitions of NP00 & MQ00, see LRWORK.
 *
 *          For optimal performance, greater workspace is needed, i.e.
 *            LWORK >= MAX( LWORK, NHETRD_LWORK )
@@ -232,7 +237,7 @@
 *          Let  NNP = MAX( N, NPROW*NPCOL + 1, 4 ). Then:
 *          LIWORK >= 12*NNP + 2*N when the eigenvectors are desired
 *          LIWORK >= 10*NNP + 2*N when only the eigenvalues have to be computed
-*          
+*
 *          If LIWORK = -1, then LIWORK is global input and a workspace
 *          query is assumed; the routine only calculates the minimum
 *          and optimal size for all work arrays. Each of these
@@ -300,7 +305,7 @@
 *          LOCr( M ) <= ceil( ceil(M/MB_A)/NPROW )*MB_A
 *          LOCc( N ) <= ceil( ceil(N/NB_A)/NPCOL )*NB_A
 *
-*  PCHEEVR assumes IEEE 754 standard compliant arithmetic. 
+*  PCHEEVR assumes IEEE 754 standard compliant arithmetic.
 *
 *  Alignment requirements
 *  ======================
@@ -308,9 +313,9 @@
 *  The distributed submatrices A(IA:*, JA:*) and Z(IZ:IZ+M-1,JZ:JZ+N-1)
 *  must satisfy the following alignment properties:
 *
-*  1.Identical (quadratic) dimension: 
+*  1.Identical (quadratic) dimension:
 *    DESCA(M_) = DESCZ(M_) = DESCA(N_) = DESCZ(N_)
-*  2.Quadratic conformal blocking: 
+*  2.Quadratic conformal blocking:
 *    DESCA(MB_) = DESCA(NB_) = DESCZ(MB_) = DESCZ(NB_)
 *    DESCA(RSRC_) = DESCZ(RSRC_)
 *  3.MOD( IA-1, MB_A ) = MOD( IZ-1, MB_Z ) = 0
@@ -369,6 +374,16 @@
 *     ..
 *     .. Executable Statements ..
 *
+*     Initialize framework context structure if not initialized
+*
+*
+      CALL AOCL_SCALAPACK_INIT( )
+*
+*
+*     Capture the subroutine entry in the trace file
+*
+      AOCL_DTL_TRACE_ENTRY_F
+*
 
       INFO = 0
 
@@ -395,7 +410,7 @@
 ***********************************************************************
 *
 *     Set up pointers into the (complex) WORK array
-*     
+*
 ***********************************************************************
       INDTAU = 1
       INDWORK = INDTAU + N
@@ -404,7 +419,7 @@
 ***********************************************************************
 *
 *     Set up pointers into the RWORK array
-*     
+*
 ***********************************************************************
       INDRTAU = 1
       INDD = INDRTAU + N
@@ -420,6 +435,26 @@
 *
 ***********************************************************************
       CALL BLACS_GRIDINFO( ICTXT, NPROW, NPCOL, MYROW, MYCOL )
+*
+*     Update the log buffer with the scalar arguments details,
+*     MPI process grid information and write to the log file
+*
+      IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
+         WRITE(LOG_BUF,102)  JOBZ, RANGE, UPLO, IA, IL,
+     $            INFO, IU, IZ, JA, JZ, LIWORK, LRWORK,
+     $                              LWORK, M, N, NZ,
+     $            VL, VU, NPROW, NPCOL, MYROW, MYCOL,
+     $            eos_str
+ 102     FORMAT('PCHEEVR inputs: ,JOBZ:',A5,', RANGE:',A5,
+     $           ', UPLO:',A5,', IA:',I5,', IL:',I5,
+     $           ', INFO:',I5,', IU:',I5,', IZ:',I5,
+     $           ', JA:',I5,', JZ:',I5,', LIWORK:',I5,
+     $           ', LRWORK:',I5,', LWORK:',I5,', M:',I5,
+     $           ', N:',I5,', NZ:',I5,', VL:',F9.4,
+     $           ', VU:',F9.4,',  NPROW: ', I5,', NPCOL: ', I5 ,
+     $           ', MYROW: ', I5,', MYCOL: ', I5, A1)
+         AOCL_DTL_LOG_ENTRY_F
+      END IF
 
 
       NPROCS = NPROW * NPCOL
@@ -445,10 +480,10 @@
 *        Take upper bound for VALEIG case
          MZ = N
       END IF
-*     
+*
       NB =  DESCA( NB_ )
       NP00 = NUMROC( N, NB, 0, 0, NPROW )
-      MQ00 = NUMROC( MZ, NB, 0, 0, NPCOL )            
+      MQ00 = NUMROC( MZ, NB, 0, 0, NPCOL )
       IF ( WANTZ ) THEN
          INDRW = INDRWORK + MAX(18*N, NP00*MQ00 + 2*NB*NB)
          LRWMIN = INDRW - 1 + (ICEIL(MZ, NPROCS) + 2)*N
@@ -456,7 +491,7 @@
       ELSE
          INDRW = INDRWORK + 12*N
          LRWMIN = INDRW - 1
-         LWMIN = N + MAX( NB*( NP00 + 1 ), 3 * NB ) 
+         LWMIN = N + MAX( NB*( NP00 + 1 ), 3 * NB )
       END IF
 
 *     The code that validates the input requires 3 workspace entries
@@ -480,7 +515,7 @@
 ***********************************************************************
       NNP = MAX( N, NPROCS+1, 4 )
       IF ( WANTZ ) THEN
-        LIWMIN = 12*NNP + 2*N 
+        LIWMIN = 12*NNP + 2*N
       ELSE
         LIWMIN = 10*NNP + 2*N
       END IF
@@ -488,12 +523,12 @@
 ***********************************************************************
 *
 *     Set up pointers into the IWORK array
-*     
+*
 ***********************************************************************
 *     Pointer to eigenpair distribution over processors
-      INDILU = LIWMIN - 2*NPROCS + 1            
-      SIZE2 = INDILU - 2*N 
-	
+      INDILU = LIWMIN - 2*NPROCS + 1
+      SIZE2 = INDILU - 2*N
+
 
 ***********************************************************************
 *
@@ -532,9 +567,9 @@
                INFO = -( 800+NB_ )
             END IF
             IF( WANTZ ) THEN
-               IAROW = INDXG2P( 1, DESCA( NB_ ), MYROW, 
+               IAROW = INDXG2P( 1, DESCA( NB_ ), MYROW,
      $                       DESCA( RSRC_ ), NPROW )
-               IZROW = INDXG2P( 1, DESCA( NB_ ), MYROW, 
+               IZROW = INDXG2P( 1, DESCA( NB_ ), MYROW,
      $                          DESCZ( RSRC_ ), NPROW )
                IF( IAROW.NE.IZROW ) THEN
                   INFO = -19
@@ -595,8 +630,16 @@
 *
       IF( INFO.NE.0 ) THEN
          CALL PXERBLA( ICTXT, 'PCHEEVR', -INFO )
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       ELSE IF( LQUERY ) THEN
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
 
@@ -613,6 +656,10 @@
          WORK( 1 ) = CMPLX( LWOPT )
          RWORK( 1 ) = REAL( LRWOPT )
          IWORK( 1 ) = LIWMIN
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
 
@@ -641,6 +688,10 @@
 
       IF (IINFO .NE. 0) THEN
          CALL PXERBLA( ICTXT, 'PCHENTRD', -IINFO )
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
 
@@ -650,25 +701,25 @@
 *
 ***********************************************************************
       OFFSET = 0
-      IF( IA.EQ.1 .AND. JA.EQ.1 .AND. 
+      IF( IA.EQ.1 .AND. JA.EQ.1 .AND.
      $    DESCA( RSRC_ ).EQ.0 .AND. DESCA( CSRC_ ).EQ.0 )
      $   THEN
-         CALL PSLARED1D( N, IA, JA, DESCA, RWORK( INDD ), 
+         CALL PSLARED1D( N, IA, JA, DESCA, RWORK( INDD ),
      $                   RWORK( INDD2 ), RWORK( INDRWORK ), LLRWORK )
 *
-         CALL PSLARED1D( N, IA, JA, DESCA, RWORK( INDE ), 
+         CALL PSLARED1D( N, IA, JA, DESCA, RWORK( INDE ),
      $                   RWORK( INDE2 ), RWORK( INDRWORK ), LLRWORK )
          IF( .NOT.LOWER )
      $      OFFSET = 1
       ELSE
          DO 10 I = 1, N
-            CALL PCELGET( 'A', ' ', WORK( INDWORK ), A, 
+            CALL PCELGET( 'A', ' ', WORK( INDWORK ), A,
      $                    I+IA-1, I+JA-1, DESCA )
             RWORK( INDD2+I-1 ) = REAL( WORK( INDWORK ) )
    10    CONTINUE
          IF( LSAME( UPLO, 'U' ) ) THEN
             DO 20 I = 1, N - 1
-               CALL PCELGET( 'A', ' ', WORK( INDWORK ), A, 
+               CALL PCELGET( 'A', ' ', WORK( INDWORK ), A,
      $                       I+IA-1, I+JA, DESCA )
                RWORK( INDE2+I-1 ) = REAL( WORK( INDWORK ) )
    20       CONTINUE
@@ -689,16 +740,16 @@
 *     SET IIL, IIU
 *
 ***********************************************************************
-      IF ( ALLEIG ) THEN 
+      IF ( ALLEIG ) THEN
          IIL = 1
          IIU = N
       ELSE IF ( INDEIG ) THEN
          IIL = IL
          IIU = IU
       ELSE IF ( VALEIG ) THEN
-         CALL SLARRC('T', N, VLL, VUU, RWORK( INDD2 ), 
+         CALL SLARRC('T', N, VLL, VUU, RWORK( INDD2 ),
      $    RWORK( INDE2 + OFFSET ), SAFMIN, EIGCNT, IIL, IIU, INFO)
-*        Refine upper bound N that was taken 
+*        Refine upper bound N that was taken
          MZ = EIGCNT
          IIL = IIL + 1
       ENDIF
@@ -710,6 +761,10 @@
          END IF
          WORK( 1 ) = REAL( LWOPT )
          IWORK( 1 ) = LIWMIN
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
 
@@ -755,10 +810,10 @@
             DOU = MYIU - MYIL + 1
             CALL SSTEGR2( JOBZ, 'I', N,  RWORK( INDD2 ),
      $                  RWORK( INDE2+OFFSET ), VLL, VUU, MYIL, MYIU,
-     $                  IM, W( 1 ), RWORK( INDRW ), N, 
+     $                  IM, W( 1 ), RWORK( INDRW ), N,
      $                  MYIU - MYIL + 1,
-     $                  IWORK( 1 ), RWORK( INDRWORK ), SIZE1, 
-     $                  IWORK( 2*N+1 ), SIZE2, 
+     $                  IWORK( 1 ), RWORK( INDRWORK ), SIZE1,
+     $                  IWORK( 2*N+1 ), SIZE2,
      $                  DOL, DOU, ZOFFSET, IINFO )
 *           SSTEGR2 zeroes out the entire W array, so we can't just give
 *           it the part of W we need.  So here we copy the W entries into
@@ -771,6 +826,10 @@
          END IF
          IF (IINFO .NE. 0) THEN
             CALL PXERBLA( ICTXT, 'SSTEGR2', -IINFO )
+*
+*           Capture the subroutine exit in the trace file
+*
+            AOCL_DTL_TRACE_EXIT_F
             RETURN
          END IF
       ELSEIF ( WANTZ .AND. NPROCS.EQ.1 ) THEN
@@ -783,20 +842,24 @@
             DOU = MYIU - IIL + 1
             CALL SSTEGR2( JOBZ, 'I', N,  RWORK( INDD2 ),
      $                  RWORK( INDE2+OFFSET ), VLL, VUU, IIL, IIU,
-     $                  IM, W( 1 ), RWORK( INDRW ), N, 
+     $                  IM, W( 1 ), RWORK( INDRW ), N,
      $                  N,
-     $                  IWORK( 1 ), RWORK( INDRWORK ), SIZE1, 
+     $                  IWORK( 1 ), RWORK( INDRWORK ), SIZE1,
      $                  IWORK( 2*N+1 ), SIZE2, DOL, DOU,
      $                  ZOFFSET, IINFO )
          ENDIF
          IF (IINFO .NE. 0) THEN
             CALL PXERBLA( ICTXT, 'SSTEGR2', -IINFO )
+*
+*           Capture the subroutine exit in the trace file
+*
+            AOCL_DTL_TRACE_EXIT_F
             RETURN
          END IF
       ELSEIF ( WANTZ ) THEN
 *        Compute representations in parallel.
 *        Share eigenvalue computation for root between all processors
-*        Then compute the eigenvectors. 
+*        Then compute the eigenvectors.
          IINFO = 0
 *        Part 1. compute root representations and root eigenvalues
          IF ( MYIL.GT.0 ) THEN
@@ -804,20 +867,24 @@
             DOU = MYIU - IIL + 1
             CALL SSTEGR2A( JOBZ, 'I', N,  RWORK( INDD2 ),
      $                  RWORK( INDE2+OFFSET ), VLL, VUU, IIL, IIU,
-     $                  IM, W( 1 ), RWORK( INDRW ), N, 
-     $                  N, RWORK( INDRWORK ), SIZE1, 
-     $                  IWORK( 2*N+1 ), SIZE2, DOL, 
+     $                  IM, W( 1 ), RWORK( INDRW ), N,
+     $                  N, RWORK( INDRWORK ), SIZE1,
+     $                  IWORK( 2*N+1 ), SIZE2, DOL,
      $                  DOU, NEEDIL, NEEDIU,
      $                  INDERR, NSPLIT, PIVMIN, SCALE, WL, WU,
      $                  IINFO )
          ENDIF
          IF (IINFO .NE. 0) THEN
             CALL PXERBLA( ICTXT, 'SSTEGR2A', -IINFO )
+*
+*           Capture the subroutine exit in the trace file
+*
+            AOCL_DTL_TRACE_EXIT_F
             RETURN
          END IF
 *
 *        The second part of parallel MRRR, the representation tree
-*        construction begins. Upon successful completion, the 
+*        construction begins. Upon successful completion, the
 *        eigenvectors have been computed. This is indicated by
 *        the flag FINISH.
 *
@@ -836,13 +903,13 @@ C        Part 2. Share eigenvalues and uncertainties between all processors
 *        2.) POINT2POINT between collaborators (those processors working
 *            jointly on a cluster.
 *        For efficiency, BROADCAST has been disabled.
-*        At a later stage, other more efficient communication algorithms 
+*        At a later stage, other more efficient communication algorithms
 *        might be implemented, e. g. group or tree-based communication.
 
          DOBCST = .FALSE.
          IF(DOBCST) THEN
 *           First gather everything on the first processor.
-*           Then use BROADCAST-based communication 
+*           Then use BROADCAST-based communication
             DO 45 I = 2, NPROCS
                IF (MYPROC .EQ. (I - 1)) THEN
                   DSTROW = 0
@@ -855,25 +922,25 @@ C        Part 2. Share eigenvalues and uncertainties between all processors
                      LENGTHI = 0
                   ENDIF
                   IWORK(2) = LENGTHI
-                  CALL IGESD2D( ICTXT, 2, 1, IWORK, 2, 
+                  CALL IGESD2D( ICTXT, 2, 1, IWORK, 2,
      $                    DSTROW, DSTCOL )
                   IF (( STARTI.GE.1 ) .AND. ( LENGTHI.GE.1 )) THEN
                      LENGTHI2 = 2*LENGTHI
 *                    Copy eigenvalues into communication buffer
                      CALL SCOPY(LENGTHI,W( STARTI ),1,
-     $                          RWORK( INDD ), 1)                    
+     $                          RWORK( INDD ), 1)
 *                    Copy uncertainties into communication buffer
                      CALL SCOPY(LENGTHI,RWORK(IINDERR+STARTI-1),1,
-     $                          RWORK( INDD+LENGTHI ), 1)                    
+     $                          RWORK( INDD+LENGTHI ), 1)
 *                    send buffer
-                     CALL SGESD2D( ICTXT, LENGTHI2, 
+                     CALL SGESD2D( ICTXT, LENGTHI2,
      $                    1, RWORK( INDD ), LENGTHI2,
      $                    DSTROW, DSTCOL )
                   END IF
                ELSE IF (MYPROC .EQ. 0) THEN
                   SRCROW = (I-1) / NPCOL
                   SRCCOL = MOD(I-1, NPCOL)
-                  CALL IGERV2D( ICTXT, 2, 1, IWORK, 2, 
+                  CALL IGERV2D( ICTXT, 2, 1, IWORK, 2,
      $                    SRCROW, SRCCOL )
                   STARTI = IWORK(1)
                   LENGTHI = IWORK(2)
@@ -884,10 +951,10 @@ C        Part 2. Share eigenvalues and uncertainties between all processors
      $                 RWORK(INDD), LENGTHI2, SRCROW, SRCCOL )
 *                    copy eigenvalues from communication buffer
                      CALL SCOPY( LENGTHI, RWORK(INDD), 1,
-     $                          W( STARTI ), 1)                    
+     $                          W( STARTI ), 1)
 *                    copy uncertainties (errors) from communication buffer
                      CALL SCOPY(LENGTHI,RWORK(INDD+LENGTHI),1,
-     $                          RWORK( IINDERR+STARTI-1 ), 1)     
+     $                          RWORK( IINDERR+STARTI-1 ), 1)
                   END IF
                END IF
   45        CONTINUE
@@ -895,10 +962,10 @@ C        Part 2. Share eigenvalues and uncertainties between all processors
             LENGTHI2 = LENGTHI * 2
             IF (MYPROC .EQ. 0) THEN
 *              Broadcast eigenvalues and errors to all processors
-               CALL SCOPY(LENGTHI,W ,1, RWORK( INDD ), 1)                 
+               CALL SCOPY(LENGTHI,W ,1, RWORK( INDD ), 1)
                CALL SCOPY(LENGTHI,RWORK( IINDERR ),1,
-     $                          RWORK( INDD+LENGTHI ), 1)                    
-               CALL SGEBS2D( ICTXT, 'A', ' ', LENGTHI2, 1, 
+     $                          RWORK( INDD+LENGTHI ), 1)
+               CALL SGEBS2D( ICTXT, 'A', ' ', LENGTHI2, 1,
      $              RWORK(INDD), LENGTHI2 )
             ELSE
                SRCROW = 0
@@ -907,14 +974,14 @@ C        Part 2. Share eigenvalues and uncertainties between all processors
      $             RWORK(INDD), LENGTHI2, SRCROW, SRCCOL )
                CALL SCOPY( LENGTHI, RWORK(INDD), 1, W, 1)
                CALL SCOPY(LENGTHI,RWORK(INDD+LENGTHI),1,
-     $                          RWORK( IINDERR ), 1)                   
+     $                          RWORK( IINDERR ), 1)
             END IF
          ELSE
 *           Enable point2point communication between collaborators
 
-*           Find collaborators of MYPROC            
+*           Find collaborators of MYPROC
             IF( (NPROCS.GT.1).AND.(MYIL.GT.0) ) THEN
-               CALL PMPCOL( MYPROC, NPROCS, IIL, NEEDIL, NEEDIU, 
+               CALL PMPCOL( MYPROC, NPROCS, IIL, NEEDIL, NEEDIU,
      $                   IWORK(INDILU), IWORK(INDILU+NPROCS),
      $                   COLBRT, FRSTCL, LASTCL )
             ELSE
@@ -923,34 +990,34 @@ C        Part 2. Share eigenvalues and uncertainties between all processors
 
             IF(COLBRT) THEN
 *              If the processor collaborates with others,
-*              communicate information. 
+*              communicate information.
                DO 47 IPROC = FRSTCL, LASTCL
                   IF (MYPROC .EQ. IPROC) THEN
                      STARTI = DOL
                      IWORK(1) = STARTI
                      LENGTHI = MYIU - MYIL + 1
                      IWORK(2) = LENGTHI
-                     
+
                      IF ((STARTI.GE.1) .AND. (LENGTHI.GE.1)) THEN
 *                       Copy eigenvalues into communication buffer
                         CALL SCOPY(LENGTHI,W( STARTI ),1,
-     $                              RWORK(INDD), 1)                    
+     $                              RWORK(INDD), 1)
 *                       Copy uncertainties into communication buffer
                         CALL SCOPY(LENGTHI,
      $                          RWORK( IINDERR+STARTI-1 ),1,
-     $                          RWORK(INDD+LENGTHI), 1)                    
+     $                          RWORK(INDD+LENGTHI), 1)
                      ENDIF
 
-                     DO 46 I = FRSTCL, LASTCL                      
+                     DO 46 I = FRSTCL, LASTCL
                         IF(I.EQ.MYPROC) GOTO 46
                         DSTROW = I/ NPCOL
                         DSTCOL = MOD(I, NPCOL)
-                        CALL IGESD2D( ICTXT, 2, 1, IWORK, 2, 
+                        CALL IGESD2D( ICTXT, 2, 1, IWORK, 2,
      $                             DSTROW, DSTCOL )
                         IF ((STARTI.GE.1) .AND. (LENGTHI.GE.1)) THEN
                            LENGTHI2 = 2*LENGTHI
 *                          send buffer
-                           CALL SGESD2D( ICTXT, LENGTHI2, 
+                           CALL SGESD2D( ICTXT, LENGTHI2,
      $                          1, RWORK(INDD), LENGTHI2,
      $                          DSTROW, DSTCOL )
                         END IF
@@ -958,7 +1025,7 @@ C        Part 2. Share eigenvalues and uncertainties between all processors
                   ELSE
                      SRCROW = IPROC / NPCOL
                      SRCCOL = MOD(IPROC, NPCOL)
-                     CALL IGERV2D( ICTXT, 2, 1, IWORK, 2, 
+                     CALL IGERV2D( ICTXT, 2, 1, IWORK, 2,
      $                             SRCROW, SRCCOL )
                      RSTARTI = IWORK(1)
                      RLENGTHI = IWORK(2)
@@ -969,10 +1036,10 @@ C        Part 2. Share eigenvalues and uncertainties between all processors
      $                      SRCROW, SRCCOL )
 *                       copy eigenvalues from communication buffer
                         CALL SCOPY( RLENGTHI,RWORK(INDE), 1,
-     $                          W( RSTARTI ), 1)                    
+     $                          W( RSTARTI ), 1)
 *                       copy uncertainties (errors) from communication buffer
                         CALL SCOPY(RLENGTHI,RWORK(INDE+RLENGTHI),1,
-     $                          RWORK( IINDERR+RSTARTI-1 ), 1)                    
+     $                          RWORK( IINDERR+RSTARTI-1 ), 1)
                      END IF
                   END IF
   47           CONTINUE
@@ -984,17 +1051,17 @@ C        Part 2. Share eigenvalues and uncertainties between all processors
 *                is constructed in parallel from top to bottom,
 *                on level at a time, until all eigenvectors
 *                have been computed.
-*      
+*
  100     CONTINUE
          IF ( MYIL.GT.0 ) THEN
             CALL SSTEGR2B( JOBZ, N,  RWORK( INDD2 ),
-     $                  RWORK( INDE2+OFFSET ), 
+     $                  RWORK( INDE2+OFFSET ),
      $                  IM, W( 1 ), RWORK( INDRW ), N, N,
-     $                  IWORK( 1 ), RWORK( INDRWORK ), SIZE1, 
-     $                  IWORK( 2*N+1 ), SIZE2, DOL, 
+     $                  IWORK( 1 ), RWORK( INDRWORK ), SIZE1,
+     $                  IWORK( 2*N+1 ), SIZE2, DOL,
      $                  DOU, NEEDIL, NEEDIU, INDWLC,
      $                  PIVMIN, SCALE, WL, WU,
-     $                  VSTART, FINISH, 
+     $                  VSTART, FINISH,
      $                  MAXCLS, NDEPTH, PARITY, ZOFFSET, IINFO )
             IINDWLC = INDRWORK + INDWLC - 1
             IF(.NOT.FINISH) THEN
@@ -1008,7 +1075,7 @@ C        Part 2. Share eigenvalues and uncertainties between all processors
                   LASTCL = MYPROC
                ENDIF
 *
-*              Check if this processor collaborates, i.e. 
+*              Check if this processor collaborates, i.e.
 *              communication is needed.
 *
                IF(COLBRT) THEN
@@ -1026,23 +1093,23 @@ C        Part 2. Share eigenvalues and uncertainties between all processors
 *                          Copy eigenvalues into communication buffer
                            CALL SCOPY(LENGTHI,
      $                          RWORK( IINDWLC+STARTI-1 ),1,
-     $                          RWORK(INDD), 1)                    
+     $                          RWORK(INDD), 1)
 *                          Copy uncertainties into communication buffer
                            CALL SCOPY(LENGTHI,
      $                          RWORK( IINDERR+STARTI-1 ),1,
-     $                          RWORK(INDD+LENGTHI), 1)                    
+     $                          RWORK(INDD+LENGTHI), 1)
                         ENDIF
-                      
-                        DO 146 I = FRSTCL, LASTCL                      
+
+                        DO 146 I = FRSTCL, LASTCL
                            IF(I.EQ.MYPROC) GOTO 146
                            DSTROW = I/ NPCOL
                            DSTCOL = MOD(I, NPCOL)
-                           CALL IGESD2D( ICTXT, 2, 1, IWORK, 2, 
+                           CALL IGESD2D( ICTXT, 2, 1, IWORK, 2,
      $                             DSTROW, DSTCOL )
                            IF ((STARTI.GE.1).AND.(LENGTHI.GE.1)) THEN
                               LENGTHI2 = 2*LENGTHI
 *                             send buffer
-                              CALL SGESD2D( ICTXT, LENGTHI2, 
+                              CALL SGESD2D( ICTXT, LENGTHI2,
      $                             1, RWORK(INDD), LENGTHI2,
      $                             DSTROW, DSTCOL )
                            END IF
@@ -1050,7 +1117,7 @@ C        Part 2. Share eigenvalues and uncertainties between all processors
                      ELSE
                         SRCROW = IPROC / NPCOL
                         SRCCOL = MOD(IPROC, NPCOL)
-                        CALL IGERV2D( ICTXT, 2, 1, IWORK, 2, 
+                        CALL IGERV2D( ICTXT, 2, 1, IWORK, 2,
      $                             SRCROW, SRCCOL )
                         RSTARTI = IWORK(1)
                         RLENGTHI = IWORK(2)
@@ -1061,19 +1128,23 @@ C        Part 2. Share eigenvalues and uncertainties between all processors
      $                         SRCROW, SRCCOL )
 *                          copy eigenvalues from communication buffer
                            CALL SCOPY(RLENGTHI,RWORK(INDE), 1,
-     $                          RWORK( IINDWLC+RSTARTI-1 ), 1)        
+     $                          RWORK( IINDWLC+RSTARTI-1 ), 1)
 *                          copy uncertainties (errors) from communication buffer
                            CALL SCOPY(RLENGTHI,RWORK(INDE+RLENGTHI),
-     $                          1,RWORK( IINDERR+RSTARTI-1 ), 1)            
+     $                          1,RWORK( IINDERR+RSTARTI-1 ), 1)
                         END IF
                       END IF
  147              CONTINUE
                ENDIF
-               GOTO 100         
+               GOTO 100
             ENDIF
          ENDIF
          IF (IINFO .NE. 0) THEN
             CALL PXERBLA( ICTXT, 'SSTEGR2B', -IINFO )
+*
+*           Capture the subroutine exit in the trace file
+*
+            AOCL_DTL_TRACE_EXIT_F
             RETURN
          END IF
 *
@@ -1106,17 +1177,17 @@ C        Part 2. Share eigenvalues and uncertainties between all processors
                LENGTHI = 0
             ENDIF
             IWORK(2) = LENGTHI
-            CALL IGESD2D( ICTXT, 2, 1, IWORK, 2, 
+            CALL IGESD2D( ICTXT, 2, 1, IWORK, 2,
      $                    DSTROW, DSTCOL )
             IF ((STARTI.GE.1).AND.(LENGTHI.GE.1)) THEN
-               CALL SGESD2D( ICTXT, LENGTHI, 
+               CALL SGESD2D( ICTXT, LENGTHI,
      $              1, W( STARTI ), LENGTHI,
      $              DSTROW, DSTCOL )
             ENDIF
          ELSE IF (MYPROC .EQ. 0) THEN
             SRCROW = (I-1) / NPCOL
             SRCCOL = MOD(I-1, NPCOL)
-            CALL IGERV2D( ICTXT, 2, 1, IWORK, 2, 
+            CALL IGERV2D( ICTXT, 2, 1, IWORK, 2,
      $                    SRCROW, SRCCOL )
             STARTI = IWORK(1)
             LENGTHI = IWORK(2)
@@ -1151,12 +1222,16 @@ C        Part 2. Share eigenvalues and uncertainties between all processors
       CALL SLASRT2( 'I', M, W, IWORK( NPROCS+2 ), IINFO )
       IF (IINFO.NE.0) THEN
          CALL PXERBLA( ICTXT, 'SLASRT2', -IINFO )
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
 
 ***********************************************************************
 *
-*     TRANSFORM Z FROM 1D WORKSPACE INTO 2D BLOCKCYCLIC STORAGE     
+*     TRANSFORM Z FROM 1D WORKSPACE INTO 2D BLOCKCYCLIC STORAGE
 *
 ***********************************************************************
       IF ( WANTZ ) THEN
@@ -1178,11 +1253,11 @@ C        Part 2. Share eigenvalues and uncertainties between all processors
   180    CONTINUE
 
          IF ( FIRST ) THEN
-            CALL PCLAEVSWP(N, RWORK( INDRW ), N, Z, IZ, JZ, 
-     $       DESCZ, IWORK( 1 ), IWORK( NPROCS+M+2 ), RWORK( INDRWORK ), 
+            CALL PCLAEVSWP(N, RWORK( INDRW ), N, Z, IZ, JZ,
+     $       DESCZ, IWORK( 1 ), IWORK( NPROCS+M+2 ), RWORK( INDRWORK ),
      $       SIZE1 )
          ELSE
-            CALL PCLAEVSWP(N, RWORK( INDRW + N ), N, Z, IZ, JZ, 
+            CALL PCLAEVSWP(N, RWORK( INDRW + N ), N, Z, IZ, JZ,
      $       DESCZ, IWORK( 1 ), IWORK( NPROCS+M+2 ), RWORK( INDRWORK ),
      $       SIZE1 )
          END IF
@@ -1202,6 +1277,10 @@ C        Part 2. Share eigenvalues and uncertainties between all processors
          END IF
          IF (IINFO.NE.0) THEN
             CALL PXERBLA( ICTXT, 'PCUNMTR', -IINFO )
+*
+*           Capture the subroutine exit in the trace file
+*
+            AOCL_DTL_TRACE_EXIT_F
             RETURN
          END IF
 *
@@ -1212,6 +1291,10 @@ C        Part 2. Share eigenvalues and uncertainties between all processors
       RWORK( 1 ) = REAL( LRWOPT )
       IWORK( 1 ) = LIWMIN
 
+*
+*     Capture the subroutine exit in the trace file
+*
+      AOCL_DTL_TRACE_EXIT_F
       RETURN
 *
 *     End of PCHEEVR

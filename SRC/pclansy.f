@@ -1,5 +1,11 @@
+*
+*     Modifications Copyright (c) 2023 Advanced Micro Devices, Inc.  All rights reserved.
+*
+#include "SL_Context_fortran_include.h"
+*
       REAL             FUNCTION PCLANSY( NORM, UPLO, N, A, IA, JA,
      $                                   DESCA, WORK )
+      USE LINK_TO_C_GLOBALS
       IMPLICIT NONE
 *
 *  -- ScaLAPACK auxiliary routine (version 1.7) --
@@ -195,10 +201,33 @@
 *     ..
 *     .. Executable Statements ..
 *
+*     Initialize framework context structure if not initialized
+*
+*
+      CALL AOCL_SCALAPACK_INIT( )
+*
+*
+*     Capture the subroutine entry in the trace file
+*
+      AOCL_DTL_TRACE_ENTRY_F
+*
 *     Get grid parameters and local indexes.
 *
       ICTXT = DESCA( CTXT_ )
       CALL BLACS_GRIDINFO( ICTXT, NPROW, NPCOL, MYROW, MYCOL )
+*
+*     Update the log buffer with the scalar arguments details,
+*     MPI process grid information and write to the log file
+*
+      IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
+         WRITE(LOG_BUF,102)  NORM, UPLO, IA, JA, N, NPROW,
+     $            NPCOL, MYROW, MYCOL, eos_str
+ 102     FORMAT('PCLANSY inputs: ,NORM:',A5,', UPLO:',A5,', IA:',I5,
+     $           ', JA:',I5,', N:',I5,',  NPROW: ', I5,
+     $           ', NPCOL: ', I5 ,', MYROW: ', I5,
+     $           ', MYCOL: ', I5, A1)
+         AOCL_DTL_LOG_ENTRY_F
+      END IF
       CALL INFOG2L( IA, JA, DESCA, NPROW, NPCOL, MYROW, MYCOL,
      $              IIA, JJA, IAROW, IACOL )
 *
@@ -857,6 +886,10 @@
 *
       PCLANSY = VALUE
 *
+*
+*     Capture the subroutine exit in the trace file
+*
+      AOCL_DTL_TRACE_EXIT_F
       RETURN
 *
 *     End of PCLANSY

@@ -1,3 +1,8 @@
+*
+*     Modifications Copyright (c) 2023 Advanced Micro Devices, Inc.  All rights reserved.
+*
+#include "SL_Context_fortran_include.h"
+*
       SUBROUTINE PCLAHQR( WANTT, WANTZ, N, ILO, IHI, A, DESCA, W, ILOZ,
      $                    IHIZ, Z, DESCZ, WORK, LWORK, IWORK, ILWORK,
      $                    INFO )
@@ -9,6 +14,7 @@
 *            modification suggested by Mark Fahey and Greg Henry
 *     1.7.0: July    31, 2001
 *
+      USE LINK_TO_C_GLOBALS
 *     .. Scalar Arguments ..
       LOGICAL            WANTT, WANTZ
       INTEGER            IHI, IHIZ, ILO, ILOZ, ILWORK, INFO, LWORK, N
@@ -309,11 +315,39 @@
 *     ..
 *     .. Executable Statements ..
 *
+*     Initialize framework context structure if not initialized
+*
+*
+      CALL AOCL_SCALAPACK_INIT( )
+*
+*
+*     Capture the subroutine entry in the trace file
+*
+      AOCL_DTL_TRACE_ENTRY_F
+*
+*     Update the log buffer with the scalar arguments details,
+*     MPI process grid information and write to the log file
+*
+      IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
+         WRITE(LOG_BUF,102)  WANTT, WANTZ, IHI, IHIZ, ILO,
+     $            ILOZ, ILWORK, INFO, LWORK, N, eos_str
+ 102     FORMAT('PCLAHQR inputs: ,WANTT:',L1,', WANTZ:',L1,
+     $           ', IHI:',I5,', IHIZ:',I5,', ILO:',I5,
+     $           ', ILOZ:',I5,', ILWORK:',I5,', INFO:',I5,
+     $           ', LWORK:',I5,', N:',I5, A1 )
+         AOCL_DTL_LOG_ENTRY_F
+      END IF
+*
       INFO = 0
 *
       ITERMAX = 30*( IHI-ILO+1 )
-      IF( N.EQ.0 )
-     $   RETURN
+      IF( N.EQ.0 ) THEN
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
+         RETURN
+      END IF
 *
 *     NODE (IAFIRST,JAFIRST) OWNS A(1,1)
 *
@@ -348,6 +382,10 @@
       JJ = JJ + MAX( 2*N, ( 8*LCMRC+2 )**2 )
       IF( LWORK.EQ.-1 ) THEN
          WORK( 1 ) = JJ
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
       IF( LWORK.LT.JJ ) THEN
@@ -384,6 +422,10 @@
      $              -1, -1 )
       IF( INFO.LT.0 ) THEN
          CALL PXERBLA( CONTXT, 'PCLAHQR', -INFO )
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
 *
@@ -411,6 +453,10 @@
          ELSE
             W( ILO ) = ZERO
          END IF
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
 *
@@ -2465,6 +2511,10 @@
 *     Failure to converge in remaining number of iterations
 *
       INFO = I
+*
+*     Capture the subroutine exit in the trace file
+*
+      AOCL_DTL_TRACE_EXIT_F
       RETURN
 *
   550 CONTINUE
@@ -2543,6 +2593,10 @@
 *
   570 CONTINUE
       CALL CGSUM2D( CONTXT, 'All', ' ', N, 1, W, N, -1, -1 )
+*
+*     Capture the subroutine exit in the trace file
+*
+      AOCL_DTL_TRACE_EXIT_F
       RETURN
 *
 *     END OF PCLAHQR

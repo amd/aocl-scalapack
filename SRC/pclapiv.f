@@ -1,3 +1,8 @@
+*
+*     Modifications Copyright (c) 2023 Advanced Micro Devices, Inc.  All rights reserved.
+*
+#include "SL_Context_fortran_include.h"
+*
       SUBROUTINE PCLAPIV( DIREC, ROWCOL, PIVROC, M, N, A, IA, JA,
      $                    DESCA, IPIV, IP, JP, DESCIP, IWORK )
 *
@@ -6,6 +11,7 @@
 *     and University of California, Berkeley.
 *     November 15, 1997
 *
+      USE LINK_TO_C_GLOBALS
 *     .. Scalar Arguments ..
       CHARACTER*1        DIREC, PIVROC, ROWCOL
       INTEGER            IA, IP, JA, JP, M, N
@@ -224,17 +230,47 @@
 *     ..
 *     .. Executable Statements ..
 *
+*     Initialize framework context structure if not initialized
+*
+*
+      CALL AOCL_SCALAPACK_INIT( )
+*
+*
+*     Capture the subroutine entry in the trace file
+*
+      AOCL_DTL_TRACE_ENTRY_F
+*
 *     Get grid parameters
 *
       ICTXT = DESCA( CTXT_ )
       CALL BLACS_GRIDINFO( ICTXT, NPROW, NPCOL, MYROW, MYCOL )
+*
+*     Update the log buffer with the scalar arguments details,
+*     MPI process grid information and write to the log file
+*
+      IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
+         WRITE(LOG_BUF,102)  DIREC, PIVROC, ROWCOL, IA,
+     $            IP, JA, JP, M, N, NPROW, NPCOL, MYROW,
+     $            MYCOL, eos_str
+ 102     FORMAT('PCLAPIV inputs: ,DIREC:',A2,', PIVROC:',A2,
+     $           ', ROWCOL:',A2,', IA:',I5,', IP:',I5,
+     $           ', JA:',I5,', JP:',I5,', M:',I5,
+     $           ', N:',I5,',  NPROW: ', I5,', NPCOL: ', I5 ,
+     $           ', MYROW: ', I5,', MYCOL: ', I5, A1)
+         AOCL_DTL_LOG_ENTRY_F
+      END IF
       ROWPVT = LSAME( ROWCOL, 'R' )
 *
 *     If we're pivoting the rows of sub( A )
 *
       IF( ROWPVT ) THEN
-         IF( M.LE.1 .OR. N.LT.1 )
-     $      RETURN
+         IF( M.LE.1 .OR. N.LT.1 ) THEN
+*
+*           Capture the subroutine exit in the trace file
+*
+            AOCL_DTL_TRACE_EXIT_F
+            RETURN
+         END IF
 *
 *        If the pivot vector is already distributed correctly
 *
@@ -293,8 +329,13 @@
 *     Otherwise, we're pivoting the columns of sub( A )
 *
       ELSE
-         IF( M.LT.1 .OR. N.LE.1 )
-     $      RETURN
+         IF( M.LT.1 .OR. N.LE.1 ) THEN
+*
+*           Capture the subroutine exit in the trace file
+*
+            AOCL_DTL_TRACE_EXIT_F
+            RETURN
+         END IF
 *
 *        If the pivot vector is already distributed correctly
 *
@@ -349,6 +390,10 @@
          END IF
       END IF
 *
+*
+*     Capture the subroutine exit in the trace file
+*
+      AOCL_DTL_TRACE_EXIT_F
       RETURN
 *
 *     End of PCLAPIV

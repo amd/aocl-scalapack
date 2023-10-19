@@ -1,3 +1,8 @@
+*
+*     Modifications Copyright (c) 2023 Advanced Micro Devices, Inc.  All rights reserved.
+*
+#include "SL_Context_fortran_include.h"
+*
       SUBROUTINE PCHEGVX( IBTYPE, JOBZ, RANGE, UPLO, N, A, IA, JA,
      $                    DESCA, B, IB, JB, DESCB, VL, VU, IL, IU,
      $                    ABSTOL, M, NZ, W, ORFAC, Z, IZ, JZ, DESCZ,
@@ -9,6 +14,7 @@
 *     and University of California, Berkeley.
 *     October 15, 1999
 *
+      USE LINK_TO_C_GLOBALS
 *     .. Scalar Arguments ..
       CHARACTER          JOBZ, RANGE, UPLO
       INTEGER            IA, IB, IBTYPE, IL, INFO, IU, IZ, JA, JB, JZ,
@@ -532,9 +538,46 @@
      $                   REAL, SQRT
 *     ..
 *     .. Executable Statements ..
+*
+*     Initialize framework context structure if not initialized
+*
+*
+      CALL AOCL_SCALAPACK_INIT( )
+*
+*
+*     Capture the subroutine entry in the trace file
+*
+      AOCL_DTL_TRACE_ENTRY_F
+*
+*     Update the log buffer with the scalar arguments details,
+*     MPI process grid information and write to the log file
+*
+      IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
+         WRITE(LOG_BUF,102)  JOBZ, RANGE, UPLO, IA, IB,
+     $            IBTYPE, IL, INFO, IU, IZ, JA, JB, JZ,
+     $                              LIWORK, LRWORK,
+     $            LWORK, M, N, NZ, ABSTOL, ORFAC, VL,
+     $            VU, eos_str
+ 102     FORMAT('PCHEGVX inputs: ,JOBZ:',A5,', RANGE:',A5,
+     $           ', UPLO:',A5,', IA:',I5,', IB:',I5,
+     $           ', IBTYPE:',I5,', IL:',I5,', INFO:',I5,
+     $           ', IU:',I5,', IZ:',I5,', JA:',I5,
+     $           ', JB:',I5,', JZ:',I5,', LIWORK:',I5,
+     $           ', LRWORK:',I5,', LWORK:',I5,', M:',I5,
+     $           ', N:',I5,', NZ:',I5,', ABSTOL:',F9.4,
+     $           ', ORFAC:',F9.4,', VL:',F9.4,
+     $           ', VU:',F9.4, A1 )
+         AOCL_DTL_LOG_ENTRY_F
+      END IF
 *       This is just to keep ftnchek and toolpack/1 happy
       IF( BLOCK_CYCLIC_2D*CSRC_*CTXT_*DLEN_*DTYPE_*LLD_*MB_*M_*NB_*N_*
-     $    RSRC_.LT.0 )RETURN
+     $    RSRC_.LT.0 )THEN
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
+         RETURN
+      END IF
 *
 *     Get grid parameters
 *
@@ -760,8 +803,16 @@
 *
       IF( INFO.NE.0 ) THEN
          CALL PXERBLA( ICTXT, 'PCHEGVX ', -INFO )
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       ELSE IF( LQUERY ) THEN
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
 *
@@ -774,6 +825,10 @@
          RWORK( 1 ) = REAL( LRWOPT )
          IFAIL( 1 ) = INFO
          INFO = IERRNPD
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
 *
@@ -829,6 +884,10 @@
       IWORK( 1 ) = LIWMIN
       WORK( 1 ) = CMPLX( REAL( LWOPT ) )
       RWORK( 1 ) = REAL( LRWOPT )
+*
+*     Capture the subroutine exit in the trace file
+*
+      AOCL_DTL_TRACE_EXIT_F
       RETURN
 *
 *     End of PCHEGVX

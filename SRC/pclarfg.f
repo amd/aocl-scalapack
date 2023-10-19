@@ -1,3 +1,8 @@
+*
+*     Modifications Copyright (c) 2023 Advanced Micro Devices, Inc.  All rights reserved.
+*
+#include "SL_Context_fortran_include.h"
+*
       SUBROUTINE PCLARFG( N, ALPHA, IAX, JAX, X, IX, JX, DESCX, INCX,
      $                    TAU )
 *
@@ -6,6 +11,7 @@
 *     and University of California, Berkeley.
 *     May 1, 1997
 *
+      USE LINK_TO_C_GLOBALS
 *     .. Scalar Arguments ..
       INTEGER            IAX, INCX, IX, JAX, JX, N
       COMPLEX            ALPHA
@@ -172,10 +178,35 @@
 *     ..
 *     .. Executable Statements ..
 *
+*     Initialize framework context structure if not initialized
+*
+*
+      CALL AOCL_SCALAPACK_INIT( )
+*
+*
+*     Capture the subroutine entry in the trace file
+*
+      AOCL_DTL_TRACE_ENTRY_F
+*
 *     Get grid parameters.
 *
       ICTXT = DESCX( CTXT_ )
       CALL BLACS_GRIDINFO( ICTXT, NPROW, NPCOL, MYROW, MYCOL )
+*
+*     Update the log buffer with the scalar arguments details,
+*     MPI process grid information and write to the log file
+*
+      IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
+         WRITE(LOG_BUF,102)  IAX, INCX, IX, JAX, JX, N,
+     $            real(ALPHA),' + i ',aimag(ALPHA), NPROW,
+     $            NPCOL, MYROW, MYCOL, eos_str
+ 102     FORMAT('PCLARFG inputs: ,IAX:',I5,', INCX:',I5,
+     $           ', IX:',I5,', JAX:',I5,', JX:',I5,', N:',I5,
+     $           ', ALPHA:',F9.4, A, F9.4,',  NPROW: ', I5,
+     $           ', NPCOL: ', I5 ,', MYROW: ', I5,
+     $           ', MYCOL: ', I5, A1)
+         AOCL_DTL_LOG_ENTRY_F
+      END IF
 *
       IF( INCX.EQ.DESCX( M_ ) ) THEN
 *
@@ -184,8 +215,13 @@
          CALL INFOG2L( IX, JAX, DESCX, NPROW, NPCOL, MYROW, MYCOL,
      $                 IIAX, JJAX, IXROW, IXCOL )
 *
-         IF( MYROW.NE.IXROW )
-     $      RETURN
+         IF( MYROW.NE.IXROW ) THEN
+*
+*           Capture the subroutine exit in the trace file
+*
+            AOCL_DTL_TRACE_EXIT_F
+            RETURN
+         END IF
 *
 *        Broadcast X(IAX,JAX) across the process row.
 *
@@ -207,8 +243,13 @@
          CALL INFOG2L( IAX, JX, DESCX, NPROW, NPCOL, MYROW, MYCOL,
      $                 IIAX, JJAX, IXROW, IXCOL )
 *
-         IF( MYCOL.NE.IXCOL )
-     $      RETURN
+         IF( MYCOL.NE.IXCOL ) THEN
+*
+*           Capture the subroutine exit in the trace file
+*
+            AOCL_DTL_TRACE_EXIT_F
+            RETURN
+         END IF
 *
 *        Broadcast X(IAX,JAX) across the process column.
 *
@@ -227,6 +268,10 @@
 *
       IF( N.LE.0 ) THEN
          TAU( INDXTAU ) = ZERO
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
 *
@@ -296,6 +341,10 @@
          END IF
       END IF
 *
+*
+*     Capture the subroutine exit in the trace file
+*
+      AOCL_DTL_TRACE_EXIT_F
       RETURN
 *
 *     End of PCLARFG

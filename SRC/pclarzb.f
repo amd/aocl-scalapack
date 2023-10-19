@@ -1,3 +1,8 @@
+*
+*     Modifications Copyright (c) 2023 Advanced Micro Devices, Inc.  All rights reserved.
+*
+#include "SL_Context_fortran_include.h"
+*
       SUBROUTINE PCLARZB( SIDE, TRANS, DIRECT, STOREV, M, N, K, L, V,
      $                    IV, JV, DESCV, T, C, IC, JC, DESCC, WORK )
 *
@@ -5,6 +10,7 @@
 *     Univ. of Tennessee, Univ. of California Berkeley, Univ. of Colorado Denver
 *     May 1 2012
 *
+      USE LINK_TO_C_GLOBALS
 *     .. Scalar Arguments ..
       CHARACTER          DIRECT, SIDE, STOREV, TRANS
       INTEGER            IC, IV, JC, JV, K, L, M, N
@@ -256,10 +262,38 @@
 *     ..
 *     .. Executable Statements ..
 *
+*     Initialize framework context structure if not initialized
+*
+*
+      CALL AOCL_SCALAPACK_INIT( )
+*
+*
+*     Capture the subroutine entry in the trace file
+*
+      AOCL_DTL_TRACE_ENTRY_F
+*
+*     Update the log buffer with the scalar arguments details,
+*     MPI process grid information and write to the log file
+*
+      IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
+         WRITE(LOG_BUF,102)  DIRECT, SIDE, STOREV, TRANS,
+     $            IC, IV, JC, JV, K, L, M, N, eos_str
+ 102     FORMAT('PCLARZB inputs: ,DIRECT:',A5,', SIDE:',A5,
+     $           ', STOREV:',A5,', TRANS:',A5,', IC:',I5,
+     $           ', IV:',I5,', JC:',I5,', JV:',I5,
+     $           ', K:',I5,', L:',I5,', M:',I5,', N:',I5, A1 )
+         AOCL_DTL_LOG_ENTRY_F
+      END IF
+*
 *     Quick return if possible
 *
-      IF( M.LE.0 .OR. N.LE.0 .OR. K.LE.0 )
-     $   RETURN
+      IF( M.LE.0 .OR. N.LE.0 .OR. K.LE.0 ) THEN
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
+         RETURN
+      END IF
 *
 *     Get grid parameters
 *
@@ -277,6 +311,10 @@
       IF( INFO.NE.0 ) THEN
          CALL PXERBLA( ICTXT, 'PCLARZB', -INFO )
          CALL BLACS_ABORT( ICTXT, 1 )
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
 *
@@ -618,6 +656,10 @@
 *
       END IF
 *
+*
+*     Capture the subroutine exit in the trace file
+*
+      AOCL_DTL_TRACE_EXIT_F
       RETURN
 *
 *     End of PCLARZB
