@@ -147,7 +147,7 @@
 *     ..
 *     .. External Functions ..
       LOGICAL            LSAME
-#ifndef F2C	  
+#ifndef F2C
       COMPLEX            CDOTC
 #endif
       EXTERNAL           CDOTC, LSAME
@@ -207,10 +207,10 @@
                AII = A( IDIAG )
                ICURR = IDIAG + LDA
 #ifdef F2C
-               CALL CDOTC( TMP, NA, A( ICURR ), LDA, 
+               CALL CDOTC( TMP, NA, A( ICURR ), LDA,
      $                            A( ICURR ), LDA )
                A( IDIAG ) = AII*AII + REAL( TMP )
-#else	       
+#else
                A( IDIAG ) = AII*AII + REAL( CDOTC( NA, A( ICURR ), LDA,
      $                                           A( ICURR ), LDA ) )
 #endif

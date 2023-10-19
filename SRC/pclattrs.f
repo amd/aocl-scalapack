@@ -932,10 +932,10 @@
                      CALL PCSCAL( N-J, ZDUM, A, IA+J, JA+J-1, DESCA, 1 )
                      CALL PCDOTU( N-J, CSUMJ, A, IA+J, JA+J-1, DESCA, 1,
      $                            X, IX+J, JX, DESCX, 1 )
-     
+
 #ifdef F2C
                    CALL CLADIV( ZDUM, ZDUM, USCAL )
-#else   
+#else
                     ZDUM = CLADIV( ZDUM, USCAL )
 #endif
                      CALL PCSCAL( N-J, ZDUM, A, IA+J, JA+J-1, DESCA, 1 )
