@@ -1,3 +1,9 @@
+*
+*     Modifications Copyright (c) 2023 Advanced Micro Devices, Inc.  All rights reserved.
+*
+*
+#include "SL_Context_fortran_include.h"
+*
       SUBROUTINE PCPORFS( UPLO, N, NRHS, A, IA, JA, DESCA, AF, IAF, JAF,
      $                    DESCAF, B, IB, JB, DESCB, X, IX, JX, DESCX,
      $                    FERR, BERR, WORK, LWORK, RWORK, LRWORK, INFO )
@@ -7,6 +13,7 @@
 *     and University of California, Berkeley.
 *     November 15, 1997
 *
+      USE LINK_TO_C_GLOBALS
 *     .. Scalar Arguments ..
       CHARACTER          UPLO
       INTEGER            IA, IAF, IB, INFO, IX, JA, JAF, JB, JX,
@@ -306,6 +313,16 @@
       CABS1( ZDUM ) = ABS( REAL( ZDUM ) ) + ABS( AIMAG( ZDUM ) )
 *     ..
 *     .. Executable Statements ..
+*
+*     Initialize framework context structure if not initialized
+*
+*
+      CALL AOCL_SCALAPACK_INIT( )
+*
+*
+*     Capture the subroutine entry in the trace file
+*
+      AOCL_DTL_TRACE_ENTRY_F
 *     .. Initialize EST
       EST = (0.0, 0.0)
 *
@@ -313,6 +330,24 @@
 *
       ICTXT = DESCA( CTXT_ )
       CALL BLACS_GRIDINFO( ICTXT, NPROW, NPCOL, MYROW, MYCOL )
+*
+*     Update the log buffer with the scalar arguments details,
+*     MPI process grid information and write to the log file
+*
+      IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
+         WRITE(LOG_BUF,102)  UPLO, IA, IAF, IB, INFO, IX,
+     $            JA, JAF, JB, JX,                   LRWORK,
+     $            LWORK, N, NRHS, NPROW, NPCOL,
+     $            MYROW, MYCOL, eos_str
+ 102     FORMAT('PCPORFS inputs: ,UPLO:',A5,', IA:',I9,
+     $           ', IAF:',I9,', IB:',I9,', INFO:',I9,
+     $           ', IX:',I9,', JA:',I9,', JAF:',I9,', JB:',I9,
+     $           ', JX:',I9,', LRWORK:',I9,', LWORK:',I9,
+     $           ', N:',I9,', NRHS:',I9,
+     $           ',  NPROW: ', I9,', NPCOL: ', I9 ,', MYROW: ', I9,
+     $           ', MYCOL: ', I9, A1)
+         AOCL_DTL_LOG_ENTRY_F
+      END IF
 *
 *     Test the input parameters.
 *
@@ -430,8 +465,16 @@
       END IF
       IF( INFO.NE.0 ) THEN
          CALL PXERBLA( ICTXT, 'PCPORFS', -INFO )
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       ELSE IF( LQUERY ) THEN
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
 *
@@ -446,6 +489,10 @@
             FERR( JJ ) = ZERO
             BERR( JJ ) = ZERO
    10    CONTINUE
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
 *
@@ -865,6 +912,10 @@
       WORK( 1 ) = CMPLX( REAL( LWMIN ) )
       RWORK( 1 ) = REAL( LRWMIN )
 *
+*
+*     Capture the subroutine exit in the trace file
+*
+      AOCL_DTL_TRACE_EXIT_F
       RETURN
 *
 *     End of PCPORFS

@@ -1,3 +1,9 @@
+*
+*     Modifications Copyright (c) 2023 Advanced Micro Devices, Inc.  All rights reserved.
+*
+*
+#include "SL_Context_fortran_include.h"
+*
       SUBROUTINE PCTRCON( NORM, UPLO, DIAG, N, A, IA, JA, DESCA, RCOND,
      $                    WORK, LWORK, RWORK, LRWORK, INFO )
 *
@@ -7,6 +13,7 @@
 *     May 25, 2001
 *
 *
+      USE LINK_TO_C_GLOBALS
 *     .. Scalar Arguments ..
       CHARACTER          DIAG, NORM, UPLO
       INTEGER            IA, JA, INFO, LRWORK, LWORK, N
@@ -225,10 +232,36 @@
 *     ..
 *     .. Executable Statements ..
 *
+*     Initialize framework context structure if not initialized
+*
+*
+      CALL AOCL_SCALAPACK_INIT( )
+*
+*
+*     Capture the subroutine entry in the trace file
+*
+      AOCL_DTL_TRACE_ENTRY_F
+*
 *     Get grid parameters
 *
       ICTXT = DESCA( CTXT_ )
       CALL BLACS_GRIDINFO( ICTXT, NPROW, NPCOL, MYROW, MYCOL )
+*
+*     Update the log buffer with the scalar arguments details,
+*     MPI process grid information and write to the log file
+*
+      IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
+         WRITE(LOG_BUF,102)  DIAG, NORM, UPLO, IA, JA, INFO,
+     $            LRWORK, LWORK, N, RCOND, NPROW,
+     $            NPCOL, MYROW, MYCOL, eos_str
+ 102     FORMAT('PCTRCON inputs: ,DIAG:',A5,', NORM:',A5,
+     $           ', UPLO:',A5,', IA:',I9,', JA:',I9,
+     $           ', INFO:',I9,', LRWORK:',I9,', LWORK:',I9,
+     $           ', N:',I9,', RCOND:',F9.4,',  NPROW: ', I9,
+     $           ', NPCOL: ', I9 ,', MYROW: ', I9,
+     $           ', MYCOL: ', I9, A1)
+         AOCL_DTL_LOG_ENTRY_F
+      END IF
 *
 *     Test the input parameters
 *
@@ -308,8 +341,16 @@
 *
       IF( INFO.NE.0 ) THEN
          CALL PXERBLA( ICTXT, 'PCTRCON', -INFO )
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       ELSE IF( LQUERY ) THEN
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
 *
@@ -317,6 +358,10 @@
 *
       IF( N.EQ.0 ) THEN
          RCOND = ONE
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
 *
@@ -424,6 +469,10 @@
       CALL PB_TOPSET( ICTXT, 'Combine', 'Columnwise', COLCTOP )
       CALL PB_TOPSET( ICTXT, 'Combine', 'Rowwise',    ROWCTOP )
 *
+*
+*     Capture the subroutine exit in the trace file
+*
+      AOCL_DTL_TRACE_EXIT_F
       RETURN
 *
 *     End of PCTRCON
