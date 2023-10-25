@@ -350,7 +350,7 @@
 *                 Compute L(J,J) and test for non-positive-definiteness.
 *
 #ifdef F2C
-                  CALL CDOTC( TMP, J-JA, A( IOFFA ), LDA, 
+                  CALL CDOTC( TMP, J-JA, A( IOFFA ), LDA,
      $                               A( IOFFA ), LDA )
                   AJJ = REAL( A( IDIAG ) ) - TMP
 #else
