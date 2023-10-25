@@ -50,7 +50,7 @@ if (WIN32 AND CMAKE_Fortran_COMPILER_ID MATCHES "Intel")
 endif()
 
 set(CMAKE_ICC_FLAGS " ")
-set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -cpp -fopenmp" )
+set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -cpp" )
 
 # set compile flags to enable address sanitizer (ASAN) tests
 if(ENABLE_ASAN_TESTS)
@@ -230,10 +230,7 @@ MESSAGE(STATUS "CMAKE_C_COMPILER_ID = ${CMAKE_C_COMPILER_ID}")
 MESSAGE(STATUS "CMAKE_Fortran_COMPILER_ID = ${CMAKE_Fortran_COMPILER_ID}")
 
 if(ENABLE_DTL)
-#Enable DTL for UNIX
-  if(UNIX)
-      add_definitions("-DAOCL_DTL ")
-  endif()
+  add_definitions("-DAOCL_DTL ")
 ENDIF(ENABLE_DTL)
 
 if(ENABLE_ILP64)
