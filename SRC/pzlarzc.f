@@ -1,3 +1,9 @@
+*
+*     Modifications Copyright (c) 2023 Advanced Micro Devices, Inc.  All rights reserved.
+*
+*
+#include "SL_Context_fortran_include.h"
+*
       SUBROUTINE PZLARZC( SIDE, M, N, L, V, IV, JV, DESCV, INCV, TAU, C,
      $                    IC, JC, DESCC, WORK )
 *
@@ -6,6 +12,7 @@
 *     and University of California, Berkeley.
 *     May 25, 2001
 *
+      USE LINK_TO_C_GLOBALS
 *     .. Scalar Arguments ..
       CHARACTER          SIDE
       INTEGER            IC, INCV, IV, JC, JV, L, M, N
@@ -269,10 +276,37 @@
 *     ..
 *     .. Executable Statements ..
 *
+*     Initialize framework context structure if not initialized
+*
+*
+      CALL AOCL_SCALAPACK_INIT( )
+*
+*
+*     Capture the subroutine entry in the trace file
+*
+      AOCL_DTL_TRACE_ENTRY_F
+*
+*     Update the log buffer with the scalar arguments details,
+*     MPI process grid information and write to the log file
+*
+      IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
+         WRITE(LOG_BUF,102)  SIDE, IC, INCV, IV, JC, JV,
+     $            L, M, N, eos_str
+ 102     FORMAT('PZLARZC inputs: ,SIDE:',A5,', IC:',I9,
+     $           ', INCV:',I9,', IV:',I9,', JC:',I9,', JV:',I9,
+     $           ', L:',I9,', M:',I9,', N:',I9, A1 )
+         AOCL_DTL_LOG_ENTRY_F
+      END IF
+*
 *     Quick return if possible
 *
-      IF( M.LE.0 .OR. N.LE.0 )
-     $   RETURN
+      IF( M.LE.0 .OR. N.LE.0 ) THEN
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
+         RETURN
+      END IF
 *
 *     Get grid parameters.
 *
@@ -911,6 +945,10 @@
 *
       END IF
 *
+*
+*     Capture the subroutine exit in the trace file
+*
+      AOCL_DTL_TRACE_EXIT_F
       RETURN
 *
 *     End of PZLARZC

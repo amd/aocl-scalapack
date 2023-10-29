@@ -1,3 +1,9 @@
+*
+*     Modifications Copyright (c) 2023 Advanced Micro Devices, Inc.  All rights reserved.
+*
+*
+#include "SL_Context_fortran_include.h"
+*
       SUBROUTINE PZLAWIL( II, JJ, M, A, DESCA, H44, H33, H43H34, V )
 *
 *  -- ScaLAPACK routine (version 1.7) --
@@ -5,6 +11,7 @@
 *     and University of California, Berkeley.
 *     July 31, 2001
 *
+      USE LINK_TO_C_GLOBALS
 *     .. Scalar Arguments ..
       INTEGER            II, JJ, M
       COMPLEX*16         H33, H43H34, H44
@@ -143,10 +150,34 @@
 *     ..
 *     .. Executable Statements ..
 *
+*     Initialize framework context structure if not initialized
+*
+*
+      CALL AOCL_SCALAPACK_INIT( )
+*
+*
+*     Capture the subroutine entry in the trace file
+*
+      AOCL_DTL_TRACE_ENTRY_F
+*
       HBL = DESCA( MB_ )
       CONTXT = DESCA( CTXT_ )
       LDA = DESCA( LLD_ )
       CALL BLACS_GRIDINFO( CONTXT, NPROW, NPCOL, MYROW, MYCOL )
+*
+*     Update the log buffer with the scalar arguments details,
+*     MPI process grid information and write to the log file
+*
+      IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
+         WRITE(LOG_BUF,102)  II, JJ, M, H33, H43H34, H44,
+     $            NPROW, NPCOL, MYROW, MYCOL, eos_str
+ 102     FORMAT('PZLAWIL inputs: ,II:',I9,', JJ:',I9,', M:',I9,
+     $           ', H33:',F9.4, A, F9.4,', H43H34:',F9.4, A, F9.4,
+     $           ', H44:',F9.4, A, F9.4,
+     $           ',  NPROW: ', I9,', NPCOL: ', I9 ,
+     $           ', MYROW: ', I9,', MYCOL: ', I9, A1)
+         AOCL_DTL_LOG_ENTRY_F
+      END IF
       LEFT = MOD( MYCOL+NPCOL-1, NPCOL )
       RIGHT = MOD( MYCOL+1, NPCOL )
       UP = MOD( MYROW+NPROW-1, NPROW )
@@ -240,8 +271,13 @@
             V3( 1 ) = A( ( ICOL-2 )*LDA+IROW )
          END IF
       END IF
-      IF( ( MYROW.NE.II ) .OR. ( MYCOL.NE.JJ ) )
-     $   RETURN
+      IF( ( MYROW.NE.II ) .OR. ( MYCOL.NE.JJ ) ) THEN
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
+         RETURN
+      END IF
 *
       IF( MODKM1.GT.1 ) THEN
          CALL INFOG2L( M+2, M+2, DESCA, NPROW, NPCOL, MYROW, MYCOL,
@@ -265,6 +301,10 @@
       V( 2 ) = V2
       V( 3 ) = V3( 1 )
 *
+*
+*     Capture the subroutine exit in the trace file
+*
+      AOCL_DTL_TRACE_EXIT_F
       RETURN
 *
 *     End of PZLAWIL

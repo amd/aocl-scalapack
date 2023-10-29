@@ -1,4 +1,10 @@
 *
+*     Modifications Copyright (c) 2023 Advanced Micro Devices, Inc.  All rights reserved.
+*
+*
+*
+*
+#include "SL_Context_fortran_include.h"
 *
       SUBROUTINE PZLAEVSWP( N, ZIN, LDZI, Z, IZ, JZ, DESCZ, NVS, KEY,
      $                      RWORK, LRWORK )
@@ -8,6 +14,7 @@
 *     and University of California, Berkeley.
 *     April 15, 1997
 *
+      USE LINK_TO_C_GLOBALS
 *     .. Scalar Arguments ..
       INTEGER            IZ, JZ, LDZI, LRWORK, N
 *     ..
@@ -154,9 +161,35 @@
       INTRINSIC          DCMPLX, MAX, MIN, MOD
 *     ..
 *     .. Executable Statements ..
+*
+*     Initialize framework context structure if not initialized
+*
+*
+      CALL AOCL_SCALAPACK_INIT( )
+*
+*
+*     Capture the subroutine entry in the trace file
+*
+      AOCL_DTL_TRACE_ENTRY_F
+*
+*     Update the log buffer with the scalar arguments details,
+*     MPI process grid information and write to the log file
+*
+      IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
+         WRITE(LOG_BUF,102)  IZ, JZ, LDZI, LRWORK, N, eos_str
+ 102     FORMAT('PZLAEVSWP inputs: ,IZ:',I9,', JZ:',I9,
+     $           ', LDZI:',I9,', LRWORK:',I9,', N:',I9, A1 )
+         AOCL_DTL_LOG_ENTRY_F
+      END IF
 *       This is just to keep ftnchek happy
       IF( BLOCK_CYCLIC_2D*CSRC_*CTXT_*DLEN_*DTYPE_*LLD_*MB_*M_*NB_*N_*
-     $    RSRC_.LT.0 )RETURN
+     $    RSRC_.LT.0 )THEN
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
+         RETURN
+      END IF
       CALL BLACS_GRIDINFO( DESCZ( CTXT_ ), NPROW, NPCOL, MYROW, MYCOL )
       IAM = MYROW + MYCOL*NPROW
       IAM = MYROW*NPCOL + MYCOL
@@ -280,6 +313,10 @@
   100    CONTINUE
 *
   110 CONTINUE
+*
+*     Capture the subroutine exit in the trace file
+*
+      AOCL_DTL_TRACE_EXIT_F
       RETURN
 *
 *     End of PZLAEVSWP

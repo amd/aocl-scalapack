@@ -1,11 +1,18 @@
+*
+*     Modifications Copyright (c) 2023 Advanced Micro Devices, Inc.  All rights reserved.
+*
+*
+#include "SL_Context_fortran_include.h"
+*
       SUBROUTINE PZHEEV( JOBZ, UPLO, N, A, IA, JA, DESCA, W, Z, IZ, JZ,
      $                   DESCZ, WORK, LWORK, RWORK, LRWORK, INFO )
 *
 *  -- ScaLAPACK routine (version 1.7) --
 *     University of Tennessee, Knoxville, Oak Ridge National Laboratory,
 *     and University of California, Berkeley.
-*     August 14, 2001 
+*     August 14, 2001
 *
+      USE LINK_TO_C_GLOBALS
 *     .. Scalar Arguments ..
       CHARACTER          JOBZ, UPLO
       INTEGER            IA, INFO, IZ, JA, JZ, LRWORK, LWORK, N
@@ -283,14 +290,48 @@
      $                   SQRT
 *     ..
 *     .. Executable Statements ..
+*
+*     Initialize framework context structure if not initialized
+*
+*
+      CALL AOCL_SCALAPACK_INIT( )
+*
+*
+*     Capture the subroutine entry in the trace file
+*
+      AOCL_DTL_TRACE_ENTRY_F
+*
+*     Update the log buffer with the scalar arguments details,
+*     MPI process grid information and write to the log file
+*
+      IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
+         WRITE(LOG_BUF,102)  JOBZ, UPLO, IA, INFO, IZ, JA,
+     $            JZ, LRWORK, LWORK, N, eos_str
+ 102     FORMAT('PZHEEV inputs: ,JOBZ:',A5,', UPLO:',A5,
+     $           ', IA:',I9,', INFO:',I9,', IZ:',I9,
+     $           ', JA:',I9,', JZ:',I9,', LRWORK:',I9,
+     $           ', LWORK:',I9,', N:',I9, A1 )
+         AOCL_DTL_LOG_ENTRY_F
+      END IF
 *       This is just to keep ftnchek and toolpack/1 happy
       IF( BLOCK_CYCLIC_2D*CSRC_*CTXT_*DLEN_*DTYPE_*LLD_*MB_*M_*NB_*N_*
-     $    RSRC_.LT.0 )RETURN
+     $    RSRC_.LT.0 )THEN
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
+         RETURN
+      END IF
 *
 *     Quick return
 *
-      IF( N.EQ.0 )
-     $   RETURN
+      IF( N.EQ.0 ) THEN
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
+         RETURN
+      END IF
 *
 *     Test the input arguments.
 *
@@ -499,10 +540,18 @@
          CALL PXERBLA( DESCA( CTXT_ ), 'PZHEEV', -INFO )
          IF( WANTZ )
      $      CALL BLACS_GRIDEXIT( CONTEXTC )
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       ELSE IF( LWORK.EQ.-1 .OR. LRWORK.EQ.-1 ) THEN
          IF( WANTZ )
      $      CALL BLACS_GRIDEXIT( CONTEXTC )
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
 *
@@ -629,6 +678,10 @@
    50 CONTINUE
       RWORK( 1 ) = LRMIN
 *
+*
+*     Capture the subroutine exit in the trace file
+*
+      AOCL_DTL_TRACE_EXIT_F
       RETURN
 *
 *     End of PZHEEV

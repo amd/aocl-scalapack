@@ -1,3 +1,9 @@
+*
+*     Modifications Copyright (c) 2023 Advanced Micro Devices, Inc.  All rights reserved.
+*
+*
+#include "SL_Context_fortran_include.h"
+*
       SUBROUTINE PZHEEVX( JOBZ, RANGE, UPLO, N, A, IA, JA, DESCA, VL,
      $                    VU, IL, IU, ABSTOL, M, NZ, W, ORFAC, Z, IZ,
      $                    JZ, DESCZ, WORK, LWORK, RWORK, LRWORK, IWORK,
@@ -8,6 +14,7 @@
 *     and University of California, Berkeley.
 *     May 25, 2001
 *
+      USE LINK_TO_C_GLOBALS
 *     .. Scalar Arguments ..
       CHARACTER          JOBZ, RANGE, UPLO
       INTEGER            IA, IL, INFO, IU, IZ, JA, JZ, LIWORK, LRWORK,
@@ -517,10 +524,49 @@
      $                   SQRT
 *     ..
 *     .. Executable Statements ..
+*
+*     Initialize framework context structure if not initialized
+*
+*
+      CALL AOCL_SCALAPACK_INIT( )
+*
+*
+*     Capture the subroutine entry in the trace file
+*
+      AOCL_DTL_TRACE_ENTRY_F
+*
+*     Update the log buffer with the scalar arguments details,
+*     MPI process grid information and write to the log file
+*
+      IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
+         WRITE(LOG_BUF,102)  JOBZ, RANGE, UPLO, IA, IL,
+     $            INFO, IU, IZ, JA, JZ, LIWORK, LRWORK,
+     $                              LWORK, M, N, NZ,
+     $            ABSTOL, ORFAC, VL, VU, eos_str
+ 102     FORMAT('PZHEEVX inputs: ,JOBZ:',A5,', RANGE:',A5,
+     $           ', UPLO:',A5,', IA:',I9,', IL:',I9,
+     $           ', INFO:',I9,', IU:',I9,', IZ:',I9,
+     $           ', JA:',I9,', JZ:',I9,', LIWORK:',I9,
+     $           ', LRWORK:',I9,', LWORK:',I9,', M:',I9,
+     $           ', N:',I9,', NZ:',I9,', ABSTOL:',F9.4,
+     $           ', ORFAC:',F9.4,', VL:',F9.4,
+     $           ', VU:',F9.4, A1 )
+         AOCL_DTL_LOG_ENTRY_F
+      END IF
 *       This is just to keep ftnchek and toolpack/1 happy
       IF( BLOCK_CYCLIC_2D*CSRC_*CTXT_*DLEN_*DTYPE_*LLD_*MB_*M_*NB_*N_*
-     $    RSRC_.LT.0 )RETURN
+     $    RSRC_.LT.0 )THEN
 *
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
+         RETURN
+      END IF
+*
+*
+*     Capture the subroutine exit in the trace file
+*
+      AOCL_DTL_TRACE_EXIT_F
       QUICKRETURN = ( N.EQ.0 )
 *
 *     Test the input arguments.
@@ -761,13 +807,25 @@
 *
       IF( INFO.NE.0 ) THEN
          CALL PXERBLA( ICTXT, 'PZHEEVX', -INFO )
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       ELSE IF( LQUERY ) THEN
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
 *
 *     Quick return if possible
 *
+*
+*     Capture the subroutine exit in the trace file
+*
+      AOCL_DTL_TRACE_EXIT_F
       IF( QUICKRETURN ) THEN
          IF( WANTZ ) THEN
             NZ = 0
@@ -777,6 +835,10 @@
          WORK( 1 ) = DCMPLX( LWOPT )
          RWORK( 1 ) = DBLE( LRWMIN )
          IWORK( 1 ) = LIWMIN
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
 *
@@ -997,6 +1059,10 @@
       RWORK( 1 ) = DBLE( LRWOPT )
       IWORK( 1 ) = LIWMIN
 *
+*
+*     Capture the subroutine exit in the trace file
+*
+      AOCL_DTL_TRACE_EXIT_F
       RETURN
 *
 *     End of PZHEEVX

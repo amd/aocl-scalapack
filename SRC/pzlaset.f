@@ -1,3 +1,9 @@
+*
+*     Modifications Copyright (c) 2023 Advanced Micro Devices, Inc.  All rights reserved.
+*
+*
+#include "SL_Context_fortran_include.h"
+*
       SUBROUTINE PZLASET( UPLO, M, N, ALPHA, BETA, A, IA, JA, DESCA )
 *
 *  -- ScaLAPACK auxiliary routine (version 1.7) --
@@ -5,6 +11,7 @@
 *     and University of California, Berkeley.
 *     May 1, 1997
 *
+      USE LINK_TO_C_GLOBALS
 *     .. Scalar Arguments ..
       CHARACTER          UPLO
       INTEGER            IA, JA, M, N
@@ -151,8 +158,35 @@
 *     ..
 *     .. Executable Statements ..
 *
-      IF( M.EQ.0 .OR. N.EQ.0 )
-     $   RETURN
+*     Initialize framework context structure if not initialized
+*
+*
+      CALL AOCL_SCALAPACK_INIT( )
+*
+*
+*     Capture the subroutine entry in the trace file
+*
+      AOCL_DTL_TRACE_ENTRY_F
+*
+*     Update the log buffer with the scalar arguments details,
+*     MPI process grid information and write to the log file
+*
+      IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
+         WRITE(LOG_BUF,102)  UPLO, IA, JA, M, N, ALPHA,
+     $            BETA, eos_str
+ 102     FORMAT('PZLASET inputs: ,UPLO:',A5,', IA:',I9,
+     $           ', JA:',I9,', M:',I9,', N:',I9,', ALPHA:',F9.4, A, F9.4,
+     $           ', BETA:',F9.4, A, F9.4, A1 )
+         AOCL_DTL_LOG_ENTRY_F
+      END IF
+*
+      IF( M.EQ.0 .OR. N.EQ.0 ) THEN
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
+         RETURN
+      END IF
 *
       IF( M.LE.( DESCA( MB_ ) - MOD( IA-1, DESCA( MB_ ) ) ) .OR.
      $    N.LE.( DESCA( NB_ ) - MOD( JA-1, DESCA( NB_ ) ) ) ) THEN
@@ -213,6 +247,10 @@
 *
       END IF
 *
+*
+*     Capture the subroutine exit in the trace file
+*
+      AOCL_DTL_TRACE_EXIT_F
       RETURN
 *
 *     End of PZLASET

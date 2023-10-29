@@ -1,3 +1,9 @@
+*
+*     Modifications Copyright (c) 2023 Advanced Micro Devices, Inc.  All rights reserved.
+*
+*
+#include "SL_Context_fortran_include.h"
+*
       SUBROUTINE PZLACP2( UPLO, M, N, A, IA, JA, DESCA, B, IB, JB,
      $                     DESCB )
 *
@@ -5,6 +11,7 @@
 *     Univ. of Tennessee, Univ. of California Berkeley, Univ. of Colorado Denver
 *     May 1 2012
 *
+      USE LINK_TO_C_GLOBALS
 *     .. Scalar Arguments ..
       CHARACTER          UPLO
       INTEGER            IA, IB, JA, JB, M, N
@@ -168,8 +175,35 @@
 *     ..
 *     .. Executable Statements ..
 *
-      IF( M.EQ.0 .OR. N.EQ.0 )
-     $   RETURN
+*     Initialize framework context structure if not initialized
+*
+*
+      CALL AOCL_SCALAPACK_INIT( )
+*
+*
+*     Capture the subroutine entry in the trace file
+*
+      AOCL_DTL_TRACE_ENTRY_F
+*
+*     Update the log buffer with the scalar arguments details,
+*     MPI process grid information and write to the log file
+*
+      IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
+         WRITE(LOG_BUF,102)  UPLO, IA, IB, JA, JB, M, N,
+     $            eos_str
+ 102     FORMAT('PZLACP2 inputs: ,UPLO:',A5,', IA:',I9,
+     $           ', IB:',I9,', JA:',I9,', JB:',I9,', M:',I9,
+     $           ', N:',I9, A1 )
+         AOCL_DTL_LOG_ENTRY_F
+      END IF
+*
+      IF( M.EQ.0 .OR. N.EQ.0 ) THEN
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
+         RETURN
+      END IF
 *
 *     Get grid parameters
 *
@@ -228,8 +262,13 @@
          IF( MYCOL.EQ.IACOL ) THEN
 *
             MP = NUMROC( M+IROFFA, MBA, MYROW, IAROW, NPROW )
-            IF( MP.LE.0 )
-     $         RETURN
+            IF( MP.LE.0 ) THEN
+*
+*              Capture the subroutine exit in the trace file
+*
+               AOCL_DTL_TRACE_EXIT_F
+               RETURN
+            END IF
             IF( MYROW.EQ.IAROW )
      $         MP = MP - IROFFA
             MYDIST = MOD( MYROW-IAROW+NPROW, NPROW )
@@ -326,8 +365,13 @@
          IF( MYROW.EQ.IAROW ) THEN
 *
             NQ = NUMROC( N+ICOFFA, NBA, MYCOL, IACOL, NPCOL )
-            IF( NQ.LE.0 )
-     $         RETURN
+            IF( NQ.LE.0 ) THEN
+*
+*              Capture the subroutine exit in the trace file
+*
+               AOCL_DTL_TRACE_EXIT_F
+               RETURN
+            END IF
             IF( MYCOL.EQ.IACOL )
      $         NQ = NQ - ICOFFA
             MYDIST = MOD( MYCOL-IACOL+NPCOL, NPCOL )
@@ -398,6 +442,10 @@
 *
       END IF
 *
+*
+*     Capture the subroutine exit in the trace file
+*
+      AOCL_DTL_TRACE_EXIT_F
       RETURN
 *
 *     End of PZLACP2

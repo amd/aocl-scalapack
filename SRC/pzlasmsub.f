@@ -1,3 +1,9 @@
+*
+*     Modifications Copyright (c) 2023 Advanced Micro Devices, Inc.  All rights reserved.
+*
+*
+#include "SL_Context_fortran_include.h"
+*
       SUBROUTINE PZLASMSUB( A, DESCA, I, L, K, SMLNUM, BUF, LWORK )
 *
 *  -- ScaLAPACK routine (version 1.7) --
@@ -5,6 +11,7 @@
 *     and University of California, Berkeley.
 *     July 31, 2001
 *
+      USE LINK_TO_C_GLOBALS
 *     .. Scalar Arguments ..
       INTEGER            I, K, L, LWORK
       DOUBLE PRECISION   SMLNUM
@@ -176,11 +183,34 @@
 *     ..
 *     .. Executable Statements ..
 *
+*     Initialize framework context structure if not initialized
+*
+*
+      CALL AOCL_SCALAPACK_INIT( )
+*
+*
+*     Capture the subroutine entry in the trace file
+*
+      AOCL_DTL_TRACE_ENTRY_F
+*
       HBL = DESCA( MB_ )
       CONTXT = DESCA( CTXT_ )
       LDA = DESCA( LLD_ )
       ULP = PDLAMCH( CONTXT, 'PRECISION' )
       CALL BLACS_GRIDINFO( CONTXT, NPROW, NPCOL, MYROW, MYCOL )
+*
+*     Update the log buffer with the scalar arguments details,
+*     MPI process grid information and write to the log file
+*
+      IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
+         WRITE(LOG_BUF,102)  I, K, L, LWORK, SMLNUM, NPROW,
+     $            NPCOL, MYROW, MYCOL, eos_str
+ 102     FORMAT('PZLASMSUB inputs: ,I:',I9,', K:',I9,', L:',I9,
+     $           ', LWORK:',I9,', SMLNUM:',F9.4,
+     $           ',  NPROW: ', I9,', NPCOL: ', I9 ,
+     $           ', MYROW: ', I9,', MYCOL: ', I9, A1)
+         AOCL_DTL_LOG_ENTRY_F
+      END IF
       LEFT = MOD( MYCOL+NPCOL-1, NPCOL )
       RIGHT = MOD( MYCOL+1, NPCOL )
       UP = MOD( MYROW+NPROW-1, NPROW )
@@ -204,6 +234,10 @@
 *
 *        Error!
 *
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
       CALL INFOG2L( I, I, DESCA, NPROW, NPCOL, MYROW, MYCOL, IROW1,
@@ -370,6 +404,10 @@
    50 CONTINUE
       CALL IGAMX2D( CONTXT, 'ALL', ' ', 1, 1, K, 1, ITMP1, ITMP2, -1,
      $              -1, -1 )
+*
+*     Capture the subroutine exit in the trace file
+*
+      AOCL_DTL_TRACE_EXIT_F
       RETURN
 *
 *     End of PZLASMSUB
