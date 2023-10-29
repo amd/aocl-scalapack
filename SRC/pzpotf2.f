@@ -278,7 +278,7 @@
 *                 Compute U(J,J) and test for non-positive-definiteness.
 *
 #ifdef F2C
-                  CALL ZDOTC( TMP, J-JA, A( IOFFA ), 1, 
+                  CALL ZDOTC( TMP, J-JA, A( IOFFA ), 1,
      $                                     A( IOFFA ), 1 )
                   AJJ = DBLE( A( IDIAG ) ) - TMP
 #else
@@ -350,7 +350,7 @@
 *                 Compute L(J,J) and test for non-positive-definiteness.
 *
 #ifdef F2C
-                  CALL ZDOTC( TMP, J-JA, A( IOFFA ), LDA, 
+                  CALL ZDOTC( TMP, J-JA, A( IOFFA ), LDA,
      &                               A( IOFFA ), LDA )
                   AJJ = DBLE( A( IDIAG ) ) - TMP
 #else
