@@ -1,3 +1,9 @@
+*
+*     Modifications Copyright (c) 2023 Advanced Micro Devices, Inc.  All rights reserved.
+*
+*
+#include "SL_Context_fortran_include.h"
+*
       SUBROUTINE PZGEQPF( M, N, A, IA, JA, DESCA, IPIV, TAU, WORK,
      $                     LWORK, RWORK, LRWORK, INFO )
 *
@@ -190,9 +196,9 @@
 *
 *  References
 *  ==========
-*  
+*
 *  For modifications introduced in Scalapack 2.1
-*  LAWN 295 
+*  LAWN 295
 *  New robust ScaLAPACK routine for computing the QR factorization with column pivoting
 *  Zvonimir Bujanovic, Zlatko Drmac
 *  http://www.netlib.org/lapack/lawnspdf/lawn295.pdf
