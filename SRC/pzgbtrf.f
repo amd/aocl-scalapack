@@ -1,3 +1,9 @@
+*
+*     Modifications Copyright (c) 2023 Advanced Micro Devices, Inc.  All rights reserved.
+*
+*
+#include "SL_Context_fortran_include.h"
+*
       SUBROUTINE PZGBTRF( N, BWL, BWU, A, JA, DESCA, IPIV, AF, LAF,
      $                    WORK, LWORK, INFO )
 *
@@ -5,6 +11,7 @@
 *     Univ. of Tennessee, Univ. of California Berkeley, Univ. of Colorado Denver
 *     May 1 2012
 *
+      USE LINK_TO_C_GLOBALS
 *     .. Scalar Arguments ..
       INTEGER            BWL, BWU, INFO, JA, LAF, LWORK, N
 *     ..
@@ -401,6 +408,16 @@
 *     ..
 *     .. Executable Statements ..
 *
+*     Initialize framework context structure if not initialized
+*
+*
+      CALL AOCL_SCALAPACK_INIT( )
+*
+*
+*     Capture the subroutine entry in the trace file
+*
+      AOCL_DTL_TRACE_ENTRY_F
+*
 *
 *     Test the input parameters
 *
@@ -429,6 +446,21 @@
 *
 *
       CALL BLACS_GRIDINFO( ICTXT, NPROW, NPCOL, MYROW, MYCOL )
+*
+*     Update the log buffer with the scalar arguments details,
+*     MPI process grid information and write to the log file
+*
+      IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
+         WRITE(LOG_BUF,102)  BWL, BWU, INFO, JA, LAF, LWORK,
+     $            N, NPROW, NPCOL, MYROW, MYCOL,
+     $            eos_str
+ 102     FORMAT('PZGBTRF inputs: ,BWL:',I9,', BWU:',I9,
+     $           ', INFO:',I9,', JA:',I9,', LAF:',I9,
+     $           ', LWORK:',I9,', N:',I9,',  NPROW: ', I9,
+     $           ', NPCOL: ', I9 ,', MYROW: ', I9,
+     $           ', MYCOL: ', I9, A1)
+         AOCL_DTL_LOG_ENTRY_F
+      END IF
       NP = NPROW * NPCOL
 *
 *
@@ -480,6 +512,10 @@
          CALL PXERBLA( ICTXT,
      $      'PZGBTRF, D&C alg.: only 1 block per proc',
      $      -INFO )
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       ENDIF
 *
@@ -488,6 +524,10 @@
          CALL PXERBLA( ICTXT,
      $      'PZGBTRF, D&C alg.: NB too small',
      $      -INFO )
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       ENDIF
 *
@@ -503,6 +543,10 @@
          CALL PXERBLA( ICTXT,
      $      'PZGBTRF: auxiliary storage error ',
      $      -INFO )
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       ENDIF
 *
@@ -521,6 +565,10 @@
      $      'PZGBTRF: worksize error ',
      $      -INFO )
          ENDIF
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       ENDIF
 *
@@ -576,13 +624,22 @@
 *
       IF( INFO.LT.0 ) THEN
          CALL PXERBLA( ICTXT, 'PZGBTRF', -INFO )
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
 *
 *     Quick return if possible
 *
-      IF( N.EQ.0 )
-     $   RETURN
+      IF( N.EQ.0 ) THEN
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
+         RETURN
+      END IF
 *
 *
 *     Adjust addressing into matrix space to properly get into
@@ -1099,6 +1156,10 @@
           ENDIF
 *
 *
+*
+*     Capture the subroutine exit in the trace file
+*
+      AOCL_DTL_TRACE_EXIT_F
       RETURN
 *
 *     End of PZGBTRF

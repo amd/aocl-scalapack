@@ -1,3 +1,9 @@
+*
+*     Modifications Copyright (c) 2023 Advanced Micro Devices, Inc.  All rights reserved.
+*
+*
+#include "SL_Context_fortran_include.h"
+*
       SUBROUTINE PZDBSV( N, BWL, BWU, NRHS, A, JA, DESCA, B, IB, DESCB,
      $                   WORK, LWORK, INFO )
 *
@@ -8,6 +14,7 @@
 *     and University of California, Berkeley.
 *     November 15, 1997
 *
+      USE LINK_TO_C_GLOBALS
 *     .. Scalar Arguments ..
       INTEGER            BWL, BWU, IB, INFO, JA, LWORK, N, NRHS
 *     ..
@@ -387,6 +394,28 @@
 *     ..
 *     .. Executable Statements ..
 *
+*     Initialize framework context structure if not initialized
+*
+*
+      CALL AOCL_SCALAPACK_INIT( )
+*
+*
+*     Capture the subroutine entry in the trace file
+*
+      AOCL_DTL_TRACE_ENTRY_F
+*
+*     Update the log buffer with the scalar arguments details,
+*     MPI process grid information and write to the log file
+*
+      IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
+         WRITE(LOG_BUF,102)  BWL, BWU, IB, INFO, JA, LWORK,
+     $            N, NRHS, eos_str
+ 102     FORMAT('PZDBSV inputs: ,BWL:',I9,', BWU:',I9,', IB:',I9,
+     $           ', INFO:',I9,', JA:',I9,', LWORK:',I9,
+     $           ', N:',I9,', NRHS:',I9, A1 )
+         AOCL_DTL_LOG_ENTRY_F
+      END IF
+*
 *     Note: to avoid duplication, most error checking is not performed
 *           in this routine and is left to routines
 *           PZDBTRF and PZDBTRS.
@@ -408,6 +437,10 @@
          CALL PXERBLA( ICTXT,
      $      'PZDBSV',
      $      -INFO )
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       ENDIF
 *
@@ -430,6 +463,10 @@
          IF( INFO .LT. 0 ) THEN
             CALL PXERBLA( ICTXT, 'PZDBSV', -INFO )
          ENDIF
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
 *
@@ -443,9 +480,17 @@
 *
       IF( INFO.NE.0 ) THEN
          CALL PXERBLA( ICTXT, 'PZDBSV', -INFO )
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
 *
+*
+*     Capture the subroutine exit in the trace file
+*
+      AOCL_DTL_TRACE_EXIT_F
       RETURN
 *
 *     End of PZDBSV

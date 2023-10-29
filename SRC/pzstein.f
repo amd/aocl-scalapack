@@ -1,3 +1,9 @@
+*
+*     Modifications Copyright (c) 2023 Advanced Micro Devices, Inc.  All rights reserved.
+*
+*
+#include "SL_Context_fortran_include.h"
+*
       SUBROUTINE PZSTEIN( N, D, E, M, W, IBLOCK, ISPLIT, ORFAC, Z, IZ,
      $                    JZ, DESCZ, WORK, LWORK, IWORK, LIWORK, IFAIL,
      $                    ICLUSTR, GAP, INFO )
@@ -7,6 +13,7 @@
 *     and University of California, Berkeley.
 *     November 15, 1997
 *
+      USE LINK_TO_C_GLOBALS
 *     .. Scalar Arguments ..
       INTEGER            INFO, IZ, JZ, LIWORK, LWORK, M, N
       DOUBLE PRECISION   ORFAC
@@ -296,9 +303,37 @@
       INTEGER            IDUM1( 1 ), IDUM2( 1 )
 *     ..
 *     .. Executable Statements ..
+*
+*     Initialize framework context structure if not initialized
+*
+*
+      CALL AOCL_SCALAPACK_INIT( )
+*
+*
+*     Capture the subroutine entry in the trace file
+*
+      AOCL_DTL_TRACE_ENTRY_F
+*
+*     Update the log buffer with the scalar arguments details,
+*     MPI process grid information and write to the log file
+*
+      IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
+         WRITE(LOG_BUF,102)  INFO, IZ, JZ, LIWORK, LWORK,
+     $            M, N, ORFAC, eos_str
+ 102     FORMAT('PZSTEIN inputs: ,INFO:',I9,', IZ:',I9,
+     $           ', JZ:',I9,', LIWORK:',I9,', LWORK:',I9,
+     $           ', M:',I9,', N:',I9,', ORFAC:',F9.4, A1 )
+         AOCL_DTL_LOG_ENTRY_F
+      END IF
 *       This is just to keep ftnchek happy
       IF( BLOCK_CYCLIC_2D*CSRC_*CTXT_*DLEN_*DTYPE_*LLD_*MB_*M_*NB_*N_*
-     $    RSRC_.LT.0 )RETURN
+     $    RSRC_.LT.0 )THEN
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
+         RETURN
+      END IF
 *
       CALL BLACS_GRIDINFO( DESCZ( CTXT_ ), NPROW, NPCOL, MYROW, MYCOL )
       SELF = MYROW*NPCOL + MYCOL
@@ -376,8 +411,16 @@
       END IF
       IF( INFO.NE.0 ) THEN
          CALL PXERBLA( DESCZ( CTXT_ ), 'PZSTEIN', -INFO )
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       ELSE IF( LWORK.EQ.-1 .OR. LIWORK.EQ.-1 ) THEN
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
 *
@@ -396,8 +439,13 @@
 *
 *     Quick return if possible
 *
-      IF( N.EQ.0 .OR. M.EQ.0 )
-     $   RETURN
+      IF( N.EQ.0 .OR. M.EQ.0 ) THEN
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
+         RETURN
+      END IF
 *
       IF( ORFAC.GE.ZERO ) THEN
          TMPFAC = ORFAC
@@ -637,6 +685,10 @@
 *
       WORK( 1 ) = ( LGCLSIZ+LOAD-1 )*N + INDRW
       IWORK( 1 ) = 3*N + P + 1
+*
+*     Capture the subroutine exit in the trace file
+*
+      AOCL_DTL_TRACE_EXIT_F
 *
 *     End of PZSTEIN
 *

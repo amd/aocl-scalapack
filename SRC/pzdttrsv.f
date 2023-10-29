@@ -1,3 +1,9 @@
+*
+*     Modifications Copyright (c) 2023 Advanced Micro Devices, Inc.  All rights reserved.
+*
+*
+#include "SL_Context_fortran_include.h"
+*
       SUBROUTINE PZDTTRSV( UPLO, TRANS, N, NRHS, DL, D, DU, JA, DESCA,
      $                     B, IB, DESCB, AF, LAF, WORK, LWORK, INFO )
 *
@@ -5,6 +11,7 @@
 *     Univ. of Tennessee, Univ. of California Berkeley, Univ. of Colorado Denver
 *     May 1 2012
 *
+      USE LINK_TO_C_GLOBALS
 *     .. Scalar Arguments ..
       CHARACTER          TRANS, UPLO
       INTEGER            IB, INFO, JA, LAF, LWORK, N, NRHS
@@ -429,6 +436,16 @@
 *     ..
 *     .. Executable Statements ..
 *
+*     Initialize framework context structure if not initialized
+*
+*
+      CALL AOCL_SCALAPACK_INIT( )
+*
+*
+*     Capture the subroutine entry in the trace file
+*
+      AOCL_DTL_TRACE_ENTRY_F
+*
 *     Test the input parameters
 *
       INFO = 0
@@ -494,6 +511,21 @@
 *
 *
       CALL BLACS_GRIDINFO( ICTXT, NPROW, NPCOL, MYROW, MYCOL )
+*
+*     Update the log buffer with the scalar arguments details,
+*     MPI process grid information and write to the log file
+*
+      IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
+         WRITE(LOG_BUF,102)  TRANS, UPLO, IB, INFO, JA,
+     $            LAF, LWORK, N, NRHS, NPROW, NPCOL, MYROW,
+     $            MYCOL, eos_str
+ 102     FORMAT('PZDTTRSV inputs: ,TRANS:',A5,', UPLO:',A5,
+     $           ', IB:',I9,', INFO:',I9,', JA:',I9,
+     $           ', LAF:',I9,', LWORK:',I9,', N:',I9,
+     $           ', NRHS:',I9,',  NPROW: ', I9,', NPCOL: ', I9 ,
+     $           ', MYROW: ', I9,', MYCOL: ', I9, A1)
+         AOCL_DTL_LOG_ENTRY_F
+      END IF
       NP = NPROW * NPCOL
 *
 *
@@ -559,6 +591,10 @@
          CALL PXERBLA( ICTXT,
      $      'PZDTTRSV, D&C alg.: only 1 block per proc',
      $      -INFO )
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       ENDIF
 *
@@ -567,6 +603,10 @@
          CALL PXERBLA( ICTXT,
      $      'PZDTTRSV, D&C alg.: NB too small',
      $      -INFO )
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       ENDIF
 *
@@ -583,6 +623,10 @@
      $      'PZDTTRSV: worksize error',
      $      -INFO )
          ENDIF
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       ENDIF
 *
@@ -652,16 +696,30 @@
 *
       IF( INFO.LT.0 ) THEN
          CALL PXERBLA( ICTXT, 'PZDTTRSV', -INFO )
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
 *
 *     Quick return if possible
 *
-      IF( N.EQ.0 )
-     $   RETURN
+      IF( N.EQ.0 ) THEN
 *
-      IF( NRHS.EQ.0 )
-     $   RETURN
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
+         RETURN
+      END IF
+*
+      IF( NRHS.EQ.0 ) THEN
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
+         RETURN
+      END IF
 *
 *
 *     Adjust addressing into matrix space to properly get into
@@ -1520,6 +1578,10 @@
       WORK( 1 ) = WORK_SIZE_MIN
 *
 *
+*
+*     Capture the subroutine exit in the trace file
+*
+      AOCL_DTL_TRACE_EXIT_F
       RETURN
 *
 *     End of PZDTTRSV
