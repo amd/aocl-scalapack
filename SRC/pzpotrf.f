@@ -1,6 +1,11 @@
+*
+*     Modifications Copyright (c) 2023 Advanced Micro Devices, Inc.  All rights reserved.
+*
 *  -- ScaLAPACK routine --
-*     Copyright (c) 2020-22 Advanced Micro Devices, Inc.  All rights reserved.
 *     June 20, 2022
+*
+#include "SL_Context_fortran_include.h"
+*
 *
 #include "SL_Context_fortran_include.h"
 *
@@ -13,6 +18,7 @@
 *     and University of California, Berkeley.
 *     May 25, 2001
 *
+      USE LINK_TO_C_GLOBALS
 *     .. Scalar Arguments ..
       CHARACTER          UPLO
       INTEGER            IA, INFO, JA, N
@@ -159,6 +165,9 @@
 *
 *     .. Declaring 'API NAME' and its length as const objects
 *     .. API_NAME string terminated with 'NULL' character.
+*
+#include "SL_Context_fortran_include.h"
+*
       CHARACTER*8, PARAMETER :: API_NAME = FUNCTION_NAME // C_NULL_CHAR
       INTEGER, PARAMETER :: LEN_API_NAME = 8
 #endif
@@ -195,12 +204,35 @@
 *
 *     Initialize framework context structure if not initialized
 *
+*
+      CALL AOCL_SCALAPACK_INIT( )
+*
+*
+*     Capture the subroutine entry in the trace file
+*
+      AOCL_DTL_TRACE_ENTRY_F
+*
+*     Initialize framework context structure if not initialized
+*
       CALL AOCL_SCALAPACK_INIT( )
 *
 *     Get grid parameters
 *
       ICTXT = DESCA( CTXT_ )
       CALL BLACS_GRIDINFO( ICTXT, NPROW, NPCOL, MYROW, MYCOL )
+*
+*     Update the log buffer with the scalar arguments details,
+*     MPI process grid information and write to the log file
+*
+      IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
+         WRITE(LOG_BUF,102)  UPLO, IA, INFO, JA, N, NPROW,
+     $            NPCOL, MYROW, MYCOL, eos_str
+ 102     FORMAT('PZPOTRF inputs: ,UPLO:',A5,', IA:',I9,
+     $           ', INFO:',I9,', JA:',I9,', N:',I9,',  NPROW: ', I9,
+     $           ', NPCOL: ', I9 ,', MYROW: ', I9,
+     $           ', MYCOL: ', I9, A1)
+         AOCL_DTL_LOG_ENTRY_F
+      END IF
 *
 *     Test the input parameters
 *
@@ -235,13 +267,22 @@
 *
       IF( INFO.NE.0 ) THEN
          CALL PXERBLA( ICTXT, 'PZPOTRF', -INFO )
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
 *
 *     Quick return if possible
 *
-      IF( N.EQ.0 )
-     $   RETURN
+      IF( N.EQ.0 ) THEN
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
+         RETURN
+      END IF
 *
 #ifdef AOCL_PROGRESS
 *     Set the AOCL progress variables related to rank, processes
@@ -421,6 +462,10 @@
       CALL PB_TOPSET( ICTXT, 'Broadcast', 'Rowwise', ROWBTOP )
       CALL PB_TOPSET( ICTXT, 'Broadcast', 'Columnwise', COLBTOP )
 *
+*
+*     Capture the subroutine exit in the trace file
+*
+      AOCL_DTL_TRACE_EXIT_F
       RETURN
 *
 *     End of PZPOTRF

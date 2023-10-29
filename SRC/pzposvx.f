@@ -1,3 +1,9 @@
+*
+*     Modifications Copyright (c) 2023 Advanced Micro Devices, Inc.  All rights reserved.
+*
+*
+#include "SL_Context_fortran_include.h"
+*
       SUBROUTINE PZPOSVX( FACT, UPLO, N, NRHS, A, IA, JA, DESCA, AF,
      $                    IAF, JAF, DESCAF, EQUED, SR, SC, B, IB, JB,
      $                    DESCB, X, IX, JX, DESCX, RCOND, FERR, BERR,
@@ -8,6 +14,7 @@
 *     and University of California, Berkeley.
 *     December 31, 1998
 *
+      USE LINK_TO_C_GLOBALS
 *     .. Scalar Arguments ..
       CHARACTER          EQUED, FACT, UPLO
       INTEGER            IA, IAF, IB, INFO, IX, JA, JAF, JB, JX, LRWORK,
@@ -388,10 +395,40 @@
 *     ..
 *     .. Executable Statements ..
 *
+*     Initialize framework context structure if not initialized
+*
+*
+      CALL AOCL_SCALAPACK_INIT( )
+*
+*
+*     Capture the subroutine entry in the trace file
+*
+      AOCL_DTL_TRACE_ENTRY_F
+*
 *     Get grid parameters
 *
       ICTXT = DESCA( CTXT_ )
       CALL BLACS_GRIDINFO( ICTXT, NPROW, NPCOL, MYROW, MYCOL )
+*
+*     Update the log buffer with the scalar arguments details,
+*     MPI process grid information and write to the log file
+*
+      IF( SCALAPACK_CONTEXT%IS_LOG_ENABLED.EQ.1 ) THEN
+         WRITE(LOG_BUF,102)  EQUED, FACT, UPLO, IA, IAF,
+     $            IB, INFO, IX, JA, JAF, JB, JX, LRWORK,
+     $                              LWORK, N, NRHS,
+     $            RCOND, NPROW, NPCOL, MYROW, MYCOL,
+     $            eos_str
+ 102     FORMAT('PZPOSVX inputs: ,EQUED:',A5,', FACT:',A5,
+     $           ', UPLO:',A5,', IA:',I9,', IAF:',I9,
+     $           ', IB:',I9,', INFO:',I9,', IX:',I9,
+     $           ', JA:',I9,', JAF:',I9,', JB:',I9,
+     $           ', JX:',I9,', LRWORK:',I9,', LWORK:',I9,
+     $           ', N:',I9,', NRHS:',I9,', RCOND:',F9.4,
+     $           ',  NPROW: ', I9,', NPCOL: ', I9 ,
+     $           ', MYROW: ', I9,', MYCOL: ', I9, A1)
+         AOCL_DTL_LOG_ENTRY_F
+      END IF
 *
 *     Test the input parameters
 *
@@ -545,8 +582,16 @@
 *
       IF( INFO.NE.0 ) THEN
          CALL PXERBLA( ICTXT, 'PZPOSVX', -INFO )
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       ELSE IF( LQUERY ) THEN
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
 *
@@ -600,6 +645,10 @@
          IF( INFO.NE.0 ) THEN
             IF( INFO.GT.0 )
      $         RCOND = ZERO
+*
+*           Capture the subroutine exit in the trace file
+*
+            AOCL_DTL_TRACE_EXIT_F
             RETURN
          END IF
       END IF
@@ -617,6 +666,10 @@
 *
       IF( RCOND.LT.PDLAMCH( ICTXT, 'Epsilon' ) ) THEN
          INFO = IA + N
+*
+*        Capture the subroutine exit in the trace file
+*
+         AOCL_DTL_TRACE_EXIT_F
          RETURN
       END IF
 *
@@ -660,6 +713,10 @@
 *
       WORK( 1 ) = DBLE( LWMIN )
       RWORK( 1 ) = DBLE( LRWMIN )
+*
+*     Capture the subroutine exit in the trace file
+*
+      AOCL_DTL_TRACE_EXIT_F
       RETURN
 *
 *     End of PZPOSVX
