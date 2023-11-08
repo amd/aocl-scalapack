@@ -32,6 +32,9 @@ option(ENABLE_DTL "Enable DTL feature " OFF)
 # ASAN testing option
 option(ENABLE_ASAN_TESTS "Enable Address sanitizer tests " OFF)
 
+# Coverage option
+option(ENABLE_COVERAGE "Enable code coverage" OFF)
+
 # Option: Include build number in the version string.
 option (ENABLE_SET_LIB_VERSION "Set library version" OFF)
 
@@ -436,6 +439,10 @@ if (UNIX)
     target_link_libraries( scalapack ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES})
     scalapack_install_library(scalapack)
   endif(CUSTOM_BLACS_FOUND)
+  if(ENABLE_COVERAGE)
+    target_compile_options(scalapack PUBLIC -fprofile-arcs  -ftest-coverage)
+    target_link_options(scalapack PUBLIC -fprofile-arcs  -ftest-coverage)
+  endif(ENABLE_COVERAGE)
 else (UNIX) # Need to separate Fortran and C Code
     if (CMAKE_C_COMPILER_ID MATCHES MSVC)
         # create Fortran objects and add to scalapack library first
