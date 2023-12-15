@@ -19,6 +19,9 @@ set(CMAKE_MODULE_PATH "${SCALAPACK_SOURCE_DIR}/CMAKE" ${CMAKE_MODULE_PATH})
 set(SL_FRAMEWORK_INCLUDE_PATH  "${SCALAPACK_SOURCE_DIR}/FRAMEWORK")
 
 # ------   Build Options List  -----------
+# Fortran to C Name Mangling build option
+set(CDEFS "NoChange" CACHE STRING "Naming strategy needed for a fortran routine to call a C routine")
+set_property(CACHE CDEFS PROPERTY STRINGS "NoChange" "UpCase" "Add_")
 
 # ILP64 build option
 option(ENABLE_ILP64 "Enable ILP64 " OFF)
@@ -49,6 +52,12 @@ if (WIN32 AND CMAKE_Fortran_COMPILER_ID MATCHES "Intel")
     set (CMAKE_IFORT_LIBDEPS_DIR "C:/Program Files (x86)/IntelSWTools/compilers_and_libraries/windows/compiler/lib/intel64_win" CACHE STRING "")
     # set the "FORCE:MULTIPLE" option to handle linker errors due to some
     # of the common functions of scalapack and lapack in case of static build.
+	if("${CDEFS}" STREQUAL "NoChange")
+	   set (CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} /names:lowercase")
+	elseif("${CDEFS}" STREQUAL "Add_")
+	   set (CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} /names:lowercase")
+	   set (CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} /assume:underscore")
+    endif ()
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /FORCE:MULTIPLE")
 endif()
 
@@ -213,14 +222,15 @@ set(PKG_CONFIG_DIR ${libdir}/pkgconfig)
 # BLACS Internal variables
 #
 #   Fortran Mangling, MPI Tests and BLACS settings
-#
+if(UNIX OR "${CDEFS}" STREQUAL "UpCase")
 include(FortranMangling)
 COMPILE(install_COMPILED)
 
 FORTRAN_MANGLING(CDEFS)
-#MESSAGE(STATUS "Setting CDEFS = ${CDEFS}")
-#set(CDEFS ${CDEFS} CACHE STRING "Fortran Mangling" FORCE)
-MESSAGE(STATUS "=========")
+endif()
+MESSAGE(STATUS "Setting CDEFS = ${CDEFS}")
+#set(CDEFS ${CDEFS} CACHE STRING "Fortran Mangling")
+ MESSAGE(STATUS "=========")
 
 # --------------------------------------------------
 # Compiler Flags
