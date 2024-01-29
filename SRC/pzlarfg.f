@@ -202,7 +202,7 @@
      $            ALPHA, NPROW, NPCOL, MYROW, MYCOL, eos_str
  102     FORMAT('PZLARFG inputs: ,IAX:',I9,', INCX:',I9,
      $           ', IX:',I9,', JAX:',I9,', JX:',I9,', N:',I9,
-     $           ', ALPHA:',F9.4, A, F9.4,',  NPROW: ', I9,
+     $           ', ALPHA:',A, F9.4,',  NPROW: ', I9,
      $           ', NPCOL: ', I9 ,', MYROW: ', I9,
      $           ', MYCOL: ', I9, A1)
          AOCL_DTL_LOG_ENTRY_F
