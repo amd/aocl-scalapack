@@ -172,8 +172,8 @@
          WRITE(LOG_BUF,102)  II, JJ, M, H33, H43H34, H44,
      $            NPROW, NPCOL, MYROW, MYCOL, eos_str
  102     FORMAT('PZLAWIL inputs: ,II:',I9,', JJ:',I9,', M:',I9,
-     $           ', H33:',F9.4, A, F9.4,', H43H34:',F9.4, A, F9.4,
-     $           ', H44:',F9.4, A, F9.4,
+     $           ', H33:',A, F9.4,', H43H34:',A, F9.4,
+     $           ', H44:',A, F9.4,
      $           ',  NPROW: ', I9,', NPCOL: ', I9 ,
      $           ', MYROW: ', I9,', MYCOL: ', I9, A1)
          AOCL_DTL_LOG_ENTRY_F
