@@ -32,6 +32,9 @@ option(ENABLE_AOCL_PROGRESS "Enable progress feature " OFF)
 # DTL option
 option(ENABLE_DTL "Enable DTL feature " OFF)
 
+# Driver check option
+option(ENABLE_DRIVER_CHECK "Enable driver check feature " OFF)
+
 # ASAN testing option
 option(ENABLE_ASAN_TESTS "Enable Address sanitizer tests " OFF)
 
@@ -245,6 +248,10 @@ MESSAGE(STATUS "CMAKE_Fortran_COMPILER_ID = ${CMAKE_Fortran_COMPILER_ID}")
 if(ENABLE_DTL)
   add_definitions("-DAOCL_DTL ")
 ENDIF(ENABLE_DTL)
+
+if(ENABLE_DRIVER_CHECK)
+  add_definitions("-DENABLE_DRIVER_CHECK")
+ENDIF(ENABLE_DRIVER_CHECK)
 
 if(ENABLE_ILP64)
   if(UNIX)
