@@ -112,7 +112,7 @@
      $                   NBVAL( NTESTS ), NRVAL( NTESTS ),
      $                   NVAL( NTESTS ), PVAL( NTESTS ),
      $                   QVAL( NTESTS )
-#ifndef DYNAMIC_WORK_MEM_ALLOC     
+#ifndef DYNAMIC_WORK_MEM_ALLOC
       DOUBLE PRECISION   MEM( MEMSIZ ), CTIME( 2 ), WTIME( 2 )
 #else
       DOUBLE PRECISION   CTIME( 2 ), WTIME( 2 )
@@ -161,7 +161,7 @@
 *
       IF( IAM.EQ.0 ) THEN
           CALL GET_AOCL_SCALAPACK_VERSION( SVERSION )
-          WRITE(*, *) 
+          WRITE(*, *)
           WRITE(*, *) 'AOCL Version: ', SVERSION
       END IF
 *
@@ -224,6 +224,7 @@
 *
 *           Make sure matrix information is correct
 *
+#ifdef ENABLE_DRIVER_CHECK
             IERR( 1 ) = 0
             IF( M.LT.1 ) THEN
                IF( IAM.EQ.0 )
@@ -234,6 +235,7 @@
      $            WRITE( NOUT, FMT = 9999 ) 'MATRIX', 'N', N
                IERR( 1 ) = 1
             END IF
+#endif
 *
 *           Check all processes for an error
 *
@@ -294,12 +296,31 @@
 *
                CALL IGSUM2D( ICTXT, 'All', ' ', 1, 1, IERR, 1, -1, 0 )
 *
+#ifdef ENABLE_DRIVER_CHECK
                IF( IERR( 1 ).LT.0 ) THEN
                   IF( IAM.EQ.0 )
      $               WRITE( NOUT, FMT = 9997 ) 'descriptor'
                   KSKIP = KSKIP + 1
                   GO TO 30
                END IF
+#else
+*              If M < 0 in LU.dat file then DESCINIT API sets IERR( 1 ) = -2
+*              If N < 0 in LU.dat file then DESCINIT API sets IERR( 1 ) = -3
+               IF( M.LT.0 .AND. IERR( 1 ).EQ.-2 ) THEN
+*                 If DESCINIT is returning correct error code then
+*                 do nothing
+                  WRITE( NOUT, FMT = 9984 ) 'M'
+               ELSE IF (N.LT.0 .AND. IERR( 1 ).EQ.-3 ) THEN
+*                 If DESCINIT is returning correct error code then
+*                 do nothing
+                  WRITE( NOUT, FMT = 9984 ) 'N'
+               ELSE IF( IERR( 1 ).LT.0 ) THEN
+                  IF( IAM.EQ.0 )
+     $               WRITE( NOUT, FMT = 9997 ) 'descriptor'
+                  KSKIP = KSKIP + 1
+                  GO TO 30
+               END IF
+#endif
 *
 *              Assign pointers into MEM for SCALAPACK arrays, A is
 *              allocated starting at position MEM( IPREPAD+1 )
@@ -415,7 +436,18 @@
                IF( INFO.NE.0 ) THEN
                   IF( IAM.EQ.0 )
      $               WRITE( NOUT, FMT = * ) 'PDGETRF INFO=', INFO
-                  KFAIL = KFAIL + 1
+*                 If M < 0 in LU.dat file then PDGETRF API sets INFO = -1
+*                 If N < 0 in LU.dat file then PDGETRF API sets INFO = -2
+                  IF (M.LT.0 .AND. INFO.EQ.-1) THEN
+*                    If PDGETRF is returning correct error code we need to pass this case
+                     KPASS = KPASS + 1
+                  ELSE IF (N.LT.0 .AND. INFO.EQ.-2) THEN
+*                    If PDGETRF is returning correct error code we need to pass this case
+                     KPASS = KPASS + 1
+                  ELSE
+*                    For other error code we will mark test case as fail
+                     KFAIL = KFAIL + 1
+                  END IF
                   RCOND = ZERO
                   GO TO 30
                END IF
@@ -629,12 +661,26 @@
                         CALL IGSUM2D( ICTXT, 'All', ' ', 1, 1, IERR, 1,
      $                                -1, 0 )
 *
+#ifdef ENABLE_DRIVER_CHECK
                         IF( IERR( 1 ).LT.0 ) THEN
                            IF( IAM.EQ.0 )
      $                        WRITE( NOUT, FMT = 9997 ) 'descriptor'
                            KSKIP = KSKIP + 1
                            GO TO 10
                         END IF
+#else
+*                       If NRHS < 0 in LU.dat file then DESCINIT API sets IERR( 1 ) = -3
+                        IF (NRHS.LT.0 .AND. IERR( 1 ).EQ.-3 ) THEN
+*                          If DESCINIT is returning correct error code then
+*                          do nothing
+                           WRITE( NOUT, FMT = 9984 ) 'NRHS'
+                        ELSE IF( IERR( 1 ).LT.0 ) THEN
+                           IF( IAM.EQ.0 )
+     $                        WRITE( NOUT, FMT = 9997 ) 'descriptor'
+                           KSKIP = KSKIP + 1
+                           GO TO 10
+                        END IF
+#endif
 *
 *                       move IPW to allow room for RHS
 *
@@ -741,6 +787,20 @@
      $                                1, 1, DESCB, INFO )
 *
                         CALL SLTIMER( 2 )
+
+                        IF( INFO.NE.0 ) THEN
+                           IF( IAM.EQ.0 )
+     $                        WRITE( NOUT, FMT = * ) 'PDGETRS INFO=', INFO
+*                          If NRHS < 0 in LU.dat file then PDGETRS API sets INFO = -3
+                           IF( NRHS.LT.0 .AND. INFO.EQ.-3 ) THEN
+*                             If PDGETRS is returning correct error code we need to pass this case
+                              KPASS = KPASS + 1
+                           ELSE
+*                             For other error code we will mark test case as fail
+                              KFAIL = KFAIL + 1
+                           END IF
+                           GO TO 30
+                        END IF
 *
                         IF( CHECK ) THEN
 *
@@ -1068,6 +1128,9 @@
  9987 FORMAT( 'END OF TESTS.' )
  9986 FORMAT( '||A - P*L*U|| / (||A|| * N * eps) = ', G25.7 )
  9985 FORMAT( '||Ax-b||/(||x||*||A||*eps*N) ', F25.7 )
+ 9984 FORMAT(  A, ' < 0 case detected. ',
+     $        'Instead of driver file, we will handle this case from ',
+     $        'ScaLAPACK API.')
 *
       STOP
 *
