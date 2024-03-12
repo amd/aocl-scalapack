@@ -113,7 +113,7 @@
      $                   NBVAL( NTESTS ), NRVAL( NTESTS ),
      $                   NVAL( NTESTS ), PVAL( NTESTS ),
      $                   QVAL( NTESTS )
-#ifndef DYNAMIC_WORK_MEM_ALLOC     
+#ifndef DYNAMIC_WORK_MEM_ALLOC
       DOUBLE PRECISION   MEM( MEMSIZ ), CTIME( 2 ), WTIME( 2 )
 #else
       DOUBLE PRECISION   CTIME( 2 ), WTIME( 2 )
@@ -211,7 +211,7 @@
 *
       IF( IAM.EQ.0 ) THEN
           CALL GET_AOCL_SCALAPACK_VERSION( SVERSION )
-          WRITE(*, *) 
+          WRITE(*, *)
           WRITE(*, *) 'AOCL Version: ', SVERSION
       END IF
 *
@@ -354,26 +354,16 @@
                   GO TO 30
                END IF
 #else
-               IF(N .LT. 0 .AND. (IERR(1) .EQ. -2 .OR.
-     $              IERR(1) .EQ. -4 .OR. IERR(1) .EQ. -8 .OR.
-     $              IERR(1) .EQ. -3 .OR. IERR(1) .EQ. -12 )) THEN
-*                   DESCINIT returns the correct error code,
-*                   -2, -3 incase of invalid M and N
-*                   -4, -8 or -12 incase of incorrect grid info
-*                   MAIN API can be validated.
-*                   Do NOTHING
-                    WRITE( *, FMT = 9984 ) 'N'
-*                   disable extreme value case when N < 0
-                    EX_FLAG = .FALSE.
-               ELSE IF(M .LT. 0 .AND. (IERR(1) .EQ. -2 .OR.
-     $               IERR(1) .EQ. -4 .OR. IERR(1) .EQ. -8 .OR.
-     $               IERR(1) .EQ. -3 .OR. IERR(1) .EQ. -12  )) THEN
-                    WRITE( NOUT, FMT = 9984 ) 'M'
-*                   disable extreme value case when M < 0
-                    EX_FLAG = .FALSE.
-               ELSE IF(M .EQ. 0 .OR. N .EQ. 0) THEN
-*                   disable extreme value case when M < 0
-                    EX_FLAG = .FALSE.
+*              If M < 0 in LU.dat file then DESCINIT API sets IERR( 1 ) = -2
+*              If N < 0 in LU.dat file then DESCINIT API sets IERR( 1 ) = -3
+               IF( M.LT.0 .AND. IERR( 1 ).EQ.-2 ) THEN
+*                 If DESCINIT is returning correct error code then
+*                 do nothing
+                  WRITE( NOUT, FMT = 9984 ) 'M'
+               ELSE IF (N.LT.0 .AND. IERR( 1 ).EQ.-3 ) THEN
+*                 If DESCINIT is returning correct error code then
+*                 do nothing
+                  WRITE( NOUT, FMT = 9984 ) 'N'
                ELSE IF( IERR( 1 ).LT.0 ) THEN
                   IF( IAM.EQ.0 )
      $               WRITE( NOUT, FMT = 9997 ) 'descriptor'
@@ -498,34 +488,16 @@
      $               WRITE( NOUT, FMT = * ) 'PDGETRF INFO=', INFO
 *                 If M < 0 in LU.dat file then PDGETRF API sets INFO = -1
 *                 If N < 0 in LU.dat file then PDGETRF API sets INFO = -2
-                  IF ((M.LT.0 .AND. INFO.EQ.-1) .OR.
-     $                (N.LT.0 .AND. INFO.EQ.-2)) THEN
-                     IF(NOUT .LE. 0 .OR. NOUT .GT. 6) THEN
-*                    resetting stdout, corrupted by negative cases
-                        NOUT = 6
-                     END IF
-*                    PDGETRF is returning correct error code, do nothing
-                     WRITE( NOUT, FMT = 9983 ) 'PDGETRF'
-                  ELSE IF (INFO.GT.0 .AND. EX_FLAG)  THEN
-                     WRITE(NOUT,*) 'PDGETRF INFO=', INFO
-*                    do nothing, skip residual calculation
-*                    Pass this case in INF/NAN residual calculation
+                  IF (M.LT.0 .AND. INFO.EQ.-1) THEN
+*                    If PDGETRF is returning correct error code we need to pass this case
+                     KPASS = KPASS + 1
+                  ELSE IF (N.LT.0 .AND. INFO.EQ.-2) THEN
+*                    If PDGETRF is returning correct error code we need to pass this case
+                     KPASS = KPASS + 1
                   ELSE
 *                    For other error code we will mark test case as fail
                      KFAIL = KFAIL + 1
-                     RCOND = ZERO
-                     GO TO 30
                   END IF
-               ELSE IF (M.EQ.0 .OR. N.EQ.0) THEN
-*                 This is the case of early return from ScaLAPACK API
-*                 early return from ScaLAPACK API.
-*                 If there is safe exit from API we need to pass this case
-                  IF(NOUT .LE. 0 .OR. NOUT .GT. 6) THEN
-*                 resetting stdout, corrupted by early return cases
-                    NOUT = 6
-                  END IF
-                  WRITE( NOUT, FMT = 9982 ) 'PDGETRF'
-                  KPASS = KPASS + 1
                   RCOND = ZERO
                   IF(NAN_PERCENT .GT. 0 .OR.
      $                INF_PERCENT .GT. 0) THEN
@@ -799,31 +771,11 @@
                            GO TO 10
                         END IF
 #else
-                           IF (NRHS.LT.0 .AND. (IERR( 1 ).EQ.-3 .OR.
-     $                           IERR(1) .EQ. -12)) THEN
-*                             If DESCINIT is returns correct error code
+*                       If NRHS < 0 in LU.dat file then DESCINIT API sets IERR( 1 ) = -3
+                        IF (NRHS.LT.0 .AND. IERR( 1 ).EQ.-3 ) THEN
+*                          If DESCINIT is returning correct error code then
 *                          do nothing
-                           IF(NOUT .LE. 0 .OR. NOUT .GT. 6) THEN
-*                          resetting stdout, corrupted by negative cases
-                              NOUT = 6
-                           END IF
                            WRITE( NOUT, FMT = 9984 ) 'NRHS'
-*                             disable extreme value case when N < 0
-                              EX_FLAG = .FALSE.
-                           ELSE IF (N.LT.0 .AND. (IERR( 1 ).EQ.-2 .OR.
-     $                           IERR( 1 ).EQ. -8 )) THEN
-*                               If DESCINIT is returns correct error code
-*                               do nothing
-                                WRITE( *, FMT = 9984 ) 'N'
-*                             disable extreme value case when N < 0
-                              EX_FLAG = .FALSE.
-                           ELSE IF (M.LT.0 .AND. (IERR( 1 ).EQ.-2 .OR.
-     $                           IERR( 1 ).EQ. -8 )) THEN
-*                               If DESCINIT is returns correct error code
-*                               do nothing
-                                WRITE( *, FMT = 9984 ) 'M'
-*                             disable extreme value case when N < 0
-                              EX_FLAG = .FALSE.
                         ELSE IF( IERR( 1 ).LT.0 ) THEN
                            IF( IAM.EQ.0 )
      $                        WRITE( NOUT, FMT = 9997 ) 'descriptor'
@@ -940,25 +892,16 @@
 
                         IF( INFO.NE.0 ) THEN
                            IF( IAM.EQ.0 )
-     $                        WRITE( NOUT, FMT = * ) 'PDGETRS INFO=',
-     $                                             INFO
-*                          If NRHS < 0 in LU.dat file then
-*                          PDGETRS API sets INFO = -3
-                           IF( NRHS.LT.0 .AND. INFO.EQ.-3 .OR.
-     $                          (M.LT.0 .AND. INFO.EQ.-1) .OR.
-     $                          (N.LT.0 .AND. INFO.EQ.-2) )  THEN
-*                             If PDGETRS is returning correct error code
-*                             we need to pass this case
-                              WRITE( *, FMT = 9983 ) 'PDGETRS'
-*                             Do nothing
-                           ELSE IF( INFO .GT. 0 .AND. EX_FLAG) THEN
-                              WRITE(*,*) 'PDGETRS INFO=', INFO
-*                             Do Nothing, Pass this case in residual calculation
+     $                        WRITE( NOUT, FMT = * ) 'PDGETRS INFO=', INFO
+*                          If NRHS < 0 in LU.dat file then PDGETRS API sets INFO = -3
+                           IF( NRHS.LT.0 .AND. INFO.EQ.-3 ) THEN
+*                             If PDGETRS is returning correct error code we need to pass this case
+                              KPASS = KPASS + 1
                            ELSE
 *                             For other error code we will mark test case as fail
                               KFAIL = KFAIL + 1
-                              GO TO 30
                            END IF
+                           GO TO 30
                         END IF
 *
                         IF( CHECK .AND. .NOT.(EX_FLAG) .AND.
@@ -1337,11 +1280,9 @@
  9987 FORMAT( 'END OF TESTS.' )
  9986 FORMAT( '||A - P*L*U|| / (||A|| * N * eps) = ', G25.7 )
  9985 FORMAT( '||Ax-b||/(||x||*||A||*eps*N) ', F25.7 )
- 9984 FORMAT(  A4, ' < 0 case detected. ',
+ 9984 FORMAT(  A, ' < 0 case detected. ',
      $        'Instead of driver file, we will handle this case from ',
      $        'ScaLAPACK API.')
- 9983 FORMAT(  A, ' returned correct error code. Passing this case.')
- 9982 FORMAT(  'This is safe exit from ', A, ' API. Passing this case.')
 *
       STOP
 *
