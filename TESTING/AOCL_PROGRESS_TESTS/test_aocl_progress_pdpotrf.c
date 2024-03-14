@@ -95,12 +95,12 @@ int main(int argc, char **argv) {
     A = (double *)calloc(mpA*nqA,sizeof(double)) ;
     if (A==NULL){ printf("Error of memory allocation A on proc %dx%d\n",myrow,mycol); exit(0); }
 
-    Int k = 0;
-    for (Int j = 0; j < nqA; j++) { // local col
+    Int k = 0, i, j;
+    for (j = 0; j < nqA; j++) { // local col
         Int l_j = j / nb; // which block
         Int x_j = j % nb; // where within that block
         Int J   = (l_j * npcol + mycol) * nb + x_j; // global col
-        for (Int i = 0; i < mpA; i++) { // local row
+        for (i = 0; i < mpA; i++) { // local row
             Int l_i = i / nb; // which block
             Int x_i = i % nb; // where within that block
             Int I   = (l_i * nprow + myrow) * nb + x_i; // global row

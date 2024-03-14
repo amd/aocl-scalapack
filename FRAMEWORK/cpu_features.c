@@ -134,6 +134,7 @@ __init_cpu_features(void)
     static unsigned initialized = 0;
     struct alc_cpu_mfg_info* mfg_info = &cpu_features.cpu_mfg_info;
     int                      arr_size = ARRAY_SIZE(__cpuid_values);
+    int i;
     if (initialized == INITIALIZED_MAGIC)
         return;
     struct alc_cpuid_regs regs;
@@ -143,7 +144,7 @@ __init_cpu_features(void)
         && regs.edx == 0x69746e65) {
         cpu_features.cpu_mfg_info.mfg_type = ALC_CPU_MFG_AMD;
     }
-    for (int i = 0; i < arr_size; i++) {
+    for (i = 0; i < arr_size; i++) {
         struct alc_cpuid_regs ft;
         __cpuid_2(__cpuid_values[i].eax, __cpuid_values[i].ecx, &ft);
         cpu_features.available[i].eax = ft.eax;
