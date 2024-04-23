@@ -3,7 +3,7 @@
 *  -- ScaLAPACK testing driver (version 1.7) --
 *     University of Tennessee, Knoxville, Oak Ridge National Laboratory,
 *     and University of California, Berkeley.
-*     May 1, 1997
+*     Modifications Copyright (c) 2024 Advanced Micro Devices, Inc. All rights reserved.
 *
 *  Purpose
 *  ========
@@ -438,18 +438,20 @@
      $               WRITE( NOUT, FMT = * ) 'PDGETRF INFO=', INFO
 *                 If M < 0 in LU.dat file then PDGETRF API sets INFO = -1
 *                 If N < 0 in LU.dat file then PDGETRF API sets INFO = -2
-                  IF (M.LT.0 .AND. INFO.EQ.-1) THEN
-*                    If PDGETRF is returning correct error code we need to pass this case
-                     KPASS = KPASS + 1
-                  ELSE IF (N.LT.0 .AND. INFO.EQ.-2) THEN
+                  IF ((M.LT.0 .AND. INFO.EQ.-1) .OR.
+     $                (N.LT.0 .AND. INFO.EQ.-2)) THEN
 *                    If PDGETRF is returning correct error code we need to pass this case
                      KPASS = KPASS + 1
                   ELSE
 *                    For other error code we will mark test case as fail
                      KFAIL = KFAIL + 1
                   END IF
-                  RCOND = ZERO
-                  GO TO 30
+               ELSE IF (M.EQ.0 .OR. N.EQ.0) THEN
+*                 This is the case of early return from ScaLAPACK API
+*                 If there is safe exit from API we need to pass this case
+                  KPASS = KPASS + 1
+               RCOND = ZERO
+               GO TO 30
                END IF
 *
                IF( CHECK ) THEN
