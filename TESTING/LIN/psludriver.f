@@ -431,13 +431,22 @@
 *                 If N < 0 in LU.dat file then PSGETRF API sets INFO = -2
                   IF ((M.LT.0 .AND. INFO.EQ.-1) .OR.
      $                (N.LT.0 .AND. INFO.EQ.-2)) THEN
-*                    If PSGETRF is returning correct error code we need to pass this case
+*                    If PSGETRF is returning correct error
+*                    code we need to pass this case
                      WRITE( NOUT, FMT = 9983 ) 'PSGETRF'
                      KPASS = KPASS + 1
                   ELSE
 *                    For other error code we will mark test case as fail
                      KFAIL = KFAIL + 1
                   END IF
+                  RCOND = ZERO
+                  GO TO 30
+               ELSE IF (M.EQ.0 .OR. N.EQ.0) THEN
+*                 If M = 0 or N =0 this is the case of
+*                 early return from ScaLAPACK API.
+*                 If there is safe exit from API we need to pass this case
+                  WRITE( NOUT, FMT = 9982 ) 'PSGETRF'
+                  KPASS = KPASS + 1
                   RCOND = ZERO
                   GO TO 30
                END IF
@@ -1124,6 +1133,7 @@
      $        'Instead of driver file, we will handle this case from ',
      $        'ScaLAPACK API.')
  9983 FORMAT(  A, ' returned correct error code. Passing this case.')
+ 9982 FORMAT(  'This is safe exit from ', A, ' API. Passing this case.')
 *
       STOP
 *
