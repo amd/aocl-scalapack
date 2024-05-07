@@ -4,7 +4,8 @@
 *  -- ScaLAPACK routine (version 1.7) --
 *     University of Tennessee, Knoxville, Oak Ridge National Laboratory,
 *     and University of California, Berkeley.
-*     May 1, 1997          
+*     May 1, 1997
+*     Modifications Copyright (c) 2024 Advanced Micro Devices, Inc. All rights reserved.
 *
 *     .. Scalar Arguments ..
       INTEGER            LWORK, M, N, NB, NOUT, NPCOL, NPROW
@@ -267,11 +268,13 @@
 *
 *     Check input parameters.
 *
+#ifdef ENABLE_DRIVER_CHECK
       IF( M.LE.0 ) THEN
          INFO = -1
       ELSE IF( N.LE.0 ) THEN
          INFO = -2
-      ELSE IF( NPROW.LE.0 ) THEN
+#endif
+      IF( NPROW.LE.0 ) THEN
          INFO = -3
       ELSE IF( NPCOL.LE.0 ) THEN
          INFO = -4
@@ -300,6 +303,18 @@
       LDVT = NUMROC( SIZE, NB, MYROW, 0, NPROW )
       LDVT = MAX( 1, LDVT )
       CALL DESCINIT( DESCA, M, N, NB, NB, 0, 0, CONTEXT, LDA, DINFO )
+*        If M < 0 in SVD.dat file then DESCINIT API sets DINFO = -2
+*        If N < 0 in SVD.dat file then DESCINIT API sets DINFO = -3
+      IF( M.LT.0 .AND. DINFO.EQ.-2 ) THEN
+*        If DESCINIT is returning correct error code then
+*        do nothing
+         WRITE( NOUT, FMT = 9997 ) 'M'
+      ELSE IF( N.LT.0 .AND. DINFO.EQ.-3 ) THEN
+         WRITE( NOUT, FMT = 9997 ) 'N'
+      ELSE IF( DINFO.LT.0 ) THEN
+          WRITE( NOUT, FMT = 9996 ) 'descriptor'
+          GO TO 120
+      END IF
       CALL DESCINIT( DESCU, M, SIZE, NB, NB, 0, 0, CONTEXT, LDU, DINFO )
       CALL DESCINIT( DESCVT, SIZE, N, NB, NB, 0, 0, CONTEXT, LDVT,
      $               DINFO )
@@ -330,6 +345,49 @@
      $              WORK( PTRVT ), IVT, JVT, DESCVT,
      $              WORK( PTRWORK ), -1, DINFO )
       WPSGESVD = INT( WORK( PTRWORK ) )
+*
+      IF( (N.EQ.0 .OR. M.EQ.0) .AND. DINFO.EQ.0  ) THEN
+*         If N =0 or M =0 this is the case of
+*         early return from ScaLAPACK API.
+*         If there is safe exit from API; pass this case
+         WRITE( NOUT, FMT = 9999 )'Passed', WTIME( 1 ),
+     $            CTIME( 1 ), M, N, NPROW, NPCOL, NB, ITYPE, CHK, MTM,
+     $            DELTA, HETERO
+         WRITE( NOUT, FMT = 9998) 'PSGESVD'
+         GO TO 120
+      END IF
+*
+*       If M < 0 in SVD.dat file then PSGESVD API sets DINFO = -3
+*       If N < 0 in SVD.dat file then PSGESVD API sets DINFO = -4
+*
+      IF ( DINFO.LT.0 ) THEN
+         WRITE( NOUT, FMT = * ) 'PSGESVD DINFO=', DINFO
+         IF( M.LT.0 .AND. DINFO.EQ.-3 ) THEN
+*        When M < 0/Invalid, PSGESVD DINFO = -3
+*        Expected Error code for M < 0
+*        Hence this case can be passed
+            WRITE( NOUT, FMT = 9999 )'Passed', WTIME( 1 ),
+     $                 CTIME( 1 ), M, N, NPROW, NPCOL, NB, ITYPE,
+     $                 CHK, MTM, DELTA, HETERO
+         WRITE( NOUT, FMT = 9995) 'PSGESVD'
+         GO TO 120
+         ELSE IF( N.LT.0 .AND. DINFO.EQ.-4 ) THEN
+*           When N < 0/Invalid, PSGESVD DINFO = -4
+*           Expected Error code for N < 0
+*           Hence this case can be passed
+            WRITE( NOUT, FMT = 9999 )'Passed', WTIME( 1 ),
+     $                  CTIME( 1 ), M, N, NPROW, NPCOL, NB, ITYPE,
+     $                  CHK, MTM, DELTA, HETERO
+            WRITE( NOUT, FMT = 9995) 'PSGESVD'
+            GO TO 120
+         ELSE
+*           For other error code we will mark test case as fail
+            WRITE( NOUT, FMT = 9999 )'Failed', WTIME( 1 ),
+     $            CTIME( 1 ), M, N, NPROW, NPCOL, NB, ITYPE, CHK, MTM,
+     $            DELTA, HETERO
+            GO TO 120
+         END IF
+      END IF
 *
       CALL PSSVDCHK( M, N, WORK( PTRAC ), IA, JA, DESCA, WORK( PTRUC ),
      $               IU, JU, DESCU, WORK( PTRVT ), IVT, JVT, DESCVT, 
@@ -643,6 +701,13 @@
   110 CONTINUE
 *
  9999 FORMAT( A6, 2E10.3, 2I6, 2I4, I5, I6, 3F6.2, 4X, A1 )
+ 9998 FORMAT( '----------Test Passed but no compute was ',
+     $       'performed! [Safe exit from ', A,']-----------')
+ 9997 FORMAT(  A, ' < 0 case detected (Negative Test). ',
+     $        'Instead of driver file, This case will be handled',
+     $        'by the ScaLAPACK API.')
+ 9996 FORMAT( 'Bad ', A10, ' parameters: going on to next test case.' )
+ 9995 FORMAT(  A, ' returned correct error code. Passing this case.')
   120 CONTINUE
 *
 *     End of PSSVDTST
