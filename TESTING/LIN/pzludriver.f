@@ -484,23 +484,13 @@
                   END IF
                   RCOND = ZERO
                   GO TO 30
-                  END IF
                ELSE IF (M.EQ.0 .OR. N.EQ.0) THEN
 *                 If M = 0 or N =0 this is the case of
 *                 early return from ScaLAPACK API.
 *                 If there is safe exit from API we need to pass this case
-                  IF(NOUT .LE. 0 .OR. NOUT .GT. 6) THEN
-*                 resetting stdout, corrupted by early return cases
-                    NOUT = 6
-                  END IF
                   WRITE( NOUT, FMT = 9982 ) 'PZGETRF'
                   KPASS = KPASS + 1
                   RCOND = ZERO
-                  IF(NAN_PERCENT .GT. 0 .OR.
-     $                INF_PERCENT .GT. 0) THEN
-*                    RESET EX-FLAG
-                     EX_FLAG = .TRUE.
-                  END IF
                   GO TO 30
                END IF
 *
@@ -1279,6 +1269,7 @@
      $        'Instead of driver file, we will handle this case from ',
      $        'ScaLAPACK API.')
  9983 FORMAT(  A, ' returned correct error code. Passing this case.')
+ 9982 FORMAT(  'This is safe exit from ', A, ' API. Passing this case.')
 *
       STOP
 *
