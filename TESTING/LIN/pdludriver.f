@@ -143,6 +143,13 @@
 *     ..
 *     .. Executable Statements ..
 *
+*     Take command-line arguments if requested
+      CHARACTER*80 arg
+      INTEGER numArgs, count
+      LOGICAL :: help_flag = .false.
+      INTEGER :: inf = 0
+      INTEGER :: nan = 0
+*
 *     Get starting information
 *
 #ifdef DYNAMIC_WORK_MEM_ALLOC
@@ -156,6 +163,61 @@
      $               NTESTS, NGRIDS, PVAL, NTESTS, QVAL, NTESTS, THRESH,
      $               EST, MEM, IAM, NPROCS )
       CHECK = ( THRESH.GE.0.0E+0 )
+
+*     Get the number of command-line arguments
+      numArgs = command_argument_count()
+
+*     Process command-line arguments
+      do count = 1, numArgs, 2
+         call get_command_argument(count, arg)
+         select case (arg)
+            case ("-h", "--help")
+                  help_flag = .true.
+                  exit
+            case ("-inf")
+                  call get_command_argument(count + 1, arg)
+                  read(arg, *) inf
+            case ("-nan")
+                  call get_command_argument(count + 1, arg)
+                  read(arg, *) nan
+            case default
+                  print *, "Invalid option: ", arg
+                  help_flag = .true.
+                  exit
+            end select
+      end do
+
+*     Print the command line variables
+      IF( IAM.EQ.0 ) THEN
+         print *, ""
+         print *, "INF Percentage in input matrix: ", inf, "%"
+         print *, "NaN Percentage in input matrix: ", nan, "%"
+         IF ( inf + nan > 100) THEN
+            print *, "Sum of INF and NaN is", inf + nan, "%"
+            help_flag = .true.
+         END IF
+         IF ( inf < 0 .OR. nan < 0) THEN
+            print *, "Negative INF / NaN value is not allowed"
+            help_flag = .true.
+         END IF
+      END IF
+
+*     Display help message if requested
+      IF (help_flag .AND. IAM.EQ.0) THEN
+            print *, ""
+            print *, "Options:"
+            print *, "  -h, --help            Display this help message"
+            print *, "  -inf <int>            INF percentage in input",
+     $               " matrix (default: 0 %)"
+            print *, "  -nan <int>            NaN percentage in input",
+     $               " matrix (default: 0 %)"
+            print *, ""
+            print *, "  Note: INF + NaN values in input matrix",
+     $               " should be in the range of 0-100 %"
+            print *, ""
+            stop
+      END IF
+
 *
 *     Print version
 *
