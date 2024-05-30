@@ -4,6 +4,7 @@
 *     University of Tennessee, Knoxville, Oak Ridge National Laboratory,
 *     and University of California, Berkeley.
 *     May 1, 1997
+*     Modifications Copyright (c) 2024 Advanced Micro Devices, Inc. All rights reserved.
 *
 *  Purpose
 *  =======
@@ -212,6 +213,7 @@
 *
 *           Make sure matrix information is correct
 *
+#ifdef ENABLE_DRIVER_CHECK
             IERR( 1 ) = 0
             IF( N.LT.1 ) THEN
                IF( IAM.EQ.0 )
@@ -222,6 +224,7 @@
      $            WRITE( NOUT, FMT = 9999 ) 'MATRIX', 'N', N
                IERR( 1 ) = 1
             END IF
+#endif
 *
 *           Check all processes for an error
 *
@@ -281,12 +284,27 @@
 *
                CALL IGSUM2D( ICTXT, 'All', ' ', 1, 1, IERR, 1, -1, 0 )
 *
+#ifdef ENABLE_DRIVER_CHECK
                IF( IERR( 1 ).LT.0 ) THEN
                   IF( IAM.EQ.0 )
      $               WRITE( NOUT, FMT = 9997 ) 'descriptor'
                   KSKIP = KSKIP + 1
                   GO TO 30
                END IF
+#else
+*              If N < 0 in LLT.dat file then DESCINIT API sets IERR( 1 ) = -2
+               IF( N.LT.0 .AND. IERR( 1 ).EQ.-2 ) THEN
+*                 If DESCINIT is returning correct error code then
+*                 do nothing
+                  WRITE( NOUT, FMT = 9984 ) 'N'
+               ELSE IF( IERR( 1 ).LT.0 ) THEN
+                  IF( IAM.EQ.0 )
+     $               WRITE( NOUT, FMT = 9997 ) 'descriptor'
+                  KSKIP = KSKIP + 1
+                  GO TO 30
+               END IF
+#endif
+
 *
 *              Assign pointers into MEM for SCALAPACK arrays, A is
 *              allocated starting at position MEM( IPREPAD+1 )
@@ -403,7 +421,16 @@
                IF( INFO.NE.0 ) THEN
                   IF( IAM.EQ.0 )
      $               WRITE( NOUT, FMT = * ) 'PDPOTRF INFO=', INFO
-                  KFAIL = KFAIL + 1
+*                 If N < 0 in LLT.dat file then PDPOTRF API sets INFO = -2
+                  IF (N.LT.0 .AND. INFO.EQ.-2) THEN
+*                    If PDPOTRF is returning correct error
+*                    code we need to pass this case
+                     WRITE( NOUT, FMT = 9983 ) 'PDPOTRF'
+                     KPASS = KPASS + 1
+                  ELSE
+*                    For other error code we will mark test case as fail
+                     KFAIL = KFAIL + 1
+                  END IF
                   RCOND = ZERO
                   GO TO 60
                END IF
@@ -496,6 +523,14 @@
                      CALL DESCINIT( DESCB, N, NRHS, NB, NBRHS, 0, 0,
      $                              ICTXT, MAX( 1, NP )+IMIDPAD,
      $                              IERR( 1 ) )
+
+*                       If NRHS < 0 in LLT.dat file then
+*                       DESCINIT API sets IERR( 1 ) = -3
+                        IF (NRHS.LT.0 .AND. IERR( 1 ).EQ.-3 ) THEN
+*                          If DESCINIT is returning correct error code then
+*                          do nothing
+                           WRITE( NOUT, FMT = 9984 ) 'NRHS'
+                        END IF
 *
 *                    move IPW to allow room for RHS
 *
@@ -602,6 +637,23 @@
 *
                      CALL SLTIMER( 2 )
 *
+                     IF( INFO.NE.0 ) THEN
+                        IF( IAM.EQ.0 )
+     $                     WRITE( NOUT, FMT = * ) 'PDPOTRS INFO=', INFO
+*                       If NRHS < 0 in LLT.dat file then
+*                       PDPOTRS API sets INFO = -3
+                        IF( NRHS.LT.0 .AND. INFO.EQ.-3 ) THEN
+*                          If PDPOTRS is returning correct error code then
+*                          we need to pass this case
+                           WRITE( NOUT, FMT = 9983 ) 'PDPOTRS'
+                           KPASS = KPASS + 1
+                        ELSE
+*                          For other error code we will mark test case as fail
+                           KFAIL = KFAIL + 1
+                        END IF
+                        GO TO 60
+                     END IF
+
                      IF( CHECK ) THEN
 *
 *                       check for memory overwrite
@@ -922,6 +974,10 @@
  9987 FORMAT( 'END OF TESTS.' )
  9986 FORMAT( '||A - ', A4, '|| / (||A|| * N * eps) = ', G25.7 )
  9985 FORMAT( '||Ax-b||/(||x||*||A||*eps*N) ', F25.7 )
+ 9984 FORMAT(  A, ' < 0 case detected. ',
+     $        'Instead of driver file, we will handle this case from ',
+     $        'ScaLAPACK API.')
+ 9983 FORMAT(  A, ' returned correct error code. Passing this case.')
 *
       STOP
 *
