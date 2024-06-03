@@ -429,6 +429,14 @@
                   END IF
                   RCOND = ZERO
                   GO TO 60
+               ELSE IF (N.EQ.0) THEN
+*                 If N = 0 this is the case of
+*                 early return from ScaLAPACK API.
+*                 If there is safe exit from API we need to pass this case
+                  WRITE( NOUT, FMT = 9982 ) 'PZPOTRF'
+                  KPASS = KPASS + 1
+                  RCOND = ZERO
+                  GO TO 60
                END IF
 *
                IF( CHECK ) THEN
@@ -973,6 +981,7 @@
      $        'Instead of driver file, we will handle this case from ',
      $        'ScaLAPACK API.')
  9983 FORMAT(  A, ' returned correct error code. Passing this case.')
+ 9982 FORMAT(  'This is safe exit from ', A, ' API. Passing this case.')
 *
       STOP
 *
