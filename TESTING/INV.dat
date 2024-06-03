@@ -4,8 +4,8 @@
 6				device out
 5				number of matrix types (next line)
 'GEN' 'UTR' 'LTR' 'UPD' 'LPD'	GEN, UTR, LTR, UPD, LPD
-4				number of problems sizes
-2 5 10 15 13 20 30 50		values of N
+6				number of problems sizes
+2 5 10 0 -5 20 30 50		values of N
 4				number of NB's
 2 3 4 5 6 20			values of NB
 4				number of process grids (ordered P & Q)

@@ -359,14 +359,13 @@
 *                   MAIN API can be validated.
 *                   Do NOTHING
                     WRITE( NOUT, FMT = 9984 ) 'N'
-*                   disable extreme flag for negative case
-                    EX_FLAG = .FALSE.
                   ELSE IF(IERR(1) .LT. 0) THEN
                      IF( IAM.EQ.0 )
      $                  WRITE( NOUT, FMT = 9997 ) 'descriptor'
                      KSKIP = KSKIP + 1
                      GO TO 10
                   END IF
+                  
 #endif
 *
 *                 Assign pointers into MEM for ScaLAPACK arrays, A is
@@ -750,7 +749,7 @@
 *
                   IF( CHECK .AND. .NOT.(EX_FLAG)) THEN
 *
-                     IF(INFO.EQ.0 .AND. N.GT.0) THEN
+                     IF(INFO.EQ.0 .AND. N.GT.0) THEN   
                         CALL PSFILLPAD( ICTXT, WORKSIZ-IPOSTPAD, 1,
      $                               MEM( IPW-IPREPAD ),
      $                               WORKSIZ-IPOSTPAD, IPREPAD,
@@ -801,13 +800,8 @@
 *                       Expected Error code for N < 0
 *                       Hence this case can be passed
                         KPASS = KPASS + 1
-                        WRITE( NOUT, FMT = 9983 ) API_NAME
+                        WRITE( NOUT, FMT = 9983 ) KPASS, API_NAME
                         PASSED = 'PASSED'
-*                       re-enable extreme flag for next case
-                        IF(INF_PERCENT .GT. 0 .OR.
-     $                        NAN_PERCENT .GT. 0) THEN
-                          EX_FLAG = .TRUE.
-                        END IF
                      ELSE
                         KFAIL = KFAIL + 1
                         IF( INFO.GT.0 ) THEN
@@ -877,7 +871,7 @@
 *
 *                 Print results
 *
-                  IF( MYROW.EQ.0 .AND. MYCOL.EQ.0 ) THEN
+                  IF( MYROW.EQ.0 .AND. MYCOL.EQ.0 .AND. INFO.EQ.0 ) THEN
 *
                      IF( LSAMEN( 3, MTYP, 'GEN' ) ) THEN
 *
@@ -1010,7 +1004,7 @@
  9984 FORMAT(  A, ' < 0 case detected. ',
      $        'Instead of driver file, This case will be handled',
      $        'by the ScaLAPACK API.')
- 9983 FORMAT( '----------Negative-Test Passed with expected',
+ 9983 FORMAT( '----------Negative Test-',I3,' Passed with expected',
      $       ' ERROR CODE in INFO from ', A,']-----------')
 *
       STOP
