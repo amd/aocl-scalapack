@@ -4,6 +4,7 @@
 *     University of Tennessee, Knoxville, Oak Ridge National Laboratory,
 *     and University of California, Berkeley.
 *     May 1, 1997
+*     Modifications Copyright (c) 2024 Advanced Micro Devices, Inc. All rights reserved.
 *
 *  Purpose
 *  =======
@@ -99,6 +100,7 @@
      $                   NPROW, NQ, WORKIINV, WORKINV, WORKSIZ
       REAL               ANORM, FRESID, RCOND, THRESH
       DOUBLE PRECISION   NOPS, TMFLOPS
+      CHARACTER*8        API_NAME
 *     ..
 *     .. Local Arrays ..
       CHARACTER*3        MATTYP( NTESTS )
@@ -150,7 +152,7 @@
       CHECK = ( THRESH.GE.0.0E+0 )
 *
 *     Loop over the different matrix types
-*
+* 
       DO 40 I = 1, NMTYP
 *
          MTYP = MATTYP( I )
@@ -235,12 +237,14 @@
 *
 *              Make sure matrix information is correct
 *
+#ifdef ENABLE_DRIVER_CHECK
                IERR( 1 ) = 0
-               IF( N.LT.1 ) THEN
+               IF( N.LT.0 ) THEN
                   IF( IAM.EQ.0 )
      $               WRITE( NOUT, FMT = 9999 ) 'MATRIX', 'N', N
                   IERR( 1 ) = 1
                END IF
+#endif
 *
 *              Make sure no one had error
 *
@@ -304,12 +308,28 @@
                   CALL IGSUM2D( ICTXT, 'All', ' ', 1, 1, IERR, 1, -1,
      $                          0 )
 *
+#ifdef ENABLE_DRIVER_CHECK
                   IF( IERR( 1 ).LT.0 ) THEN
                      IF( IAM.EQ.0 )
      $                  WRITE( NOUT, FMT = 9997 ) 'descriptor'
                      KSKIP = KSKIP + 1
                      GO TO 10
                   END IF
+#else
+                  IF(N .LT. 0 .AND. (IERR(1) .EQ. -2 .OR.
+     $              IERR(1) .EQ. -4 .OR. IERR(1) .EQ. -8 )) THEN
+*                   DESCINIT returns the correct error code,
+*                   MAIN API can be validated.
+*                   Do NOTHING
+                    WRITE( NOUT, FMT = 9984 ) 'N'
+                  ELSE IF(IERR(1) .LT. 0) THEN
+                     IF( IAM.EQ.0 )
+     $                  WRITE( NOUT, FMT = 9997 ) 'descriptor'
+                     KSKIP = KSKIP + 1
+                     GO TO 10
+                  END IF
+                  
+#endif
 *
 *                 Assign pointers into MEM for ScaLAPACK arrays, A is
 *                 allocated starting at position MEM( IPREPAD+1 )
@@ -462,7 +482,7 @@
 *
 *                 Need 1-norm of A for checking
 *
-                  IF( CHECK ) THEN
+                  IF( CHECK .AND. N.GT.0 ) THEN
 *
                      CALL PCFILLPAD( ICTXT, NP, NQ, MEM( IPA-IPREPAD ),
      $                               DESCA( LLD_ ), IPREPAD, IPOSTPAD,
@@ -574,7 +594,7 @@
      $                             MEM( IPPIV ), INFO )
                      CALL SLTIMER( 1 )
 *
-                     IF( CHECK ) THEN
+                     IF( CHECK .AND. N.GT.0 ) THEN
 *
 *                       Check for memory overwrite
 *
@@ -589,13 +609,15 @@
 *
 *                    Perform the general matrix inversion
 *
+                    
                      CALL SLTIMER( 2 )
+                     API_NAME = 'PCGETRI'
                      CALL PCGETRI( N, MEM( IPA ), 1, 1, DESCA,
      $                             MEM( IPPIV ), MEM( IPW ), LWORK,
      $                             MEM( IPIW ), LIWORK, INFO )
                      CALL SLTIMER( 2 )
 *
-                     IF( CHECK ) THEN
+                     IF( CHECK .AND. N.GT.0 ) THEN
 *
 *                       Check for memory overwrite
 *
@@ -623,11 +645,12 @@
 *                    Perform the general matrix inversion
 *
                      CALL SLTIMER( 2 )
+                     API_NAME = 'PCTRTRI'
                      CALL PCTRTRI( UPLO, 'Non unit', N, MEM( IPA ), 1,
      $                             1, DESCA, INFO )
                      CALL SLTIMER( 2 )
 *
-                     IF( CHECK ) THEN
+                     IF( CHECK .AND. N.GT.0 ) THEN
 *
 *                       Check for memory overwrite
 *
@@ -646,7 +669,7 @@
      $                             INFO )
                      CALL SLTIMER( 1 )
 *
-                     IF( CHECK ) THEN
+                     IF( CHECK .AND. N.GT.0 ) THEN
 *
 *                       Check for memory overwrite
 *
@@ -660,11 +683,12 @@
 *                    inversion
 *
                      CALL SLTIMER( 2 )
+                     API_NAME = 'PCPOTRI'
                      CALL PCPOTRI( UPLO, N, MEM( IPA ), 1, 1, DESCA,
      $                             INFO )
                      CALL SLTIMER( 2 )
 *
-                     IF( CHECK ) THEN
+                     IF( CHECK .AND. N.GT.0 ) THEN
 *
 *                       Check for memory overwrite
 *
@@ -676,36 +700,60 @@
 *
                   END IF
 *
-                  IF( CHECK ) THEN
+                  IF( CHECK) THEN
 *
-                     CALL PCFILLPAD( ICTXT, WORKSIZ-IPOSTPAD, 1,
+                     IF(INFO.EQ.0 .AND. N.GT.0) THEN
+                        CALL PCFILLPAD( ICTXT, WORKSIZ-IPOSTPAD, 1,
      $                               MEM( IPW-IPREPAD ),
      $                               WORKSIZ-IPOSTPAD, IPREPAD,
      $                               IPOSTPAD, PADVAL )
 *
-*                    Compute fresid = || inv(A)*A-I ||
+*                       Compute fresid = || inv(A)*A-I ||
 *
-                     CALL PCINVCHK( MTYP, N, MEM( IPA ), 1, 1, DESCA,
-     $                              IASEED, ANORM, FRESID, RCOND,
-     $                              MEM( IPW ) )
+                        CALL PCINVCHK( MTYP, N, MEM( IPA ), 1, 1,
+     $                               DESCA, IASEED, ANORM, FRESID,
+     $                               RCOND, MEM( IPW ) )
 *
-*                    Check for memory overwrite
+*                       Check for memory overwrite
 *
-                     CALL PCCHEKPAD( ICTXT, 'PCINVCHK', NP, NQ,
+                        CALL PCCHEKPAD( ICTXT, 'PCINVCHK', NP, NQ,
      $                               MEM( IPA-IPREPAD ),
      $                               DESCA( LLD_ ),
      $                               IPREPAD, IPOSTPAD, PADVAL )
-                     CALL PCCHEKPAD( ICTXT, 'PCINVCHK',
+                        CALL PCCHEKPAD( ICTXT, 'PCINVCHK',
      $                               WORKSIZ-IPOSTPAD, 1,
      $                               MEM( IPW-IPREPAD ),
      $                               WORKSIZ-IPOSTPAD, IPREPAD,
      $                               IPOSTPAD, PADVAL )
+                     END IF
 *
 *                    Test residual and detect NaN result
 *
-                     IF( FRESID.LE.THRESH .AND. INFO.EQ.0 .AND.
+                     IF(N.EQ.0 .AND. INFO.EQ.0) THEN
+*                       If N =0 this is the case of
+*                       early return from ScaLAPACK API.
+*                       If there is safe exit from API; pass this case
+                        KPASS = KPASS + 1
+                        WRITE( NOUT, FMT = 9985 ) KPASS, API_NAME
+                        PASSED = 'PASSED'
+                        GO TO 10
+                     ELSE IF( FRESID.LE.THRESH .AND. INFO.EQ.0 .AND.
      $                   ( (FRESID-FRESID) .EQ. 0.0E+0 ) ) THEN
                         KPASS = KPASS + 1
+                        PASSED = 'PASSED'
+                     ELSE IF(N.LT.0 .AND.
+     $                      ((INFO.EQ.-1
+     $                          .AND. LSAMEN( 3, MTYP, 'GEN' )) .OR.
+     $                      (INFO.EQ.-3 .AND.
+     $                          LSAMEN( 2, MTYP( 2:3 ), 'TR' )) .OR.
+     $                      (INFO.EQ.-2 .AND.
+     $                          LSAMEN( 2, MTYP( 2:3 ), 'PD' )))) THEN
+*                       When N < 0/Invalid, PCGETRI INFO = -1
+*                       PTPOTRI INFO = -2 and PCTRTRI INFO = -3
+*                       Expected Error code for N < 0
+*                       Hence this case can be passed
+                        KPASS = KPASS + 1
+                        WRITE( NOUT, FMT = 9983 ) KPASS, API_NAME
                         PASSED = 'PASSED'
                      ELSE
                         KFAIL = KFAIL + 1
@@ -734,7 +782,7 @@
 *
 *                 Print results
 *
-                  IF( MYROW.EQ.0 .AND. MYCOL.EQ.0  ) THEN
+                  IF( MYROW.EQ.0 .AND. MYCOL.EQ.0 .AND. INFO.EQ.0 ) THEN
 *
                      IF( LSAMEN( 3, MTYP, 'GEN' ) ) THEN
 *
@@ -850,7 +898,7 @@
  9995 FORMAT( 'TIME     N  NB     P     Q Fct Time Inv Time ',
      $        '     MFLOPS    Cond   Resid  CHECK' )
  9994 FORMAT( '---- ----- --- ----- ----- -------- -------- ',
-     $        '----------- ------- ------- ------' )
+     $        '--------  -------   -----   ----- ------' )
  9993 FORMAT( A4, 1X, I5, 1X, I5, 1X, I5, 1X, I5, 1X, F8.2, 1X, F8.2,
      $        1X, F12.2, 1X, F7.1, 1X, F7.2, 1X, A6 )
  9992 FORMAT( 'Finished ', I6, ' tests, with the following results:' )
@@ -860,6 +908,13 @@
  9988 FORMAT( I5, ' tests skipped because of illegal input values.' )
  9987 FORMAT( 'END OF TESTS.' )
  9986 FORMAT( A )
+ 9985 FORMAT( '----------Test-',I3,' Passed but no compute was ',
+     $       'performed! [Safe exit from ', A,']-----------')
+ 9984 FORMAT(  A, ' < 0 case detected. ',
+     $        'Instead of driver file, This case will be handled',
+     $        'by the ScaLAPACK API.')
+ 9983 FORMAT( '----------Negative Test-',I3,' Passed with expected',
+     $       ' ERROR CODE in INFO from ', A,']-----------')
 *
       STOP
 *
