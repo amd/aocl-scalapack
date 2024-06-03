@@ -331,20 +331,11 @@
                   GO TO 30
                END IF
 #else
-               IF(N .LT. 0 .AND. (IERR(1) .EQ. -2 .OR.
-     $              IERR(1) .EQ. -4 .OR. IERR(1) .EQ. -8 .OR.
-     $              IERR(1) .EQ. -3 .OR. IERR(1) .EQ. -12 )) THEN
-*                   DESCINIT returns the correct error code,
-*                   -2, -3 incase of invalid M and N
-*                   -4, -8 or -12 incase of incorrect grid info
-*                   MAIN API can be validated.
-*                   Do NOTHING
-                  WRITE( *, FMT = 9984 ) 'N'
-*                   disable extreme value case when N < 0
-                    EX_FLAG = .FALSE.
-               ELSE IF(N .EQ. 0) THEN
-*                   disable extreme value case when M < 0
-                    EX_FLAG = .FALSE.
+*              If N < 0 in LLT.dat file then DESCINIT API sets IERR( 1 ) = -2
+               IF( N.LT.0 .AND. IERR( 1 ).EQ.-2 ) THEN
+*                 If DESCINIT is returning correct error code then
+*                 do nothing
+                  WRITE( NOUT, FMT = 9984 ) 'N'
                ELSE IF( IERR( 1 ).LT.0 ) THEN
                   IF( IAM.EQ.0 )
      $               WRITE( NOUT, FMT = 9997 ) 'descriptor'
@@ -472,17 +463,16 @@
                   END IF
                   IF( IAM.EQ.0 )
      $               WRITE( NOUT, FMT = * ) 'PSPOTRF INFO=', INFO
-*                 If N < 0 in LLT.dat file then PDPOTRF API sets INFO = -2
+*                 If N < 0 in LLT.dat file then PSPOTRF API sets INFO = -2
                   IF (N.LT.0 .AND. INFO.EQ.-2) THEN
-*                    If PSPOTRF is returning correct error code, do nothing
+*                    If PSPOTRF is returning correct error
+*                    code we need to pass this case
                      WRITE( NOUT, FMT = 9983 ) 'PSPOTRF'
-                  ELSE IF (INFO.GT.0 .AND. EX_FLAG)  THEN
-                     WRITE(*,*) 'PSPOTRF INFO=', INFO
-*                    do nothing, skip residual calculation
-*                    Pass this case in INF/NAN residual calculation
+                     KPASS = KPASS + 1
                   ELSE
 *                    For other error code we will mark test case as fail
                      KFAIL = KFAIL + 1
+                  END IF
                   RCOND = ZERO
                   GO TO 60
                   END IF
@@ -593,11 +583,10 @@
      $                              IERR( 1 ) )
 *                       If NRHS < 0 in LLT.dat file then
 *                       DESCINIT API sets IERR( 1 ) = -3
-                        IF (NRHS.LT.0 .AND. IERR( 1 ).EQ.-3 .OR.
-     $                           IERR(1) .EQ. -12) THEN
-*                             If DESCINIT is returns correct error code
+                        IF (NRHS.LT.0 .AND. IERR( 1 ).EQ.-3 ) THEN
+*                          If DESCINIT is returning correct error code then
 *                          do nothing
-*                           WRITE( *, FMT = 9984 ) 'NRHS'
+                           WRITE( NOUT, FMT = 9984 ) 'NRHS'
                         END IF
 *
 *                    move IPW to allow room for RHS
@@ -707,32 +696,22 @@
                      CALL SLTIMER( 2 )
 *
                      IF( INFO.NE.0 ) THEN
-                        IF(NOUT .LE. 0 .OR. NOUT .GT. 6) THEN
-*                       resetting stdout, corrupted by negative cases
-                           NOUT = 6
-                        END IF
                         IF( IAM.EQ.0 )
      $                     WRITE( NOUT, FMT = * ) 'PSPOTRS INFO=', INFO
 *                       If NRHS < 0 in LLT.dat file then
 *                       PSPOTRS API sets INFO = -3
-                        IF( NRHS.LT.0 .AND. INFO.EQ.-3 .OR.
-     $                          (N.LT.0 .AND. INFO.EQ.-2) )  THEN
+                        IF( NRHS.LT.0 .AND. INFO.EQ.-3 ) THEN
 *                          If PSPOTRS is returning correct error code then
 *                          we need to pass this case
-                           WRITE( *, FMT = 9983 ) 'PSPOTRS'
-                        ELSE IF( INFO .GT. 0 .AND. EX_FLAG) THEN
-                              WRITE(*,*) 'PSPOTRS INFO=', INFO
-*                             Do Nothing, Pass this case in residual calculation
+                           WRITE( NOUT, FMT = 9983 ) 'PSPOTRS'
+                           KPASS = KPASS + 1
                         ELSE
 *                          For other error code we will mark test case as fail
                            KFAIL = KFAIL + 1
-                           GO TO 60
                         END IF
+                        GO TO 60
                      END IF
-*
-                     IF( CHECK .AND. .NOT.(EX_FLAG) .AND.
-     $                      INFO .EQ. 0 .AND. N .GT. 0 .AND.
-     $                      NRHS .GT. 0) THEN
+                     IF( CHECK ) THEN
 *
 *                       check for memory overwrite
 *
@@ -1112,11 +1091,10 @@
  9987 FORMAT( 'END OF TESTS.' )
  9986 FORMAT( '||A - ', A4, '|| / (||A|| * N * eps) = ', G25.7 )
  9985 FORMAT( '||Ax-b||/(||x||*||A||*eps*N) ', F25.7 )
- 9984 FORMAT(  A4, ' < 0 case detected. ',
+ 9984 FORMAT(  A, ' < 0 case detected. ',
      $        'Instead of driver file, we will handle this case from ',
      $        'ScaLAPACK API.')
  9983 FORMAT(  A, ' returned correct error code. Passing this case.')
- 9982 FORMAT(  'This is safe exit from ', A, ' API. Passing this case.')
 *
       STOP
 *
