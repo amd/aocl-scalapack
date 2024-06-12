@@ -4,6 +4,7 @@
 *     University of Tennessee, Knoxville, Oak Ridge National Laboratory,
 *     and University of California, Berkeley.
 *     May 28, 2001
+*     Modifications Copyright (c) 2024 Advanced Micro Devices, Inc. All rights reserved.
 *
 *  Purpose
 *  =======
@@ -97,6 +98,7 @@
       CHARACTER*8        ROUTCHK
       CHARACTER*80       OUTFILE
       LOGICAL            CHECK
+      LOGICAL            M_INVALID, N_INVALID
       INTEGER            I, IAM, IASEED, ICTXT, IMIDPAD, INFO, IPA,
      $                   IPOSTPAD, IPPIV, IPREPAD, IPTAU, IPRW, IPW, J,
      $                   K, KFAIL, KPASS, KSKIP, KTESTS, L, LIPIV,
@@ -106,6 +108,7 @@
      $                   WORKFCT, WORKRFCT, WORKSIZ
       REAL               THRESH
       DOUBLE PRECISION   ANORM, FRESID, NOPS, TMFLOPS
+      CHARACTER*8        API_NAME
 *     ..
 *     .. Arrays ..
       CHARACTER*2        FACTOR( NTESTS )
@@ -156,6 +159,8 @@
      $               NTESTS, NGRIDS, PVAL, NTESTS, QVAL, NTESTS,
      $               THRESH, MEM, IAM, NPROCS )
       CHECK = ( THRESH.GE.0.0E+0 )
+      M_INVALID = .TRUE.
+      N_INVALID = .TRUE.
 *
 *     Loop over the different factorization types
 *
@@ -253,6 +258,7 @@
 *
 *              Make sure matrix information is correct
 *
+#ifdef ENABLE_DRIVER_CHECK
                IERR(1) = 0
                IF( M.LT.1 ) THEN
                   IF( IAM.EQ.0 )
@@ -263,17 +269,20 @@
      $               WRITE( NOUT, FMT = 9999 ) 'MATRIX', 'N', N
                   IERR( 1 ) = 1
                END IF
+#endif
 *
 *              Make sure no one had error
 *
                CALL IGSUM2D( ICTXT, 'All', ' ', 1, 1, IERR, 1, -1, 0 )
 *
+#ifdef ENABLE_DRIVER_CHECK
                IF( IERR( 1 ).GT.0 ) THEN
                   IF( IAM.EQ.0 )
      $               WRITE( NOUT, FMT = 9997 ) 'matrix'
                   KSKIP = KSKIP + 1
                   GO TO 20
                END IF
+#endif
 *
 *              Loop over different blocking sizes
 *
@@ -350,12 +359,34 @@
                   CALL IGSUM2D( ICTXT, 'All', ' ', 1, 1, IERR, 1, -1,
      $                          0 )
 *
+#ifdef ENABLE_DRIVER_CHECK
                   IF( IERR( 1 ).LT.0 ) THEN
                      IF( IAM.EQ.0 )
      $                  WRITE( NOUT, FMT = 9997 ) 'descriptor'
                      KSKIP = KSKIP + 1
                      GO TO 10
                   END IF
+#else
+                  IF(N .LT. 0 .AND. (IERR(1) .EQ. -2 .OR.
+     $              IERR(1) .EQ. -4 .OR. IERR(1) .EQ. -8 .OR.
+     $              IERR(1) .EQ. -3 .OR. IERR(1) .EQ. -12 )) THEN
+*                   DESCINIT returns the correct error code,
+*                   -2, -3 incase of invalid M and N
+*                   -4, -8 or -12 incase of incorrect grid info
+*                   MAIN API can be validated.
+*                   Do NOTHING
+                    WRITE( NOUT, FMT = 9984 ) 'N'
+                  ELSE IF(M .LT. 0 .AND. (IERR(1) .EQ. -2 .OR.
+     $               IERR(1) .EQ. -4 .OR. IERR(1) .EQ. -8 .OR.
+     $               IERR(1) .EQ. -3 .OR. IERR(1) .EQ. -12  )) THEN
+                    WRITE( NOUT, FMT = 9984 ) 'M'
+                  ELSE IF(IERR(1) .LT. 0) THEN
+                     IF( IAM.EQ.0 )
+     $                  WRITE( NOUT, FMT = 9997 ) 'descriptor'
+                     KSKIP = KSKIP + 1
+                     GO TO 10
+                  END IF
+#endif
 *
 *                 Assign pointers into MEM for ScaLAPACK arrays, A is
 *                 allocated starting at position MEM( IPREPAD+1 )
@@ -544,7 +575,7 @@
 *
 *                 Need the Infinity of A for checking
 *
-                  IF( CHECK ) THEN
+                  IF( CHECK .AND. (N .GT. 0 .AND. M .GT. 0) ) THEN
                      CALL PZFILLPAD( ICTXT, MP, NQ, MEM( IPA-IPREPAD ),
      $                               DESCA( LLD_ ), IPREPAD, IPOSTPAD,
      $                               PADVAL )
@@ -588,30 +619,35 @@
 *                 Perform QR factorizations
 *
                   IF( LSAMEN( 2, FACT, 'QR' ) ) THEN
+                     API_NAME = 'PZGEQRF'
                      CALL SLTIMER( 1 )
                      CALL PZGEQRF( M, N, MEM( IPA ), 1, 1, DESCA,
      $                             MEM( IPTAU ), MEM( IPW ), LWORK,
      $                             INFO )
                      CALL SLTIMER( 1 )
                   ELSE IF( LSAMEN( 2, FACT, 'QL' ) ) THEN
+                     API_NAME = 'PZGEQLF'
                      CALL SLTIMER( 1 )
                      CALL PZGEQLF( M, N, MEM( IPA ), 1, 1, DESCA,
      $                             MEM( IPTAU ), MEM( IPW ), LWORK,
      $                             INFO )
                      CALL SLTIMER( 1 )
                   ELSE IF( LSAMEN( 2, FACT, 'LQ' ) ) THEN
+                     API_NAME = 'PZGELQF'
                      CALL SLTIMER( 1 )
                      CALL PZGELQF( M, N, MEM( IPA ), 1, 1, DESCA,
      $                             MEM( IPTAU ), MEM( IPW ), LWORK,
      $                             INFO )
                      CALL SLTIMER( 1 )
                   ELSE IF( LSAMEN( 2, FACT, 'RQ' ) ) THEN
+                     API_NAME = 'PZGERQF'
                      CALL SLTIMER( 1 )
                      CALL PZGERQF( M, N, MEM( IPA ), 1, 1, DESCA,
      $                             MEM( IPTAU ), MEM( IPW ), LWORK,
      $                             INFO )
                      CALL SLTIMER( 1 )
                   ELSE IF( LSAMEN( 2, FACT, 'QP' ) ) THEN
+                     API_NAME = 'PZGEQPF'
                      CALL SLTIMER( 1 )
                      CALL PZGEQPF( M, N, MEM( IPA ), 1, 1, DESCA,
      $                             MEM( IPPIV ), MEM( IPTAU ),
@@ -619,147 +655,221 @@
      $                             LRWORK, INFO )
                      CALL SLTIMER( 1 )
                   ELSE IF( LSAMEN( 2, FACT, 'TZ' ) ) THEN
+                     API_NAME = 'ZDTZRZF'
                      CALL SLTIMER( 1 )
+#ifdef ENABLE_DRIVER_CHECK
                      IF( N.GE.M )
      $                  CALL PZTZRZF( M, N, MEM( IPA ), 1, 1, DESCA,
      $                                MEM( IPTAU ), MEM( IPW ), LWORK,
      $                                INFO )
+#else
+                     IF( N .LT. M ) THEN
+                       WRITE( NOUT, FMT = 9982 )
+                     END IF
+                     CALL PZTZRZF( M, N, MEM( IPA ), 1, 1, DESCA,
+     $                                MEM( IPTAU ), MEM( IPW ), LWORK,
+     $                                INFO )
+#endif
                      CALL SLTIMER( 1 )
                   END IF
 *
                   IF( CHECK ) THEN
 *
-*                    Check for memory overwrite in factorization
+                     IF(INFO .EQ. 0 .AND. N .GT. 0 .AND.
+     $                     M .GT. 0) THEN
 *
-                     CALL PZCHEKPAD( ICTXT, ROUT, MP, NQ,
+*
+*                       Check for memory overwrite in factorization
+*
+                        CALL PZCHEKPAD( ICTXT, ROUT, MP, NQ,
      $                               MEM( IPA-IPREPAD ), DESCA( LLD_ ),
      $                               IPREPAD, IPOSTPAD, PADVAL )
-                     CALL PZCHEKPAD( ICTXT, ROUT, LTAU, 1,
+                        CALL PZCHEKPAD( ICTXT, ROUT, LTAU, 1,
      $                               MEM( IPTAU-IPREPAD ), LTAU,
      $                               IPREPAD, IPOSTPAD, PADVAL )
-                     IF( LSAMEN( 2, FACT, 'QP' ) ) THEN
-                        CALL PZCHEKPAD( ICTXT, ROUT, LIPIV, 1,
+                        IF( LSAMEN( 2, FACT, 'QP' ) ) THEN
+                           CALL PZCHEKPAD( ICTXT, ROUT, LIPIV, 1,
      $                                  MEM( IPPIV-IPREPAD ), LIPIV,
      $                                  IPREPAD, IPOSTPAD, PADVAL )
-                        CALL PZCHEKPAD( ICTXT, ROUT, WORKRFCT-IPOSTPAD,
+                           CALL PZCHEKPAD( ICTXT, ROUT,
+     $                                  WORKRFCT-IPOSTPAD,
      $                                  1, MEM( IPRW-IPREPAD ),
      $                                  WORKRFCT-IPOSTPAD,
      $                                  IPREPAD, IPOSTPAD, PADVAL )
-                     END IF
-                     CALL PZCHEKPAD( ICTXT, ROUT, WORKFCT-IPOSTPAD, 1,
-     $                               MEM( IPW-IPREPAD ),
+                        END IF
+                        CALL PZCHEKPAD( ICTXT, ROUT, WORKFCT-IPOSTPAD,
+     $                               1, MEM( IPW-IPREPAD ),
      $                               WORKFCT-IPOSTPAD, IPREPAD,
      $                               IPOSTPAD, PADVAL )
-                     CALL PZFILLPAD( ICTXT, WORKSIZ-IPOSTPAD, 1,
+                        CALL PZFILLPAD( ICTXT, WORKSIZ-IPOSTPAD, 1,
      $                               MEM( IPW-IPREPAD ),
      $                               WORKSIZ-IPOSTPAD,
      $                               IPREPAD, IPOSTPAD, PADVAL )
 *
-                     IF( LSAMEN( 2, FACT, 'QR' ) ) THEN
+                        IF( LSAMEN( 2, FACT, 'QR' ) ) THEN
 *
-*                       Compute residual = ||A-Q*R|| / (||A||*N*eps)
+*                          Compute residual = ||A-Q*R|| / (||A||*N*eps)
 *
-                        CALL PZGEQRRV( M, N, MEM( IPA ), 1, 1, DESCA,
+                           CALL PZGEQRRV( M, N, MEM( IPA ), 1, 1,
+     $                                 DESCA,
      $                                 MEM( IPTAU ), MEM( IPW ) )
-                        CALL PZLAFCHK( 'No', 'No', M, N, MEM( IPA ), 1,
+                           CALL PZLAFCHK( 'No', 'No', M, N,
+     $                              MEM( IPA ), 1,
      $                              1, DESCA, IASEED, ANORM, FRESID,
      $                              MEM( IPW ) )
-                     ELSE IF( LSAMEN( 2, FACT, 'QL' ) ) THEN
+                        ELSE IF( LSAMEN( 2, FACT, 'QL' ) ) THEN
 *
-*                       Compute residual = ||A-Q*L|| / (||A||*N*eps)
+*                          Compute residual = ||A-Q*L|| / (||A||*N*eps)
 *
-                        CALL PZGEQLRV( M, N, MEM( IPA ), 1, 1, DESCA,
+                           CALL PZGEQLRV( M, N, MEM( IPA ), 1, 1,
+     $                                 DESCA,
      $                                 MEM( IPTAU ), MEM( IPW ) )
-                        CALL PZLAFCHK( 'No', 'No', M, N, MEM( IPA ), 1,
+                           CALL PZLAFCHK( 'No', 'No', M, N,
+     $                              MEM( IPA ), 1,
      $                              1, DESCA, IASEED, ANORM, FRESID,
      $                              MEM( IPW ) )
-                     ELSE IF( LSAMEN( 2, FACT, 'LQ' ) ) THEN
+                        ELSE IF( LSAMEN( 2, FACT, 'LQ' ) ) THEN
 *
-*                       Compute residual = ||A-L*Q|| / (||A||*N*eps)
+*                          Compute residual = ||A-L*Q|| / (||A||*N*eps)
 *
-                        CALL PZGELQRV( M, N, MEM( IPA ), 1, 1, DESCA,
+                           CALL PZGELQRV( M, N, MEM( IPA ), 1, 1,
+     $                                 DESCA,
      $                                 MEM( IPTAU ), MEM( IPW ) )
-                        CALL PZLAFCHK( 'No', 'No', M, N, MEM( IPA ), 1,
+                           CALL PZLAFCHK( 'No', 'No', M, N,
+     $                              MEM( IPA ), 1,
      $                              1, DESCA, IASEED, ANORM, FRESID,
      $                              MEM( IPW ) )
-                     ELSE IF( LSAMEN( 2, FACT, 'RQ' ) ) THEN
+                        ELSE IF( LSAMEN( 2, FACT, 'RQ' ) ) THEN
 *
-*                       Compute residual = ||A-R*Q|| / (||A||*N*eps)
+*                          Compute residual = ||A-R*Q|| / (||A||*N*eps)
 *
-                        CALL PZGERQRV( M, N, MEM( IPA ), 1, 1, DESCA,
+                           CALL PZGERQRV( M, N, MEM( IPA ), 1, 1,
+     $                                 DESCA,
      $                                 MEM( IPTAU ), MEM( IPW ) )
-                        CALL PZLAFCHK( 'No', 'No', M, N, MEM( IPA ), 1,
+                           CALL PZLAFCHK( 'No', 'No', M, N,
+     $                              MEM( IPA ), 1,
      $                              1, DESCA, IASEED, ANORM, FRESID,
      $                              MEM( IPW ) )
-                     ELSE IF( LSAMEN( 2, FACT, 'QP' ) ) THEN
+                        ELSE IF( LSAMEN( 2, FACT, 'QP' ) ) THEN
 *
-*                       Compute residual = ||AP-Q*R|| / (||A||*N*eps)
+*                          Compute residual = ||AP-Q*R|| / (||A||*N*eps)
 *
-                        CALL PZGEQRRV( M, N, MEM( IPA ), 1, 1, DESCA,
+                           CALL PZGEQRRV( M, N, MEM( IPA ), 1, 1,
+     $                                 DESCA,
      $                                 MEM( IPTAU ), MEM( IPW ) )
-                     ELSE IF( LSAMEN( 2, FACT, 'TZ' ) ) THEN
+                        ELSE IF( LSAMEN( 2, FACT, 'TZ' ) ) THEN
 *
-*                       Compute residual = ||A-T*Z|| / (||A||*N*eps)
+*                          Compute residual = ||A-T*Z|| / (||A||*N*eps)
 *
-                        IF( N.GE.M ) THEN
-                           CALL PZTZRZRV( M, N, MEM( IPA ), 1, 1, DESCA,
+                           IF( N.GE.M ) THEN
+                              CALL PZTZRZRV( M, N, MEM( IPA ), 1, 1,
+     $                                    DESCA,
      $                                    MEM( IPTAU ), MEM( IPW ) )
-                        END IF
-                        CALL PZLAFCHK( 'No', 'No', M, N, MEM( IPA ), 1,
+                           END IF
+                           CALL PZLAFCHK( 'No', 'No', M, N,
+     $                                 MEM( IPA ), 1,
      $                                 1, DESCA, IASEED, ANORM, FRESID,
      $                                 MEM( IPW ) )
-                     END IF
+                        END IF
 *
-*                    Check for memory overwrite
+*                       Check for memory overwrite
 *
-                     CALL PZCHEKPAD( ICTXT, ROUTCHK, MP, NQ,
+                        CALL PZCHEKPAD( ICTXT, ROUTCHK, MP, NQ,
      $                               MEM( IPA-IPREPAD ), DESCA( LLD_ ),
      $                               IPREPAD, IPOSTPAD, PADVAL )
-                     CALL PZCHEKPAD( ICTXT, ROUTCHK, LTAU, 1,
+                        CALL PZCHEKPAD( ICTXT, ROUTCHK, LTAU, 1,
      $                               MEM( IPTAU-IPREPAD ), LTAU,
      $                               IPREPAD, IPOSTPAD, PADVAL )
-                     CALL PZCHEKPAD( ICTXT, ROUTCHK, WORKSIZ-IPOSTPAD,
+                        CALL PZCHEKPAD( ICTXT, ROUTCHK,
+     $                               WORKSIZ-IPOSTPAD,
      $                               1, MEM( IPW-IPREPAD ),
      $                               WORKSIZ-IPOSTPAD, IPREPAD,
      $                               IPOSTPAD, PADVAL )
 *
-                     IF( LSAMEN( 2, FACT, 'QP' ) ) THEN
+                        IF( LSAMEN( 2, FACT, 'QP' ) ) THEN
 *
-                        CALL PZQPPIV( M, N, MEM( IPA ), 1, 1, DESCA,
+                           CALL PZQPPIV( M, N, MEM( IPA ), 1, 1, DESCA,
      $                                MEM( IPPIV ) )
 *
-*                       Check for memory overwrite
+*                          Check for memory overwrite
 *
-                        CALL PZCHEKPAD( ICTXT, 'PZQPPIV', MP, NQ,
+                           CALL PZCHEKPAD( ICTXT, 'PZQPPIV', MP, NQ,
      $                                  MEM( IPA-IPREPAD ),
      $                                  DESCA( LLD_ ),
      $                                  IPREPAD, IPOSTPAD, PADVAL )
-                        CALL PZCHEKPAD( ICTXT, 'PZQPPIV', LIPIV, 1,
+                           CALL PZCHEKPAD( ICTXT, 'PZQPPIV', LIPIV, 1,
      $                                  MEM( IPPIV-IPREPAD ), LIPIV,
      $                                  IPREPAD, IPOSTPAD, PADVAL )
 *
-                        CALL PZLAFCHK( 'No', 'No', M, N, MEM( IPA ), 1,
+                           CALL PZLAFCHK( 'No', 'No', M, N,
+     $                                 MEM( IPA ), 1,
      $                                 1, DESCA, IASEED, ANORM, FRESID,
      $                                 MEM( IPW ) )
 *
-*                       Check for memory overwrite
+*                          Check for memory overwrite
 *
-                        CALL PZCHEKPAD( ICTXT, 'PZLAFCHK', MP, NQ,
+                           CALL PZCHEKPAD( ICTXT, 'PZLAFCHK', MP, NQ,
      $                                  MEM( IPA-IPREPAD ),
      $                                  DESCA( LLD_ ),
      $                                  IPREPAD, IPOSTPAD, PADVAL )
-                        CALL PZCHEKPAD( ICTXT, 'PZLAFCHK',
+                           CALL PZCHEKPAD( ICTXT, 'PZLAFCHK',
      $                                  WORKSIZ-IPOSTPAD, 1,
      $                                  MEM( IPW-IPREPAD ),
      $                                  WORKSIZ-IPOSTPAD, IPREPAD,
      $                                  IPOSTPAD, PADVAL )
+
+                        END IF
                      END IF
 *
 *                    Test residual and detect NaN result
 *
-                     IF( LSAMEN( 2, FACT, 'TZ' ) .AND. N.LT.M ) THEN
-                        KSKIP = KSKIP + 1
-                        PASSED = 'BYPASS'
+                     M_INVALID = M.LT.0 .AND.
+     $                      ((INFO.EQ.-1 .AND.
+     $                          LSAMEN( 2, FACT, 'QR')) .OR.
+     $                      (INFO.EQ.-1 .AND.
+     $                          LSAMEN( 2, FACT, 'QL')) .OR.
+     $                      (INFO.EQ.-1 .AND.
+     $                          LSAMEN( 2, FACT, 'LQ')) .OR.
+     $                      (INFO.EQ.-1 .AND.
+     $                          LSAMEN( 2, FACT, 'RQ')) .OR.
+     $                      (INFO.EQ.-1 .AND.
+     $                          LSAMEN( 2, FACT, 'QP')) .OR.
+     $                      (INFO.EQ.-1 .AND.
+     $                          LSAMEN( 2, FACT, 'TZ' )))
+                     N_INVALID = N.LT.0 .AND.
+     $                      ((INFO.EQ.-2 .AND.
+     $                          LSAMEN( 2, FACT, 'QR')) .OR.
+     $                      (INFO.EQ.-2 .AND.
+     $                          LSAMEN( 2, FACT, 'QL')) .OR.
+     $                      (INFO.EQ.-2 .AND.
+     $                          LSAMEN( 2, FACT, 'LQ')) .OR.
+     $                      (INFO.EQ.-2 .AND.
+     $                          LSAMEN( 2, FACT, 'RQ')) .OR.
+     $                      (INFO.EQ.-2 .AND.
+     $                          LSAMEN( 2, FACT, 'QP')) .OR.
+     $                      (INFO.EQ.-2 .AND.
+     $                          LSAMEN( 2, FACT, 'TZ' )))
+*
+                     IF(N.EQ.0 .AND. INFO.EQ.0) THEN
+*                       If N =0 this is the case of
+*                       early return from ScaLAPACK API.
+*                       If there is safe exit from API; pass this case
+                        KPASS = KPASS + 1
+                        WRITE( NOUT, FMT = 9985 ) KPASS, API_NAME
+                        PASSED = 'PASSED'
+                        GO TO 10
+                     ELSE IF(M_INVALID .OR. N_INVALID) THEN
+*                       When N < 0/Invalid, INFO = -2
+*                       When M < 0/Invalid, INFO = -1
+*                       Expected Error code for N < 0
+*                       Hence this case can be passed
+                        KPASS = KPASS + 1
+                        WRITE( NOUT, FMT = 9983 ) KPASS, API_NAME
+                        PASSED = 'PASSED'
+                     ELSE IF( LSAMEN( 2, FACT, 'TZ' ) .AND.
+     $                    (N.LT.M .AND. INFO.EQ.-2 ) ) THEN
+                        KPASS = KPASS + 1
+                        WRITE( NOUT, FMT = 9983 ) KPASS, API_NAME
                      ELSE
                         IF( FRESID.LE.THRESH .AND.
      $                      (FRESID-FRESID).EQ.0.0D+0 ) THEN
@@ -901,6 +1011,16 @@
  9988 FORMAT( I5, ' tests skipped because of illegal input values.' )
  9987 FORMAT( 'END OF TESTS.' )
  9986 FORMAT( A )
+ 9985 FORMAT( '----------Test-',I3,' Passed but no compute was ',
+     $       'performed! [Safe exit from ', A,']-----------')
+ 9984 FORMAT(  A, ' < 0 case detected. ',
+     $        'Instead of driver file, This case will be handled',
+     $        'by the ScaLAPACK API.')
+ 9983 FORMAT( '----------Negative Test-',I3,' Passed with expected',
+     $       ' ERROR CODE in INFO from ', A,']-----------')
+ 9982 FORMAT( ' N < M case detected. ',
+     $        'Instead of driver file, This case will be handled',
+     $        'by the PCTZRZF API.')
 *
       STOP
 *
