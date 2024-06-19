@@ -9,6 +9,8 @@
 *     University of California, Berkeley and
 *     University of Tennessee, Knoxville. 
 *     October 21, 2006
+*     Modifications Copyright (c) 2024 Advanced Micro Devices, Inc.
+*     All rights reserved.
 *
       IMPLICIT NONE
 *
@@ -410,6 +412,19 @@
 *
       CALL SLTIMER( 6 )
       CALL SLTIMER( 1 )
+*
+      IF ( N.LT.0 .AND. INFO.EQ.-4) THEN
+         WRITE( NOUT, FMT = * ) 'PZHEEVR INFO=', INFO
+*        When N < 0/Invalid, PZHEEVR INFO = -4
+*        Expected Error code for N < 0
+*        Hence this case can be passed.
+         WRITE( NOUT, FMT = 9980) 'PZHEEVR'
+         GO TO 150
+      ELSE IF ( INFO.LT.0 ) THEN
+         WRITE( NOUT, FMT = * ) 'PZHEEVR INFO=', INFO
+         RESULT = 1
+         GO TO 150
+      END IF
 *
 *     Indicate that there are no unresolved clusters. 
 *     This is necessary so that the tester 
@@ -822,6 +837,7 @@
  9983 FORMAT( 'ICLUSTR not zero terminated' )
  9982 FORMAT( 'IL, IU, VL or VU altered by PZHEEVR' )
  9981 FORMAT( 'NZ altered by PZHEEVR with JOBZ=N' )
+ 9980 FORMAT(  A, ' returned correct error code. Passing this case.')
 *
 *     End of PZSEPRSUBTST
 *

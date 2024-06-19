@@ -5,6 +5,8 @@
 *     University of California, Berkeley and
 *     University of Tennessee, Knoxville. 
 *     October 21, 2006
+*     Modifications Copyright (c) 2024 Advanced Micro Devices, Inc.
+*     All rights reserved.
 *
       IMPLICIT NONE
 *
@@ -158,8 +160,17 @@
      $                                    MYCOL )
 *
                      IF( MYROW.GE.0 ) THEN
+*        If N < 0 in SEPR.dat file then DESCINIT API sets INFO = -2
                         CALL DESCINIT( DESCA, N, N, NB, NB, 0, 0,
      $                                 CONTEXT, LDA, INFO )
+*        If DESCINIT is returning correct error code then
+*        do nothing
+                        IF( N.LT.0 .AND. INFO.EQ.-2 ) THEN
+                           WRITE( NOUT, FMT = 9999 ) 'N'
+                        ELSE IF( INFO.LT.0 ) THEN
+                           WRITE( NOUT, FMT = 9998 ) 'descriptor'
+                           GO TO 40
+                        END IF
                         CALL PDLASIZESEPR( DESCA, IPREPAD, IPOSTPAD,
      $                                     SIZEMQRLEFT, SIZEMQRRIGHT,
      $                                     SIZEQRF, SIZETMS, SIZEQTQ,
@@ -219,6 +230,10 @@
       END IF
 *
       RETURN
+ 9999 FORMAT(  A, ' < 0 case detected (Negative Test). ',
+     $        'Instead of driver file, This case will be handled',
+     $        'by the ScaLAPACK API.')
+ 9998 FORMAT( 'Bad ', A10, ' parameters: going on to next test case.' )
 *
 *     End of PDSEPRREQ
 *
