@@ -6,6 +6,7 @@
 *     University of Tennessee, Knoxville, Oak Ridge National Laboratory,
 *     and University of California, Berkeley.
 *     May 1, 1997
+*     Modifications Copyright (c) 2024 Advanced Micro Devices, Inc. All rights reserved.
 *
 *     .. Scalar Arguments ..
       CHARACTER*1        AFORM, DIAG
@@ -119,7 +120,7 @@
       PARAMETER          ( ONE = 1.0E+0, TWO = 2.0E+0, ZERO = 0.0E+0 )
 *     ..
 *     .. Local Scalars ..
-      LOGICAL            SYMM, HERM, TRAN
+      LOGICAL            SYMM, HERM, TRAN, EXT_FLAG
       INTEGER            I, IC, IK, INFO, IOFFC, IOFFR, IR, J, JK,
      $                   JUMP1, JUMP2, JUMP3, JUMP4, JUMP5, JUMP6,
      $                   JUMP7, MAXMN, MEND, MOFF, MP, MRCOL, MRROW,
@@ -142,8 +143,15 @@
 *     .. External Functions ..
       LOGICAL            LSAME
       INTEGER            ICEIL, NUMROC
+      INTEGER            CNT1, CNT2, CNT, TOT_CNT, DIV_FACTOR, REGION
       REAL               PSRAND
       EXTERNAL           ICEIL, NUMROC, LSAME, PSRAND
+*
+      CHARACTER*80 arg
+      INTEGER numArgs, count
+      LOGICAL :: help_flag = .false.
+      INTEGER :: INF_PERCENT = 0
+      INTEGER :: NAN_PERCENT = 0
 *     ..
 *     .. Executable Statements ..
 *
@@ -154,6 +162,64 @@
       SYMM = LSAME( AFORM, 'S' )
       HERM = LSAME( AFORM, 'H' )
       TRAN = LSAME( AFORM, 'T' )
+      EXT_FLAG = .FALSE.
+
+*     Take command-line arguments if requested
+*
+
+*     Get the number of command-line arguments
+      numArgs = command_argument_count()
+
+*     Process command-line arguments
+      do count = 1, numArgs, 2
+         call get_command_argument(count, arg)
+         select case (arg)
+            case ("-h", "--help")
+               help_flag = .true.
+               exit
+            case ("-inf")
+               call get_command_argument(count + 1, arg)
+               read(arg, *) INF_PERCENT
+               IF (INF_PERCENT .GT. 0) THEN
+                  EXT_FLAG = .TRUE.
+               END IF
+            case ("-nan")
+               call get_command_argument(count + 1, arg)
+               read(arg, *) NAN_PERCENT
+               IF (NAN_PERCENT .GT. 0) THEN
+                  EXT_FLAG = .TRUE.
+               END IF
+            case default
+               print *, "Invalid option: ", arg
+               help_flag = .true.
+               exit
+         end select
+      end do
+
+      IF ( INF_PERCENT + NAN_PERCENT > 100) THEN
+         print *,"Sum of INF and NaN is", INF_PERCENT+NAN_PERCENT,"%"
+         help_flag = .true.
+      END IF
+      IF ( INF_PERCENT < 0 .OR. NAN_PERCENT < 0) THEN
+         print *, "Negative INF / NaN value is not allowed"
+         help_flag = .true.
+      END IF
+
+*     Display help message if requested
+      IF (help_flag .AND. IAM.EQ.0) THEN
+         print *, ""
+         print *, "Options:"
+         print *, "  -h, --help            Display this help message"
+         print *, "  -inf <int>            INF percentage in input",
+     $               " matrix (default: 0 %)"
+         print *, "  -nan <int>            NaN percentage in input",
+     $               " matrix (default: 0 %)"
+         print *, ""
+         print *, "  Note: INF + NaN values in input matrix",
+     $               " should be in the range of 0-100 %"
+         print *, ""
+         stop
+      END IF
 *
       INFO = 0
       IF( .NOT.LSAME( DIAG, 'D' ) .AND.
@@ -213,9 +279,46 @@
       JSEED(1) = ISEED
       JSEED(2) = 0
 *
+*     Extreme-value parameter caclculations
+      IF( LSAME( DIAG, 'D' ) ) THEN
+             DIV_FACTOR = 2
+      ELSE
+             DIV_FACTOR = 4
+      END IF
+*     Find type of matrix to identify where to fill INF/NAN,
+*     If UPPER_TRIANGULAR_MATRIX., start above DIAG
+      IF( LSAME(AFORM, 'U' ) ) THEN
+           REGION = (IRNUM * ICNUM)/DIV_FACTOR
+*     If LOWER_TRIANGULAR/GENERAL MATRIX, start at beginning
+      ELSE
+           REGION = 1
+      END IF
+      IF (EXT_FLAG) THEN
+           ZERO1 = 0.0E0
+           ONE1 = 1.0E0
+*          Calculate the number of NANs/INFs per grid
+           CNT1 = (IRNUM * ICNUM * NAN_PERCENT)/100
+           CNT2 = (IRNUM * ICNUM * INF_PERCENT)/100
+           CNT1 = CEILING(REAL(CNT1))
+           CNT2 = CEILING(REAL(CNT2))
+*          When Percentage requested by the user is low
+*          Replace atleast one element with NAN/INF
+*          Applicable for smaller matrices [2x2]
+           IF(NAN_PERCENT .GT. 0 .AND. CNT1 .EQ. 0 ) THEN
+             CNT1 = CNT1 + 1
+             PRINT *, 'NAN Percentage is too low,',
+     $                'Including one NAN element'
+           END IF
+           IF(INF_PERCENT .GT. 0 .AND. CNT2 .EQ. 0 ) THEN
+             CNT2 = CNT2 + 1
+             PRINT *, 'INF Percentage is too low,',
+     $                'Including one INF element'
+           END IF
+      END IF
+*
 *     Symmetric or Hermitian matrix will be generated.
 *
-      IF( SYMM.OR.HERM ) THEN
+      IF( (SYMM.OR.HERM) .AND. .NOT.(EXT_FLAG) ) THEN
 *
 *        First, generate the lower triangular part (with diagonal block)
 *
@@ -397,7 +500,8 @@
 *
 *     (Conjugate) Transposed matrix A will be generated.
 *
-      ELSE IF( TRAN .OR. LSAME( AFORM, 'C' ) ) THEN
+      ELSE IF(( TRAN .OR. LSAME( AFORM, 'C' )) .AND.
+     $              .NOT.(EXT_FLAG) ) THEN
 *
          JUMP1 = 1
          JUMP2 = 2*NQNB
@@ -470,6 +574,9 @@
 *     A random matrix is generated.
 *
       ELSE
+
+         TOT_CNT = 0
+         CNT = 0
 *
          JUMP1 = 1
          JUMP2 = 2*NPMB
@@ -506,8 +613,21 @@
                   IOFFR = ((IR-1)*NPROW+MRROW) * MB
                   DO 250 J = 1, MB
                      IF( IK .GT. IRNUM ) GO TO 270
-                     A(IK,JK) = CMPLX( ONE - TWO*PSRAND(0),
+*                    Replace with NANs/INFs for extreme values
+                     IF(EXT_FLAG .AND. CNT .LE. (CNT1 + CNT2) .AND.
+     $                    TOT_CNT .GE. REGION) THEN
+                        IF ( CNT .LT. CNT1) THEN
+                           A(IK, JK) = CMPLX(ZERO1/ZERO1,ZERO1/ZERO1)
+                        ELSE IF ( CNT .LT. (CNT1 + CNT2)) THEN
+                           A(IK, JK) = CMPLX(ONE1/ZERO1, ONE1/ZERO1)
+                        END IF
+                        CNT = CNT + 1
+                        TOT_CNT = TOT_CNT + 1
+                     ELSE
+                        A(IK,JK) = CMPLX( ONE - TWO*PSRAND(0),
      $                                 ONE - TWO*PSRAND(0) )
+                        TOT_CNT = TOT_CNT + 1
+                     END IF
                      IK = IK + 1
   250             CONTINUE
                   CALL JUMPIT( IA2, IC2, IB1, IRAN2 )
@@ -544,6 +664,9 @@
             RETURN
          END IF
 *
+
+         CNT = 0
+         TOT_CNT = 0
          MAXMN = MAX(M, N)
          JK    = 1
          DO 340 IC = NOFF+1, NEND
@@ -554,12 +677,23 @@
                IF( IOFFC.EQ.IOFFR ) THEN
                   DO 310 J = 0, MB-1
                      IF( IK .GT. IRNUM ) GO TO 330
-                     IF( HERM ) THEN
+                     IF(EXT_FLAG .AND. CNT .LE. (CNT1 + CNT2)
+     $                    .AND. TOT_CNT .GT. (N/2) ) THEN
+                         IF ( CNT .LT. CNT1) THEN
+                           A(IK, JK+J) = CMPLX(ZERO1/ZERO1,ZERO1/ZERO1)
+                         ELSE IF ( CNT .LT. (CNT1 + CNT2)) THEN
+                           A(IK, JK+J) = CMPLX(ONE1/ZERO1, ONE1/ZERO1)
+                         END IF
+                         CNT = CNT + 1
+                         TOT_CNT = TOT_CNT + 1
+                     ELSE IF( HERM ) THEN
                         A(IK,JK+J) = CMPLX(
      $                             ABS(REAL(A(IK,JK+J)))+2*MAXMN, ZERO )
+                        TOT_CNT = TOT_CNT + 1
                      ELSE
                         A(IK,JK+J) = CMPLX( ABS(REAL(A(IK,JK+J)))+MAXMN,
      $                                   ABS(AIMAG(A(IK,JK+J)))+ MAXMN )
+                        TOT_CNT = TOT_CNT + 1
                      END IF
                      IK = IK + 1
   310             CONTINUE
