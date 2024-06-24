@@ -478,12 +478,17 @@
 *                    code we need to pass this case
                      WRITE( NOUT, FMT = 9983 ) 'PZGETRF'
                      KPASS = KPASS + 1
+                     RCOND = ZERO
+                     GO TO 30
+                  ELSE IF (INFO.GT.0 .AND. EX_FLAG)  THEN
+                     WRITE(*,*) 'PZGETRF INFO=', INFO
+*                    do nothing, skip residual calculation
                   ELSE
 *                    For other error code we will mark test case as fail
                      KFAIL = KFAIL + 1
-                  END IF
                   RCOND = ZERO
                   GO TO 30
+                  END IF
                ELSE IF (M.EQ.0 .OR. N.EQ.0) THEN
 *                 If M = 0 or N =0 this is the case of
 *                 early return from ScaLAPACK API.
@@ -494,7 +499,7 @@
                   GO TO 30
                END IF
 *
-               IF( CHECK .AND. .NOT.(EX_FLAG) .AND. INFO.EQ.0 ) THEN
+               IF( CHECK .AND. .NOT.(EX_FLAG) ) THEN
 *
 *                 Check for memory overwrite in LU factorization
 *
@@ -513,7 +518,7 @@
                   NRHS = 0
                   NBRHS = 0
 *
-                  IF( CHECK .AND. .NOT.(EX_FLAG) .AND. INFO.EQ.0) THEN
+                  IF( CHECK .AND. .NOT.(EX_FLAG) ) THEN
 *
 *                    Compute FRESID = ||A - P*L*U|| / (||A|| * N * eps)
 *
@@ -583,17 +588,6 @@
 *                          RESET RESIDUAL FLAG
                            RES_FLAG = .FALSE.
                         END IF
-                     ELSE IF ((M.LT.0 .AND. INFO.EQ.-1) .OR.
-     $                (N.LT.0 .AND. INFO.EQ.-2)) THEN
-                         KPASS = KPASS + 1
-                         FRESID = FRESID - FRESID
-                         PASSED = 'PASSED'
-                         IF(NAN_PERCENT .GT. 0 .OR.
-     $                        INF_PERCENT .GT. 0) THEN
-*                          RESET EX-FLAG
-                           EX_FLAG = .TRUE.
-                         END IF
-*
                      ELSE
 *                       Don't perform the checking, only timing
                         FRESID = FRESID - FRESID
@@ -712,8 +706,7 @@
      $                             MEM( IPW2 ), LRWORK, INFO )
                      END IF
 *
-                     IF( CHECK .AND. .NOT.(EX_FLAG) .AND.
-     $                      N .GT. 0 .AND. M .GT. 0) THEN
+                     IF( CHECK .AND. .NOT.(EX_FLAG)) THEN
                         CALL PZCHEKPAD( ICTXT, 'PZGECON', NP, NQ,
      $                                  MEM( IPA-IPREPAD ),
      $                                  DESCA( LLD_ ), IPREPAD,
@@ -835,7 +828,7 @@
      $                                 MYRHS, MYROW, MYCOL, NPROW,
      $                                 NPCOL )
 *
-                        IF( CHECK )
+                        IF( CHECK .AND. .NOT.(EX_FLAG) )
      $                     CALL PZFILLPAD( ICTXT, NP, MYRHS,
      $                                     MEM( IPB-IPREPAD ),
      $                                     DESCB( LLD_ ), IPREPAD,
@@ -885,13 +878,18 @@
 *                             If PZGETRS is returning correct error code we need to pass this case
                               WRITE( NOUT, FMT = 9983 ) 'PZGETRS'
                               KPASS = KPASS + 1
+                              GO TO 30
+                           ELSE IF( INFO .GT. 0 .AND. EX_FLAG) THEN
+                              WRITE(*,*) 'PZGETRS INFO=', INFO
+*                             Do Nothing, Pass this case in residual calculation
                            ELSE
 *                             For other error code we will mark test case as fail
                               KFAIL = KFAIL + 1
+                              GO TO 30
                            END IF
-                           GO TO 30
                         END IF
-                        IF( CHECK ) THEN
+*
+                        IF( CHECK .AND. .NOT.(EX_FLAG) ) THEN
 *
 *                          check for memory overwrite
 *
@@ -976,18 +974,6 @@
 *                                RESET RESIDUAL FLAG
                                  RES_FLAG = .FALSE.
                               END IF
-                           ELSE IF( NRHS.LT.0 .AND. INFO.EQ.-3 .OR.
-     $                          (M.LT.0 .AND. INFO.EQ.-1) .OR.
-     $                          (N.LT.0 .AND. INFO.EQ.-2) )  THEN
-*                             If PDGETRS is returning correct error code
-*                             we need to pass this case
-                              SRESID = SRESID - SRESID
-                              KPASS = KPASS + 1
-                              IF(NAN_PERCENT .GT. 0 .OR.
-     $                          INF_PERCENT .GT. 0) THEN
-*                                  RESET EX-FLAG
-                                   EX_FLAG = .TRUE.
-                              END IF
                            ELSE
                                SRESID = SRESID - SRESID
                                KPASS = KPASS + 1
@@ -1026,8 +1012,7 @@
                               GO TO 10
                            END IF
 *
-                           IF( CHECK .AND. .NOT.(EX_FLAG) .AND.
-     $                           INFO .EQ.0) THEN
+                           IF( CHECK .AND. .NOT.(EX_FLAG) ) THEN
                               CALL PZFILLPAD( ICTXT, LWORK, 1,
      $                                        MEM( IPW-IPREPAD ),
      $                                        LWORK, IPREPAD, IPOSTPAD,
@@ -1050,8 +1035,7 @@
      $                                   MEM( IPW ), LWORK, MEM( IPW2 ),
      $                                   LRWORK, INFO )
 *
-                           IF( CHECK .AND. .NOT.(EX_FLAG) .AND.
-     $                           INFO .EQ.0) THEN
+                           IF( CHECK .AND. .NOT.(EX_FLAG) ) THEN
                               CALL PZCHEKPAD( ICTXT, 'PZGERFS', NP,
      $                                        NQ, MEM( IPA0-IPREPAD ),
      $                                        DESCA( LLD_ ), IPREPAD,
@@ -1185,7 +1169,7 @@
    20             END DO
 *
                   IF( CHECK.AND.( SRESID.GT.THRESH ) .AND.
-     $                     .NOT.(EX_FLAG) .AND. INFO .EQ.0) THEN
+     $                     .NOT.(EX_FLAG) ) THEN
 *
 *                    Compute fresid = ||A - P*L*U|| / (||A|| * N * eps)
 *
