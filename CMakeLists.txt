@@ -1,4 +1,4 @@
-##Copyright (C) 2021-2023, Advanced Micro Devices, Inc. All rights reserved.##
+##Copyright (C) 2021-2024, Advanced Micro Devices, Inc. All rights reserved.##
 
 cmake_minimum_required(VERSION 3.20)
 project(SCALAPACK C Fortran)
@@ -444,6 +444,23 @@ if(WIN32 AND BUILD_SHARED_LIBS)
   set (CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 endif ()
 
+# Option to choose whether to compile the source code and the test framework. By default both are ON.
+option(SCALAPACK_BUILD_SOURCE "Build all source of the ScaLAPACK library" ON)
+option(SCALAPACK_BUILD_TESTS "Build all tests of the ScaLAPACK library" ON)
+
+if(SCALAPACK_BUILD_SOURCE STREQUAL "OFF" AND SCALAPACK_BUILD_TESTS STREQUAL "ON")
+  if(NOT SCALAPACK_LIBRARY_PATH)
+    message (FATAL_ERROR "Please provide SCALAPACK_LIBRARY_PATH")
+  endif()
+endif()
+
+# If user want to build ScaLAPACK source code, unset precompiled SCALAPACK_LIBRARY_PATH variable
+if(SCALAPACK_BUILD_SOURCE STREQUAL "ON")
+  if(SCALAPACK_LIBRARY_PATH)
+    UNSET(SCALAPACK_LIBRARY_PATH CACHE)
+  endif()
+endif()
+
 if (UNIX)
   if(CUSTOM_BLACS_FOUND)
     add_library(scalapack ${dtl} ${framework} ${framework-C} ${tools} ${tools-C} ${extra_lapack} ${pblas} ${pblas-F} ${ptzblas} ${ptools} ${pbblas} ${redist} ${src} ${src-C})
@@ -451,10 +468,26 @@ if (UNIX)
     target_link_libraries( scalapack ${BLACS_LIBRARY} ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES})
     scalapack_install_library(scalapack)
   else(CUSTOM_BLACS_FOUND)
-    add_library(scalapack ${dtl} ${framework} ${framework-C} ${blacs} ${tools} ${tools-C} ${extra_lapack} ${pblas} ${pblas-F} ${ptzblas} ${ptools} ${pbblas} ${redist} ${src} ${src-C})
-    custom_macros_for_each_scalapack_source (scalapack)
-    target_link_libraries( scalapack ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES})
-    scalapack_install_library(scalapack)
+    if(SCALAPACK_BUILD_SOURCE)
+      add_library(scalapack ${dtl} ${framework} ${framework-C} ${blacs} ${tools} ${tools-C} ${extra_lapack} ${pblas} ${pblas-F} ${ptzblas} ${ptools} ${pbblas} ${redist} ${src} ${src-C})
+      custom_macros_for_each_scalapack_source (scalapack)
+      target_link_libraries( scalapack ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES})
+      scalapack_install_library(scalapack)
+    else()
+      if(BUILD_SHARED_LIBS)
+        add_library(scalapack SHARED IMPORTED)
+        set_target_properties(scalapack PROPERTIES
+        IMPORTED_LOCATION "${SCALAPACK_LIBRARY_PATH}/libscalapack.so"
+        )
+      else()
+        add_library(scalapack STATIC IMPORTED)
+        set_target_properties(scalapack PROPERTIES
+        IMPORTED_LOCATION "${SCALAPACK_LIBRARY_PATH}/libscalapack.a"
+        )
+      endif()
+      custom_macros_for_each_scalapack_source (scalapack)
+      target_link_libraries( scalapack INTERFACE ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES})
+    endif()
   endif(CUSTOM_BLACS_FOUND)
   if(ENABLE_COVERAGE)
     target_compile_options(scalapack PUBLIC -fprofile-arcs  -ftest-coverage)
@@ -470,11 +503,29 @@ else (UNIX) # Need to separate Fortran and C Code
         target_link_directories( scalapack PUBLIC ${CMAKE_IFORT_LIBDEPS_DIR})
         scalapack_install_library(scalapack)
       else(CUSTOM_BLACS_FOUND)
-        add_library(scalapack-F OBJECT  ${pblas-F} ${pbblas} ${ptzblas} ${tools} ${framework} ${src} ${extra_lapack} )
-        add_library(scalapack $<TARGET_OBJECTS:scalapack-F> ${blacs} ${tools-C}  ${dtl} ${framework-C} ${pblas} ${ptools} ${redist} ${src-C})
-        target_link_libraries( scalapack ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES} ${MPI_LIBRARY})
-        target_link_directories( scalapack PUBLIC ${CMAKE_IFORT_LIBDEPS_DIR})
-        scalapack_install_library(scalapack)
+        if(SCALAPACK_BUILD_SOURCE)
+          add_library(scalapack-F OBJECT  ${pblas-F} ${pbblas} ${ptzblas} ${tools} ${framework} ${src} ${extra_lapack} )
+          add_library(scalapack $<TARGET_OBJECTS:scalapack-F> ${blacs} ${tools-C}  ${dtl} ${framework-C} ${pblas} ${ptools} ${redist} ${src-C})
+          target_link_libraries( scalapack ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES} ${MPI_LIBRARY})
+          target_link_directories( scalapack PUBLIC ${CMAKE_IFORT_LIBDEPS_DIR})
+          scalapack_install_library(scalapack)
+        else()
+          if(BUILD_SHARED_LIBS)
+            add_library(scalapack SHARED IMPORTED)
+            set_target_properties(scalapack PROPERTIES
+            IMPORTED_LOCATION "${SCALAPACK_LIBRARY_PATH}/scalapack.dll"
+            IMPORTED_IMPLIB "${SCALAPACK_LIBRARY_PATH}/scalapack.lib"
+            )
+            file(COPY ${SCALAPACK_LIBRARY_PATH}/scalapack.dll
+            DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/Testing/Release)
+          else()
+            add_library(scalapack STATIC IMPORTED)
+            set_target_properties(scalapack PROPERTIES
+            IMPORTED_LOCATION "${SCALAPACK_LIBRARY_PATH}/scalapack.lib"
+            )
+          endif()
+          target_link_libraries( scalapack INTERFACE ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES} ${MPI_LIBRARY})
+        endif()
       endif(CUSTOM_BLACS_FOUND)
     else (CMAKE_C_COMPILER_ID MATCHES Clang)
         # create C objects and add to scalapack library first
@@ -487,18 +538,35 @@ else (UNIX) # Need to separate Fortran and C Code
         target_link_directories( scalapack PUBLIC ${CMAKE_IFORT_LIBDEPS_DIR})
         scalapack_install_library(scalapack)
       else(CUSTOM_BLACS_FOUND)
-        add_library(scalapack-C OBJECT ${blacs} ${tools-C} ${dtl} ${framework-C} ${pblas} ${ptools} ${redist} ${src-C})
-        target_link_libraries( scalapack-C ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES} ${MPI_LIBRARY})
-        target_link_directories( scalapack-C PUBLIC ${CMAKE_IFORT_LIBDEPS_DIR})
-        add_library(scalapack $<TARGET_OBJECTS:scalapack-C> ${pblas-F} ${pbblas} ${ptzblas} ${tools} ${framework} ${src} ${extra_lapack} )
-        target_link_libraries( scalapack ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES} ${MPI_LIBRARY})
-        target_link_directories( scalapack PUBLIC ${CMAKE_IFORT_LIBDEPS_DIR})
-        scalapack_install_library(scalapack)
+        if(SCALAPACK_BUILD_SOURCE)
+          add_library(scalapack-C OBJECT ${blacs} ${tools-C} ${dtl} ${framework-C} ${pblas} ${ptools} ${redist} ${src-C})
+          target_link_libraries( scalapack-C ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES} ${MPI_LIBRARY})
+          target_link_directories( scalapack-C PUBLIC ${CMAKE_IFORT_LIBDEPS_DIR})
+          add_library(scalapack $<TARGET_OBJECTS:scalapack-C> ${pblas-F} ${pbblas} ${ptzblas} ${tools} ${framework} ${src} ${extra_lapack} )
+          target_link_libraries( scalapack ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES} ${MPI_LIBRARY})
+          target_link_directories( scalapack PUBLIC ${CMAKE_IFORT_LIBDEPS_DIR})
+          scalapack_install_library(scalapack)
+        else()
+          if(BUILD_SHARED_LIBS)
+            add_library(scalapack SHARED IMPORTED)
+            set_target_properties(scalapack PROPERTIES
+            IMPORTED_LOCATION "${SCALAPACK_LIBRARY_PATH}/scalapack.dll"
+            IMPORTED_IMPLIB "${SCALAPACK_LIBRARY_PATH}/scalapack.lib"
+            )
+            file(COPY ${SCALAPACK_LIBRARY_PATH}/scalapack.dll
+            DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/Testing/Release)
+          else()
+            add_library(scalapack STATIC IMPORTED)
+            set_target_properties(scalapack PROPERTIES
+            IMPORTED_LOCATION "${SCALAPACK_LIBRARY_PATH}/scalapack.lib"
+            )
+          endif()
+          target_link_libraries( scalapack INTERFACE ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES} ${MPI_LIBRARY})
+        endif()
       endif(CUSTOM_BLACS_FOUND)
     endif ()
 endif (UNIX)
 
-option(SCALAPACK_BUILD_TESTS "Build all tests of the ScaLAPACK library" ON)
 if(${SCALAPACK_BUILD_TESTS})
   add_subdirectory(TESTING)
 endif()
@@ -534,8 +602,9 @@ INCLUDE(CPack)
 
 # --------------------------------------------------
 
-
+if(SCALAPACK_BUILD_SOURCE)
 export(TARGETS scalapack FILE scalapack-targets.cmake)
+endif()
 
 if( NOT LAPACK_FOUND )
  install(FILES
@@ -563,7 +632,8 @@ install(FILES
   DESTINATION lib/cmake/scalapack-${SCALAPACK_VERSION}
   )
 
-install(EXPORT scalapack-targets
-  DESTINATION lib/cmake/scalapack-${SCALAPACK_VERSION})
-
+ if(SCALAPACK_BUILD_SOURCE)
+ install(EXPORT scalapack-targets
+   DESTINATION lib/cmake/scalapack-${SCALAPACK_VERSION})
+ endif()
 file(COPY scalapack_test.sh DESTINATION ${SCALAPACK_BINARY_DIR})
