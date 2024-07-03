@@ -4,6 +4,7 @@
 *     University of Tennessee, Knoxville, Oak Ridge National Laboratory,
 *     and University of California, Berkeley.
 *     May 28, 2001
+*     Modifications Copyright (c) 2024 Advanced Micro Devices, Inc. All rights reserved.
 *
 *  Purpose
 *  =======
@@ -59,6 +60,7 @@
 *
 *  =====================================================================
 *
+      use,intrinsic :: ieee_arithmetic
 *     .. Parameters ..
       INTEGER            BLOCK_CYCLIC_2D, CSRC_, CTXT_, DLEN_, DTYPE_,
      $                   LLD_, MB_, M_, NB_, N_, RSRC_
@@ -133,6 +135,16 @@
 *     ..
 *     .. Executable Statements ..
 *
+*     Take command-line arguments if requested
+      CHARACTER*80 arg
+      INTEGER numArgs, count
+      LOGICAL :: help_flag = .FALSE.
+      LOGICAL :: EX_FLAG = .FALSE., RES_FLAG = .FALSE.
+      INTEGER :: INF_PERCENT = 0
+      INTEGER :: NAN_PERCENT = 0
+      DOUBLE PRECISION :: X
+
+*
 *     Get starting information
 *
 #ifdef DYNAMIC_WORK_MEM_ALLOC
@@ -147,6 +159,35 @@
      $               NNBR, NBRVAL, NTESTS, NGRIDS, PVAL, NTESTS, QVAL,
      $               NTESTS, THRESH, MEM, IAM, NPROCS )
       CHECK = ( THRESH.GE.0.0E+0 )
+
+*     Get the number of command-line arguments
+      numArgs = command_argument_count()
+
+*     Process command-line arguments
+      do count = 1, numArgs, 2
+         call get_command_argument(count, arg)
+         select case (arg)
+            case ("-h", "--help")
+                  help_flag = .true.
+                  exit
+            case ("-inf")
+                  call get_command_argument(count + 1, arg)
+                  read(arg, *) INF_PERCENT
+                  IF (INF_PERCENT .GT. 0) THEN
+                     EX_FLAG = .TRUE.
+                  END IF
+            case ("-nan")
+                  call get_command_argument(count + 1, arg)
+                  read(arg, *) NAN_PERCENT
+                  IF (NAN_PERCENT .GT. 0) THEN
+                     EX_FLAG = .TRUE.
+                  END IF
+            case default
+                  print *, "Invalid option: ", arg
+                  help_flag = .true.
+                  exit
+            end select
+      end do
 *
 *     Print headings
 *
@@ -207,15 +248,17 @@
 *           Make sure matrix information is correct
 *
             IERR( 1 ) = 0
-            IF( M.LT.1 ) THEN
+#ifdef ENABLE_DRIVER_CHECK
+            IF( M.LT.0 ) THEN
                IF( IAM.EQ.0 )
      $            WRITE( NOUT, FMT = 9999 ) 'MATRIX', 'M', M
                IERR( 1 ) = 1
-            ELSE IF( N.LT.1 ) THEN
+            ELSE IF( N.LT.0 ) THEN
                IF( IAM.EQ.0 )
      $            WRITE( NOUT, FMT = 9999 ) 'MATRIX', 'N', N
                IERR( 1 ) = 1
             END IF
+#endif
 *
 *           Make sure no one had error
 *
@@ -281,12 +324,35 @@
 *
                CALL IGSUM2D( ICTXT, 'All', ' ', 1, 1, IERR, 1, -1, 0 )
 *
+
+#ifdef ENABLE_DRIVER_CHECK
                IF( IERR( 1 ).LT.0 ) THEN
                   IF( IAM.EQ.0 )
      $               WRITE( NOUT, FMT = 9997 ) 'descriptor'
                   KSKIP = KSKIP + 1
                   GO TO 70
                END IF
+#else
+*              If M < 0, DESCINIT API sets IERR( 1 ) = -2
+*              If N < 0, DESCINIT API sets IERR( 1 ) = -3
+*              When M/N < 0, LDA is Negative, DESCINIT IERR( 1 ) = -8
+               IF( M.LT.0 .AND. (IERR( 1 ).EQ.-2 .OR.
+     $             IERR( 1 ).EQ. -8 .OR. IERR(1).EQ.-12 )) THEN
+*                 If DESCINIT is returning correct error code then
+*                 do nothing
+                  WRITE( NOUT, FMT = 9985 ) 'M'
+               ELSE IF (N.LT.0 .AND. (IERR( 1 ).EQ.-3 .OR.
+     $             IERR( 1 ).EQ. -8 .OR. IERR(1).EQ.-12 )) THEN
+*                 If DESCINIT is returning correct error code then
+*                 do nothing
+                  WRITE( NOUT, FMT = 9985 ) 'N'
+               ELSE IF( IERR( 1 ).LT.0 ) THEN
+                  IF( IAM.EQ.0 )
+     $               WRITE( NOUT, FMT = 9997 ) 'descriptor'
+                  KSKIP = KSKIP + 1
+                  GO TO 70
+               END IF
+#endif
 *
                DO 60 ISCALE = 1, 3
 *
@@ -323,7 +389,7 @@
                      GO TO 70
                   END IF
 *
-                  IF( CHECK ) THEN
+                  IF( CHECK .AND. M.GT.0 .AND. N.GT.0 ) THEN
                      CALL PDFILLPAD( ICTXT, MP, NQ, MEM( IPA-IPREPAD ),
      $                               DESCA( LLD_ ), IPREPAD, IPOSTPAD,
      $                               PADVAL )
@@ -335,10 +401,12 @@
 *
 *                 Generate the matrix A and calculate its 1-norm
 *
-                  CALL PDQRT13( ISCALE, M, N, MEM( IPA ), 1, 1,
+                 IF(M.GT.0 .AND. N.GT.0 ) THEN
+                   CALL PDQRT13( ISCALE, M, N, MEM( IPA ), 1, 1,
      $                          DESCA, ANORM, IASEED, MEM( IPW ) )
+                  END IF
 *
-                  IF( CHECK ) THEN
+                  IF( CHECK .AND. M.GT.0 .AND. N.GT.0 ) THEN
                      CALL PDCHEKPAD( ICTXT, 'PDQRT13', MP, NQ,
      $                               MEM( IPA-IPREPAD ), DESCA( LLD_ ),
      $                               IPREPAD, IPOSTPAD, PADVAL )
@@ -399,12 +467,41 @@
                            CALL IGSUM2D( ICTXT, 'All', ' ', 2, 1, IERR,
      $                                   2, -1, 0 )
 *
+#ifdef ENABLE_DRIVER_CHECK
                            IF( IERR( 1 ).LT.0 .OR. IERR( 2 ).LT.0 ) THEN
                               IF( IAM.EQ.0 )
      $                           WRITE( NOUT, FMT = 9997 ) 'descriptor'
                               KSKIP = KSKIP + 1
                               GO TO 30
                            END IF
+#else
+                           IF (NRHS.LT.0 .AND. (IERR( 1 ).EQ.-3 .OR.
+     $                           IERR(1) .EQ. -12)) THEN
+*                             If DESCINIT is returns correct error code then
+*                             do nothing
+                              WRITE( NOUT, FMT = 9985 ) 'NRHS'
+                           ELSE IF (N.LT.0 .AND. (IERR( 1 ).EQ.-2 .OR.
+     $                           IERR( 1 ).EQ. -8 .OR.
+     $                           IERR( 2 ).EQ.-2 .OR.
+     $                           IERR( 2 ).EQ. -8) ) THEN
+*                               If DESCINIT is returns correct error code then
+*                               do nothing
+                                WRITE( NOUT, FMT = 9985 ) 'N'
+                           ELSE IF (M.LT.0 .AND. (IERR( 1 ).EQ.-2 .OR.
+     $                           IERR( 1 ).EQ. -8 .OR.
+     $                           IERR( 2 ).EQ. -2 .OR.
+     $                           IERR( 2 ).EQ. -8)) THEN
+*                               If DESCINIT is returns correct error code then
+*                               do nothing
+                                WRITE( NOUT, FMT = 9985 ) 'M'
+                           ELSE IF( IERR( 1 ).LT.0 .OR.
+     $                      IERR( 2 ).LT.0 ) THEN
+                              IF( IAM.EQ.0 )
+     $                           WRITE( NOUT, FMT = 9997 ) 'descriptor'
+                              KSKIP = KSKIP + 1
+                              GO TO 30
+                           END IF
+#endif
 *
 *                          Check for enough memory
 *
@@ -436,8 +533,10 @@
 *
 *                          Generate RHS
 *
-                           IF( TPSD ) THEN
-                              CALL PDMATGEN( ICTXT, 'No', 'No',
+                           IF (M.GT.0 .AND. N.GT.0 .AND.
+     $                                 NRHS.GT.0) THEN
+                             IF( TPSD ) THEN
+                               CALL PDMATGEN( ICTXT, 'No', 'No',
      $                                       DESCW( M_ ), DESCW( N_ ),
      $                                       DESCW( MB_ ), DESCW( NB_ ),
      $                                       MEM( IPW ), DESCW( LLD_ ),
@@ -445,7 +544,7 @@
      $                                       DESCW( CSRC_ ), IBSEED, 0,
      $                                       MP, 0, NRHSQ, MYROW, MYCOL,
      $                                       NPROW, NPCOL )
-                           ELSE
+                             ELSE
                               CALL PDMATGEN( ICTXT, 'No', 'No',
      $                                       DESCW( M_ ), DESCW( N_ ),
      $                                       DESCW( MB_ ), DESCW( NB_ ),
@@ -454,9 +553,10 @@
      $                                       DESCW( CSRC_ ), IBSEED, 0,
      $                                       NP, 0, NRHSQ, MYROW, MYCOL,
      $                                       NPROW, NPCOL )
+                             END IF
                            END IF
-*
-                           IF( CHECK ) THEN
+                           IF( CHECK .AND. M.GT.0 .AND. N.GT.0 .AND.
+     $                                NRHS.GT.0) THEN
                               CALL PDFILLPAD( ICTXT, MNP, NRHSQ,
      $                                        MEM( IPX-IPREPAD ),
      $                                        DESCX( LLD_ ), IPREPAD,
@@ -473,22 +573,29 @@
      $                                           IPOSTPAD, PADVAL )
                               END IF
                            END IF
-*
-                           DO 10 JJ = 1, NRHS
-                              CALL PDNRM2( NCOLS, BNORM, MEM( IPW ), 1,
-     $                                     JJ, DESCW, 1 )
-                              IF( BNORM.GT.ZERO )
-     $                           CALL PDSCAL( NCOLS, ONE / BNORM,
-     $                                        MEM( IPW ), 1, JJ, DESCW,
-     $                                        1 )
+                           IF( M.GT.0 .AND. N.GT.0 .AND.
+     $                           NRHS.GT.0 ) THEN
+                             DO 10 JJ = 1, NRHS
+                                CALL PDNRM2( NCOLS, BNORM, MEM( IPW ),
+     $                                      1, JJ, DESCW, 1 )
+                                IF( BNORM.GT.ZERO )
+     $                             CALL PDSCAL( NCOLS, ONE / BNORM,
+     $                                        MEM( IPW ), 1, JJ,
+     $                                        DESCW, 1 )
    10                      CONTINUE
+                           END IF
 *
-                           CALL PDGEMM( TRANS, 'N', NROWS, NRHS, NCOLS,
+                           IF (M.GE.0 .AND. N.GE.0 .AND.
+     $                           NRHS.GE.0) THEN
+                              CALL PDGEMM( TRANS, 'N', NROWS,
+     $                                  NRHS, NCOLS,
      $                                  ONE, MEM( IPA ), 1, 1, DESCA,
      $                                  MEM( IPW ), 1, 1, DESCW, ZERO,
      $                                  MEM( IPX ), 1, 1, DESCX )
+                           END IF
 *
-                           IF( CHECK ) THEN
+                           IF( CHECK .AND. M.GT.0 .AND. N.GT.0 .AND.
+     $                              NRHS.GT.0 ) THEN
 *
 *                             check for memory overwrite
 *
@@ -539,8 +646,8 @@
                                  IF( IAM.EQ.0 )
      $                              WRITE( NOUT, FMT = 9997 )
      $                                     'descriptor'
-                                 KSKIP = KSKIP + 1
-                                 GO TO 30
+                                  KSKIP = KSKIP + 1
+                                  GO TO 30
                               END IF
 *
                               IPW = IPB + DESCB( LLD_ )*NRHSQ +
@@ -593,7 +700,8 @@
                               GO TO 30
                            END IF
 *
-                           IF( CHECK ) THEN
+                           IF( CHECK .AND. M.GT.0 .AND. N.GT.0 .AND.
+     $                                 NRHS .GT.0 ) THEN
 *
 *                             Make the copy of the right hand side
 *
@@ -624,13 +732,27 @@
 *
 *                          Solve the LS or overdetermined system
 *
+*                          Induce incorrect case, TRANS has to be C or N
+*                          Hence for the third iteration, use invalid TRANS
+*                           IF( ITRAN.EQ.3 ) THEN
+*                             TRANS = 'E'
+*                           END IF
+
+
                            CALL PDGELS( TRANS, M, N, NRHS, MEM( IPA ),
      $                                  1, 1, DESCA, MEM( IPX ), 1, 1,
      $                                  DESCX, MEM( IPW ), LWORK, INFO )
 *
                            CALL SLTIMER( 1 )
 *
-                           IF( CHECK ) THEN
+                           IF( (N .EQ. 0 .OR. M.EQ.0 .OR.
+     $                          NRHS .EQ. 0 ) .AND. INF0.EQ.0) THEN
+*                             If M = 0 or N =0 this is the case of
+*                             safe exit, early return from ScaLAPACK API.
+                              WRITE( NOUT, FMT = 9983 ) 'PDGELS'
+                           END IF
+                           IF( CHECK .AND. M.GT.0 .AND.
+     $                          N.GT.0 .AND. NRHS.GT.0 ) THEN
 *
 *                             check for memory overwrite
 *
@@ -650,14 +772,20 @@
 *
 *                          Regenerate A in place for testing and next
 *                          iteration
+
+                           IF(M.GT.0 .AND. N.GT.0 .AND. NRHS.GT.0) THEN
 *
-                           CALL PDQRT13( ISCALE, M, N, MEM( IPA ), 1, 1,
-     $                                   DESCA, ANORM, IASEED,
+                              CALL PDQRT13( ISCALE, M, N, MEM( IPA ),
+     $                                    1, 1, DESCA, ANORM, IASEED,
      $                                   MEM( IPW ) )
+
+                           END IF
 *
 *                          check the solution to rhs
 *
-                           IF( CHECK ) THEN
+                           IF( CHECK .AND. M.GT.0 .AND.
+     $                          N.GT.0 .AND. NRHS.GT.0 .AND.
+     $                         .NOT.(EX_FLAG) ) THEN
 *
 *                             Am I going to call PDQRT17 ?
 *
@@ -839,7 +967,9 @@
 *                             Call PDQRT14
 *
                               IF( ( M.GE.N .AND. TPSD ) .OR.
-     $                            ( M.LT.N .AND. ( .NOT.TPSD ) ) ) THEN
+     $                            ( M.LT.N .AND. (.NOT.TPSD) ) .AND.
+     $                            ( M.GT.0 .AND. N.GT.0 .AND.
+     $                              NRHS.GT.0 ) ) THEN
 *
                                  IPW = IPB
 *
@@ -930,7 +1060,15 @@
 *                             did not pass the threshold.
 *
                               PASSED = 'PASSED'
-                              DO 20 II = 1, 2
+                              IF((M.EQ.0 .OR. N.EQ.0 .OR.
+     $                          NRHS .EQ. 0) .AND. INF0 .EQ. 0) THEN
+*                               If M = 0, N =0, NRHS =0 this is the case of
+*                               early return from ScaLAPACK API.
+*                               Pass this case
+                                KPASS = KPASS + 1
+                                SRESID = SRESID - SRESID
+                              ELSE
+                                DO 20 II = 1, 2
                                  IF( ( RESULT( II ).GE.THRESH ) .AND.
      $                             ( RESULT( II )-RESULT( II ).EQ.0.0E+0
      $                              ) ) THEN
@@ -943,16 +1081,75 @@
                                  ELSE
                                     KPASS = KPASS + 1
                                  END IF
-   20                         CONTINUE
+   20                           CONTINUE
+                              END IF
 *
                            ELSE
 *
-*                             By-pass the solve check
+                              IF((M.EQ.0 .OR. N.EQ.0 .OR.
+     $                         NRHS .EQ. 0) .AND. INF0 .EQ. 0) THEN
+*                               If M = 0, N =0, NRHS =0 this is the case of
+*                               early return from ScaLAPACK API.
+*                               Pass this case
+                                KPASS = KPASS + 1
+                                SRESID = SRESID - SRESID
+                                PASSED = 'PASSED'
 *
-                              KPASS = KPASS + 1
-                              SRESID = SRESID - SRESID
-                              PASSED = 'BYPASS'
+*                             When N < 0, PZGELS returns INF0 = -2
+*                             When M < 0, PZGELS returns INF0 = -3
+*                             When NRHS < 0, PZGELS returns INF0 = -4
 *
+                              ELSE IF( (M .LT. 0 .AND.
+     $                                       INFO .EQ. -2 ) .OR.
+     $                                  (N .LT. 0 .AND.
+     $                                       INFO .EQ. -3 ) .OR.
+     $                                  (NRHS .LT. 0 .AND.
+     $                                       (INFO.EQ. -14 .OR.
+     $                                       INFO.EQ. -4 ))) THEN
+*
+*                               If PZGELS returns correct error code
+*                               pass this case
+                                WRITE( NOUT, FMT = 9984 ) 'PZGELS'
+                                KPASS = KPASS + 1
+                                SRESID = SRESID - SRESID
+                                PASSED = 'PASSED'
+*                             Extreme value validation check
+                              ELSE IF( EX_FLAG) THEN
+*                                Check presence of INF/NAN in output
+*                                Pass the case if present
+                                 DO IK = 0, M
+                                    DO JK = 1, N
+                                       X = MEM(IK*N + JK)
+                                       IF (isnan(X)) THEN
+*                                         NAN DETECTED
+                                          RES_FLAG = .TRUE.
+                                          EXIT
+                                       ELSE IF (.NOT.ieee_is_finite(
+     $                                         X)) THEN
+*                                         INFINITY DETECTED
+                                          RES_FLAG = .TRUE.
+                                          EXIT
+                                       END IF
+                                    END DO
+                                    IF(RES_FLAG) THEN
+                                      EXIT
+                                    END IF
+                                 END DO
+                                 IF (.NOT.(RES_FLAG)) THEN
+                                   KFAIL = KFAIL + 1
+                                   PASSED = 'FAILED'
+                                 ELSE
+                                   KPASS = KPASS + 1
+                                   PASSED = 'PASSED'
+*                                  RESET RESIDUAL FLAG
+                                   RES_FLAG = .FALSE.
+                                 END IF
+                              ELSE
+                                KPASS = KPASS + 1
+                                SRESID = SRESID - SRESID
+                                PASSED = 'BYPASS'
+
+                              END IF
                            END IF
 *
 *                          Gather maximum of all CPU and WALL clock
@@ -1081,6 +1278,12 @@
  9987 FORMAT( 'END OF TESTS.' )
  9986 FORMAT( ' TRANS=''', A1, ''', M=', I5, ', N=', I5, ', NRHS=', I4,
      $      ', NB=', I4, ', type', I2, ', test(', I2, ')=', G12.5 )
+ 9985 FORMAT(  A, ' < 0 case detected. ',
+     $        'Instead of driver file, This case will be handeld by',
+     $        'the PDGELS API.')
+ 9984 FORMAT(  A, ' returned correct error code. Passing this case.')
+ 9983 FORMAT(  'Early return case. Safe exit from ', A, ' API'
+     $         ' Passing this case.')
 *
       STOP
 *
