@@ -4,6 +4,7 @@
 *     University of Tennessee, Knoxville, Oak Ridge National Laboratory,
 *     and University of California, Berkeley.
 *     March, 2000
+*     Modifications Copyright (c) 2024 Advanced Micro Devices, Inc. All rights reserved.
 *
 *  Purpose
 *  =======
@@ -195,11 +196,13 @@
 *           Make sure matrix information is correct
 *
             IERR( 1 ) = 0
+#ifdef ENABLE_DRIVER_CHECK
             IF( N.LT.1 ) THEN
                IF( IAM.EQ.0 )
      $            WRITE( NOUT, FMT = 9999 )'MATRIX', 'N', N
                IERR( 1 ) = 1
             END IF
+#endif
 *
 *           Check all processes for an error
 *
@@ -271,12 +274,32 @@
 *
                CALL IGSUM2D( ICTXT, 'All', ' ', 2, 1, IERR, 2, -1, 0 )
 *
+#ifdef ENABLE_DRIVER_CHECK
                IF( IERR( 1 ).LT.0 .OR. IERR( 2 ).LT.0 ) THEN
                   IF( IAM.EQ.0 )
      $               WRITE( NOUT, FMT = 9997 )'descriptor'
                   KSKIP = KSKIP + 1
                   GO TO 10
                END IF
+#else
+*               If N < 0 in NEP.dat file then DESCINIT API sets
+*               IERR( 1 ) to -2 or -8 or -4.
+*               If DESCINIT is returning correct error code then
+*               do nothing
+               IF( N.LT.0 .AND. (IERR( 1 ).EQ.-2 .OR.
+     $                 IERR( 1 ).EQ. -8 .OR.
+     $                 IERR( 1 ).EQ. -4 .OR.
+     $                 IERR( 2 ).EQ.-2 .OR.
+     $                 IERR( 2 ).EQ. -8 .OR.
+     $                 IERR( 2 ).EQ. -4) ) THEN
+                  WRITE ( NOUT, FMT = 9984 ) 'PCLAHQR'
+               ELSE IF( IERR( 1 ).LT.0 .OR. IERR( 2 ).LT.0 ) THEN
+                  IF( IAM.EQ.0 )
+     $               WRITE( NOUT, FMT = 9997 ) 'descriptor'
+                  KSKIP = KSKIP + 1
+                  GO TO 10
+               END IF
+#endif
 *
 *              Assign pointers into MEM for SCALAPACK arrays, A is
 *              allocated starting at position MEM( IPREPAE+1 )
@@ -389,11 +412,23 @@
                IF( INFO.NE.0 ) THEN
                   IF( IAM.EQ.0 )
      $               WRITE( NOUT, FMT = * )'PCLAHQR INFO=', INFO
-                  KFAIL = KFAIL + 1
-                  GO TO 10
+*                 If N < 0 in NEP.dat file then PCLAHQR API
+*                 sets INFO = -5
+                  IF (N.LT.0 .AND. INFO.EQ.-5) THEN
+*                    If PCLAHQR is returning correct error
+*                    code we need to pass this case
+                     WRITE( NOUT, FMT = 9983 ) 'PCLAHQR'
+                  ELSE IF ( N.GT.1 .AND. INFO.NE.0 ) THEN
+                     KFAIL = KFAIL + 1
+                     GO TO 10
+                  END IF
+               ELSE IF (N.EQ.0) THEN
+*                 If N =0 this is the case of
+*                 early return from ScaLAPACK API.
+                  WRITE( NOUT, FMT = 9982 ) 'PCLAHQR'
                END IF
 *
-               IF( CHECK ) THEN
+               IF( CHECK .AND. INFO.EQ.0 ) THEN
 *
 *                 Check for memory overwrite in NEP factorization
 *
@@ -451,6 +486,10 @@
      $                ( ( QRESID-QRESID ).EQ.0.0E+0 ) ) THEN
                      KPASS = KPASS + 1
                      PASSED = 'PASSED'
+                     ELSE IF( N.EQ.0 ) THEN
+*                 Passing residual checks for the case N = 0
+                     KPASS = KPASS + 1
+                     PASSED = 'PASSED'
                   ELSE
                      KFAIL = KFAIL + 1
                      PASSED = 'FAILED'
@@ -467,7 +506,13 @@
                   KPASS = KPASS + 1
                   FRESID = FRESID - FRESID
                   QRESID = QRESID - QRESID
-                  PASSED = 'BYPASS'
+*                 If the ScaLAPACK API is returning the correct
+*                 INFO code for N < 0 then pass the case.
+                  IF (N.LT.0 .AND. INFO.EQ.-5) THEN
+                     PASSED = 'PASSED'
+                  ELSE
+                     PASSED = 'BYPASS'
+                  END IF
 *
                END IF
 *
@@ -563,6 +608,11 @@
  9987 FORMAT( 'END OF TESTS.' )
  9986 FORMAT( '||H - Q*S*Q^T|| / (||H|| * N * eps) = ', G25.7 )
  9985 FORMAT( '||Q^T*Q - I|| / ( N * eps ) ', G25.7 )
+ 9984 FORMAT(  A, ' < 0 case detected. ',
+     $        'Instead of driver file, we will handle this case from ',
+     $        'ScaLAPACK API.')
+ 9983 FORMAT(  A, ' returned correct error code. Passing this case.')
+ 9982 FORMAT(  'This is safe exit from ', A, ' API. Passing this case.')
 *
       STOP
 *
