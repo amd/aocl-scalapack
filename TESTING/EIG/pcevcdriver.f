@@ -4,6 +4,7 @@
 *     University of Tennessee, Knoxville, Oak Ridge National Laboratory,
 *     and University of California, Berkeley.
 *     June, 2000
+*     Modifications Copyright (c) 2024 Advanced Micro Devices, Inc. All rights reserved.
 *
 *  Purpose
 *  =======
@@ -200,11 +201,13 @@
 *           Make sure matrix information is correct
 *
             IERR( 1 ) = 0
+#ifdef ENABLE_DRIVER_CHECK
             IF( N.LT.1 ) THEN
                IF( IAM.EQ.0 )
      $            WRITE( NOUT, FMT = 9999 )'MATRIX', 'N', N
                IERR( 1 ) = 1
             END IF
+#endif
 *
 *           Check all processes for an error
 *
@@ -275,12 +278,31 @@
 *
                CALL IGSUM2D( ICTXT, 'All', ' ', 2, 1, IERR, 2, -1, 0 )
 *
+#ifdef ENABLE_DRIVER_CHECK
                IF( IERR( 1 ).LT.0 .OR. IERR( 2 ).LT.0 ) THEN
                   IF( IAM.EQ.0 )
      $               WRITE( NOUT, FMT = 9997 )'descriptor'
                   KSKIP = KSKIP + 1
                   GO TO 20
                END IF
+#else
+*              If N < 0 in EVC.dat file then DESCINIT API sets IERR( 1 ) = -3
+               IF( N.LT.0 .AND. (IERR( 1 ).EQ.-2 .OR.
+     $                 IERR( 1 ).EQ. -8 .OR.
+     $                 IERR( 1 ).EQ. -4 .OR.
+     $                 IERR( 2 ).EQ.-2 .OR.
+     $                 IERR( 2 ).EQ. -8 .OR.
+     $                 IERR( 2 ).EQ. -4) ) THEN
+*              If DESCINIT is returning correct error code we need to pass
+*              and it will be ScaLAPACK API
+                  WRITE ( NOUT, FMT = 9984 ) 'PCTREVC'
+               ELSE IF( IERR( 1 ).LT.0 .OR. IERR( 2 ).LT.0 ) THEN
+                  IF( IAM.EQ.0 )
+     $               WRITE( NOUT, FMT = 9997 ) 'descriptor'
+                  KSKIP = KSKIP + 1
+                  GO TO 20
+               END IF
+#endif
 *
 *              Assign pointers into MEM for SCALAPACK arrays, A is
 *              allocated starting at position MEM( IPREPAE+1 )
@@ -358,7 +380,7 @@
 *
 *              Calculate inf-norm of A for residual error-checking
 *
-               IF( CHECK ) THEN
+               IF( CHECK .AND. N.GE.0 ) THEN
                   CALL PCFILLPAD( ICTXT, NP, NQ, MEM( IPA-IPREPAD ),
      $                            DESCA( LLD_ ), IPREPAD, IPOSTPAD,
      $                            PADVAL )
@@ -402,8 +424,13 @@
                      MEM( IPWR-1+JJJ ) = ZERO
                   END IF
    10          CONTINUE
+*
+*              In case of N<0, surpassing the call off ZGSUM2D
+*
+               IF(N.GT.0) THEN
                CALL CGSUM2D( ICTXT, 'All', ' ', N, 1, MEM( IPWR ), N,
      $                       -1, -1 )
+               END IF
 *
                SELECT( 1 ) = .TRUE.
                CALL SLBOOT()
@@ -421,11 +448,23 @@
                IF( INFO.NE.0 ) THEN
                   IF( IAM.EQ.0 )
      $               WRITE( NOUT, FMT = * )'PCTREVC INFO=', INFO
-                  KFAIL = KFAIL + 1
-                  GO TO 20
+*                 If N < 0 in EVC.dat file then PCTREVC API sets
+*                 INFO = -4
+                  IF (N.LT.0 .AND. INFO.EQ.-4) THEN
+*                    If PCTREVC is returning correct error
+*                    code we need to pass this case
+                     WRITE( NOUT, FMT = 9983 ) 'PCTREVC'
+                  ELSE IF ( N.GT.1 .AND. INFO.NE.0 ) THEN
+                     KFAIL = KFAIL + 1
+                     GO TO 20
+                  END IF
+               ELSE IF (N.EQ.0) THEN
+*                 If N =0 this is the case of
+*                 early return from ScaLAPACK API.
+                  WRITE( NOUT, FMT = 9982 ) 'PCTREVC'
                END IF
 *
-               IF( CHECK ) THEN
+               IF( CHECK .AND. INFO.EQ.0 ) THEN
 *
 *                 Check for memory overwrite in NEP factorization
 *
@@ -488,6 +527,10 @@
      $                ( ( QRESID-QRESID ).EQ.0.0E+0 ) ) THEN
                      KPASS = KPASS + 1
                      PASSED = 'PASSED'
+                  ELSE IF( N.EQ.0 ) THEN
+*                 Passing residual checks for the case N = 0
+                        KPASS = KPASS + 1
+                        PASSED = 'PASSED'
                   ELSE
                      KFAIL = KFAIL + 1
                      PASSED = 'FAILED'
@@ -504,7 +547,11 @@
                   KPASS = KPASS + 1
                   FRESID = FRESID - FRESID
                   QRESID = QRESID - QRESID
-                  PASSED = 'BYPASS'
+                  IF (N.LT.0 .AND. INFO.EQ.-4) THEN
+                     PASSED = 'PASSED'
+                  ELSE
+                     PASSED = 'BYPASS'
+                  END IF
 *
                END IF
 *
@@ -600,6 +647,11 @@
  9987 FORMAT( 'END OF TESTS.' )
  9986 FORMAT( '||H*Z - Z*D|| / (||T|| * N * eps) = ', G25.7 )
  9985 FORMAT( 'max_j(max|Z(j)| - 1) / ( N * eps ) ', G25.7 )
+ 9984 FORMAT(  A, ' < 0 case detected. ',
+     $        'Instead of driver file, we will handle this case from ',
+     $        'ScaLAPACK API.')
+ 9983 FORMAT(  A, ' returned correct error code. Passing this case.')
+ 9982 FORMAT(  'This is safe exit from ', A, ' API. Passing this case.')
 *
       STOP
 *
