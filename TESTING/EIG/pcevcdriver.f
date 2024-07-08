@@ -337,19 +337,6 @@
      $                 IERR( 2 ).EQ. -4) ) THEN
 *              If DESCINIT is returning correct error code we need to pass
 *              and it will be ScaLAPACK API
-                  WRITE( NOUT, FMT = 9983 ) 'N'
-*                   disable extreme value case when N < 0
-                  EX_FLAG = .FALSE.
-               ELSE IF(N .EQ. 0 .AND. (IERR(1) .EQ. 0 .OR.
-     $              IERR(1) .EQ. -5 .OR. IERR(1) .EQ. -10 .OR.
-     $              IERR(1) .EQ. -15 .OR. IERR(1) .EQ. -20 )) THEN
-*                   DESCINIT returns the correct error code,
-*                   When N = 0,
-*                   -5, -10 or -20 incase of incorrect grid info
-*                   MAIN API can be validated.
-*                   Do NOTHING
-*                   disable extreme value case when N = 0
-                    EX_FLAG = .FALSE.
                   WRITE ( NOUT, FMT = 9984 ) 'PCTREVC'
                ELSE IF( IERR( 1 ).LT.0 .OR. IERR( 2 ).LT.0 ) THEN
                   IF( IAM.EQ.0 )
@@ -519,7 +506,7 @@
                   WRITE( NOUT, FMT = 9982 ) 'PCTREVC'
                END IF
 *
-               IF( CHECK .AND. INFO.EQ.0  .AND. .NOT.(EX_FLAG) ) THEN
+               IF( CHECK .AND. INFO.EQ.0 ) THEN
 *
 *                 Check for memory overwrite in NEP factorization
 *
