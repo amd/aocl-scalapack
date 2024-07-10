@@ -169,6 +169,35 @@
       CHECK = ( THRESH.GE.0.0E+0 )
       M_INVALID = .TRUE.
       N_INVALID = .TRUE.
+*     Get the number of command-line arguments
+      numArgs = command_argument_count()
+
+*     Process command-line arguments
+      do count = 1, numArgs, 2
+         call get_command_argument(count, arg)
+         select case (arg)
+            case ("-h", "--help")
+                  help_flag = .true.
+                  exit
+            case ("-inf")
+                  call get_command_argument(count + 1, arg)
+                  read(arg, *) INF_PERCENT
+                  IF (INF_PERCENT .GT. 0) THEN
+                     EX_FLAG = .TRUE.
+                  END IF
+            case ("-nan")
+                  call get_command_argument(count + 1, arg)
+                  read(arg, *) NAN_PERCENT
+                  IF (NAN_PERCENT .GT. 0) THEN
+                     EX_FLAG = .TRUE.
+                  END IF
+            case default
+                  print *, "Invalid option: ", arg
+                  help_flag = .true.
+                  exit
+            end select
+      end do
+*
 *
 *     Loop over the different factorization types
 *
@@ -389,10 +418,17 @@
 *                   MAIN API can be validated.
 *                   Do NOTHING
                     WRITE( NOUT, FMT = 9984 ) 'N'
+*                   disable extreme value case when N < 0
+                    EX_FLAG = .FALSE.
                   ELSE IF(M .LT. 0 .AND. (IERR(1) .EQ. -2 .OR.
      $               IERR(1) .EQ. -4 .OR. IERR(1) .EQ. -8 .OR.
      $               IERR(1) .EQ. -3 .OR. IERR(1) .EQ. -12  )) THEN
                     WRITE( NOUT, FMT = 9984 ) 'M'
+*                   disable extreme value case when M < 0
+                    EX_FLAG = .FALSE.
+                  ELSE IF(M .EQ. 0 .OR. N .EQ. 0) THEN
+*                   disable extreme value case when M < 0
+                    EX_FLAG = .FALSE.
                   ELSE IF(IERR(1) .LT. 0) THEN
                      IF( IAM.EQ.0 )
      $                  WRITE( NOUT, FMT = 9997 ) 'descriptor'
@@ -688,6 +724,7 @@
                      IF(INFO .EQ. 0 .AND. N .GT. 0 .AND.
      $                     M .GT. 0) THEN
 *
+*
 *                       Check for memory overwrite in factorization
 *
                         CALL PSCHEKPAD( ICTXT, ROUT, MP, NQ,
@@ -854,13 +891,19 @@
      $                      (INFO.EQ.-2 .AND.
      $                          LSAMEN( 2, FACT, 'TZ' )))
 *
-                     IF(N.EQ.0 .AND. INFO.EQ.0) THEN
+                     IF( (N.EQ.0 .AND. INFO.EQ.0) .OR.
+     $                   (M.EQ.0 .AND. INFO.EQ.0) ) THEN
 *                       If N =0 this is the case of
 *                       early return from ScaLAPACK API.
 *                       If there is safe exit from API; pass this case
                         KPASS = KPASS + 1
                         WRITE( NOUT, FMT = 9985 ) KPASS, API_NAME
                         PASSED = 'PASSED'
+*                       RE-ENABLE for EX CASE
+                        IF(INF_PERCENT .GT. 0 .OR.
+     $                        NAN_PERCENT .GT. 0) THEN
+                          EX_FLAG = .TRUE.
+                        END IF
                         GO TO 10
                      ELSE IF(M_INVALID .OR. N_INVALID) THEN
 *                       When N < 0/Invalid, INFO = -2
@@ -870,6 +913,11 @@
                         KPASS = KPASS + 1
                         WRITE( NOUT, FMT = 9983 ) KPASS, API_NAME
                         PASSED = 'PASSED'
+*                       RE-ENABLE for EX CASE
+                        IF(INF_PERCENT .GT. 0 .OR.
+     $                        NAN_PERCENT .GT. 0) THEN
+                          EX_FLAG = .TRUE.
+                        END IF
                      ELSE IF( LSAMEN( 2, FACT, 'TZ' ) .AND.
      $                    (N.LT.M .AND. INFO.EQ.-2 ) ) THEN
                         KPASS = KPASS + 1
