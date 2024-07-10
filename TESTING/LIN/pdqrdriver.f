@@ -63,6 +63,7 @@
 *
 *  =====================================================================
 *
+      use,intrinsic :: ieee_arithmetic
 *     .. Parameters ..
       INTEGER            BLOCK_CYCLIC_2D, CSRC_, CTXT_, DLEN_, DTYPE_,
      $                   LLD_, MB_, M_, NB_, N_, RSRC_
@@ -141,6 +142,16 @@
 *     ..
 *     .. Data Statements ..
       DATA               KTESTS, KPASS, KFAIL, KSKIP /4*0/
+*
+*     Take command-line arguments if requested
+      CHARACTER*80 arg
+      INTEGER numArgs, count
+      LOGICAL :: help_flag = .FALSE.
+      LOGICAL :: EX_FLAG = .FALSE., RES_FLAG = .FALSE.
+      INTEGER :: INF_PERCENT = 0
+      INTEGER :: NAN_PERCENT = 0
+      DOUBLE PRECISION :: X
+*
 *     ..
 *     .. Executable Statements ..
 *
@@ -158,6 +169,35 @@
       CHECK = ( THRESH.GE.0.0E+0 )
       M_INVALID = .TRUE.
       N_INVALID = .TRUE.
+*     Get the number of command-line arguments
+      numArgs = command_argument_count()
+
+*     Process command-line arguments
+      do count = 1, numArgs, 2
+         call get_command_argument(count, arg)
+         select case (arg)
+            case ("-h", "--help")
+                  help_flag = .true.
+                  exit
+            case ("-inf")
+                  call get_command_argument(count + 1, arg)
+                  read(arg, *) INF_PERCENT
+                  IF (INF_PERCENT .GT. 0) THEN
+                     EX_FLAG = .TRUE.
+                  END IF
+            case ("-nan")
+                  call get_command_argument(count + 1, arg)
+                  read(arg, *) NAN_PERCENT
+                  IF (NAN_PERCENT .GT. 0) THEN
+                     EX_FLAG = .TRUE.
+                  END IF
+            case default
+                  print *, "Invalid option: ", arg
+                  help_flag = .true.
+                  exit
+            end select
+      end do
+*
 *
 *     Loop over the different factorization types
 *
@@ -193,7 +233,7 @@
                ROUT = 'PDGEQPF'
                ROUTCHK = 'PDGEQRRV'
                WRITE( NOUT, FMT = 9986 )
-     $                'QR factorization with column pivoting tests.'
+     $                'QP factorization with column pivoting tests.'
             ELSE IF( LSAMEN( 2, FACT, 'TZ' ) ) THEN
                ROUT = 'PDTZRZF'
                ROUTCHK = 'PDTZRZRV'
@@ -373,10 +413,17 @@
 *                   MAIN API can be validated.
 *                   Do NOTHING
                     WRITE( NOUT, FMT = 9984 ) 'N'
+*                   disable extreme value case when N < 0
+                    EX_FLAG = .FALSE.
                   ELSE IF(M .LT. 0 .AND. (IERR(1) .EQ. -2 .OR.
      $               IERR(1) .EQ. -4 .OR. IERR(1) .EQ. -8 .OR.
      $               IERR(1) .EQ. -3 .OR. IERR(1) .EQ. -12  )) THEN
                     WRITE( NOUT, FMT = 9984 ) 'M'
+*                   disable extreme value case when M < 0
+                    EX_FLAG = .FALSE.
+                  ELSE IF(M .EQ. 0 .OR. N .EQ. 0) THEN
+*                   disable extreme value case when M < 0
+                    EX_FLAG = .FALSE.
                   ELSE IF(IERR(1) .LT. 0) THEN
                      IF( IAM.EQ.0 )
      $                  WRITE( NOUT, FMT = 9997 ) 'descriptor'
@@ -659,7 +706,7 @@
                      CALL SLTIMER( 1 )
                   END IF
 *
-                  IF( CHECK ) THEN
+                  IF( CHECK  .AND. (.NOT.(EX_FLAG)) ) THEN
 *
                      IF(INFO .EQ. 0 .AND. N .GT. 0 .AND.
      $                     M .GT. 0) THEN
@@ -830,13 +877,19 @@
      $                      (INFO.EQ.-2 .AND.
      $                          LSAMEN( 2, FACT, 'TZ' )))
 *
-                     IF(N.EQ.0 .AND. INFO.EQ.0) THEN
+                     IF( (N.EQ.0 .AND. INFO.EQ.0) .OR.
+     $                   (M.EQ.0 .AND. INFO.EQ.0) ) THEN
 *                       If N =0 this is the case of
 *                       early return from ScaLAPACK API.
 *                       If there is safe exit from API; pass this case
                         KPASS = KPASS + 1
                         WRITE( NOUT, FMT = 9985 ) KPASS, API_NAME
                         PASSED = 'PASSED'
+*                       RE-ENABLE for EX CASE
+                        IF(INF_PERCENT .GT. 0 .OR.
+     $                        NAN_PERCENT .GT. 0) THEN
+                          EX_FLAG = .TRUE.
+                        END IF
                         GO TO 10
                      ELSE IF(M_INVALID .OR. N_INVALID) THEN
 *                       When N < 0/Invalid, INFO = -2
@@ -846,6 +899,11 @@
                         KPASS = KPASS + 1
                         WRITE( NOUT, FMT = 9983 ) KPASS, API_NAME
                         PASSED = 'PASSED'
+*                       RE-ENABLE for EX CASE
+                        IF(INF_PERCENT .GT. 0 .OR.
+     $                        NAN_PERCENT .GT. 0) THEN
+                          EX_FLAG = .TRUE.
+                        END IF
                      ELSE IF( LSAMEN( 2, FACT, 'TZ' ) .AND.
      $                    (N.LT.M .AND. INFO.EQ.-2 ) ) THEN
                         KPASS = KPASS + 1
@@ -862,12 +920,47 @@
                      END IF
 *
                   ELSE
+
+*                    Extreme value cases
+                     IF(EX_FLAG) THEN
+*                       Check presence of INF/NAN in output
+*                       Pass the case if present
+                        DO IK = 0, M
+                           DO JK = 1, N+1
+                              X = MEM(IK*N + JK)
+                              IF (isnan(X)) THEN
+*                                NAN DETECTED
+                                 RES_FLAG = .TRUE.
+                                 EXIT
+                              ELSE IF (.NOT.ieee_is_finite(
+     $                                    X)) THEN
+*                                INFINITY DETECTED
+                                 RES_FLAG = .TRUE.
+                                 EXIT
+                              END IF
+                           END DO
+                           IF(RES_FLAG) THEN
+                              EXIT
+                           END IF
+                        END DO
+                        IF (.NOT.(RES_FLAG)) THEN
+                           KFAIL = KFAIL + 1
+                           PASSED = 'FAILED'
+                        ELSE
+                           KPASS = KPASS + 1
+                           PASSED = 'PASSED'
+*                          RESET RESIDUAL FLAG
+                           RES_FLAG = .FALSE.
+                        END IF
+                        FRESID = FRESID - FRESID
 *
-*                    Don't perform the checking, only timing
-*
-                     KPASS = KPASS + 1
-                     FRESID = FRESID - FRESID
-                     PASSED = 'BYPASS'
+*                    Don't perform the checking, only the timing
+*                    operation
+                     ELSE
+                       KPASS = KPASS + 1
+                       FRESID = FRESID - FRESID
+                       PASSED = 'BYPASS'
+                     END IF
 *
                   END IF
 *
