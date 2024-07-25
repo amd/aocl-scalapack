@@ -6,6 +6,10 @@
 *     and University of California, Berkeley.
 *     February 24, 2000
 *
+*     Modifications Copyright (c) 2024 Advanced Micro Devices, Inc. All rights reserved.
+*
+*
+      use,intrinsic :: ieee_arithmetic
 *     .. Scalar Arguments ..
       LOGICAL            CHECK
       INTEGER            IAM, KFAIL, KPASS, KSKIP, NMAT, NOUT, NPROCS,
@@ -148,11 +152,50 @@
       DATA               ANBTEST / 1, 2, 3, 16, 1, 2, 3, 16 /
       DATA               PNBTEST / 1, 16, 8, 1, 16, 8, 1, 16 /
 *     ..
+*
+*     Take command-line arguments if requested
+      CHARACTER*80 arg
+      INTEGER numArgs, count
+      LOGICAL :: help_flag = .FALSE.
+      LOGICAL :: EX_FLAG = .FALSE., RES_FLAG = .FALSE.
+      INTEGER :: INF_PERCENT = 0
+      INTEGER :: NAN_PERCENT = 0
+      DOUBLE PRECISION :: X
+
+*
 *     .. Executable Statements ..
 *       This is just to keep ftnchek and toolpack/1 happy
       IF( BLOCK_CYCLIC_2D*CSRC_*CTXT_*DLEN_*DTYPE_*LLD_*MB_*M_*NB_*N_*
      $    RSRC_.LT.0 )RETURN
 *
+*     Get the number of command-line arguments
+      numArgs = command_argument_count()
+
+*     Process command-line arguments
+      do count = 1, numArgs, 2
+         call get_command_argument(count, arg)
+         select case (arg)
+            case ("-h", "--help")
+                  help_flag = .true.
+                  exit
+            case ("-inf")
+                  call get_command_argument(count + 1, arg)
+                  read(arg, *) INF_PERCENT
+                  IF (INF_PERCENT .GT. 0) THEN
+                     EX_FLAG = .TRUE.
+                  END IF
+            case ("-nan")
+                  call get_command_argument(count + 1, arg)
+                  read(arg, *) NAN_PERCENT
+                  IF (NAN_PERCENT .GT. 0) THEN
+                     EX_FLAG = .TRUE.
+                  END IF
+            case default
+                  print *, "Invalid option: ", arg
+                  help_flag = .true.
+                  exit
+            end select
+      end do
 *
       IASEED = 100
       SPLITSTIMED = 0
@@ -198,11 +241,13 @@
 *           Make sure matrix information is correct
 *
             IERR( 1 ) = 0
+#ifdef ENABLE_DRIVER_CHECK
             IF( N.LT.1 ) THEN
                IF( IAM.EQ.0 )
      $            WRITE( NOUT, FMT = 9999 )'MATRIX', 'N', N
                IERR( 1 ) = 1
             END IF
+#endif
 *
 *           Make sure no one had error
 *
@@ -326,12 +371,32 @@
 *
                CALL IGSUM2D( ICTXT, 'All', ' ', 1, 1, IERR, 1, -1, 0 )
 *
+#ifdef ENABLE_DRIVER_CHECK
                IF( IERR( 1 ).LT.0 ) THEN
                   IF( IAM.EQ.0 )
      $               WRITE( NOUT, FMT = 9997 )'descriptor'
                   KSKIP = KSKIP + 1
                   GO TO 10
                END IF
+#else
+               IF(N .LT. 0 .AND. (IERR(1) .EQ. -2 .OR.
+     $              IERR(1) .EQ. -4 .OR. IERR(1) .EQ. -8 .OR.
+     $              IERR(1) .EQ. -3 .OR. IERR(1) .EQ. -12 .OR.
+     $              IERR(1) .EQ. -18 .OR. IERR(1) .EQ. -32 )) THEN
+*                   DESCINIT returns the correct error code,
+*                   -2, -3 incase of invalid N
+*                   -4, -8 or -12 incase of incorrect grid info
+*                   MAIN API can be validated.
+*                   Do NOTHING
+                    WRITE( *, FMT = 9971 ) 'N'
+               ELSE IF(IERR(1) .LT. 0) THEN
+                  IF( IAM.EQ.0 )
+     $               WRITE( NOUT, FMT = 9997 )'descriptor'
+                  KSKIP = KSKIP + 1
+                  GO TO 10
+               END IF
+
+#endif
 *
 *              Assign pointers into MEM for SCALAPACK arrays, A is
 *              allocated starting at position MEM( IPREPAD+1 )
@@ -405,7 +470,7 @@
 *
 *              Need Infinity-norm of A for checking
 *
-               IF( CHECK ) THEN
+               IF( CHECK .AND. N.GE.0 ) THEN
                   CALL PSFILLPAD( ICTXT, NP, NQ, MEM( IPA-IPREPAD ),
      $                            DESCA( LLD_ ), IPREPAD, IPOSTPAD,
      $                            PADVAL )
@@ -443,7 +508,7 @@
 *
                CALL SLTIMER( 1 )
 *
-               IF( CHECK ) THEN
+               IF( CHECK .AND. INFO .EQ. 0 .AND. .NOT.(EX_FLAG) ) THEN
 *
 *                 Check for memory overwrite
 *
@@ -502,8 +567,17 @@
 *
 *                 Test residual and detect NaN result
 *
-                  IF( FRESID.LE.THRESH .AND. FRESID-FRESID.EQ.
-     $                0.0E+0 .AND. IERR( 1 ).EQ.0 ) THEN
+                  IF(( N .EQ. 0) .AND. INFO .EQ. 0 ) THEN
+*                   early return from ScaLAPACK API.
+*                   If there is safe exit from API; pass this case
+*                   When N = 0, set ILO = 1, IHI = N in dat, to validate early return.
+                     KPASS = KPASS + 1
+                    WRITE( *, FMT = 9972 ) 'PSSYTTRD'
+                     PASSED = 'PASSED'
+                    FRESID = 0
+                  ELSE IF( FRESID.LE.THRESH .AND.
+     $                  FRESID-FRESID.EQ.0.0E+0 .AND.
+     $                  IERR( 1 ).EQ.0 ) THEN
                      KPASS = KPASS + 1
                      PASSED = 'PASSED'
                   ELSE
@@ -511,20 +585,72 @@
      $                  WRITE( NOUT, FMT = 9991 )FRESID
                      KFAIL = KFAIL + 1
                      PASSED = 'FAILED'
-*
-*
                   END IF
-*
-*
-                  IF( MYROW.EQ.0 .AND. MYCOL.EQ.0 .AND. IERR( 1 ).NE.0 )
+
+                  IF( MYROW.EQ.0 .AND. MYCOL.EQ.0 .AND.
+     $                     IERR( 1 ).NE.0 )
      $               WRITE( NOUT, FMT = * )'D or E copies incorrect ...'
                ELSE
 *
-*                 Don't perform the checking, only the timing operation
 *
-                  KPASS = KPASS + 1
                   FRESID = FRESID - FRESID
-                  PASSED = 'BYPASS'
+*                 Early return case
+                  IF(( N .EQ. 0) .AND. INFO .EQ. 0) THEN
+*                   If N =0 this is the case of
+*                   early return from ScaLAPACK API.
+*                   If there is safe exit from API; pass this case
+                    KPASS = KPASS + 1
+                    WRITE( *, FMT = 9972 ) 'PSSYTTRD'
+                    PASSED = 'PASSED'
+*                 Invalid M/N
+                  ELSE IF( N .LT. 0 .AND. INFO .EQ. -2 ) THEN
+*
+*                   When N < 0/Invalid, INFO = -2
+*                   Expected Error code for N < 0
+*                   Hence this case can be passed
+                    WRITE( *, FMT = 9970 ) 'PSSYTTRD'
+                    KPASS = KPASS + 1
+                    PASSED = 'PASSED'
+*
+*                 Extreme-value inputs
+                  ELSE IF(EX_FLAG) THEN
+*                   Check presence of INF/NAN in output
+*                   Pass the case if present
+                    DO IK = 0, N-1
+                      DO JK = 1, N
+                        X = MEM(IK*N + JK)
+*                        PRINT *, X
+                        IF (isnan(X)) THEN
+*                         NAN DETECTED
+                          RES_FLAG = .TRUE.
+                          EXIT
+                        ELSE IF (.NOT.ieee_is_finite(X)) THEN
+*                         INFINITY DETECTED
+                          RES_FLAG = .TRUE.
+                          EXIT
+                        END IF
+                      END DO
+                      IF(RES_FLAG) THEN
+                        EXIT
+                      END IF
+                    END DO
+                    IF (.NOT.(RES_FLAG)) THEN
+                      KFAIL = KFAIL + 1
+                      PASSED = 'FAILED'
+                    ELSE
+                      KPASS = KPASS + 1
+                      PASSED = 'PASSED'
+*                     RESET RESIDUAL FLAG
+                      RES_FLAG = .FALSE.
+                    END IF
+*
+                  ELSE
+*
+                    KPASS = KPASS + 1
+                    PASSED = 'BYPASS'
+*
+                  END IF
+*
                END IF
 *
 *              Gather maximum of all CPU and WALL clock timings
@@ -660,6 +786,13 @@
  9975 FORMAT( 'S2_TRANS_SUM = 4; %  v = v + vt'' ' )
  9974 FORMAT( 'S2_DOT = 5; %  c = v'' * h ' )
  9973 FORMAT( 'S2_R2K = 6; %  A = A - v * h'' - h * v'' ' )
+ 9972 FORMAT( '----------Test Passed but no compute was ',
+     $       'performed! [Safe exit from ', A,']-----------')
+ 9971 FORMAT(  A, ' < 0 case detected. ',
+     $        'Instead of driver file, This case will be handled',
+     $        'by the ScaLAPACK API.')
+ 9970 FORMAT( '----------Negative-Test Passed with expected',
+     $       ' ERROR CODE in INFO from ', A,']-----------')
 *
 *
 *     End of PSTTRDTESTER
