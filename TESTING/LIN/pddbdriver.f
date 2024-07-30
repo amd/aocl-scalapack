@@ -6,6 +6,8 @@
 *     and University of California, Berkeley.
 *     November 15, 1997
 *
+*     Modifications Copyright (c) 2024 Advanced Micro Devices, Inc. All rights reserved.
+*
 *  Purpose
 *  =======
 *
@@ -69,6 +71,7 @@
 *
 *  =====================================================================
 *
+      use,intrinsic :: ieee_arithmetic
 *     .. Parameters ..
       INTEGER            TOTMEM
 #ifndef DYNAMIC_WORK_MEM_ALLOC
@@ -143,6 +146,14 @@
       DATA               KFAIL, KPASS, KSKIP, KTESTS / 4*0 /
 *     ..
 *
+*     Take command-line arguments if requested
+      CHARACTER*80 arg
+      INTEGER numArgs, count
+      LOGICAL :: help_flag = .FALSE.
+      LOGICAL :: EX_FLAG = .FALSE., RES_FLAG = .FALSE.
+      INTEGER :: INF_PERCENT = 0
+      INTEGER :: NAN_PERCENT = 0
+      DOUBLE PRECISION :: X
 *
 *
 *     .. Executable Statements ..
@@ -163,6 +174,35 @@
 *
       CHECK = ( THRESH.GE.0.0D+0 )
 *
+*     Get the number of command-line arguments
+      numArgs = command_argument_count()
+
+*     Process command-line arguments
+      do count = 1, numArgs, 2
+         call get_command_argument(count, arg)
+         select case (arg)
+            case ("-h", "--help")
+                  help_flag = .true.
+                  exit
+            case ("-inf")
+                  call get_command_argument(count + 1, arg)
+                  read(arg, *) INF_PERCENT
+                  IF (INF_PERCENT .GT. 0) THEN
+                     EX_FLAG = .TRUE.
+                  END IF
+            case ("-nan")
+                  call get_command_argument(count + 1, arg)
+                  read(arg, *) NAN_PERCENT
+                  IF (NAN_PERCENT .GT. 0) THEN
+                     EX_FLAG = .TRUE.
+                  END IF
+            case default
+                  print *, "Invalid option: ", arg
+                  help_flag = .true.
+                  exit
+            end select
+      end do
+*
 *     Print headings
 *
       IF( IAM.EQ.0 ) THEN
@@ -181,6 +221,7 @@
 *
 *        Make sure grid information is correct
 *
+#ifdef ENABLE_DRIVER_CHECK
          IERR( 1 ) = 0
          IF( NPROW.LT.1 ) THEN
             IF( IAM.EQ.0 )
@@ -202,6 +243,7 @@
             KSKIP = KSKIP + 1
             GO TO 50
          END IF
+#endif
 *
 *        Define process grid
 *
@@ -231,23 +273,28 @@
 *
 *          Make sure matrix information is correct
 *
+#ifdef ENABLE_DRIVER_CHECK
            IF( N.LT.1 ) THEN
                IF( IAM.EQ.0 )
      $            WRITE( NOUT, FMT = 9999 ) 'MATRIX', 'N', N
                IERR( 1 ) = 1
            END IF
+#endif
 *
 *          Check all processes for an error
 *
            CALL IGSUM2D( ICTXT, 'All', ' ', 1, 1, IERR, 1,
      $                    -1, 0 )
 *
+
+#ifdef ENABLE_DRIVER_CHECK
            IF( IERR( 1 ).GT.0 ) THEN
                IF( IAM.EQ.0 )
      $            WRITE( NOUT, FMT = 9997 ) 'size'
                KSKIP = KSKIP + 1
                GO TO 40
            END IF
+#endif
 *
 *
            DO 45 BW_NUM = 1, NBW
@@ -285,10 +332,12 @@
              CALL IGSUM2D( ICTXT, 'All', ' ', 1, 1, IERR, 1,
      $                    -1, 0 )
 *
+#ifdef ENABLE_DRIVER_CHECK
              IF( IERR( 1 ).GT.0 ) THEN
                KSKIP = KSKIP + 1
                GO TO 45
              END IF
+#endif
 *
              DO 30 K = 1, NNB
 *
@@ -300,6 +349,10 @@
      $               + MAX(BWL,BWU)
                   NB = MAX( NB, 2*MAX(BWL,BWU) )
                   NB = MIN( N, NB )
+               END IF
+*              Altering the auto-assign for early return of N case
+               IF (N .EQ. 0 .AND. NB.EQ.0) THEN
+                 NB = 1
                END IF
 *
 *              Make sure NB is legal
@@ -314,10 +367,13 @@
                CALL IGSUM2D( ICTXT, 'All', ' ', 1, 1, IERR, 1,
      $                       -1, 0 )
 *
+
+#ifdef ENABLE_DRIVER_CHECK
                IF( IERR( 1 ).GT.0 ) THEN
                   KSKIP = KSKIP + 1
                   GO TO 30
                END IF
+#endif
 *
 *              Padding constants
 *
@@ -359,12 +415,42 @@
 *
                CALL IGSUM2D( ICTXT, 'All', ' ', 1, 1, IERR, 1, -1, 0 )
 *
+#ifdef ENABLE_DRIVER_CHECK
                IF( IERR( 1 ).LT.0 ) THEN
                   IF( IAM.EQ.0 )
      $               WRITE( NOUT, FMT = 9997 ) 'descriptor'
                   KSKIP = KSKIP + 1
                   GO TO 30
                END IF
+#else
+               IF(N .LT. 0 .AND. (IERR(1) .EQ. -3 .OR.
+     $              IERR(1) .EQ. -6 .OR. IERR(1) .EQ. -9 .OR.
+     $              IERR(1) .EQ. -4 .OR. IERR(1) .EQ. -12 )) THEN
+*                   DESCINIT returns the correct error code,
+*                   -2, -3 incase of invalid M and N
+*                   -4, -6 or -12 incase of incorrect grid info
+*                   MAIN API can be validated.
+*                   Do NOTHING
+                  WRITE( NOUT, FMT = 9983 ) 'N'
+*                   disable extreme value case when N < 0
+                  EX_FLAG = .FALSE.
+               ELSE IF(N .EQ. 0 .AND. (IERR(1) .EQ. 0 .OR.
+     $              IERR(1) .EQ. -5 .OR. IERR(1) .EQ. -10 .OR.
+     $              IERR(1) .EQ. -15 .OR. IERR(1) .EQ. -20 )) THEN
+*                   DESCINIT returns the correct error code,
+*                   When N = 0, IERR(1) could be return
+*                   -5, -10 or -20 incase of incorrect grid info
+*                   MAIN API can be validated.
+*                   Do NOTHING
+*                   disable extreme value case when N = 0
+                    EX_FLAG = .FALSE.
+               ELSE IF(IERR(1) .LT. 0) THEN
+                  IF( IAM.EQ.0 )
+     $               WRITE( NOUT, FMT = 9997 ) 'descriptor'
+                  KSKIP = KSKIP + 1
+                  GO TO 30
+               END IF
+#endif
 *
 *              Assign pointers into MEM for SCALAPACK arrays, A is
 *              allocated starting at position MEM( IPREPAD+1 )
@@ -481,17 +567,19 @@
      $                         ((BWL+BWU+1)+10), 0, 0, IASEED, MYROW,
      $                         MYCOL, NPROW, NPCOL )
 *
-               CALL PDFILLPAD( ICTXT, NP, NQ, MEM( IPA-IPREPAD ),
+               IF(N .GE. 0) THEN
+                 CALL PDFILLPAD( ICTXT, NP, NQ, MEM( IPA-IPREPAD ),
      $                          ((BWL+BWU+1)+10), IPREPAD, IPOSTPAD,
      $                          PADVAL )
 *
-               CALL PDFILLPAD( ICTXT, WORKSIZ, 1,
+                 CALL PDFILLPAD( ICTXT, WORKSIZ, 1,
      $                          MEM( IP_DRIVER_W-IPREPAD ), WORKSIZ,
      $                          IPREPAD, IPOSTPAD, PADVAL )
+               END IF
 *
 *              Calculate norm of A for residual error-checking
 *
-               IF( CHECK ) THEN
+               IF( CHECK .AND. N.GT.0  ) THEN
 *
                   ANORM = PDLANGE( '1', (BWL+BWU+1),
      $                            N, MEM( IPA ), 1, 1,
@@ -514,20 +602,31 @@
                CALL SLTIMER( 1 )
 *
                CALL PDDBTRF( N, BWL, BWU, MEM( IPA ), 1, DESCA,
-     $                       MEM( IP_FILLIN ), FILLIN_SIZE, MEM( IPW ),
+     $                       MEM( IP_FILLIN ), FILLIN_SIZE, MEM(IPW),
      $                       IPW_SIZE, INFO )
 *
                CALL SLTIMER( 1 )
 *
                IF( INFO.NE.0 ) THEN
-                  IF( IAM.EQ.0 ) THEN
-                    WRITE( NOUT, FMT = * ) 'PDDBTRF INFO=', INFO
-                  ENDIF
+                  IF(N .LT. 0 .AND. (INFO .EQ. -1 .OR.
+     $                   INFO .EQ. -604 )) THEN
+*                    expected error code, pass this case to solve API
+                     WRITE( NOUT, FMT = * ) 'PDDBTRF INFO=', INFO
+*                 When N = 0, make BWL and BWU = 0 for early return
+                  ELSE IF(N .EQ. 0 .AND. INFO .EQ. -3) THEN
+*                    expected error code, when bandwidth is incorrect
+*                    pass this case to solve API
+                     WRITE( NOUT, FMT = * ) 'PDDBTRF INFO=', INFO
+                  ELSE
+                    IF( IAM.EQ.0 ) THEN
+                      WRITE( NOUT, FMT = * ) 'PDDBTRF INFO=', INFO
+                    ENDIF
                   KFAIL = KFAIL + 1
                   GO TO 30
+                 END IF
                END IF
 *
-               IF( CHECK ) THEN
+               IF( CHECK .AND. INFO .EQ. 0 ) THEN
 *
 *                 Check for memory overwrite in factorization
 *
@@ -629,7 +728,7 @@
 *
 *                    Solve linear system via factorization
 *
-                     CALL PDDBTRS( TRANS, N, BWL, BWU, NRHS, MEM( IPA ),
+                     CALL PDDBTRS( TRANS, N, BWL, BWU, NRHS, MEM(IPA),
      $                             1, DESCA, MEM( IPB ), 1, DESCB,
      $                             MEM( IP_FILLIN ), FILLIN_SIZE,
      $                             MEM( IPW_SOLVE ), IPW_SOLVE_SIZE,
@@ -638,14 +737,23 @@
                      CALL SLTIMER( 2 )
 *
                      IF( INFO.NE.0 ) THEN
-                       IF( IAM.EQ.0 )
-     $  WRITE( NOUT, FMT = * ) 'PDDBTRS INFO=', INFO
-                       KFAIL = KFAIL + 1
-                       PASSED = 'FAILED'
-                       GO TO 20
+                        IF(N .LT. 0 .AND. (INFO .EQ. -2 .OR.
+     $                           INFO .EQ. -804)) THEN
+*                          expected error code, pass this case to solve API
+                           WRITE( NOUT, FMT = * ) 'PDDBTRS INFO=', INFO
+                        ELSE IF(N .EQ. 0 .AND. INFO .EQ. -4) THEN
+*                          expected error code, pass this case to solve API
+                           WRITE( NOUT, FMT = * ) 'PDDBTRS INFO=', INFO
+                        ELSE
+                         IF( IAM.EQ.0 )
+     $                     WRITE( NOUT, FMT = * ) 'PDDBTRS INFO=', INFO
+                         KFAIL = KFAIL + 1
+                         PASSED = 'FAILED'
+                         GO TO 20
+                        END IF
                      END IF
 *
-                     IF( CHECK ) THEN
+                     IF( CHECK .AND. .NOT.(EX_FLAG) ) THEN
 *
 *                       check for memory overwrite
 *
@@ -659,12 +767,14 @@
 *
                         SRESID = ZERO
 *
-                        CALL PDDBLASCHK( 'N', 'D', TRANS,
+                        IF(INFO .EQ. 0) THEN
+                          CALL PDDBLASCHK( 'N', 'D', TRANS,
      $                       N, BWL, BWU, NRHS,
      $                       MEM( IPB ), 1, 1, DESCB2D,
      $                       IASEED, MEM( IPA ), 1, 1, DESCA2D,
      $                       IBSEED, ANORM, SRESID,
      $                       MEM( IP_DRIVER_W ), WORKSIZ )
+                        END IF
 *
                         IF( IAM.EQ.0 ) THEN
                            IF( SRESID.GT.THRESH )
@@ -673,13 +783,58 @@
 *
 *                       The second test is a NaN trap
 *
-                        IF( ( SRESID.LE.THRESH          ).AND.
+                        IF( N .EQ. 0 .AND. (INFO .EQ. -4 .OR.
+     $                       INFO .EQ. 0)) THEN
+*                       If N =0 this is the case of
+*                       early return from ScaLAPACK API.
+*                       If there is safe exit from API; pass this case
+                           KPASS = KPASS + 1
+                           WRITE( NOUT, FMT = 9984 ) 'PDDBTRS'
+                           PASSED = 'PASSED'
+                        ELSE IF(N .LT. 0 .AND. (INFO .EQ. -2 .OR.
+     $                         INFO .EQ. -804 )) THEN
+*                       When N < 0/Invalid, PDDBTRS INFO = -1
+*                       Expected Error code for N < 0
+*                       Hence this case can be passed
+                           KPASS = KPASS + 1
+                           WRITE( NOUT, FMT = 9982 ) 'PDDBTRS'
+                           PASSED = 'PASSED'
+                        ELSE IF( ( SRESID.LE.THRESH ).AND.
      $                      ( (SRESID-SRESID).EQ.0.0D+0 ) ) THEN
                            KPASS = KPASS + 1
                            PASSED = 'PASSED'
                         ELSE
                            KFAIL = KFAIL + 1
                            PASSED = 'FAILED'
+                        END IF
+                     ELSE IF(EX_FLAG) THEN
+*                       Check presence of INF/NAN in output
+*                       Pass the case if present
+                        DO IK = 0, N-1
+                           DO JK = 1, N
+                              X = (MEM(IK*N + JK))
+                              IF (isnan(X)) THEN
+*                                NAN DETECTED
+                                 RES_FLAG = .TRUE.
+                                 EXIT
+                              ELSE IF (.NOT.ieee_is_finite(X)) THEN
+*                                INFINITY DETECTED
+                                 RES_FLAG = .TRUE.
+                                 EXIT
+                              END IF
+                          END DO
+                           IF(RES_FLAG) THEN
+                              EXIT
+                           END IF
+                        END DO
+                        IF (.NOT.(RES_FLAG)) THEN
+                           KFAIL = KFAIL + 1
+                           PASSED = 'FAILED'
+                        ELSE
+                           KPASS = KPASS + 1
+                           PASSED = 'PASSED'
+*                          RESET RESIDUAL FLAG
+                           RES_FLAG = .FALSE.
                         END IF
 *
                      END IF
@@ -922,6 +1077,13 @@
  9987 FORMAT( 'END OF TESTS.' )
  9986 FORMAT( '||A - ', A4, '|| / (||A|| * N * eps) = ', G25.7 )
  9985 FORMAT( '||Ax-b||/(||x||*||A||*eps*N) ', F25.7 )
+ 9984 FORMAT( '----------Test Passed but no compute was ',
+     $       'performed! [Safe exit from ', A,']-----------')
+ 9983 FORMAT(  A, ' < 0 case detected. ',
+     $        'Instead of driver file, This case will be handled',
+     $        'by the ScaLAPACK API.')
+ 9982 FORMAT( '----------Negative-Test Passed with expected',
+     $       ' ERROR CODE in INFO from ', A,']-----------')
 *
       STOP
 *
