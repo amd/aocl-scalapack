@@ -589,11 +589,12 @@
 *              For SPD Tridiagonal complex matrices, diagonal is stored
 *                as a real. Thus, compact D into half the space
 *
-        DO H=1, NUMROC(N,NB,MYCOL,0,NPCOL)/2
+               IF(N .GT. 0) THEN
+                DO H=1, NUMROC(N,NB,MYCOL,0,NPCOL)/2
                   MEM( IPA+INT_TEMP+H-1 ) = MEM( IPA+INT_TEMP+2*H-2 )
      $               +MEM( IPA+INT_TEMP+2*H-1 )*( 0.0D+0, 1.0D+0 )
-   10   END DO
-               IF( 2*(NUMROC(N,NB,MYCOL,0,NPCOL)/2).NE.
+   10           END DO
+                IF( 2*(NUMROC(N,NB,MYCOL,0,NPCOL)/2).NE.
      $               NUMROC(N,NB,MYCOL,0,NPCOL) ) THEN
                   H=NUMROC(N,NB,MYCOL,0,NPCOL)/2+1
                   MEM( IPA+INT_TEMP+H-1 ) = MEM( IPA+INT_TEMP+2*H-2 )
