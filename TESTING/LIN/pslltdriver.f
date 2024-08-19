@@ -65,6 +65,7 @@
 *
 *  =====================================================================
 *
+      use,intrinsic :: ieee_arithmetic
 *     .. Parameters ..
       INTEGER            BLOCK_CYCLIC_2D, CSRC_, CTXT_, DLEN_, DTYPE_,
      $                   LLD_, MB_, M_, NB_, N_, RSRC_
@@ -141,6 +142,15 @@
 *     ..
 *     .. Executable Statements ..
 *
+*     Take command-line arguments if requested
+      CHARACTER*80 arg
+      INTEGER numArgs, count
+      LOGICAL :: help_flag = .FALSE.
+      LOGICAL :: EX_FLAG = .FALSE., RES_FLAG = .FALSE.
+      INTEGER :: INF_PERCENT = 0
+      INTEGER :: NAN_PERCENT = 0
+      DOUBLE PRECISION :: X
+*
 *     Get starting information
 *
 #ifdef DYNAMIC_WORK_MEM_ALLOC
@@ -154,6 +164,35 @@
      $                NTESTS, NGRIDS, PVAL, NTESTS, QVAL, NTESTS,
      $                THRESH, EST, MEM, IAM, NPROCS )
       CHECK = ( THRESH.GE.0.0E+0 )
+
+*     Get the number of command-line arguments
+      numArgs = command_argument_count()
+
+*     Process command-line arguments
+      do count = 1, numArgs, 2
+         call get_command_argument(count, arg)
+         select case (arg)
+            case ("-h", "--help")
+                  help_flag = .true.
+                  exit
+            case ("-inf")
+                  call get_command_argument(count + 1, arg)
+                  read(arg, *) INF_PERCENT
+                  IF (INF_PERCENT .GT. 0) THEN
+                     EX_FLAG = .TRUE.
+                  END IF
+            case ("-nan")
+                  call get_command_argument(count + 1, arg)
+                  read(arg, *) NAN_PERCENT
+                  IF (NAN_PERCENT .GT. 0) THEN
+                     EX_FLAG = .TRUE.
+                  END IF
+            case default
+                  print *, "Invalid option: ", arg
+                  help_flag = .true.
+                  exit
+            end select
+      end do
 *
 *     Print headings
 *
@@ -292,11 +331,20 @@
                   GO TO 30
                END IF
 #else
-*              If N < 0 in LLT.dat file then DESCINIT API sets IERR( 1 ) = -2
-               IF( N.LT.0 .AND. IERR( 1 ).EQ.-2 ) THEN
-*                 If DESCINIT is returning correct error code then
-*                 do nothing
-                  WRITE( NOUT, FMT = 9984 ) 'N'
+               IF(N .LT. 0 .AND. (IERR(1) .EQ. -2 .OR.
+     $              IERR(1) .EQ. -4 .OR. IERR(1) .EQ. -8 .OR.
+     $              IERR(1) .EQ. -3 .OR. IERR(1) .EQ. -12 )) THEN
+*                   DESCINIT returns the correct error code,
+*                   -2, -3 incase of invalid M and N
+*                   -4, -8 or -12 incase of incorrect grid info
+*                   MAIN API can be validated.
+*                   Do NOTHING
+                  WRITE( *, FMT = 9984 ) 'N'
+*                   disable extreme value case when N < 0
+                    EX_FLAG = .FALSE.
+               ELSE IF(N .EQ. 0) THEN
+*                   disable extreme value case when M < 0
+                    EX_FLAG = .FALSE.
                ELSE IF( IERR( 1 ).LT.0 ) THEN
                   IF( IAM.EQ.0 )
      $               WRITE( NOUT, FMT = 9997 ) 'descriptor'
@@ -373,7 +421,7 @@
 *
 *              Calculate inf-norm of A for residual error-checking
 *
-               IF( CHECK ) THEN
+               IF( CHECK .AND. N .GT. 0 ) THEN
                   CALL PSFILLPAD( ICTXT, NP, NQ, MEM( IPA-IPREPAD ),
      $                             DESCA( LLD_ ), IPREPAD, IPOSTPAD,
      $                             PADVAL )
@@ -400,7 +448,7 @@
      $                           DESCA( LLD_ ), DESCA( RSRC_ ),
      $                           DESCA( CSRC_ ), IASEED, 0, NP, 0, NQ,
      $                           MYROW, MYCOL, NPROW, NPCOL )
-                  IF( CHECK )
+                  IF( CHECK  .AND. N .GT. 0 )
      $               CALL PSFILLPAD( ICTXT, NP, NQ,
      $                               MEM( IPA0-IPREPAD ), DESCA( LLD_ ),
      $                               IPREPAD, IPOSTPAD, PADVAL )
@@ -420,29 +468,31 @@
                IF( INFO.NE.0 ) THEN
                   IF( IAM.EQ.0 )
      $               WRITE( NOUT, FMT = * ) 'PSPOTRF INFO=', INFO
-*                 If N < 0 in LLT.dat file then PSPOTRF API sets INFO = -2
+*                 If N < 0 in LLT.dat file then PDPOTRF API sets INFO = -2
                   IF (N.LT.0 .AND. INFO.EQ.-2) THEN
-*                    If PSPOTRF is returning correct error
-*                    code we need to pass this case
+*                    If PSPOTRF is returning correct error code, do nothing
                      WRITE( NOUT, FMT = 9983 ) 'PSPOTRF'
-                     KPASS = KPASS + 1
+                  ELSE IF (INFO.GT.0 .AND. EX_FLAG)  THEN
+                     WRITE(*,*) 'PSPOTRF INFO=', INFO
+*                    do nothing, skip residual calculation
+*                    Pass this case in INF/NAN residual calculation
                   ELSE
 *                    For other error code we will mark test case as fail
                      KFAIL = KFAIL + 1
-                  END IF
                   RCOND = ZERO
                   GO TO 60
+                  END IF
                ELSE IF (N.EQ.0) THEN
 *                 If N = 0 this is the case of
 *                 early return from ScaLAPACK API.
 *                 If there is safe exit from API we need to pass this case
-                  WRITE( NOUT, FMT = 9982 ) 'PSPOTRF'
-                  KPASS = KPASS + 1
+                   WRITE( NOUT, FMT = 9982 ) 'PSPOTRF'
                   RCOND = ZERO
-                  GO TO 60
                END IF
 *
-               IF( CHECK ) THEN
+*
+               IF( CHECK .AND. .NOT.(EX_FLAG) .AND. INFO.EQ.0 .AND.
+     $                N .GT. 0) THEN
 *
 *                 Check for memory overwrite in LLt factorization
 *
@@ -484,7 +534,7 @@
                      GO TO 60
                   END IF
 *
-                  IF( CHECK ) THEN
+                  IF( CHECK .AND. .NOT.(EX_FLAG) .AND. INFO .EQ. 0) THEN
                      CALL PSFILLPAD( ICTXT, LWORK, 1,
      $                               MEM( IPW-IPREPAD ), LWORK,
      $                               IPREPAD, IPOSTPAD, PADVAL )
@@ -496,11 +546,14 @@
 *
 *                 Compute condition number of the matrix
 *
-                  CALL PSPOCON( UPLO, N, MEM( IPA ), 1, 1, DESCA,
+                  IF(.NOT.(EX_FLAG) .AND. N.GT.0 ) THEN
+                    CALL PSPOCON( UPLO, N, MEM( IPA ), 1, 1, DESCA,
      $                          ANORM1, RCOND, MEM( IPW ), LWORK,
      $                          MEM( IPW2 ), LIWORK, INFO )
+                  END IF
 *
-                  IF( CHECK ) THEN
+                  IF( CHECK .AND. .NOT.(EX_FLAG) .AND.
+     $                      N .GT. 0) THEN
                      CALL PSCHEKPAD( ICTXT, 'PSPOCON', NP, NQ,
      $                               MEM( IPA-IPREPAD ), DESCA( LLD_ ),
      $                               IPREPAD, IPOSTPAD, PADVAL )
@@ -532,10 +585,11 @@
      $                              IERR( 1 ) )
 *                       If NRHS < 0 in LLT.dat file then
 *                       DESCINIT API sets IERR( 1 ) = -3
-                        IF (NRHS.LT.0 .AND. IERR( 1 ).EQ.-3 ) THEN
-*                          If DESCINIT is returning correct error code then
+                        IF (NRHS.LT.0 .AND. IERR( 1 ).EQ.-3 .OR.
+     $                           IERR(1) .EQ. -12) THEN
+*                             If DESCINIT is returns correct error code
 *                          do nothing
-                           WRITE( NOUT, FMT = 9984 ) 'NRHS'
+*                           WRITE( *, FMT = 9984 ) 'NRHS'
                         END IF
 *
 *                    move IPW to allow room for RHS
@@ -601,7 +655,7 @@
      $                              DESCB( CSRC_ ), IBSEED, 0, NP, 0,
      $                              MYRHS, MYROW, MYCOL, NPROW, NPCOL )
 *
-                     IF( CHECK )
+                     IF( CHECK .AND. INFO .EQ. 0 )
      $                  CALL PSFILLPAD( ICTXT, NP, MYRHS,
      $                                  MEM( IPB-IPREPAD ),
      $                                  DESCB( LLD_ ),
@@ -616,7 +670,8 @@
      $                                 MYRHS, MYROW, MYCOL, NPROW,
      $                                 NPCOL )
 *
-                        IF( CHECK ) THEN
+                        IF( CHECK .AND. .NOT.(EX_FLAG) .AND.
+     $                              INFO .EQ. 0 ) THEN
                            CALL PSFILLPAD( ICTXT, NP, MYRHS,
      $                                     MEM( IPB0-IPREPAD ),
      $                                     DESCB( LLD_ ), IPREPAD,
@@ -648,18 +703,24 @@
      $                     WRITE( NOUT, FMT = * ) 'PSPOTRS INFO=', INFO
 *                       If NRHS < 0 in LLT.dat file then
 *                       PSPOTRS API sets INFO = -3
-                        IF( NRHS.LT.0 .AND. INFO.EQ.-3 ) THEN
+                        IF( NRHS.LT.0 .AND. INFO.EQ.-3 .OR.
+     $                          (N.LT.0 .AND. INFO.EQ.-2) )  THEN
 *                          If PSPOTRS is returning correct error code then
 *                          we need to pass this case
-                           WRITE( NOUT, FMT = 9983 ) 'PSPOTRS'
-                           KPASS = KPASS + 1
+                           WRITE( *, FMT = 9983 ) 'PSPOTRS'
+                        ELSE IF( INFO .GT. 0 .AND. EX_FLAG) THEN
+                              WRITE(*,*) 'PSPOTRS INFO=', INFO
+*                             Do Nothing, Pass this case in residual calculation
                         ELSE
 *                          For other error code we will mark test case as fail
                            KFAIL = KFAIL + 1
+                           GO TO 60
                         END IF
-                        GO TO 60
                      END IF
-                     IF( CHECK ) THEN
+*
+                     IF( CHECK .AND. .NOT.(EX_FLAG) .AND.
+     $                      INFO .EQ. 0 .AND. N .GT. 0 .AND.
+     $                      NRHS .GT. 0) THEN
 *
 *                       check for memory overwrite
 *
@@ -710,9 +771,63 @@
                            PASSED = 'FAILED'
                         END IF
                      ELSE
-                        KPASS = KPASS + 1
-                        SRESID = SRESID - SRESID
-                        PASSED = 'BYPASS'
+                           IF( NRHS.LT.0 .AND. INFO.EQ.-3 .OR.
+     $                          (N.LT.0 .AND. INFO.EQ.-2) )  THEN
+*                             If PDGETRS is returning correct error code
+*                             we need to pass this case
+                              SRESID = SRESID - SRESID
+                              KPASS = KPASS + 1
+                              IF(NAN_PERCENT .GT. 0 .OR.
+     $                          INF_PERCENT .GT. 0) THEN
+*                                  RESET EX-FLAG
+                                   EX_FLAG = .TRUE.
+                              END IF
+                           ELSE IF( N .EQ. 0 .AND. INFO .EQ. 0 )  THEN
+*                             If PDGETRS is returning correct error code
+*                             we need to pass this case
+                              SRESID = SRESID - SRESID
+                              KPASS = KPASS + 1
+                              IF(NAN_PERCENT .GT. 0 .OR.
+     $                          INF_PERCENT .GT. 0) THEN
+*                                  RESET EX-FLAG
+                                   EX_FLAG = .TRUE.
+                              END IF
+*                          Extreme value validation check
+                           ELSE IF( EX_FLAG) THEN
+*                            Check presence of INF/NAN in output
+*                            Pass the case if present
+                              DO IK = 0, M
+                                 DO JK = 1, N
+                                    X = MEM(IK*N + JK)
+                                    IF (isnan(X)) THEN
+*                                      NAN DETECTED
+                                       RES_FLAG = .TRUE.
+                                       EXIT
+                                    ELSE IF (.NOT.ieee_is_finite(
+     $                                       X)) THEN
+*                                      INFINITY DETECTED
+                                       RES_FLAG = .TRUE.
+                                       EXIT
+                                    END IF
+                                 END DO
+                                 IF(RES_FLAG) THEN
+                                    EXIT
+                                 END IF
+                              END DO
+                              IF (.NOT.(RES_FLAG)) THEN
+                                 KFAIL = KFAIL + 1
+                                 PASSED = 'FAILED'
+                              ELSE
+                                 KPASS = KPASS + 1
+                                 PASSED = 'PASSED'
+*                                RESET RESIDUAL FLAG
+                                 RES_FLAG = .FALSE.
+                              END IF
+                           ELSE
+                              SRESID = SRESID - SRESID
+                              KPASS = KPASS + 1
+                              PASSED = 'BYPASS'
+                           END IF
                      END IF
 *
                      IF( EST ) THEN
@@ -746,7 +861,8 @@
                               GO TO 10
                            END IF
 *
-                           IF( CHECK ) THEN
+                           IF( CHECK .AND. .NOT.(EX_FLAG) .AND.
+     $                           INFO .EQ.0) THEN
                               CALL PSFILLPAD( ICTXT, LWORK, 1,
      $                                        MEM( IPW-IPREPAD ),
      $                                        LWORK, IPREPAD, IPOSTPAD,
@@ -761,17 +877,21 @@
 *                          Use iterative refinement to improve the
 *                          computed solution
 *
-                           CALL PSPORFS( UPLO, N, NRHS, MEM( IPA0 ),
+                           IF(INFO .EQ.0 .AND. .NOT.(EX_FLAG) ) THEN
+                             CALL PSPORFS( UPLO, N, NRHS, MEM( IPA0 ),
      $                                   1, 1, DESCA, MEM( IPA ), 1, 1,
      $                                   DESCA, MEM( IPB0 ), 1, 1,
      $                                   DESCB, MEM( IPB ), 1, 1, DESCB,
      $                                   MEM( IPFERR ), MEM( IPBERR ),
      $                                   MEM( IPW ), LWORK, MEM( IPW2 ),
      $                                   LIWORK, INFO )
+                           END IF
 *
 *                          check for memory overwrite
 *
-                           IF( CHECK ) THEN
+                           IF( CHECK .AND. INFO .EQ.0 .AND.
+     $                              .NOT.(EX_FLAG) .AND.
+     $                              N .GT. 0 .AND. NRHS .GT. 0) THEN
                               CALL PSCHEKPAD( ICTXT, 'PSPORFS', NP,
      $                                        NQ, MEM( IPA0-IPREPAD ),
      $                                        DESCA( LLD_ ), IPREPAD,
@@ -898,7 +1018,8 @@
    10             CONTINUE
    20          END DO
 *
-               IF( CHECK .AND. SRESID.GT.THRESH ) THEN
+               IF( CHECK .AND. SRESID.GT.THRESH .AND. INFO .EQ.0 .AND.
+     $                          .NOT.(EX_FLAG)) THEN
 *
 *                 Compute FRESID = ||A - LL'|| / (||A|| * N * eps)
 *
@@ -979,7 +1100,7 @@
  9987 FORMAT( 'END OF TESTS.' )
  9986 FORMAT( '||A - ', A4, '|| / (||A|| * N * eps) = ', G25.7 )
  9985 FORMAT( '||Ax-b||/(||x||*||A||*eps*N) ', F25.7 )
- 9984 FORMAT(  A, ' < 0 case detected. ',
+ 9984 FORMAT(  A4, ' < 0 case detected. ',
      $        'Instead of driver file, we will handle this case from ',
      $        'ScaLAPACK API.')
  9983 FORMAT(  A, ' returned correct error code. Passing this case.')
