@@ -51,37 +51,37 @@ Following are the prerequisite libraries for building AOCL-ScaLAPACK:
          -------------------------------------------------
          i) Single-thread-AOCL-BLAS:
             $ cmake .. -DBUILD_SHARED_LIBS=OFF -DBLAS_LIBRARIES="-fopenmp <path to AOCL-BLAS library>/libblis.a" 
-            -DLAPACK_LIBRARIES="-lstdc++ <path to AOCL-LAPACK library>/libflame.a <path to AOCL-Utils library>/libaoclutils.a" 
+            -DLAPACK_LIBRARIES="<path to AOCL-LAPACK library>/libflame.a;<path to AOCL-Utils library>/libaoclutils.a;-lstdc++" 
             -DCMAKE_C_COMPILER=mpicc -DCMAKE_Fortran_COMPILER=mpif90 -DUSE_OPTIMIZED_LAPACK_BLAS=OFF 
       
          ii)Multi-thread-AOCL-BLAS:
             $ cmake .. -DBUILD_SHARED_LIBS=OFF -DBLAS_LIBRARIES="-fopenmp <path to AOCL-BLAS library>/libblis-mt.a" 
-            -DLAPACK_LIBRARIES="-lstdc++ <path to AOCL-LAPACK library>/libflame.a <path to AOCL-Utils library>/libaoclutils.a" 
+            -DLAPACK_LIBRARIES="<path to AOCL-LAPACK library>/libflame.a;<path to AOCL-Utils library>/libaoclutils.a;-lstdc++" 
             -DCMAKE_C_COMPILER=mpicc -DCMAKE_Fortran_COMPILER=mpif90 -DUSE_OPTIMIZED_LAPACK_BLAS=OFF
       
          #Building shared library using GCC/AOCC compiler:
          -------------------------------------------------
          i) Single-thread-AOCL-BLAS:
             $ cmake .. -DBUILD_SHARED_LIBS=ON -DBLAS_LIBRARIES="-fopenmp <path to AOCL-BLAS library>/libblis.so" 
-            -DLAPACK_LIBRARIES="-lstdc++ <path to AOCL-LAPACK library>/libflame.so <path to AOCL-Utils library>/libaoclutils.so" 
+            -DLAPACK_LIBRARIES="<path to AOCL-LAPACK library>/libflame.so;<path to AOCL-Utils library>/libaoclutils.so;-lstdc++" 
             -DCMAKE_C_COMPILER=mpicc -DCMAKE_Fortran_COMPILER=mpif90 -DUSE_OPTIMIZED_LAPACK_BLAS=OFF
       
          ii)Multi-thread-AOCL-BLAS:
             $ cmake .. -DBUILD_SHARED_LIBS=ON -DBLAS_LIBRARIES="-fopenmp <path to AOCL-BLAS library>/libblis-mt.so" 
-            -DLAPACK_LIBRARIES="-lstdc++ <path to AOCL-LAPACK library>/libflame.so <path to AOCL-Utils library>/libaoclutils.so" 
+            -DLAPACK_LIBRARIES="<path to AOCL-LAPACK library>/libflame.so;<path to AOCL-Utils library>/libaoclutils.so;-lstdc++" 
             -DCMAKE_C_COMPILER=mpicc -DCMAKE_Fortran_COMPILER=mpif90 -DUSE_OPTIMIZED_LAPACK_BLAS=OFF
       
          #Static library with external BLACS library:
          --------------------------------------------
          $ cmake .. -DBUILD_SHARED_LIBS=OFF -DBLAS_LIBRARIES="-fopenmp <path to AOCL-BLAS library>/libblis-mt.a" 
-           -DLAPACK_LIBRARIES="-lstdc++ <path to AOCL-LAPACK library>/libflame.a <path to AOCL-Utils library>/libaoclutils.a" 
+           -DLAPACK_LIBRARIES="<path to AOCL-LAPACK library>/libflame.a;<path to AOCL-Utils library>/libaoclutils.a;-lstdc++" 
            -DBLACS_LIBRARIES=<path to BLACS library>/libBLACS.a -DCMAKE_C_COMPILER=mpicc -DCMAKE_Fortran_COMPILER=mpif90 
            -DUSE_OPTIMIZED_LAPACK_BLAS=OFF
       
          #Static library with Intel MPI and ICC compiler:
          ------------------------------------------------
          $ cmake .. -DBUILD_SHARED_LIBS=OFF -DBLAS_LIBRARIES="-fopenmp <path to AOCL-BLAS library>/libblis-mt.a" 
-           -DLAPACK_LIBRARIES="-lstdc++ -fopenmp <path to AOCL-LAPACK library>/libflame.a <path to AOCL-Utils library>/libaoclutils.a" 
+           -DLAPACK_LIBRARIES="<path to AOCL-LAPACK library>/libflame.a;<path to AOCL-Utils library>/libaoclutils.a;-lstdc++" 
            -DCMAKE_C_COMPILER=mpiicc -DCMAKE_Fortran_COMPILER=mpiifort -DUSE_OPTIMIZED_LAPACK_BLAS=OFF;
       
       d. Ensure CMake locates AOCL-LAPACK and AOCL-BLAS libraries. On completion, a message, “LAPACK routine dgesv is found: 1” 
