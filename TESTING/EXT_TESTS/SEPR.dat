@@ -1,0 +1,26 @@
+
+
+'ScaLAPACK Symmetric Eigensolver Test File'
+' '
+'sepr.out'                      output file name (if any)
+6                               device out (13 & 14 reserved for internal testing)
+4 				maximum number of processes
+'Y'				Switch set to 'Y'
+' '
+'TEST 1 - negative and zero matrix sizes - different process configurations'
+3                               number of matrices
+-1 0 2                           Matrix sizes
+1				number of uplo choices
+'L'				uplo choices
+1				number of processor configurations (P, Q, NB)
+1	         		values of P (NPROW)
+2	 			values of Q (NPCOL)
+1	 			values of NB 
+1				number of matrix types
+8 			 	matrix types (see pdseprtst.f)
+'N'				perform subset tests?
+80.0				Threshold (* 5 for generalized tests) 
+-1 				Absolute Tolerance
+' '
+'End of tests'
+-1
