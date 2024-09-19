@@ -45,3 +45,53 @@ Address Sanitizer(ASAN) testing:
 Address saitizer(ASAN) tests are supported through the AOCL-ScaLAPACK
 test suite. To enable the same, include the build configure option
 '-DENABLE_ASAN_TESTS=ON'.
+
+Extended test suite for AOCL-ScaLAPACK:
+=======================================
+
+Extended test suite that includes additional cases such as
+
+    a) Negative inputs.
+    b) Early reuturn inputs.
+    c) Extreme value inputs.
+    
+NOTE: Not all testing executable support the extended test suite.
+
+Running extended test suite:
+----------------------------
+
+Eg: To test negative inputs and early return inputs.
+    Upon building the AOCL-ScaLAPACK library, by default '.dat' files
+    are copied from source TESTING folder to built TESTING folder.
+    In order to test extended test cases, copy the '.dat' files present
+    in the folder aocl-scalapack/TESTING/EXT_TESTS to TESTING folder
+    of the built workspace replacing the existing '.dat' files.
+    
+    For instance:
+    Running a test program:
+    
+    $ mpirun -np 4 ./xdinv
+
+Eg: To test extreme value inputs.
+    Upon building the AOCL-ScaLAPACK library, to test the infinity or NaN
+    input values, refer below illustration.
+    
+    For instance:
+    Infinity and NaN input values can be clubbed together or can be
+    used individually. Percentage of infinity and NaNs can be altered.
+      
+    1)mpirun -np <mpi_ranks> ./<test_program> -inf <%_of_inf> 
+      
+     $ mpirun -np 4 ./xdinv -inf 10
+        
+    2)mpirun -np <mpi_ranks> ./<test_program> -nan <%_of_nan> 
+      
+     $ mpirun -np 4 ./xdinv -nan 10
+        
+    3)mpirun -np <mpi_ranks> ./<test_program> -inf <%_of_inf> -nan <%_of_nan>
+      
+     $ mpirun -np 4 ./xdinv -inf 10 -nan 30
+      
+      
+    
+    
