@@ -1,9 +1,10 @@
-prefix=@prefix@
-libdir=@libdir@
+prefix=${prefix}
+libdir=${libdir}
 
-Name: scalapack
-Description: SCALAPACK reference implementation
-Version: @SCALAPACK_VERSION@
-URL: http://www.netlib.org/scalapack/
+Name: AOCL-ScaLAPACK
+Description: AOCL-ScaLAPACK is a high performant implementation of ScaLAPACK reference
+Version: ${PROJ_VERSION}
+URL: https://github.com/amd/aocl-scalapack
+
 Libs: -L${libdir} -lscalapack
-Requires: mpi lapack blas
+Requires: mpi libflame blis aoclutils

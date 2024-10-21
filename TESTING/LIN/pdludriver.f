@@ -3,7 +3,7 @@
 *  -- ScaLAPACK testing driver (version 1.7) --
 *     University of Tennessee, Knoxville, Oak Ridge National Laboratory,
 *     and University of California, Berkeley.
-*     Modifications Copyright (c) 2024 Advanced Micro Devices, Inc. All rights reserved.
+*     Modifications Copyright (c) 2024-2025 Advanced Micro Devices, Inc. All rights reserved.
 *
 *  Purpose
 *  ========
@@ -102,7 +102,7 @@
      $                   LIPIV, LIWORK, LWORK, LW2, M, MAXMN,
      $                   MINMN, MP, MYCOL, MYRHS, MYROW, N, NB, NBRHS,
      $                   NGRIDS, NMAT, NNB, NNBR, NNR, NOUT, NP, NPCOL,
-     $                   NPROCS, NPROW, NQ, NRHS, WORKSIZ
+     $                   NPROCS, NPROW, NQ, NRHS, WORKSIZ, NULL_POS
       REAL               THRESH
       DOUBLE PRECISION   ANORM, ANORM1, FRESID, NOPS, RCOND,
      $                   SRESID, SRESID2, TMFLOPS
@@ -119,7 +119,7 @@
       DOUBLE PRECISION   CTIME( 2 ), WTIME( 2 )
       DOUBLE PRECISION, allocatable :: MEM (:)
 #endif
-      CHARACTER          SVERSION( 100 )
+      CHARACTER*100          SVERSION
 *     ..
 *     .. External Subroutines ..
       EXTERNAL           BLACS_BARRIER, BLACS_EXIT, BLACS_GET,
@@ -158,7 +158,21 @@
 #ifdef DYNAMIC_WORK_MEM_ALLOC
       allocate(MEM(MEMSIZ))
 #endif
+*
+*     Display AOCL-SCALAPACK Version
+*
       CALL BLACS_PINFO( IAM, NPROCS )
+
+      IF (IAM.EQ.0) THEN
+          CALL GET_AOCL_SCALAPACK_VERSION(SVERSION)
+          NULL_POS = INDEX(SVERSION, CHAR(0))
+          IF (NULL_POS .GT. 0) THEN
+              SVERSION = SVERSION(1:NULL_POS-1)
+          END IF
+          WRITE(*, *)
+          WRITE(*, *) 'AOCL-Scalapack Version: ', TRIM(SVERSION)
+      END IF
+
       IASEED = 100
       IBSEED = 200
       CALL PDLUINFO( OUTFILE, NOUT, NMAT, MVAL, NVAL, NTESTS, NNB,
