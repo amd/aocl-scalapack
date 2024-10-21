@@ -1,7 +1,7 @@
 /* ---------------------------------------------------------------------
 *
 *  -- AOCL ScaLAPACK routine --
-*     Copyright (c) 2020-2024 Advanced Micro Devices, Inc.  All rights reserved.
+*     Copyright (c) 2020-2025 Advanced Micro Devices, Inc.  All rights reserved.
 *
 *  ---------------------------------------------------------------------
 */
@@ -24,19 +24,27 @@ void get_aocl_scalapack_version_( version )
    char * version;
 #endif
 {
-#ifdef AOCL_SCALAPACK_VERSION
-     char slmainversion[] = "AOCL-ScaLAPACK 5.0.1 ";
+
+
+     char slmainversion[1000];
      char slversion[1000];
      char scalapackversion[] = ", supports ScaLAPACK 2.2.0";
      int length, i;
 
+     char prefix[] = "AOCL-ScaLAPACK ";
+
+     strcpy(slmainversion, prefix);
      length = 0;
      for (i = 0; i<strlen(slmainversion); ++i, ++length)
      {
 	    slversion[length] = slmainversion[i];
      }
 
+#ifdef AOCL_SCALAPACK_LINUX_VERSION
+     char configslversion[] = AOCL_SCALAPACK_VERSION;
+#else
      char configslversion[] = VERSION_MAKE_STR(AOCL_SCALAPACK_VERSION);
+#endif
      for (i = 0; i<strlen(configslversion); ++i, ++length)
      {
 	    slversion[length] = configslversion[i];
@@ -49,9 +57,7 @@ void get_aocl_scalapack_version_( version )
 
      slversion[length] = '\0';
      strcpy(version, slversion);
-#else
-    strcpy(version, "AOCL-ScaLAPACK 5.0.1, supports ScaLAPACK 2.2.0");
-#endif
+
 return;
 }
 

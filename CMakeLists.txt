@@ -1,6 +1,12 @@
-##Copyright (C) 2021-2024, Advanced Micro Devices, Inc. All rights reserved.##
+##Copyright (C) 2021-2025, Advanced Micro Devices, Inc. All rights reserved.##
 
 cmake_minimum_required(VERSION 3.26)
+
+# Reading program version from file
+
+file(STRINGS "so_version" VERSION_DATA)
+list(JOIN VERSION_DATA "." PROJ_VERSION)
+
 project(SCALAPACK C Fortran)
 # Configure the warning and code coverage suppression file
 configure_file(
@@ -41,8 +47,8 @@ option(ENABLE_ASAN_TESTS "Enable Address sanitizer tests " OFF)
 # Coverage option
 option(ENABLE_COVERAGE "Enable code coverage" OFF)
 
-# Option: Include build number in the version string.
-option (ENABLE_SET_LIB_VERSION "Set library version" OFF)
+# Set custom library version number
+set(ENABLE_SET_LIB_VERSION "default_version" CACHE STRING "Set the library version")
 
 # Option: Dynamic allocation of work buffer memory in Test code
 # Helpful to test larger matrix sizes more than 2K
@@ -267,18 +273,29 @@ else(ENABLE_ILP64)
    add_definitions("-DUInt=unsigned int " "-DInt=int" )
 ENDIF(ENABLE_ILP64)
 
+#if the flag is not set or set to a binary value, use the AOCL-VERSION
+if("${ENABLE_SET_LIB_VERSION}" MATCHES "^(default_version|OFF|ON)$")
+    string(TIMESTAMP TODAY "%Y%m%d")
+    if(UNIX)
+      set(AOCL_SCALAPACK_LINUX_VERSION TRUE)
+	    set(LIBRARY_VERSION "\"${PROJ_VERSION}\tBuild\t${TODAY}\"")
+    elseif(WIN32)
+      set( LIBRARY_VERSION "${PROJ_VERSION}\tBuild\t${TODAY}")
+    endif()
+    add_definitions("-DAOCL_SCALAPACK_VERSION=${LIBRARY_VERSION}")
+else()
+    if(UNIX)
+      set(AOCL_SCALAPACK_LINUX_VERSION TRUE)
+    endif()
+    add_definitions("-DAOCL_SCALAPACK_VERSION=${ENABLE_SET_LIB_VERSION}")
+endif()
+
 if(ENABLE_AOCL_PROGRESS)
   if(UNIX)
     add_definitions("-DAOCL_PROGRESS")
   endif()
 ENDIF(ENABLE_AOCL_PROGRESS)
     message(STATUS "ENABLE_SET_LIB_VERSION : ${ENABLE_SET_LIB_VERSION} ")
-
-if(ENABLE_SET_LIB_VERSION)
-    string(TIMESTAMP TODAY "%Y%m%d")
-    set( LIBRARY_VERSION "\tBuild\t${TODAY}")
-    add_definitions("-DAOCL_SCALAPACK_VERSION=${LIBRARY_VERSION}")
-endif()
 
 ADD_DEFINITIONS( "-D${CDEFS}" "${f2cflag}")
 set(CMAKE_C_FLAGS " ${CMAKE_C_FLAGS} ${CMAKE_ICC_FLAGS} -I ${SL_FRAMEWORK_INCLUDE_PATH}/")
@@ -576,9 +593,9 @@ endif()
 SET(CPACK_PACKAGE_NAME "ScaLAPACK")
 SET(CPACK_PACKAGE_VENDOR "University of Tennessee, Univ. of California Berkeley, Univ. of Colorado Denver and NAG Ltd")
 SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY "ScaLAPACK- Linear Algebra Package")
-set(SCALAPACK_VERSION 2.1.0)
+set(SCALAPACK_VERSION 2.2.0)
 set(CPACK_PACKAGE_VERSION_MAJOR 2)
-set(CPACK_PACKAGE_VERSION_MINOR 1)
+set(CPACK_PACKAGE_VERSION_MINOR 2)
 set(CPACK_PACKAGE_VERSION_PATCH 0)
 set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE")
 SET(CPACK_PACKAGE_INSTALL_DIRECTORY "SCALAPACK")
