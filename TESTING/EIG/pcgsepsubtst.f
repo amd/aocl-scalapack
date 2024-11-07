@@ -18,6 +18,7 @@
       CHARACTER          JOBZ, RANGE, UPLO
       INTEGER            IA, IBTYPE, IL, IPOSTPAD, IPREPAD, IU, JA,
      $                   LIWORK, LRWORK, LWORK, LWORK1, N, NOUT, RESULT
+     $                   ERR
       REAL               ABSTOL, QTQNRM, THRESH, TSTNRM, VL, VU
 *     ..
 *     .. Array Arguments ..
@@ -423,6 +424,17 @@
      $              SIZEHEEVX, RWORK( 1+IPREPAD ), LWORK1,
      $              IWORK( 1+IPREPAD ), LIWORK, IFAIL( 1+IPREPAD ),
      $              ICLUSTR( 1+IPREPAD ), GAP( 1+IPREPAD ), INFO )
+*
+      IF ( N.LT.0 .AND. INFO.EQ.-4) THEN
+         WRITE( *, FMT = * ) 'PCHEGVX INFO=', INFO
+*        When N < 0/Invalid, PCHEGVX INFO = -4
+*        Expected Error code for N < 0
+*        Hence this case can be passed.
+         WRITE( *, FMT = 9980) 'PCHEGVX'
+*        else continue the checks
+         GO TO 160
+      END IF
+*
       CALL SLTIMER( 6 )
       CALL SLTIMER( 1 )
 *
@@ -820,6 +832,7 @@
  9983 FORMAT( 'ICLUSTR not zero terminated' )
  9982 FORMAT( 'IL, IU, VL or VU altered by PCHEGVX' )
  9981 FORMAT( 'NZ altered by PCHEGVX with JOBZ=N' )
+ 9980 FORMAT(  A, ' returned correct error code. Passing this case.')
 *
 *     End of PCGSEPSUBTST
 *

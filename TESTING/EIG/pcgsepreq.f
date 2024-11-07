@@ -251,7 +251,7 @@
      $                              ' pCGSEPREQ failed'
                                  CALL BLACS_ABORT( CONTEXT, -1 )
                               END IF
-                              CALL BLACS_GRIDEXIT( CONTEXT )
+                                 CALL BLACS_GRIDEXIT( CONTEXT )
                            END IF
                         END IF
    10                CONTINUE
