@@ -142,5 +142,19 @@
 20.0				Threshold (* 5 for generalized tests) 
 -1				Absolute Tolerance
 ' '
+'TEST 9 - Negative test cases'
+3                               number of matrices
+0 -1 2				matrix size
+1				number of uplo choices
+'L'				uplo choices
+2				number of processor configurations (P, Q, NB)
+1 1	         		values of P (NPROW)
+2 1	 			values of Q (NPCOL)
+1 1	 			values of NB 
+1				number of matrix types
+8 			 	matrix types (see pdseptst.f)
+'N'				perform subset tests?
+80.0				Threshold (* 5 for generalized tests) 
+-1 				Absolute Tolerance
 'End of tests'
 -1

@@ -19,6 +19,7 @@
       CHARACTER          JOBZ, RANGE, UPLO
       INTEGER            IA, IBTYPE, IL, IPOSTPAD, IPREPAD, IU, JA,
      $                   LIWORK, LRWORK, LWORK, LWORK1, N, NOUT, RESULT
+     $                   ERR
       REAL               ABSTOL, QTQNRM, THRESH, TSTNRM, VL, VU
 *     ..
 *     .. Array Arguments ..
