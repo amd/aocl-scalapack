@@ -10,6 +10,8 @@
 *     University of Tennessee, Knoxville, Oak Ridge National Laboratory,
 *     and University of California, Berkeley.
 *     November 15, 1997
+*     Modifications Copyright (c) 2024-2025 Advanced Micro Devices, Inc.
+*     All rights reserved.
 *
 *     .. Scalar Arguments ..
       CHARACTER          SUBTESTS, UPLO
@@ -397,10 +399,13 @@
             CALL PSFILLPAD( DESCA( CTXT_ ), SIZETMS, 1, WORK( INDWORK ),
      $                      SIZETMS, IPREPAD, IPOSTPAD, PADVAL+1.0E+0 )
 *
-            CALL PSLATMS( N, N, 'S', ISEED, 'S', WORK( INDD ), IMODE,
+            IF(N .GT. -1) THEN
+*           If N<0 skip PSLATMS check
+             CALL PSLATMS( N, N, 'S', ISEED, 'S', WORK( INDD ), IMODE,
      $                    COND, ANORM, 0, 0, 'N', COPYA, 1, 1, DESCA,
      $                    ORDER, WORK( INDWORK+IPREPAD ), SIZETMS,
      $                    IINFO )
+            END IF
             WKNOWN = .TRUE.
 *
             CALL PSCHEKPAD( DESCA( CTXT_ ), 'PSLATMS1-WORK', SIZETMS, 1,
@@ -414,10 +419,13 @@
             CALL PSFILLPAD( DESCA( CTXT_ ), SIZETMS, 1, WORK( INDWORK ),
      $                      SIZETMS, IPREPAD, IPOSTPAD, PADVAL+2.0E+0 )
 *
-            CALL PSLATMS( N, N, 'S', ISEED, 'S', WORK( INDD ), IMODE,
+            IF(N .GT. -1) THEN
+*           If N<0 skip PSLATMS check
+             CALL PSLATMS( N, N, 'S', ISEED, 'S', WORK( INDD ), IMODE,
      $                    COND, ANORM, N, N, 'N', COPYA, 1, 1, DESCA,
      $                    ORDER, WORK( INDWORK+IPREPAD ), SIZETMS,
      $                    IINFO )
+            END IF
 *
             CALL PSCHEKPAD( DESCA( CTXT_ ), 'PSLATMS2-WORK', SIZETMS, 1,
      $                      WORK( INDWORK ), SIZETMS, IPREPAD, IPOSTPAD,
@@ -446,10 +454,13 @@
             CALL PSFILLPAD( DESCA( CTXT_ ), SIZETMS, 1, WORK( INDWORK ),
      $                      SIZETMS, IPREPAD, IPOSTPAD, PADVAL+3.0E+0 )
 *
-            CALL PSLATMS( N, N, 'S', ISEED, 'S', WORK( INDD ), IMODE,
+            IF(N .GT. -1) THEN
+*           If N<0 skip PSLATMS check
+             CALL PSLATMS( N, N, 'S', ISEED, 'S', WORK( INDD ), IMODE,
      $                    COND, ANORM, N, N, 'N', COPYA, 1, 1, DESCA,
      $                    ORDER, WORK( INDWORK+IPREPAD ), SIZETMS,
      $                    IINFO )
+            END IF
 *
             WKNOWN = .TRUE.
 *
@@ -522,10 +533,13 @@
             CALL PSFILLPAD( DESCA( CTXT_ ), SIZETMS, 1, WORK( INDWORK ),
      $                      SIZETMS, IPREPAD, IPOSTPAD, PADVAL+4.0E+0 )
 *
-            CALL PSLATMS( N, N, 'S', ISEED, 'S', WORK( INDD ), IMODE,
+            IF(N .GT. -1) THEN
+*           If N<0 skip PSLATMS check
+             CALL PSLATMS( N, N, 'S', ISEED, 'S', WORK( INDD ), IMODE,
      $                    COND, ANORM, 0, 0, 'N', COPYA, 1, 1, DESCA,
      $                    ORDER, WORK( INDWORK+IPREPAD ), SIZETMS,
      $                    IINFO )
+            END IF
 *
             CALL PSCHEKPAD( DESCA( CTXT_ ), 'PSLATMS4-WORK', SIZETMS, 1,
      $                      WORK( INDWORK ), SIZETMS, IPREPAD, IPOSTPAD,
@@ -539,7 +553,7 @@
             IINFO = 1
          END IF
 *
-         IF( WKNOWN )
+         IF( WKNOWN .AND. N.GT.-1 )
      $      CALL SLASRT( 'I', N, WORK( INDD ), IINFO )
 *
 *    Create the B matrix
@@ -555,9 +569,12 @@
          ISEED( 3 ) = MOD( ISEED( 3 )+192, 4096 )
          ISEED( 2 ) = MOD( ISEED( 2 )+35, 4096 )
          ISEED( 1 ) = MOD( ISEED( 1 )+128, 4096 )
-         CALL PSLATMS( N, N, 'S', ISEED, 'P', WORK( INDD ), 3, TEN,
+         IF(N .GT. -1) THEN
+*           If N<0 skip PSLATMS check
+          CALL PSLATMS( N, N, 'S', ISEED, 'P', WORK( INDD ), 3, TEN,
      $                 ANORM, N, N, 'N', COPYB, 1, 1, DESCA, ORDER,
      $                 WORK( INDWORK+IPREPAD ), SIZETMS, IINFO )
+         END IF
 *
          CALL PSCHEKPAD( DESCA( CTXT_ ), 'PSLATMS5-WORK', SIZETMS, 1,
      $                   WORK( INDWORK ), SIZETMS, IPREPAD, IPOSTPAD,

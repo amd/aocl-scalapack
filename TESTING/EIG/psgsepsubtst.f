@@ -11,6 +11,8 @@
 *     University of Tennessee, Knoxville, Oak Ridge National Laboratory,
 *     and University of California, Berkeley.
 *     May 1, 1997
+*     Modifications Copyright (c) 2024-2025 Advanced Micro Devices, Inc.
+*     All rights reserved.
 *
 *     .. Scalar Arguments ..
       LOGICAL            WKNOWN
@@ -405,6 +407,17 @@
      $              LWORK1, IWORK( 1+IPREPAD ), LIWORK,
      $              IFAIL( 1+IPREPAD ), ICLUSTR( 1+IPREPAD ),
      $              GAP( 1+IPREPAD ), INFO )
+*
+      IF ( N.LT.0 .AND. INFO.EQ.-4) THEN
+         WRITE( *, FMT = * ) 'PSSYGVX INFO=', INFO
+*        When N < 0/Invalid, PSSYGVX INFO = -4
+*        Expected Error code for N < 0
+*        Hence this case can be passed.
+         WRITE( *, FMT = 9980) 'PSSYGVX'
+*        Else continue the checks
+         GO TO 150
+      END IF
+*
       CALL SLTIMER( 6 )
       CALL SLTIMER( 1 )
 *
@@ -799,6 +812,7 @@
  9983 FORMAT( 'ICLUSTR not zero terminated' )
  9982 FORMAT( 'IL, IU, VL or VU altered by PSSYGVX' )
  9981 FORMAT( 'NZ altered by PSSYGVX with JOBZ=N' )
+ 9980 FORMAT(  A, ' returned correct error code. Passing this case.')
 *
 *     End of PSGSEPSUBTST
 *
