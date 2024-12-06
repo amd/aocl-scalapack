@@ -31,8 +31,8 @@ void pdpanel_lcopy_( double * A, Int * IA, Int * JA, Int *LDA,
 
    for( i = 0; i < *M; i++ )
    {
-      Aptr = Mptr( ( ( char * ) A ), IC, JC + i, *LDA, type->size );
-      Lptr = Mptr( ( ( char * ) panel->lmem ), 0, i, *M, type->size );
+      Aptr = (double *) Mptr( ( ( char * ) A ), IC, JC + i, *LDA, type->size );
+      Lptr = (double *) Mptr( ( ( char * ) panel->lmem ), 0, i, *M, type->size );
 
       for( j = 0; j < *M; j++ )
       {
