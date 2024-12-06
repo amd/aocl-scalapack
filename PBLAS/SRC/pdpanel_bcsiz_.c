@@ -99,7 +99,7 @@ void pdpanel_bcsiz_(double * A, Int * M, Int * N,
       {
          panel->LN  -= *JB;
          panel->ldm  = lda;
-         panel->pmem = Mptr( ((char *) A), Xii + TM, Xjj, panel->ldm, type->size );
+         panel->pmem = (double *) Mptr( ((char *) A), Xii + TM, Xjj, panel->ldm, type->size );
       }
       else
       {
@@ -124,7 +124,7 @@ void pdpanel_bcsiz_(double * A, Int * M, Int * N,
       if(myrow == iarow)
       {
          panel->ldu  = lda;
-         panel->umem = Mptr(((char *) A), Xii, panel->Xjj, lda, type->size);
+         panel->umem = (double *) Mptr(((char *) A), Xii, panel->Xjj, lda, type->size);
       }
       else
       {
