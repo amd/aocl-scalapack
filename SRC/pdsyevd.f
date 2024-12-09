@@ -1,5 +1,5 @@
 *
-*     Copyright (c) 2023 Advanced Micro Devices, Inc.  All rights reserved.
+*     Copyright (c) 2023-2024 Advanced Micro Devices, Inc.  All rights reserved.
 *
 *
 #include "SL_Context_fortran_include.h"
@@ -173,7 +173,12 @@
      $                   INDD, INDE, INDE2, INDTAU, INDWORK, INDWORK2,
      $                   IROFFA, IROFFZ, ISCALE, LIWMIN, LLWORK,
      $                   LLWORK2, LWMIN, MYCOL, MYROW, NB, NP, NPCOL,
-     $                   NPROW, NQ, OFFSET, TRILWMIN
+     $                   NPROW, NQ, OFFSET, TRILWMIN, MIN_PROCS
+*     MIN_PROCS is set to 32, which is considered to be the
+*     thereshold for moderate number of processes
+*
+      PARAMETER          (MIN_PROCS = 32)
+*
       DOUBLE PRECISION   ANRM, BIGNUM, EPS, RMAX, RMIN, SAFMIN, SIGMA,
      $                   SMLNUM
 *     ..
@@ -362,10 +367,25 @@
 *
 *     Reduce symmetric matrix to tridiagonal form.
 *
+*    PDSYNTRD is a prototype version of PDSYTRD tailored to work
+*    faster than PDSYTRD when the workspace provided by the user
+*    is adequate and under following conditions;
+*    1) UPLO = 'L'; 2) Number of processes is moderate or large.
+*    3) The number of matrix rows contained in a process is small.
+*       (Flat/rectangular grids with smaller NPROW values)
 *
-      CALL PDSYTRD( UPLO, N, A, IA, JA, DESCA, WORK( INDD ),
+*
+      IF( LSAME( UPLO, 'L' ) .AND. ( (NPROW * NPCOL) .GE.
+     $   MIN_PROCS ) ) THEN
+         CALL PDSYNTRD( UPLO, N, A, IA, JA, DESCA, WORK( INDD ),
      $              WORK( INDE2 ), WORK( INDTAU ), WORK( INDWORK ),
      $              LLWORK, IINFO )
+      ELSE
+         CALL PDSYTRD( UPLO, N, A, IA, JA, DESCA, WORK( INDD ),
+     $              WORK( INDE2 ), WORK( INDTAU ), WORK( INDWORK ),
+     $              LLWORK, IINFO )
+
+      ENDIF
 *
 *     Copy the values of D, E to all processes.
 *
