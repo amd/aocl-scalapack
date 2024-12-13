@@ -1,6 +1,6 @@
 ##Copyright (C) 2021-2024, Advanced Micro Devices, Inc. All rights reserved.##
 
-cmake_minimum_required(VERSION 3.22)
+cmake_minimum_required(VERSION 3.26)
 project(SCALAPACK C Fortran)
 # Configure the warning and code coverage suppression file
 configure_file(
