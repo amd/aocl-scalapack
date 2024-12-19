@@ -40,7 +40,7 @@ Int AOCLI_SringSR(BLACSCONTEXT *ctxt, AOCLPBUFF *pb, Int step)
    Int mydist, mid, pv, nx;
 
    MPI_Comm comm;
-   Int ierr, m_in, rval;
+   int ierr, m_in, rval;
 
    Np = ctxt->scp->Np;
    if (Np < 2) return 0;
