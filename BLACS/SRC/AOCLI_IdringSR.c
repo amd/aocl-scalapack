@@ -38,7 +38,7 @@ Int AOCLI_IdringSR(BLACSCONTEXT *ctxt, AOCLPBUFF *pb, Int step)
    Int next, prev, root; 
 
    MPI_Comm comm;
-   Int ierr, m_in, rval;
+   int ierr, m_in, rval;
    rval = AOCL_SUCCESS;
 
    Np = ctxt->scp->Np;
