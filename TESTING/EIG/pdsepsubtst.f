@@ -426,7 +426,7 @@
       CALL SLTIMER( 1 )
 *
 *     skip checkpad conditions for negative cases
-      IF( THRESH.LE.0 .AND. N.LE.0) THEN
+      IF( THRESH.LE.0 .AND. N .LT. 0 ) THEN
          RESULT = 0
       ELSE
          IF(.NOT.(EX_FLAG)) THEN

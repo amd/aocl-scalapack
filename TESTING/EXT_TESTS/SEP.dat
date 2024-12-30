@@ -5,7 +5,7 @@
 191 				maximum number of processes
 'N'				disable pxsyev tests, recommended for heterogeneous systems.
 ' '
-'TEST 1 - test one large matrix'
+'TEST 1 - test one large matrix - Performance'
 1				number of matrices
 3600
 2				number of uplo choices
@@ -20,7 +20,7 @@
 20.0				Threshold (* 5 for generalized tests)
 -1				Absolute Tolerance
 ' '
-'TEST 2 - test one large matrix'
+'TEST 2 - test one large matrix - Performance'
 1                               number of matrices
 3600
 2                               number of uplo choices
@@ -34,6 +34,36 @@
 'N'                             perform subset tests?
 20.0                            Threshold (* 5 for generalized tests)
 -1                              Absolute Tolerance
+' '
+'TEST 3 - test tiny matrices - early return case'
+1                               number of matrices
+0
+1				number of uplo choices
+'L'				uplo choices
+1				number of processor configurations (P, Q, NB)
+1	         		values of P (NPROW)
+4 	 			values of Q (NPCOL)
+1 	 			values of NB
+1				number of matrix types
+8 			 	matrix types (see pdseptst.f)
+'N'				perform subset tests?
+80.0				Threshold (* 5 for generalized tests)
+-1 				Absolute Tolerance
+' '
+'TEST 4 - test tiny matrices - negative/incorrect case'
+1                               number of matrices
+-5
+1				number of uplo choices
+'L'				uplo choices
+1				number of processor configurations (P, Q, NB)
+1	         		values of P (NPROW)
+4 	 			values of Q (NPCOL)
+1 	 			values of NB
+1				number of matrix types
+8 			 	matrix types (see pdseptst.f)
+'N'				perform subset tests?
+80.0				Threshold (* 5 for generalized tests)
+-1 				Absolute Tolerance
 ' '
 'End of tests'
 -1

@@ -8,7 +8,7 @@
 *     University of Tennessee, Knoxville, Oak Ridge National Laboratory,
 *     and University of California, Berkeley.
 *     August 14, 2001
-*     Modifications Copyright (c) 2025 Advanced Micro Devices, Inc. All rights reserved.
+*     Modifications Copyright (c) 2024-2025 Advanced Micro Devices, Inc. All rights reserved.
 *
 *     .. Scalar Arguments ..
       CHARACTER          HETERO, SUBTESTS, UPLO
@@ -1121,8 +1121,7 @@
 *        PDSYEV test1:
 *        JOBZ = 'N', eigenvalues only
 *
-         IF( INFO.NE.0 . AND. N .GE. 0 .AND.
-     $            .NOT.(EX_FLAG)) THEN
+         IF( INFO.NE.0 . AND. N .GE. 0) THEN
 *
 *           If the EVX tests fail, we do not perform the EV tests
 *
@@ -1165,7 +1164,7 @@
 *        PDSYEV test2:
 *        JOBZ = 'V', eigenvalues and eigenvectors
 *
-         IF( INFO.EQ.0 .AND. .NOT.(EX_FLAG) ) THEN
+         IF( INFO.EQ.0 ) THEN
             JOBZ = 'V'
 *
             CALL PDSYEV( JOBZ, UPLO, N, A, 1, 1, DESCA,
