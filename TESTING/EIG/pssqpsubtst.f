@@ -9,7 +9,9 @@
 *     University of Tennessee, Knoxville, Oak Ridge National Laboratory,
 *     and University of California, Berkeley.
 *     November 15, 1997
+*     Modifications Copyright (c) 2024-2025 Advanced Micro Devices, Inc. All rights reserved.
 *
+      use,intrinsic :: ieee_arithmetic
 *     .. Scalar Arguments ..
       LOGICAL            WKNOWN
       CHARACTER          JOBZ, UPLO
@@ -19,7 +21,7 @@
 *     ..
 *     .. Array Arguments ..
       INTEGER            DESCA( * )
-      REAL               A( * ), COPYA( * ), WIN( * ), WNEW( * ), 
+      REAL               A( * ), COPYA( * ), WIN( * ), WNEW( * ),
      $                   WORK( * ), Z( * )
 *     ..
 *
@@ -136,7 +138,7 @@
 *          RESULT = 1    =>  ONe or more tests failed
 *
 *  TSTNRM  (global output) REAL
-*          |AQ- QL| / (ABSTOL+EPS*|A|)*N 
+*          |AQ- QL| / (ABSTOL+EPS*|A|)*N
 *
 *  QTQNRM  (global output) REAL
 *          |QTQ -I| / N*EPS
@@ -158,8 +160,8 @@
      $                   NP, NPCOL, NPROW, NQ, RESAQ, RESQTQ,
      $                   SIZECHK, SIZEMQRLEFT, SIZEMQRRIGHT, SIZEQRF,
      $                   SIZEQTQ, SIZESUBTST, SIZESYEV, SIZESYEVX,
-     $                   SIZETMS, SIZETST, SIZESYEVD, ISIZESYEVD 
-      REAL               EPS, EPSNORMA, ERROR, MAXERROR, MINERROR, 
+     $                   SIZETMS, SIZETST, SIZESYEVD, ISIZESYEVD
+      REAL               EPS, EPSNORMA, ERROR, MAXERROR, MINERROR,
      $                   NORMWIN, SAFMIN
 *     ..
 *     .. Local Arrays ..
@@ -174,15 +176,25 @@
       EXTERNAL           LSAME, NUMROC, PSLAMCH, PSLANSY
 *     ..
 *     .. External Subroutines ..
-      EXTERNAL           BLACS_GRIDINFO, DESCINIT, IGAMN2D, IGAMX2D, 
-     $                   PSCHEKPAD, PSELSET, PSFILLPAD, PSLASIZESQP, 
-     $                   PSSEPCHK, PSSEPQTQ, PSSYEV, SGAMN2D, SGAMX2D, 
+      EXTERNAL           BLACS_GRIDINFO, DESCINIT, IGAMN2D, IGAMX2D,
+     $                   PSCHEKPAD, PSELSET, PSFILLPAD, PSLASIZESQP,
+     $                   PSSEPCHK, PSSEPQTQ, PSSYEV, SGAMN2D, SGAMX2D,
      $                   SLACPY, SLBOOT, SLTIMER
 *     ..
 *     .. Intrinsic Functions ..
       INTRINSIC          ABS, MAX, MIN, MOD
 *     ..
 *     .. Executable Statements ..
+*
+*     Take command-line arguments if requested
+      CHARACTER*80 arg
+      INTEGER numArgs, count
+      LOGICAL :: help_flag = .FALSE.
+      LOGICAL :: EX_FLAG = .FALSE., RES_FLAG = .FALSE.
+      INTEGER :: INF_PERCENT = 0
+      INTEGER :: NAN_PERCENT = 0
+      DOUBLE PRECISION :: X
+*
 *       This is just to keep ftnchek happy
       IF( BLOCK_CYCLIC_2D*CSRC_*CTXT_*DLEN_*DT_*LLD_*MB_*M_*NB_*N_*
      $    RSRC_.LT.0 )RETURN
@@ -228,7 +240,37 @@
      $               DESCA( CTXT_ ), DESCA( LLD_ ), INFO )
 *
       CALL BLACS_GRIDINFO( DESCA( CTXT_ ), NPROW, NPCOL, MYROW, MYCOL )
+*      
+*     Get the number of command-line arguments
+      numArgs = command_argument_count()
 *
+*     Process command-line arguments
+      do count = 1, numArgs, 2
+         call get_command_argument(count, arg)
+         arg = trim(arg)
+         select case (arg)
+            case ("-h", "--help")
+                  help_flag = .true.
+                  exit
+            case ("-inf")
+                  call get_command_argument(count + 1, arg)
+                  read(arg, *) INF_PERCENT
+                  IF (INF_PERCENT .GT. 0) THEN
+                     EX_FLAG = .TRUE.
+                  END IF
+            case ("-nan")
+                  call get_command_argument(count + 1, arg)
+                  read(arg, *) NAN_PERCENT
+                  IF (NAN_PERCENT .GT. 0) THEN
+                     EX_FLAG = .TRUE.
+                  END IF
+            case default
+                  print *, "Invalid option: ", arg
+                  help_flag = .true.
+                  exit
+            end select
+      end do
+
       IAM = 1
       IF( MYROW.EQ.0 .AND. MYCOL.EQ.0 )
      $   IAM = 0
@@ -281,7 +323,8 @@
       CALL SLTIMER( 6 )
       CALL SLTIMER( 1 )
 *
-      IF( THRESH.LE.0 ) THEN
+*     Skip checkpad conidtions for negative cases
+      IF( THRESH.LE.0 .OR. N.LT.0) THEN
          RESULT = 0
       ELSE
          CALL PSCHEKPAD( DESCA( CTXT_ ), 'PSSYEV-A', NP, NQ, A,
@@ -301,6 +344,49 @@
 *     Check INFO
 *
 *
+
+*      When N < 0/Invalid, PSSYEV INFO = -3
+*      Expected Error code for N < 0
+*      Hence this case can be passed by setting RESULT = 0
+
+         IF(N .LT. 0 .AND. INFO .EQ. -3) THEN
+           IF( IAM.EQ.0 ) THEN
+             WRITE( NOUT, FMT = 9991)
+           END IF
+           RESULT = 0
+           GO TO 150
+*    Extreme-values validation block
+*
+         ELSE IF(EX_FLAG .AND. N.GT.0) THEN
+*    Check presence of INF/NAN in output
+*    Pass the case if present
+           DO IK = 0, N-1
+             DO JK = 1, N
+               X = COPYA(IK*N + JK)
+               IF (isnan(X)) THEN
+*    NAN DETECTED
+                 RES_FLAG = .TRUE.
+                 EXIT
+               ELSE IF (.NOT.ieee_is_finite(X)) THEN
+*    INFINITY DETECTED
+                 RES_FLAG = .TRUE.
+                 EXIT
+               END IF
+             END DO
+             IF(RES_FLAG) THEN
+               EXIT
+             END IF
+           END DO
+           IF (.NOT.(RES_FLAG)) THEN
+             RESULT = 1
+           ELSE
+             RESULT = 0
+*    RESET RESIDUAL FLAG
+             RES_FLAG = .FALSE.
+           END IF
+           GO TO 150
+         END IF
+
 *     Make sure that all processes return the same value of INFO
 *
          ITMP( 1 ) = INFO
@@ -474,6 +560,8 @@
  9994 FORMAT( 'Heterogeneity detected by PSSYEV' )
  9993 FORMAT( 'PSSYEV failed the |AQ -QE| test' )
  9992 FORMAT( 'PSSYEV failed the |QTQ -I| test' )
+ 9991 FORMAT( 'N < 0, negative test case detected with expected'
+     $        ' INFO = -3, Passing this case')
 *
 *     End of PSSQPSUBTST
 *

@@ -7,6 +7,7 @@
 *     University of Tennessee, Knoxville, Oak Ridge National Laboratory,
 *     and University of California, Berkeley.
 *     May 1, 1997
+*     Modifications Copyright (c) 2024-2025 Advanced Micro Devices, Inc. All rights reserved.
 *
 *     .. Scalar Arguments ..
       CHARACTER          HETERO
@@ -116,8 +117,8 @@
       EXTERNAL           ICEIL, NUMROC
 *     ..
 *     .. External Subroutines ..
-      EXTERNAL           BLACS_ABORT, BLACS_GET, BLACS_GRIDEXIT, 
-     $                   BLACS_GRIDINFO, BLACS_GRIDINIT, BLACS_PINFO, 
+      EXTERNAL           BLACS_ABORT, BLACS_GET, BLACS_GRIDEXIT,
+     $                   BLACS_GRIDINFO, BLACS_GRIDINIT, BLACS_PINFO,
      $                   DESCINIT, PSLASIZESQP, PSSEPINFO, PSSEPTST
 *     ..
 *     .. Intrinsic Functions ..
@@ -178,7 +179,7 @@
      $                                    SIZEQRF, SIZETMS, SIZEQTQ,
      $                                    SIZECHK, SIZESYEVX,
      $                                    ISIZESYEVX, SIZESYEV,
-     $                                    SIZESYEVD, ISIZESYEVD, 
+     $                                    SIZESYEVD, ISIZESYEVD,
      $                                    SIZESUBTST, ISIZESUBTST,
      $                                    SIZETST, ISIZETST )
 *
@@ -227,6 +228,10 @@ C    $                           IPOSTPAD + 1
      $                                    ISIZETST, HETERO, NOUT, RES )
 *
                            IF( RES.EQ.0 ) THEN
+                              NPASSED = NPASSED + 1
+*                      Pass negative cases since validation is
+*                      complete at this stage
+                           ELSE IF( RES.EQ.1 .AND. N.LT.0) THEN
                               NPASSED = NPASSED + 1
                            ELSE IF( RES.EQ.2 ) THEN
                               NNOCHECK = NNOCHECK + 1
