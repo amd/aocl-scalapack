@@ -4,7 +4,7 @@
 *     University of Tennessee, Knoxville, Oak Ridge National Laboratory,
 *     and University of California, Berkeley.
 *     March, 2000
-*     Modifications Copyright (c) 2024 Advanced Micro Devices, Inc. All rights reserved.
+*     Modifications Copyright (c) 2024-2025 Advanced Micro Devices, Inc. All rights reserved.
 *
 *  Purpose
 *  =======
@@ -333,6 +333,21 @@
      $                 IERR( 2 ).EQ.-2 .OR.
      $                 IERR( 2 ).EQ. -8 .OR.
      $                 IERR( 2 ).EQ. -4) ) THEN
+*              If DESCINIT is returning correct error code we need to pass
+*              and it will be ScaLAPACK API
+                  WRITE( NOUT, FMT = 9983 ) 'N'
+*                   disable extreme value case when N < 0
+                  EX_FLAG = .FALSE.
+               ELSE IF(N .EQ. 0 .AND. (IERR(1) .EQ. 0 .OR.
+     $            IERR(1) .EQ. -5 .OR. IERR(1) .EQ. -10 .OR.
+     $            IERR(1) .EQ. -15 .OR. IERR(1) .EQ. -20 )) THEN
+*                 DESCINIT returns the correct error code,
+*                 When N = 0,
+*                 -5, -10 or -20 incase of incorrect grid info
+*                 MAIN API can be validated.
+*                 Do NOTHING
+*                 disable extreme value case when N = 0
+                  EX_FLAG = .FALSE.
                   WRITE ( NOUT, FMT = 9984 ) 'PZLAHQR'
                ELSE IF( IERR( 1 ).LT.0 .OR. IERR( 2 ).LT.0 ) THEN
                   IF( IAM.EQ.0 )
@@ -459,17 +474,18 @@
 *                    If PZLAHQR is returning correct error
 *                    code we need to pass this case
                      WRITE( NOUT, FMT = 9983 ) 'PZLAHQR'
-                  ELSE IF ( N.GT.1 .AND. INFO.NE.0 ) THEN
+                  ELSE IF ( N.GT.1 .AND. INFO.NE.0
+     $                         .AND. .NOT.EX_FLAG ) THEN
                      KFAIL = KFAIL + 1
                      GO TO 10
                   END IF
-               ELSE IF (N.EQ.0) THEN
+               ELSE IF ( N.EQ.0 ) THEN
 *                 If N =0 this is the case of
 *                 early return from ScaLAPACK API.
                   WRITE( NOUT, FMT = 9982 ) 'PZLAHQR'
                END IF
 *
-               IF( CHECK .AND. INFO.EQ.0 ) THEN
+               IF( CHECK .AND. INFO.EQ.0 .AND. .NOT.(EX_FLAG) ) THEN
 *
 *                 Check for memory overwrite in NEP factorization
 *
