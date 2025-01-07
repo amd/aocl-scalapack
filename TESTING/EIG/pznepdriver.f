@@ -4,7 +4,7 @@
 *     University of Tennessee, Knoxville, Oak Ridge National Laboratory,
 *     and University of California, Berkeley.
 *     March, 2000
-*     Modifications Copyright (c) 2024 Advanced Micro Devices, Inc. All rights reserved.
+*     Modifications Copyright (c) 2024-2025 Advanced Micro Devices, Inc. All rights reserved.
 *
 *  Purpose
 *  =======
@@ -61,6 +61,7 @@
 *
 *  =====================================================================
 *
+      use,intrinsic :: ieee_arithmetic
 *     .. Parameters ..
       INTEGER            BLOCK_CYCLIC_2D, CSRC_, CTXT_, DLEN_, DT_,
      $                   LLD_, MB_, M_, NB_, N_, RSRC_
@@ -121,6 +122,14 @@
 *     ..
 *     .. Data statements ..
       DATA               KFAIL, KPASS, KSKIP, KTESTS / 4*0 /
+*     Take command-line arguments if requested
+      CHARACTER*80 arg
+      INTEGER numArgs, count
+      LOGICAL :: help_flag = .FALSE.
+      LOGICAL :: EX_FLAG = .FALSE., RES_FLAG = .FALSE.
+      INTEGER :: INF_PERCENT = 0
+      INTEGER :: NAN_PERCENT = 0
+      DOUBLE PRECISION :: X
 *     ..
 *     .. Executable Statements ..
 *
@@ -135,6 +144,33 @@
      $                NTESTS, NGRIDS, PVAL, NTESTS, QVAL, NTESTS,
      $                THRESH, MEM, IAM, NPROCS )
       CHECK = ( THRESH.GE.0.0E+0 )
+*
+      numArgs = command_argument_count()
+*     Process command-line arguments
+      do count = 1, numArgs, 2
+         call get_command_argument(count, arg)
+         select case (arg)
+            case ("-h", "--help")
+                  help_flag = .true.
+                  exit
+            case ("-inf")
+                  call get_command_argument(count + 1, arg)
+                  read(arg, *) INF_PERCENT
+                  IF (INF_PERCENT .GT. 0) THEN
+                     EX_FLAG = .TRUE.
+                  END IF
+            case ("-nan")
+                  call get_command_argument(count + 1, arg)
+                  read(arg, *) NAN_PERCENT
+                  IF (NAN_PERCENT .GT. 0) THEN
+                     EX_FLAG = .TRUE.
+                  END IF
+            case default
+                  print *, "Invalid option: ", arg
+                  help_flag = .true.
+                  exit
+            end select
+      end do
 *
 *     Print headings
 *
@@ -154,6 +190,7 @@
 *
 *        Make sure grid information is correct
 *
+#ifdef ENABLE_DRIVER_CHECK
          IERR( 1 ) = 0
          IF( NPROW.LT.1 ) THEN
             IF( IAM.EQ.0 )
@@ -175,6 +212,7 @@
             KSKIP = KSKIP + 1
             GO TO 30
          END IF
+#endif
 *
 *        Define process grid
 *
@@ -205,6 +243,7 @@
 *
 *           Check all processes for an error
 *
+#ifdef ENABLE_DRIVER_CHECK
             CALL IGSUM2D( ICTXT, 'All', ' ', 1, 1, IERR, 1, -1, 0 )
 *
             IF( IERR( 1 ).GT.0 ) THEN
@@ -213,6 +252,7 @@
                KSKIP = KSKIP + 1
                GO TO 20
             END IF
+#endif
 *
             DO 10 K = 1, NNB
 *
@@ -229,6 +269,7 @@
 *
 *              Check all processes for an error
 *
+#ifdef ENABLE_DRIVER_CHECK
                CALL IGSUM2D( ICTXT, 'All', ' ', 1, 1, IERR, 1, -1, 0 )
 *
                IF( IERR( 1 ).GT.0 ) THEN
@@ -237,6 +278,7 @@
                   KSKIP = KSKIP + 1
                   GO TO 10
                END IF
+#endif
 *
 *              Padding constants
 *
@@ -291,6 +333,21 @@
      $                 IERR( 2 ).EQ.-2 .OR.
      $                 IERR( 2 ).EQ. -8 .OR.
      $                 IERR( 2 ).EQ. -4) ) THEN
+*              If DESCINIT is returning correct error code we need to pass
+*              and it will be ScaLAPACK API
+                  WRITE( NOUT, FMT = 9983 ) 'N'
+*                   disable extreme value case when N < 0
+                  EX_FLAG = .FALSE.
+               ELSE IF(N .EQ. 0 .AND. (IERR(1) .EQ. 0 .OR.
+     $            IERR(1) .EQ. -5 .OR. IERR(1) .EQ. -10 .OR.
+     $            IERR(1) .EQ. -15 .OR. IERR(1) .EQ. -20 )) THEN
+*                 DESCINIT returns the correct error code,
+*                 When N = 0,
+*                 -5, -10 or -20 incase of incorrect grid info
+*                 MAIN API can be validated.
+*                 Do NOTHING
+*                 disable extreme value case when N = 0
+                  EX_FLAG = .FALSE.
                   WRITE ( NOUT, FMT = 9984 ) 'PZLAHQR'
                ELSE IF( IERR( 1 ).LT.0 .OR. IERR( 2 ).LT.0 ) THEN
                   IF( IAM.EQ.0 )
@@ -409,7 +466,7 @@
                CALL SLTIMER( 1 )
 *
                IF( INFO.NE.0 ) THEN
-                  IF( IAM.EQ.0 )
+                  IF( IAM.EQ.0 .AND. .NOT.(EX_FLAG) )
      $               WRITE( NOUT, FMT = * )'PZLAHQR INFO=', INFO
 *                 If N < 0 in NEP.dat file then PZLAHQR API sets
 *                 INFO = -5
@@ -417,17 +474,18 @@
 *                    If PZLAHQR is returning correct error
 *                    code we need to pass this case
                      WRITE( NOUT, FMT = 9983 ) 'PZLAHQR'
-                  ELSE IF ( N.GT.1 .AND. INFO.NE.0 ) THEN
+                  ELSE IF ( N.GT.1 .AND. INFO.NE.0
+     $                         .AND. .NOT.EX_FLAG ) THEN
                      KFAIL = KFAIL + 1
                      GO TO 10
                   END IF
-               ELSE IF (N.EQ.0) THEN
+               ELSE IF ( N.EQ.0 ) THEN
 *                 If N =0 this is the case of
 *                 early return from ScaLAPACK API.
                   WRITE( NOUT, FMT = 9982 ) 'PZLAHQR'
                END IF
 *
-               IF( CHECK .AND. INFO.EQ.0 ) THEN
+               IF( CHECK .AND. INFO.EQ.0 .AND. .NOT.(EX_FLAG) ) THEN
 *
 *                 Check for memory overwrite in NEP factorization
 *
@@ -479,7 +537,33 @@
 *
 *                 Test residual and detect NaN result
 *
-                  IF( ( FRESID.LE.THRESH ) .AND.
+                  IF( N .EQ. 0 .AND. (INFO .EQ. -4 .OR.
+     $                       INFO .EQ. 0)) THEN
+*                       If N =0 this is the case of
+*                       early return from ScaLAPACK API.
+*                       If there is safe exit from API; pass this case
+                     KPASS = KPASS + 1
+                     WRITE( NOUT, FMT = 9984 ) 'PZLAHQR'
+                     PASSED = 'PASSED'
+*                    Re-enable EX_FLAG
+                     IF(NAN_PERCENT .GT. 0 .OR.
+     $                     INF_PERCENT .GT. 0) THEN
+                             EX_FLAG = .TRUE.
+                     END IF
+                  ELSE IF(N .LT. 0 .AND. (INFO .EQ. -2 .OR.
+     $                        INFO .EQ. -804 )) THEN
+*                    When N < 0/Invalid, PZLAHQR INFO = -1
+*                    Expected Error code for N < 0
+*                    Hence this case can be passed
+                     KPASS = KPASS + 1
+                     WRITE( NOUT, FMT = 9982 ) 'PZLAHQR'
+                     PASSED = 'PASSED'
+*                    Re-enable EX_FLAG
+                        IF(NAN_PERCENT .GT. 0 .OR.
+     $                             INF_PERCENT .GT. 0) THEN
+                           EX_FLAG = .TRUE.
+                        END IF
+                  ELSE IF( ( FRESID.LE.THRESH ) .AND.
      $                ( ( FRESID-FRESID ).EQ.0.0D+0 ) .AND.
      $                ( QRESID.LE.THRESH ) .AND.
      $                ( ( QRESID-QRESID ).EQ.0.0D+0 ) ) THEN
@@ -498,6 +582,37 @@
                      END IF
                   END IF
 *
+*                    Extreme-value validation block
+               ELSE IF(EX_FLAG) THEN
+*                       Check presence of INF/NAN in output
+*                       Pass the case if present
+                        DO IK = 0, N-1
+                           DO JK = 1, N
+                              X = (MEM(IK*N + JK))
+                              IF (isnan(X)) THEN
+*                                NAN DETECTED
+                                 RES_FLAG = .TRUE.
+                                 EXIT
+                              ELSE IF (.NOT.ieee_is_finite(
+     $                                    X)) THEN
+*                                INFINITY DETECTED
+                                 RES_FLAG = .TRUE.
+                                 EXIT
+                              END IF
+                          END DO
+                           IF(RES_FLAG) THEN
+                              EXIT
+                           END IF
+                        END DO
+                        IF (.NOT.(RES_FLAG)) THEN
+                           KFAIL = KFAIL + 1
+                           PASSED = 'FAILED'
+                        ELSE
+                           KPASS = KPASS + 1
+                           PASSED = 'PASSED'
+*                          RESET RESIDUAL FLAG
+                           RES_FLAG = .FALSE.
+                        END IF
                ELSE
 *
 *                 Don't perform the checking, only timing
