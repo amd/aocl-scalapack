@@ -8,6 +8,7 @@
 *     University of Tennessee, Knoxville, Oak Ridge National Laboratory,
 *     and University of California, Berkeley.
 *     May 1, 1997
+*     Modifications Copyright (c) 2024-25 Advanced Micro Devices, Inc. All rights reserved.
 *
 *     .. Scalar Arguments ..
       INTEGER            IAM, LDFACT, LDMBVAL, LDMVAL, LDNBVAL, LDNVAL,
@@ -299,6 +300,9 @@
             ELSE IF( LSAMEN( 2, FACTOR( K ), 'TZ' ) ) THEN
                WORK( I ) = 6
                I = I + 1
+            ELSE IF( LSAMEN( 2, FACTOR( K ), 'R2' ) ) THEN
+               WORK( I ) = 7
+               I = I + 1
             END IF
    20    CONTINUE
 *
@@ -449,6 +453,8 @@
                FACTOR( K ) = 'QP'
             ELSE IF( WORK( K ).EQ.6 ) THEN
                FACTOR( K ) = 'TZ'
+            ELSE IF( WORK( K ).EQ.7 ) THEN
+               FACTOR( K ) = 'R2'
             END IF
    30    CONTINUE
 *

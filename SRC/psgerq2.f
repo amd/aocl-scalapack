@@ -252,7 +252,6 @@
 *
       IF( INFO.NE.0 ) THEN
          CALL PXERBLA( ICTXT, 'PSGERQ2', -INFO )
-         CALL BLACS_ABORT( ICTXT, 1 )
 *
 *        Capture the subroutine exit in the trace file
 *

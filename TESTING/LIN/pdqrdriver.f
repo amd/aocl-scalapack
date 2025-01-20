@@ -4,7 +4,7 @@
 *     University of Tennessee, Knoxville, Oak Ridge National Laboratory,
 *     and University of California, Berkeley.
 *     May 28, 2001
-*     Modifications Copyright (c) 2024 Advanced Micro Devices, Inc. All rights reserved.
+*     Modifications Copyright (c) 2024-25 Advanced Micro Devices, Inc. All rights reserved.
 *
 *  Purpose
 *  =======
@@ -127,7 +127,7 @@
      $                   PDFILLPAD, PDGELQF, PDGELQRV,
      $                   PDGEQLF, PDGEQLRV, PDGEQPF,
      $                   PDQPPIV, PDGEQRF, PDGEQRRV,
-     $                   PDGERQF, PDGERQRV, PDTZRZRV,
+     $                   PDGERQF, PDGERQ2, PDGERQRV, PDTZRZRV,
      $                   PDMATGEN, PDLAFCHK, PDQRINFO,
      $                   PDTZRZF, SLBOOT, SLCOMBINE, SLTIMER
 *     ..
@@ -229,6 +229,11 @@
                ROUTCHK = 'PDGERQRV'
                WRITE( NOUT, FMT = 9986 )
      $                'RQ factorization tests.'
+            ELSE IF( LSAMEN( 2, FACT, 'R2' ) ) THEN
+               ROUT = 'PDGERQ2'
+               ROUTCHK = 'PDGERQRV'
+               WRITE( NOUT, FMT = 9986 )
+     $                'RQ2 factorization tests.'
             ELSE IF( LSAMEN( 2, FACT, 'QP' ) ) THEN
                ROUT = 'PDGEQPF'
                ROUTCHK = 'PDGEQRRV'
@@ -506,7 +511,8 @@
 *
                      END IF
 *
-                  ELSE IF( LSAMEN( 2, FACT, 'RQ' ) ) THEN
+                  ELSE IF( LSAMEN( 2, FACT, 'RQ' ) .OR.
+     $                     LSAMEN( 2, FACT, 'R2' ) ) THEN
 *
                      LTAU = MP
                      IPW = IPTAU + LTAU + IPOSTPAD + IPREPAD
@@ -680,6 +686,13 @@
      $                             MEM( IPTAU ), MEM( IPW ), LWORK,
      $                             INFO )
                      CALL SLTIMER( 1 )
+                  ELSE IF( LSAMEN( 2, FACT, 'R2' ) ) THEN
+                     API_NAME = 'PDGERQ2'
+                     CALL SLTIMER( 1 )
+                     CALL PDGERQ2( M, N, MEM( IPA ), 1, 1, DESCA,
+     $                             MEM( IPTAU ), MEM( IPW ), LWORK,
+     $                             INFO )
+                     CALL SLTIMER( 1 )
                   ELSE IF( LSAMEN( 2, FACT, 'QP' ) ) THEN
                      API_NAME = 'PDGEQPF'
                      CALL SLTIMER( 1 )
@@ -776,6 +789,19 @@
      $                              MEM( IPA ), 1,
      $                              1, DESCA, IASEED, ANORM, FRESID,
      $                              MEM( IPW ) )
+                        ELSE IF( LSAMEN( 2, FACT, 'R2' ) ) THEN
+*
+*                          Compute residual = ||A-R*Q|| / (||A||*N*eps)
+*
+*                          Since PDGERQ2 computes RQ factorization,
+*                          validation of PDGERQF can be used
+                           CALL PDGERQRV( M, N, MEM( IPA ), 1, 1,
+     $                                 DESCA,
+     $                                 MEM( IPTAU ), MEM( IPW ) )
+                           CALL PDLAFCHK( 'No', 'No', M, N,
+     $                              MEM( IPA ), 1,
+     $                              1, DESCA, IASEED, ANORM, FRESID,
+     $                              MEM( IPW ) )
                         ELSE IF( LSAMEN( 2, FACT, 'QP' ) ) THEN
 *
 *                          Compute residual = ||AP-Q*R|| / (||A||*N*eps)
@@ -860,6 +886,8 @@
      $                      (INFO.EQ.-1 .AND.
      $                          LSAMEN( 2, FACT, 'RQ')) .OR.
      $                      (INFO.EQ.-1 .AND.
+     $                          LSAMEN( 2, FACT, 'R2')) .OR.
+     $                      (INFO.EQ.-1 .AND.
      $                          LSAMEN( 2, FACT, 'QP')) .OR.
      $                      (INFO.EQ.-1 .AND.
      $                          LSAMEN( 2, FACT, 'TZ' )))
@@ -872,6 +900,8 @@
      $                          LSAMEN( 2, FACT, 'LQ')) .OR.
      $                      (INFO.EQ.-2 .AND.
      $                          LSAMEN( 2, FACT, 'RQ')) .OR.
+     $                      (INFO.EQ.-2 .AND.
+     $                          LSAMEN( 2, FACT, 'R2')) .OR.
      $                      (INFO.EQ.-2 .AND.
      $                          LSAMEN( 2, FACT, 'QP')) .OR.
      $                      (INFO.EQ.-2 .AND.
