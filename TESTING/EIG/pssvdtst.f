@@ -5,8 +5,10 @@
 *     University of Tennessee, Knoxville, Oak Ridge National Laboratory,
 *     and University of California, Berkeley.
 *     May 1, 1997
-*     Modifications Copyright (c) 2024 Advanced Micro Devices, Inc. All rights reserved.
+*     Modifications Copyright (c) 2024-2025 Advanced Micro Devices, Inc.
+*     All rights reserved.
 *
+      use,intrinsic :: ieee_arithmetic
 *     .. Scalar Arguments ..
       INTEGER            LWORK, M, N, NB, NOUT, NPCOL, NPROW
       REAL               THRESH
@@ -248,6 +250,15 @@
 *     ..
 *     .. Intrinsic Functions ..
       INTRINSIC          ABS, INT, MAX, MIN, SQRT
+*
+*     Take command-line arguments if requested
+      CHARACTER*80 arg
+      INTEGER numArgs, count
+      LOGICAL :: help_flag = .FALSE.
+      LOGICAL :: EX_FLAG = .FALSE., RES_FLAG = .FALSE.
+      INTEGER :: INF_PERCENT = 0
+      INTEGER :: NAN_PERCENT = 0
+      DOUBLE PRECISION :: X
 *     ..
 *     .. Executable Statements ..
 *     This is just to keep ftnchek happy
@@ -321,6 +332,34 @@
 *
 *     Set some pointers to work array in order to do "dummy" calls.
 *
+*     Get the number of command-line arguments
+      numArgs = command_argument_count()
+*     Process command-line arguments
+      do count = 1, numArgs, 2
+         call get_command_argument(count, arg)
+         select case (arg)
+            case ("-h", "--help")
+                  help_flag = .true.
+                  exit
+            case ("-inf")
+                  call get_command_argument(count + 1, arg)
+                  read(arg, *) INF_PERCENT
+                  IF (INF_PERCENT .GT. 0) THEN
+                     EX_FLAG = .TRUE.
+                  END IF
+            case ("-nan")
+                  call get_command_argument(count + 1, arg)
+                  read(arg, *) NAN_PERCENT
+                  IF (NAN_PERCENT .GT. 0) THEN
+                     EX_FLAG = .TRUE.
+                  END IF
+            case default
+                  print *, "Invalid option: ", arg
+                  help_flag = .true.
+                  exit
+            end select
+      end do
+*
       PTRA = 2
       PTRAC = PTRA + LDA*NQ
       PTRD = PTRAC + LDA*NQ
@@ -334,11 +373,23 @@
       PTRVTC = PTRWORK
 *
 *     "Dummy" calls -- return required workspace in work(1) without
-*     any calculation. 
+*     any calculation.
 *
-      CALL PSLAGGE( M, N, WORK( PTRD ), WORK( PTRA ), IA, JA, DESCA,
-     $              ISEED, SIZE, WORK( PTRWORK ), -1, DINFO )
-      WPSLAGGE = INT( WORK( PTRWORK ) )
+*     A "Dummy" call does not call pdmatgen file to 
+*     generate a matrix. Passing LWORK instead of -1 generates a
+*     general random matrix.
+*
+      IF ( .NOT.EX_FLAG ) THEN
+         CALL PSLAGGE( M, N, WORK( PTRD ), WORK( PTRA ),
+     $           IA, JA, DESCA,ISEED, SIZE,
+     $           WORK( PTRWORK ), -1, DINFO )
+         WPSLAGGE = INT( WORK( PTRWORK ) )
+      ELSE
+         CALL PSLAGGE( M, N, WORK( PTRD ), WORK( PTRA ),
+     $           IA, JA, DESCA,ISEED, SIZE,
+     $           WORK( PTRWORK ), LWORK, DINFO )
+         WPSLAGGE = INT( WORK( PTRWORK ) )
+      END IF
 *
       CALL PSGESVD( 'V', 'V', M, N, WORK( PTRA ), IA, JA, DESCA, 
      $              WORK( PTRS ), WORK( PTRU ), IU, JU, DESCU, 
@@ -346,7 +397,8 @@
      $              WORK( PTRWORK ), -1, DINFO )
       WPSGESVD = INT( WORK( PTRWORK ) )
 *
-      IF( (N.EQ.0 .OR. M.EQ.0) .AND. DINFO.EQ.0  ) THEN
+      IF( (N.EQ.0 .OR. M.EQ.0) .AND. DINFO.EQ.0 
+     $            .AND. .NOT.EX_FLAG  ) THEN
 *         If N =0 or M =0 this is the case of
 *         early return from ScaLAPACK API.
 *         If there is safe exit from API; pass this case
@@ -360,9 +412,9 @@
 *       If M < 0 in SVD.dat file then PSGESVD API sets DINFO = -3
 *       If N < 0 in SVD.dat file then PSGESVD API sets DINFO = -4
 *
-      IF ( DINFO.LT.0 ) THEN
+      IF ( DINFO.LT.0 .AND. .NOT.EX_FLAG ) THEN
          WRITE( NOUT, FMT = * ) 'PSGESVD DINFO=', DINFO
-         IF( M.LT.0 .AND. DINFO.EQ.-3 ) THEN
+         IF( M.LT.0 .AND. DINFO.EQ.-3 .AND. .NOT.EX_FLAG ) THEN
 *        When M < 0/Invalid, PSGESVD DINFO = -3
 *        Expected Error code for M < 0
 *        Hence this case can be passed
@@ -371,7 +423,7 @@
      $                 CHK, MTM, DELTA, HETERO
          WRITE( NOUT, FMT = 9995) 'PSGESVD'
          GO TO 120
-         ELSE IF( N.LT.0 .AND. DINFO.EQ.-4 ) THEN
+         ELSE IF( N.LT.0 .AND. DINFO.EQ.-4 .AND. .NOT.EX_FLAG ) THEN
 *           When N < 0/Invalid, PSGESVD DINFO = -4
 *           Expected Error code for N < 0
 *           Hence this case can be passed
@@ -389,6 +441,43 @@
          END IF
       END IF
 *
+*      Extreme-values validation block
+*
+      IF(EX_FLAG .AND. N.GT.0) THEN
+*      Check presence of INF/NAN in output
+*      Pass the case if present
+            DO IK = 0, N-1
+              DO JK = 1, N
+                X = WORK(IK*N + JK)
+
+                IF (isnan(X)) THEN
+*      NAN DETECTED
+                  RES_FLAG = .TRUE.
+                  EXIT
+                ELSE IF (.NOT.ieee_is_finite(X)) THEN
+*      INFINITY DETECTED
+                  RES_FLAG = .TRUE.
+                  EXIT
+                END IF
+              END DO
+              IF(RES_FLAG) THEN
+                EXIT
+              END IF
+            END DO
+            IF (.NOT.(RES_FLAG)) THEN
+              WRITE( NOUT, FMT = 9999 )'Failed', WTIME( 1 ),
+     $            CTIME( 1 ), M, N, NPROW, NPCOL, NB, ITYPE, CHK, MTM,
+     $            DELTA, HETERO
+            ELSE
+              WRITE( NOUT, FMT = 9999 )'Passed', WTIME( 1 ),
+     $                  CTIME( 1 ), M, N, NPROW, NPCOL, NB, ITYPE,
+     $                  CHK, MTM, DELTA, HETERO
+*      RESET RESIDUAL FLAG
+              RES_FLAG = .FALSE.
+            END IF
+            GO TO 120
+*
+      END IF
       CALL PSSVDCHK( M, N, WORK( PTRAC ), IA, JA, DESCA, WORK( PTRUC ),
      $               IU, JU, DESCU, WORK( PTRVT ), IVT, JVT, DESCVT, 
      $               WORK( PTRS ), THRESH, WORK( PTRWORK ), -1, 
