@@ -30,6 +30,7 @@ file(COPY SEP.dat DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 file(COPY SEPR.dat DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 file(COPY SVD.dat DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 file(COPY TRD.dat DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
+file(COPY GESV.dat DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 
 add_test(xslu ${MPIEXEC} ${MPIEXEC_NUMPROC_FLAG} 4 ./xslu)
 add_test(xdlu ${MPIEXEC} ${MPIEXEC_NUMPROC_FLAG} 4 ./xdlu)
@@ -119,4 +120,9 @@ add_test(xzheevr ${MPIEXEC} ${MPIEXEC_NUMPROC_FLAG} 4 ./xzheevr)
 
 add_test(xshseqr ${MPIEXEC} ${MPIEXEC_NUMPROC_FLAG} 4 ./xshseqr)
 add_test(xdhseqr ${MPIEXEC} ${MPIEXEC_NUMPROC_FLAG} 4 ./xdhseqr)
+
+add_test(xsgesv ${MPIEXEC} ${MPIEXEC_NUMPROC_FLAG} 4 ./xsgesv)
+add_test(xdgesv ${MPIEXEC} ${MPIEXEC_NUMPROC_FLAG} 4 ./xdgesv)
+add_test(xcgesv ${MPIEXEC} ${MPIEXEC_NUMPROC_FLAG} 4 ./xcgesv)
+add_test(xzgesv ${MPIEXEC} ${MPIEXEC_NUMPROC_FLAG} 4 ./xzgesv)
 

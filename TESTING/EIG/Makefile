@@ -61,6 +61,11 @@ zheevrexe = ../xzheevr
 shseqrexe = ../xshseqr
 dhseqrexe = ../xdhseqr
 
+sgesvexe = ../xsgesv
+dgesvexe = ../xdgesv
+cgesvexe = ../xcgesv
+zgesvexe = ../xzgesv
+
 smatgen = psmatgen.o pmatgeninc.o
 dmatgen = pdmatgen.o pmatgeninc.o
 cmatgen = pcmatgen.o pmatgeninc.o
@@ -136,12 +141,17 @@ pzsepchk.o pzsepqtq.o pzlatms.o pzseprtst.o pdsepinfo.o pzlagsy.o pzlasizesep.o 
 shseqr = pshseqrdriver.o psmatgen2.o $(smatgen)
 dhseqr = pdhseqrdriver.o pdmatgen2.o $(dmatgen)
 
+sgesv =  psgesvdriver.o pxgesvinfo.o $(smatgen)
+dgesv =  pdgesvdriver.o pxgesvinfo.o $(dmatgen)
+cgesv =  pcgesvdriver.o pxgesvinfo.o $(cmatgen)
+zgesv =  pzgesvdriver.o pxgesvinfo.o $(zmatgen)
+
 all : single double complex complex16
 
-single:    $(shrdexe) $(strdexe) $(sbrdexe) $(ssepexe) $(sgsepexe) $(snepexe) $(ssvdexe) $(ssyevrexe) $(shseqrexe)
-double:    $(dhrdexe) $(dtrdexe) $(dbrdexe) $(dsepexe) $(dgsepexe) $(dnepexe) $(dsvdexe) $(dsyevrexe) $(dhseqrexe)
-complex:   $(chrdexe) $(ctrdexe) $(cbrdexe) $(csepexe) $(cgsepexe) $(cnepexe) $(cevcexe) $(cheevrexe)
-complex16: $(zhrdexe) $(ztrdexe) $(zbrdexe) $(zsepexe) $(zgsepexe) $(znepexe) $(zevcexe) $(zheevrexe)
+single:    $(shrdexe) $(strdexe) $(sbrdexe) $(ssepexe) $(sgsepexe) $(snepexe) $(ssvdexe) $(ssyevrexe) $(shseqrexe) $(sgesvexe)
+double:    $(dhrdexe) $(dtrdexe) $(dbrdexe) $(dsepexe) $(dgsepexe) $(dnepexe) $(dsvdexe) $(dsyevrexe) $(dhseqrexe) $(dgesvexe)
+complex:   $(chrdexe) $(ctrdexe) $(cbrdexe) $(csepexe) $(cgsepexe) $(cnepexe) $(cevcexe) $(cheevrexe) $(cgesvexe)
+complex16: $(zhrdexe) $(ztrdexe) $(zbrdexe) $(zsepexe) $(zgsepexe) $(znepexe) $(zevcexe) $(zheevrexe) $(zgesvexe)
 
 $(sbrdexe) : ../../$(SCALAPACKLIB) $(sbrd)
 	$(FCLOADER) $(FCLOADFLAGS) -o $(sbrdexe) $(sbrd) ../../$(SCALAPACKLIB) $(LIBS)
@@ -244,6 +254,18 @@ $(shseqrexe): ../../$(SCALAPACKLIB) $(shseqr)
 
 $(dhseqrexe): ../../$(SCALAPACKLIB) $(dhseqr)
 	$(FCLOADER) $(FCLOADFLAGS) -o $(dhseqrexe) $(dhseqr) ../../$(SCALAPACKLIB) $(LIBS)
+
+$(sgesvexe): ../../$(SCALAPACKLIB) $(sgesv)
+	$(FCLOADER) $(FCLOADFLAGS) -o $(sgesvexe) $(sgesv) ../../$(SCALAPACKLIB) $(LIBS)
+
+$(dgesvexe): ../../$(SCALAPACKLIB) $(dgesv)
+	$(FCLOADER) $(FCLOADFLAGS) -o $(dgesvexe) $(dgesv) ../../$(SCALAPACKLIB) $(LIBS)
+
+$(cgesvexe): ../../$(SCALAPACKLIB) $(cgesv)
+	$(FCLOADER) $(FCLOADFLAGS) -o $(cgesvexe) $(cgesv) ../../$(SCALAPACKLIB) $(LIBS)
+
+$(zgesvexe): ../../$(SCALAPACKLIB) $(zgesv)
+	$(FCLOADER) $(FCLOADFLAGS) -o $(zgesvexe) $(zgesv) ../../$(SCALAPACKLIB) $(LIBS)
 
 clean:
 	rm -f *.o
