@@ -671,7 +671,7 @@
          END IF
 *
 *
-         CALL IGAMX2D( DESCA( CTXT_ ), 'a', ' ', 1, 1, RESULT, 1, 1, 1,
+         CALL IGAMX2D( DESCA( CTXT_ ), 'a', ' ', 1, 1, INT(RESULT), 1, 1, 1,
      $                 -1, -1, 0 )
          IF( RESULT.NE.0 )
      $      GO TO 160
@@ -804,7 +804,7 @@
 *
 *     All processes should report the same result
 *
-      CALL IGAMX2D( DESCA( CTXT_ ), 'a', ' ', 1, 1, RESULT, 1, 1, 1, -1,
+      CALL IGAMX2D( DESCA( CTXT_ ), 'a', ' ', 1, 1, INT(RESULT), 1, 1, 1, -1,
      $              -1, 0 )
 *
   160 CONTINUE

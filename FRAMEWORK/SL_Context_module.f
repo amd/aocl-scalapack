@@ -1,6 +1,6 @@
 
 * ************************************************************************
-* Copyright (c) 2023 Advanced Micro Devices, Inc.
+* Copyright (c) 2025 Advanced Micro Devices, Inc.
 *
 * Permission is hereby granted, free of charge, to any person obtaining a copy
 * of this software and associated documentation files (the "Software"), to deal
@@ -28,8 +28,13 @@
            INTEGER(C_INT)::IS_TRACE_ENABLED
            INTEGER(C_INT)::IS_LOG_ENABLED
            INTEGER(C_INT)::IS_PROGRESS_ENABLED
+#ifdef ENABLE_ILP64
+           INTEGER(C_LONG)::RANK
+           INTEGER(C_LONG)::NUM_PROCS
+#else
            INTEGER(C_INT)::RANK
            INTEGER(C_INT)::NUM_PROCS
+#endif 
          END TYPE
          TYPE(AOCL_SCALAPACK_GLOBAL_CONTEXT),BIND(C)::SCALAPACK_CONTEXT
 *  ..
