@@ -10,6 +10,7 @@
 *     University of Tennessee, Knoxville, Oak Ridge National Laboratory,
 *     and University of California, Berkeley.
 *     November 15, 1997
+*     Modifications Copyright (c) 2025 Advanced Micro Devices, Inc. All rights reserved.
 *
 *     .. Scalar Arguments ..
       CHARACTER          UPLO
@@ -321,7 +322,7 @@
 *        Send number of elements to be sent
          CALL IGEBS2D( ICTXT, 'All', ' ', 1, 1, I-1, 1 )
 *        Send elements
-         CALL IGEBS2D( ICTXT, 'All', ' ', I-1, 1, WORK, I-1 )
+         CALL IGEBS2D( ICTXT, 'All', ' ', I-1, 1, WORK(1), I-1 )
 *
          I = 1
          CALL ICOPY( NMAT, NVAL, 1, WORK( I ), 1 )
@@ -338,7 +339,7 @@
          I = I + NGRIDS
          CALL ICOPY( NGRIDS, QVAL, 1, WORK( I ), 1 )
          I = I + NGRIDS
-         CALL IGEBS2D( ICTXT, 'All', ' ', I-1, 1, WORK, I-1 )
+         CALL IGEBS2D( ICTXT, 'All', ' ', I-1, 1, WORK(1), I-1 )
 *
 *        regurgitate input
 *
@@ -473,7 +474,7 @@
 *
          CALL SGEBR2D( ICTXT, 'All', ' ', 1, 1, THRESH, 1, 0, 0 )
          CALL IGEBR2D( ICTXT, 'All', ' ', 1, 1, I, 1, 0, 0 )
-         CALL IGEBR2D( ICTXT, 'All', ' ', I, 1, WORK, I, 0, 0 )
+         CALL IGEBR2D( ICTXT, 'All', ' ', I, 1, WORK(1), I, 0, 0 )
          I = 1
          NMAT = WORK( I )
          I = I+1
@@ -496,7 +497,7 @@
 *
          I = NMAT + NBW + NNB + NNR + NNBR + 2*NGRIDS
 *
-         CALL IGEBR2D( ICTXT, 'All', ' ', 1, I, WORK, 1, 0, 0 )
+         CALL IGEBR2D( ICTXT, 'All', ' ', 1, I, WORK(1), 1, 0, 0 )
          I = 1
          CALL ICOPY( NMAT, WORK( I ), 1, NVAL, 1 )
          I = I + NMAT

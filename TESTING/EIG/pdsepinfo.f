@@ -10,6 +10,7 @@
 *     University of Tennessee, Knoxville, Oak Ridge National Laboratory,
 *     and University of California, Berkeley.
 *     May 1, 1997
+*     Modifications Copyright (c) 2025 Advanced Micro Devices, Inc. All rights reserved.
 *
 *  Purpose
 *  =======
@@ -192,10 +193,11 @@
 *
       IF( IAM.EQ.0 ) THEN
          READ( NIN, FMT = * )( MATSIZES( I ), I = 1, NMATSIZES )
-         CALL IGEBS2D( CONTEXT, 'All', ' ', 1, NMATSIZES, MATSIZES, 1 )
+         CALL IGEBS2D( CONTEXT, 'All', ' ', 1, NMATSIZES, MATSIZES(1),
+     $                 1 )
       ELSE
-         CALL IGEBR2D( CONTEXT, 'All', ' ', 1, NMATSIZES, MATSIZES, 1,
-     $                 0, 0 )
+         CALL IGEBR2D( CONTEXT, 'All', ' ', 1, NMATSIZES, MATSIZES(1),
+     $                 1, 0, 0 )
       END IF
 *
       IF( IAM.EQ.0 ) THEN
@@ -221,9 +223,10 @@
                IUPLOS( I ) = 2
             END IF
    10    CONTINUE
-         CALL IGEBS2D( CONTEXT, 'All', ' ', 1, NUPLOS, IUPLOS, 1 )
+         CALL IGEBS2D( CONTEXT, 'All', ' ', 1, NUPLOS, IUPLOS(1), 1 )
       ELSE
-         CALL IGEBR2D( CONTEXT, 'All', ' ', 1, NUPLOS, IUPLOS, 1, 0, 0 )
+         CALL IGEBR2D( CONTEXT, 'All', ' ', 1, NUPLOS, IUPLOS(1), 1,
+     $                 0, 0 )
       END IF
       DO 20 I = 1, NUPLOS
          IF( IUPLOS( I ).EQ.1 ) THEN
@@ -250,10 +253,10 @@
 *
       IF( IAM.EQ.0 ) THEN
          READ( NIN, FMT = * )( NPROWS( I ), I = 1, NPCONFIGS )
-         CALL IGEBS2D( CONTEXT, 'All', ' ', 1, NPCONFIGS, NPROWS, 1 )
+         CALL IGEBS2D( CONTEXT, 'All', ' ', 1, NPCONFIGS, NPROWS(1), 1 )
       ELSE
-         CALL IGEBR2D( CONTEXT, 'All', ' ', 1, NPCONFIGS, NPROWS, 1, 0,
-     $                 0 )
+         CALL IGEBR2D( CONTEXT, 'All', ' ', 1, NPCONFIGS, NPROWS(1),
+     $                 1, 0, 0 )
       END IF
       DO 30 I = 1, NPCONFIGS
          IF( NPROWS( I ).LE.0 )
@@ -268,10 +271,10 @@
 *
       IF( IAM.EQ.0 ) THEN
          READ( NIN, FMT = * )( NPCOLS( I ), I = 1, NPCONFIGS )
-         CALL IGEBS2D( CONTEXT, 'All', ' ', 1, NPCONFIGS, NPCOLS, 1 )
+         CALL IGEBS2D( CONTEXT, 'All', ' ', 1, NPCONFIGS, NPCOLS(1), 1 )
       ELSE
-         CALL IGEBR2D( CONTEXT, 'All', ' ', 1, NPCONFIGS, NPCOLS, 1, 0,
-     $                 0 )
+         CALL IGEBR2D( CONTEXT, 'All', ' ', 1, NPCONFIGS, NPCOLS(1),
+     $                 1, 0, 0 )
       END IF
       DO 40 I = 1, NPCONFIGS
          IF( NPCOLS( I ).LE.0 )
@@ -287,9 +290,10 @@
 *
       IF( IAM.EQ.0 ) THEN
          READ( NIN, FMT = * )( NBS( I ), I = 1, NPCONFIGS )
-         CALL IGEBS2D( CONTEXT, 'All', ' ', 1, NPCONFIGS, NBS, 1 )
+         CALL IGEBS2D( CONTEXT, 'All', ' ', 1, NPCONFIGS, NBS(1), 1 )
       ELSE
-         CALL IGEBR2D( CONTEXT, 'All', ' ', 1, NPCONFIGS, NBS, 1, 0, 0 )
+         CALL IGEBR2D( CONTEXT, 'All', ' ', 1, NPCONFIGS, NBS(1), 1,
+     $                 0, 0 )
       END IF
       DO 50 I = 1, NPCONFIGS
          IF( NBS( I ).LE.0 )
@@ -320,10 +324,11 @@
 *
       IF( IAM.EQ.0 ) THEN
          READ( NIN, FMT = * )( MATTYPES( I ), I = 1, NMATTYPES )
-         CALL IGEBS2D( CONTEXT, 'All', ' ', 1, NMATTYPES, MATTYPES, 1 )
+         CALL IGEBS2D( CONTEXT, 'All', ' ', 1, NMATTYPES, MATTYPES(1),
+     $                 1 )
       ELSE
-         CALL IGEBR2D( CONTEXT, 'All', ' ', 1, NMATTYPES, MATTYPES, 1,
-     $                 0, 0 )
+         CALL IGEBR2D( CONTEXT, 'All', ' ', 1, NMATTYPES, MATTYPES(1),
+     $                 1, 0, 0 )
       END IF
 *
       DO 60 I = 1, NMATTYPES

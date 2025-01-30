@@ -8,6 +8,7 @@
 *     University of California, Berkeley and
 *     University of Tennessee, Knoxville. 
 *     October 21, 2006
+*     Modifications Copyright (c) 2025 Advanced Micro Devices, Inc. All rights reserved.
 *
       IMPLICIT NONE
 *
@@ -324,9 +325,9 @@
 *     This ensures that everyone starts out with the same seed.
 *
          IF( MYROW.EQ.0 .AND. MYCOL.EQ.0 ) THEN
-            CALL IGEBS2D( CONTEXT, 'a', ' ', 4, 1, ISEED, 4 )
+            CALL IGEBS2D( CONTEXT, 'a', ' ', 4, 1, ISEED(1), 4 )
          ELSE
-            CALL IGEBR2D( CONTEXT, 'a', ' ', 4, 1, ISEED, 4, 0, 0 )
+            CALL IGEBR2D( CONTEXT, 'a', ' ', 4, 1, ISEED(1), 4, 0, 0 )
          END IF
          ISEEDIN( 1 ) = ISEED( 1 )
          ISEEDIN( 2 ) = ISEED( 2 )

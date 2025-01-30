@@ -1,4 +1,4 @@
-##Copyright (C) 2021, Advanced Micro Devices, Inc. All rights reserved.##
+##Copyright (C) 2025, Advanced Micro Devices, Inc. All rights reserved.##
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${SCALAPACK_BINARY_DIR}/TESTING)
 
@@ -167,6 +167,11 @@ else(WIN32)
   target_link_libraries(xcls scalapack ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES})
   target_link_libraries(xzls scalapack ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES})
 endif(WIN32)
+
+# Temp hack to address warning in *qrdriver.f files. Here floating point values are being Integer parameter
+if (UNIX)
+	set_source_files_properties(psqrdriver.f pdqrdriver.f pcqrdriver.f pzqrdriver.f PROPERTIES COMPILE_FLAGS "-w")
+endif()
 
 if ("${CMAKE_Fortran_COMPILER_ID}" STREQUAL "GNU" AND CMAKE_Fortran_COMPILER_VERSION VERSION_GREATER_EQUAL 10)
     set( CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -std=legacy" )  # local to this directory

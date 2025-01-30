@@ -3,7 +3,8 @@
 *  -- ScaLAPACK testing driver (version 1.7) --
 *     University of Tennessee, Knoxville, Oak Ridge National Laboratory,
 *     and University of California, Berkeley.
-*     May 1, 1997      
+*     May 1, 1997
+*     Modifications Copyright (c) 2025 Advanced Micro Devices, Inc. All rights reserved.      
 *
 *  Purpose
 *  ========
@@ -177,16 +178,18 @@
 *
       IF( IAM.EQ.0 ) THEN
          READ( NIN, FMT = * )( MM( I ), I = 1, NMATSIZES )
-         CALL IGEBS2D( CONTEXT, 'All', ' ', 1, NMATSIZES, MM, 1 )
+         CALL IGEBS2D( CONTEXT, 'All', ' ', 1, NMATSIZES, MM(1), 1 )
       ELSE
-         CALL IGEBR2D( CONTEXT, 'All', ' ', 1, NMATSIZES, MM, 1, 0, 0 )
+         CALL IGEBR2D( CONTEXT, 'All', ' ', 1, NMATSIZES, MM(1), 1,
+     $                 0, 0 )
       END IF
 *
       IF( IAM.EQ.0 ) THEN
          READ( NIN, FMT = * )( NN( I ), I = 1, NMATSIZES )
-         CALL IGEBS2D( CONTEXT, 'All', ' ', 1, NMATSIZES, NN, 1 )
+         CALL IGEBS2D( CONTEXT, 'All', ' ', 1, NMATSIZES, NN(1), 1 )
       ELSE
-         CALL IGEBR2D( CONTEXT, 'All', ' ', 1, NMATSIZES, NN, 1, 0, 0 )
+         CALL IGEBR2D( CONTEXT, 'All', ' ', 1, NMATSIZES, NN(1), 1,
+     $                 0, 0 )
       END IF
 *
 *     Read and broadcast NPCONFIGS.
@@ -212,10 +215,10 @@
       IF( IAM.EQ.0 ) THEN
          READ( NIN, FMT = * )( NPROWS( I ), I = 1, NPCONFIGS )
 *
-         CALL IGEBS2D( CONTEXT, 'All', ' ', 1, NPCONFIGS, NPROWS, 1 )
+         CALL IGEBS2D( CONTEXT, 'All', ' ', 1, NPCONFIGS, NPROWS(1), 1 )
       ELSE
-         CALL IGEBR2D( CONTEXT, 'All', ' ', 1, NPCONFIGS, NPROWS, 1, 0,
-     $                 0 )
+         CALL IGEBR2D( CONTEXT, 'All', ' ', 1, NPCONFIGS, NPROWS(1),
+     $                 1, 0, 0 )
       END IF
 *     Deal with error
       DO 20 I = 1, NPCONFIGS
@@ -233,10 +236,10 @@
 *
       IF( IAM.EQ.0 ) THEN
          READ( NIN, FMT = * )( NPCOLS( I ), I = 1, NPCONFIGS )
-         CALL IGEBS2D( CONTEXT, 'All', ' ', 1, NPCONFIGS, NPCOLS, 1 )
+         CALL IGEBS2D( CONTEXT, 'All', ' ', 1, NPCONFIGS, NPCOLS(1), 1 )
       ELSE
-         CALL IGEBR2D( CONTEXT, 'All', ' ', 1, NPCONFIGS, NPCOLS, 1, 0,
-     $                 0 )
+         CALL IGEBR2D( CONTEXT, 'All', ' ', 1, NPCONFIGS, NPCOLS(1),
+     $                 1, 0, 0 )
       END IF
 *
 *     Deal with error.
@@ -256,9 +259,10 @@
 *
       IF( IAM.EQ.0 ) THEN
          READ( NIN, FMT = * )( NBS( I ), I = 1, NPCONFIGS )
-         CALL IGEBS2D( CONTEXT, 'All', ' ', 1, NPCONFIGS, NBS, 1 )
+         CALL IGEBS2D( CONTEXT, 'All', ' ', 1, NPCONFIGS, NBS(1), 1 )
       ELSE
-         CALL IGEBR2D( CONTEXT, 'All', ' ', 1, NPCONFIGS, NBS, 1, 0, 0 )
+         CALL IGEBR2D( CONTEXT, 'All', ' ', 1, NPCONFIGS, NBS(1), 1,
+     $                 0, 0 )
       END IF
 *     Deal with error
       DO 40 I = 1, NPCONFIGS
