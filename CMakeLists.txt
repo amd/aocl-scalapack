@@ -506,6 +506,13 @@ if (UNIX)
       target_link_libraries( scalapack INTERFACE ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES})
     endif()
   endif(CUSTOM_BLACS_FOUND)
+  
+  #Add C-specific compile options to remove absolute path 
+  target_compile_options(scalapack PRIVATE  
+    $<$<COMPILE_LANGUAGE:C>:-fPIC>  
+    $<$<COMPILE_LANGUAGE:C>:-fmacro-prefix-map=${SCALAPACK_SOURCE_DIR}/=>  
+  ) 
+
   if(ENABLE_COVERAGE)
     target_compile_options(scalapack PUBLIC -fprofile-arcs  -ftest-coverage)
     target_link_options(scalapack PUBLIC -fprofile-arcs  -ftest-coverage)
