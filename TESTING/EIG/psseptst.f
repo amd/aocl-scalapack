@@ -275,6 +275,36 @@
 *
       CALL BLACS_PINFO( IAM, NNODES )
       CALL BLACS_GRIDINFO( CONTEXT, NPROW, NPCOL, MYROW, MYCOL )
+      
+*     Get the number of command-line arguments
+      numArgs = command_argument_count()
+*
+*     Process command-line arguments
+      do count = 1, numArgs, 2
+         call get_command_argument(count, arg)
+         arg = trim(arg)
+         select case (arg)
+            case ("-h", "--help")
+                  help_flag = .true.
+                  exit
+            case ("-inf")
+                  call get_command_argument(count + 1, arg)
+                  read(arg, *) INF_PERCENT
+                  IF (INF_PERCENT .GT. 0) THEN
+                     EX_FLAG = .TRUE.
+                  END IF
+            case ("-nan")
+                  call get_command_argument(count + 1, arg)
+                  read(arg, *) NAN_PERCENT
+                  IF (NAN_PERCENT .GT. 0) THEN
+                     EX_FLAG = .TRUE.
+                  END IF
+            case default
+                  print *, "Invalid option: ", arg
+                  help_flag = .true.
+                  exit
+            end select
+      end do
 *
 *     Distribute HETERO across processes
 *
@@ -376,6 +406,14 @@
             COND = ULPINV
          ELSE
             COND = ULPINV*ANINV / TEN
+         END IF
+*
+*
+*      IF extreme flag is enabled, opt to the general matgen
+*      routine to populate the input with INF/NANs
+*
+         IF(EX_FLAG) THEN
+           ITYPE = 8
          END IF
 *
 *     Special Matrices
@@ -1084,7 +1122,8 @@
 *        PSSYEV test1:
 *        JOBZ = 'N', eigenvalues only
 *
-         IF( INFO.NE.0 . AND. N .GE. 0) THEN
+         IF( INFO.NE.0 . AND. N .GE. 0 .AND. 
+     $           .NOT.(EX_FLAG)) THEN
 *
 *           If the EVX tests fail, we do not perform the EV tests
 *
@@ -1126,7 +1165,7 @@
 *        PSSYEV test2:
 *        JOBZ = 'V', eigenvalues and eigenvectors
 *  
-         IF( INFO.EQ.0 ) THEN
+         IF( INFO.EQ.0 .AND. .NOT.(EX_FLAG) ) THEN
             JOBZ = 'V'
 *
             CALL PSSYEV( JOBZ, UPLO, N, A, 1, 1, DESCA,

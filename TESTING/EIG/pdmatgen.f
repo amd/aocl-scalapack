@@ -589,7 +589,14 @@
                   DO 250 J = 1, MB
                      IF( IK .GT. IRNUM ) GO TO 270
 *                    Replace with NANs/INFs for extreme values
-                     IF(EXT_FLAG .AND. CNT .LE. (CNT1 + CNT2) .AND.
+*                    Special case handling for 1x1 matrices
+                     IF( EXT_FLAG .AND. N.EQ.1 ) THEN
+                        IF ( CNT .LT. CNT1) THEN
+                           A(IK, JK) = ZERO1/ZERO1
+                        ELSE IF ( CNT .LT. (CNT1 + CNT2)) THEN
+                           A(IK, JK) = ONE1/ZERO1
+                        END IF
+                     ELSE IF(EXT_FLAG .AND. CNT .LE. (CNT1 + CNT2) .AND.
      $                    TOT_CNT .GE. REGION) THEN
                         IF ( CNT .LT. CNT1) THEN
                            A(IK, JK) = ZERO1/ZERO1

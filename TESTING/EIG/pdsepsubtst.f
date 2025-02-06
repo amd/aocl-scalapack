@@ -426,36 +426,38 @@
       CALL SLTIMER( 1 )
 *
 *     skip checkpad conditions for negative cases
-      IF( THRESH.LE.0 .AND. N .LT. 0 ) THEN
+      IF( THRESH.LE.0 .AND. N.LE.0) THEN
          RESULT = 0
       ELSE
-         CALL PDCHEKPAD( DESCA( CTXT_ ), 'PDSYEVX-A', NP, NQ, A,
+         IF(.NOT.(EX_FLAG)) THEN
+          CALL PDCHEKPAD( DESCA( CTXT_ ), 'PDSYEVX-A', NP, NQ, A,
      $                   DESCA( LLD_ ), IPREPAD, IPOSTPAD, PADVAL )
 *
-         CALL PDCHEKPAD( DESCZ( CTXT_ ), 'PDSYEVX-Z', NP, MQ, Z,
+          CALL PDCHEKPAD( DESCZ( CTXT_ ), 'PDSYEVX-Z', NP, MQ, Z,
      $                   DESCZ( LLD_ ), IPREPAD, IPOSTPAD,
      $                   PADVAL+1.0D+0 )
 *
-         CALL PDCHEKPAD( DESCA( CTXT_ ), 'PDSYEVX-WNEW', N, 1, WNEW, N,
+          CALL PDCHEKPAD( DESCA( CTXT_ ), 'PDSYEVX-WNEW', N, 1, WNEW, N,
      $                   IPREPAD, IPOSTPAD, PADVAL+2.0D+0 )
 *
-         CALL PDCHEKPAD( DESCA( CTXT_ ), 'PDSYEVX-GAP', NPROW*NPCOL, 1,
+          CALL PDCHEKPAD( DESCA( CTXT_ ), 'PDSYEVX-GAP', NPROW*NPCOL, 1,
      $                   GAP, NPROW*NPCOL, IPREPAD, IPOSTPAD,
      $                   PADVAL+3.0D+0 )
 *
-         CALL PDCHEKPAD( DESCA( CTXT_ ), 'PDSYEVX-WORK', LWORK1, 1,
+          CALL PDCHEKPAD( DESCA( CTXT_ ), 'PDSYEVX-WORK', LWORK1, 1,
      $                   WORK, LWORK1, IPREPAD, IPOSTPAD,
      $                   PADVAL+4.0D+0 )
 *
-         CALL PICHEKPAD( DESCA( CTXT_ ), 'PDSYEVX-IWORK', LIWORK, 1,
+          CALL PICHEKPAD( DESCA( CTXT_ ), 'PDSYEVX-IWORK', LIWORK, 1,
      $                   IWORK, LIWORK, IPREPAD, IPOSTPAD, IPADVAL )
 *
-         CALL PICHEKPAD( DESCA( CTXT_ ), 'PDSYEVX-IFAIL', N, 1, IFAIL,
+          CALL PICHEKPAD( DESCA( CTXT_ ), 'PDSYEVX-IFAIL', N, 1, IFAIL,
      $                   N, IPREPAD, IPOSTPAD, IPADVAL )
 *
-         CALL PICHEKPAD( DESCA( CTXT_ ), 'PDSYEVX-ICLUSTR',
+          CALL PICHEKPAD( DESCA( CTXT_ ), 'PDSYEVX-ICLUSTR',
      $                   2*NPROW*NPCOL, 1, ICLUSTR, 2*NPROW*NPCOL,
      $                   IPREPAD, IPOSTPAD, IPADVAL )
+         END IF
 *
 *
 *     Since we now know the spectrum, we can potentially reduce MAXSIZE.

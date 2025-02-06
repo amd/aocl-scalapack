@@ -429,33 +429,35 @@
       IF( THRESH.LE.0 .AND. N .LT. 0 ) THEN
          RESULT = 0
       ELSE
-         CALL PSCHEKPAD( DESCA( CTXT_ ), 'PSSYEVX-A', NP, NQ, A,
+         IF(.NOT.(EX_FLAG)) THEN
+          CALL PSCHEKPAD( DESCA( CTXT_ ), 'PSSYEVX-A', NP, NQ, A,
      $                   DESCA( LLD_ ), IPREPAD, IPOSTPAD, PADVAL )
 *
-         CALL PSCHEKPAD( DESCZ( CTXT_ ), 'PSSYEVX-Z', NP, MQ, Z,
+          CALL PSCHEKPAD( DESCZ( CTXT_ ), 'PSSYEVX-Z', NP, MQ, Z,
      $                   DESCZ( LLD_ ), IPREPAD, IPOSTPAD,
      $                   PADVAL+1.0E+0 )
 *
-         CALL PSCHEKPAD( DESCA( CTXT_ ), 'PSSYEVX-WNEW', N, 1, WNEW, N,
+          CALL PSCHEKPAD( DESCA( CTXT_ ), 'PSSYEVX-WNEW', N, 1, WNEW,N,
      $                   IPREPAD, IPOSTPAD, PADVAL+2.0E+0 )
 *
-         CALL PSCHEKPAD( DESCA( CTXT_ ), 'PSSYEVX-GAP', NPROW*NPCOL, 1,
+          CALL PSCHEKPAD( DESCA( CTXT_ ), 'PSSYEVX-GAP', NPROW*NPCOL,1,
      $                   GAP, NPROW*NPCOL, IPREPAD, IPOSTPAD,
      $                   PADVAL+3.0E+0 )
 *
-         CALL PSCHEKPAD( DESCA( CTXT_ ), 'PSSYEVX-WORK', LWORK1, 1,
+          CALL PSCHEKPAD( DESCA( CTXT_ ), 'PSSYEVX-WORK', LWORK1, 1,
      $                   WORK, LWORK1, IPREPAD, IPOSTPAD,
      $                   PADVAL+4.0E+0 )
 *
-         CALL PICHEKPAD( DESCA( CTXT_ ), 'PSSYEVX-IWORK', LIWORK, 1,
+          CALL PICHEKPAD( DESCA( CTXT_ ), 'PSSYEVX-IWORK', LIWORK, 1,
      $                   IWORK, LIWORK, IPREPAD, IPOSTPAD, IPADVAL )
 *
-         CALL PICHEKPAD( DESCA( CTXT_ ), 'PSSYEVX-IFAIL', N, 1, IFAIL,
+          CALL PICHEKPAD( DESCA( CTXT_ ), 'PSSYEVX-IFAIL', N, 1,IFAIL,
      $                   N, IPREPAD, IPOSTPAD, IPADVAL )
 *
-         CALL PICHEKPAD( DESCA( CTXT_ ), 'PSSYEVX-ICLUSTR',
+          CALL PICHEKPAD( DESCA( CTXT_ ), 'PSSYEVX-ICLUSTR',
      $                   2*NPROW*NPCOL, 1, ICLUSTR, 2*NPROW*NPCOL,
      $                   IPREPAD, IPOSTPAD, IPADVAL )
+         END IF
 *
 *
 *     Since we now know the spectrum, we can potentially reduce MAXSIZE.
