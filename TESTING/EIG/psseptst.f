@@ -1122,7 +1122,8 @@
 *        PSSYEV test1:
 *        JOBZ = 'N', eigenvalues only
 *
-         IF( INFO.NE.0 . AND. N .GE. 0) THEN
+         IF( INFO.NE.0 . AND. N .GE. 0 .AND. 
+     $           .NOT.(EX_FLAG)) THEN
 *
 *           If the EVX tests fail, we do not perform the EV tests
 *
