@@ -29,6 +29,7 @@
      $                    UNI_LAPACK = .TRUE. )
       INTEGER           N, NB, ARSRC, ACSRC
       INTEGER           NIN, NMAT, NNB, NGRIDS, I  
+      INTEGER, ALLOCATABLE :: NVAL(:), NBVAL(:), PVAL(:), QVAL(:)  
       CHARACTER(LEN=100) :: SUMMRY, USRINFO  
       INTEGER           NOUT  
       INTEGER           BLOCK_CYCLIC_2D, CSRC_, CTXT_, DLEN_, DT_,
@@ -36,13 +37,11 @@
       PARAMETER         ( BLOCK_CYCLIC_2D = 1, DLEN_ = 9, DT_ = 1,
      $                    CTXT_ = 2, M_ = 3, N_ = 4, MB_ = 5, NB_ = 6,
      $                    RSRC_ = 7, CSRC_ = 8, LLD_ = 9 )
-      INTEGER           DPALLOC, INTALLC, NTESTS
+      INTEGER           DPALLOC, INTALLC
       INTEGER           DPSIZ, INTSZ, IZERO  
       PARAMETER         ( DPSIZ = 8, DPALLOC = 8 000 000,
      $                    INTSZ = 4, INTALLC = 8 000 000,
-     $                    IZERO = 0, NTESTS = 20)
-      INTEGER           NVAL(NTESTS), NBVAL(NTESTS), PVAL(NTESTS), 
-     $                  QVAL(NTESTS)
+     $                    IZERO = 0)  
       REAL              ZERO, ONE, TWO
       PARAMETER         ( ZERO = 0.0, ONE = 1.0, TWO = 2.0 )
 *
@@ -84,18 +83,71 @@
       EXTERNAL          MPI_WTIME
       EXTERNAL          PSGEBAL
       EXTERNAL          PSMATGEN2
-      EXTERNAL          PSHSEQRINFO
+
+      IF( IAM.EQ.0 ) THEN
+*  
+*     	 Open file and skip data file header  
+*  	     
+    		 NIN = 10  
+    		 OPEN( NIN, FILE='EQR.dat', STATUS='OLD' )  
+    		 READ( NIN, FMT = * ) SUMMRY  
+    		 SUMMRY = ' '  
+		 
+*     	 Read in user-supplied info about machine type, compiler, etc.  
+*  	     
+    		 READ( NIN, FMT = * ) USRINFO  
+		 
+*     	 Read name and unit number for summary output file  
+*  	     
+    		 READ( NIN, FMT = * ) SUMMRY  
+    		 READ( NIN, FMT = * ) NOUT  
+    		 IF( NOUT.NE.0 .AND. NOUT.NE.6 ) THEN  
+    		 	OPEN( NOUT, FILE = SUMMRY, STATUS = 'UNKNOWN' )  
+    		 END IF  
+		 
+*     	 Read and check the parameter values for the tests.  
+*  	     
+*     	 Get number of matrices and their dimensions  
+*  	     
+    		 READ( NIN, FMT = * ) NMAT  
+    		 ALLOCATE(NVAL(NMAT))  
+    		 READ( NIN, FMT = * ) ( NVAL( I ), I = 1, NMAT )  
+		 
+*     	 Get values of NB  
+*
+    		 READ( NIN, FMT = * ) NNB  
+    		 ALLOCATE(NBVAL(NNB))  
+    		 READ( NIN, FMT = * ) ( NBVAL( I ), I = 1, NNB )  
+		 
+*     	 Get number of grids  
+*  	     
+    		 READ( NIN, FMT = * ) NGRIDS  
+    		 ALLOCATE(PVAL(NGRIDS), QVAL(NGRIDS))  
+		 
+*     	 Get values of P and Q  
+*  	     
+    		 READ( NIN, FMT = * ) ( PVAL( I ), I = 1, NGRIDS )  
+    		 READ( NIN, FMT = * ) ( QVAL( I ), I = 1, NGRIDS )  
+		 
+*     	 Close input file  
+*  	     
+    		 CLOSE( NIN )  
+		 
+*     	 Use the first values from NVAL and NBVAL for N and NB  
+    		 N = NVAL(1)  
+    		 NB = NBVAL(1)  
+		 
+*     	 Allocate SCALE array  
+    		 ALLOCATE(SCALE(N))  
+		 
+*     	 What processor should hold the first element in A?  
+    		 ARSRC = 0  
+    		 ACSRC = 0  
+      END IF
       
 *     ...Executable statements...
 *
-      CALL BLACS_PINFO( IAM, NPROCS )
-
-      CALL PSHSEQRINFO( SUMMRY, NOUT, NMAT, NVAL, NTESTS,
-     $                  NNB, NBVAL, NTESTS, NGRIDS, PVAL, NTESTS,
-     $                  QVAL, NTESTS, THRESH, IAM, NPROCS )
-
-      N  = NVAL(1)
-      NB = NBVAL(1)
+      CALL BLACS_PINFO( IAM, SYS_NPROCS )
       NPROW = PVAL(1)
       NPCOL = QVAL(1)
       CALL BLACS_GET( 0, 0, ICTXT )

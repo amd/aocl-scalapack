@@ -1,4 +1,4 @@
-##Copyright (C) 2021, Advanced Micro Devices, Inc. All rights reserved.##
+##Copyright (C) 2025, Advanced Micro Devices, Inc. All rights reserved.##
 
 add_subdirectory(LIN)
 add_subdirectory(EIG)
@@ -31,6 +31,7 @@ file(COPY SEPR.dat DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 file(COPY SVD.dat DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 file(COPY TRD.dat DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 file(COPY GESV.dat DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
+file(COPY EQR.dat DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 
 add_test(xslu ${MPIEXEC} ${MPIEXEC_NUMPROC_FLAG} 4 ./xslu)
 add_test(xdlu ${MPIEXEC} ${MPIEXEC_NUMPROC_FLAG} 4 ./xdlu)
