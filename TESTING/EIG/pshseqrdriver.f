@@ -3,7 +3,7 @@
 ***********************************************************************
 *
 *     Contributor: Robert Granat and Meiyue Shao
-*     This version is of Feb 2011.
+*     Modifications Copyright (c) 2025 Advanced Micro Devices, Inc. All rights reserved.
 *
       PROGRAM PSHSEQRDRIVER
 *
@@ -28,21 +28,20 @@
      $                    SLV_MIN = 2, SLV_MAX = 2,
      $                    UNI_LAPACK = .TRUE. )
       INTEGER           N, NB, ARSRC, ACSRC
-      PARAMETER         (
-*     Problem size.
-     $                    N = 500, NB = 50,
-*     What processor should hold the first element in A?
-     $                    ARSRC = 0, ACSRC = 0 )
+      INTEGER           NIN, NMAT, NNB, NGRIDS, I  
+      INTEGER, ALLOCATABLE :: NVAL(:), NBVAL(:), PVAL(:), QVAL(:)  
+      CHARACTER(LEN=100) :: SUMMRY, USRINFO  
+      INTEGER           NOUT  
       INTEGER           BLOCK_CYCLIC_2D, CSRC_, CTXT_, DLEN_, DT_,
      $                  LLD_, MB_, M_, NB_, N_, RSRC_
       PARAMETER         ( BLOCK_CYCLIC_2D = 1, DLEN_ = 9, DT_ = 1,
      $                    CTXT_ = 2, M_ = 3, N_ = 4, MB_ = 5, NB_ = 6,
      $                    RSRC_ = 7, CSRC_ = 8, LLD_ = 9 )
       INTEGER           DPALLOC, INTALLC
-      INTEGER           DPSIZ, INTSZ, NOUT, IZERO
+      INTEGER           DPSIZ, INTSZ, IZERO  
       PARAMETER         ( DPSIZ = 8, DPALLOC = 8 000 000,
      $                    INTSZ = 4, INTALLC = 8 000 000,
-     $                    NOUT = 6, IZERO = 0)
+     $                    IZERO = 0)  
       REAL              ZERO, ONE, TWO
       PARAMETER         ( ZERO = 0.0, ONE = 1.0, TWO = 2.0 )
 *
@@ -50,7 +49,7 @@
       INTEGER           ICTXT, IAM, NPROW, NPCOL, MYROW, MYCOL,
      $                  SYS_NPROCS, NPROCS, AROWS, ACOLS, TEMP_ICTXT
       INTEGER           THREADS
-      INTEGER           INFO, KTOP, KBOT, ILO, IHI, I
+      INTEGER           INFO, KTOP, KBOT, ILO, IHI  
       INTEGER           IPA, IPACPY, IPQ, WR1, WI1, WR2, WI2, IPW1,
      $                  IPW2, IPIW
       INTEGER           TOTIT, SWEEPS, TOTNS, HESS
@@ -65,7 +64,7 @@
 *
 *     ...Local Arrays...
       INTEGER           DESCA( DLEN_ ), DESCQ( DLEN_ ), DESCVEC( DLEN_ )
-      REAL              SCALE( N )
+      REAL, ALLOCATABLE :: SCALE(:)  
       REAL, ALLOCATABLE :: MEM(:)
       INTEGER, ALLOCATABLE :: IMEM(:)
 *
@@ -83,12 +82,73 @@
       EXTERNAL          MPI_WTIME
       EXTERNAL          PSGEBAL
       EXTERNAL          PSMATGEN2
+
+      IF( IAM.EQ.0 ) THEN
+*  
+*     	 Open file and skip data file header  
+*  	     
+    		 NIN = 10  
+    		 OPEN( NIN, FILE='EQR.dat', STATUS='OLD' )  
+    		 READ( NIN, FMT = * ) SUMMRY  
+    		 SUMMRY = ' '  
+		 
+*     	 Read in user-supplied info about machine type, compiler, etc.  
+*  	     
+    		 READ( NIN, FMT = * ) USRINFO  
+		 
+*     	 Read name and unit number for summary output file  
+*  	     
+    		 READ( NIN, FMT = * ) SUMMRY  
+    		 READ( NIN, FMT = * ) NOUT  
+    		 IF( NOUT.NE.0 .AND. NOUT.NE.6 ) THEN  
+    		 	OPEN( NOUT, FILE = SUMMRY, STATUS = 'UNKNOWN' )  
+    		 END IF  
+		 
+*     	 Read and check the parameter values for the tests.  
+*  	     
+*     	 Get number of matrices and their dimensions  
+*  	     
+    		 READ( NIN, FMT = * ) NMAT  
+    		 ALLOCATE(NVAL(NMAT))  
+    		 READ( NIN, FMT = * ) ( NVAL( I ), I = 1, NMAT )  
+		 
+*     	 Get values of NB  
 *
+    		 READ( NIN, FMT = * ) NNB  
+    		 ALLOCATE(NBVAL(NNB))  
+    		 READ( NIN, FMT = * ) ( NBVAL( I ), I = 1, NNB )  
+		 
+*     	 Get number of grids  
+*  	     
+    		 READ( NIN, FMT = * ) NGRIDS  
+    		 ALLOCATE(PVAL(NGRIDS), QVAL(NGRIDS))  
+		 
+*     	 Get values of P and Q  
+*  	     
+    		 READ( NIN, FMT = * ) ( PVAL( I ), I = 1, NGRIDS )  
+    		 READ( NIN, FMT = * ) ( QVAL( I ), I = 1, NGRIDS )  
+		 
+*     	 Close input file  
+*  	     
+    		 CLOSE( NIN )  
+		 
+*     	 Use the first values from NVAL and NBVAL for N and NB  
+    		 N = NVAL(1)  
+    		 NB = NBVAL(1)  
+		 
+*     	 Allocate SCALE array  
+    		 ALLOCATE(SCALE(N))  
+		 
+*     	 What processor should hold the first element in A?  
+    		 ARSRC = 0  
+    		 ACSRC = 0  
+      END IF
+      
 *     ...Executable statements...
 *
       CALL BLACS_PINFO( IAM, SYS_NPROCS )
-      NPROW = INT( SQRT( FLOAT(SYS_NPROCS) ) )
-      NPCOL = SYS_NPROCS / NPROW
+      NPROW = PVAL(1)
+      NPCOL = QVAL(1)
       CALL BLACS_GET( 0, 0, ICTXT )
       CALL BLACS_GRIDINIT( ICTXT, '2D', NPROW, NPCOL )
       CALL BLACS_GRIDINFO( ICTXT, NPROW, NPCOL, MYROW, MYCOL )
@@ -542,7 +602,7 @@ c     $      ' %%% Total execution time in seconds:', TOTTIME
 *
 *     Deallocate MEM and IMEM.
 *
-      DEALLOCATE( MEM, IMEM )
+      DEALLOCATE( MEM, IMEM, SCALE )  
 *
       CALL BLACS_GRIDEXIT( ICTXT )
 *
