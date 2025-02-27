@@ -384,12 +384,12 @@
          CALL PDLAGGE( M, N, WORK( PTRD ), WORK( PTRA ),
      $           IA, JA, DESCA, ISEED, SIZE,
      $           WORK( PTRWORK ), -1, DINFO )
-         WPSLAGGE = INT( WORK( PTRWORK ) )
+         WPDLAGGE = INT( WORK( PTRWORK ) )
       ELSE
          CALL PDLAGGE( M, N, WORK( PTRD ), WORK( PTRA ),
      $           IA, JA, DESCA, ISEED, SIZE,
      $           WORK( PTRWORK ), LWORK, DINFO )
-         WPSLAGGE = INT( WORK( PTRWORK ) )
+         WPDLAGGE = INT( WORK( PTRWORK ) )
       END IF
 *
       CALL PDGESVD( 'V', 'V', M, N, WORK( PTRA ), IA, JA, DESCA, 
