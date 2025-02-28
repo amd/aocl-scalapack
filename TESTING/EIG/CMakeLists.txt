@@ -65,11 +65,6 @@ pcsepchk.f pcsepqtq.f pclatms.f pcseprtst.f pssepinfo.f pclagsy.f pclasizesep.f 
 add_executable(xzheevr  pzlasizesepr.f pzlasizeheevr.f pzseprdriver.f pzseprreq.f pzseprsubtst.f
 pzsepchk.f pzsepqtq.f pzlatms.f pzseprtst.f pdsepinfo.f pzlagsy.f pzlasizesep.f ${zmatgen})
 
-add_executable(xsgesv  psgesvdriver.f pxgesvinfo.f ${smatgen})
-add_executable(xdgesv  pdgesvdriver.f pxgesvinfo.f ${dmatgen})
-add_executable(xcgesv  pcgesvdriver.f pxgesvinfo.f ${cmatgen})
-add_executable(xzgesv  pzgesvdriver.f pxgesvinfo.f ${zmatgen}) 
-
 add_executable(xshseqr pshseqrdriver.f psmatgen2.f ${cmatgen})
 add_executable(xdhseqr pdhseqrdriver.f pdmatgen2.f ${cmatgen})
 
@@ -118,11 +113,6 @@ if(WIN32)
   target_link_libraries(xshseqr scalapack ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES} ${OpenMP_libomp_LIBRARY})
   target_link_libraries(xdhseqr scalapack ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES} ${OpenMP_libomp_LIBRARY})
 
-  target_link_libraries(xsgesv scalapack ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES} ${OpenMP_libomp_LIBRARY})
-  target_link_libraries(xdgesv scalapack ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES} ${OpenMP_libomp_LIBRARY})
-  target_link_libraries(xcgesv scalapack ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES} ${OpenMP_libomp_LIBRARY})
-  target_link_libraries(xzgesv scalapack ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES} ${OpenMP_libomp_LIBRARY})
-
 else(WIN32)
   target_link_libraries(xsbrd scalapack ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES})
   target_link_libraries(xdbrd scalapack ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES})
@@ -167,11 +157,6 @@ else(WIN32)
 
   target_link_libraries(xshseqr scalapack ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES})
   target_link_libraries(xdhseqr scalapack ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES})
-
-  target_link_libraries(xsgesv scalapack ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES})
-  target_link_libraries(xdgesv scalapack ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES})
-  target_link_libraries(xcgesv scalapack ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES})
-  target_link_libraries(xzgesv scalapack ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES})
 
 endif(WIN32)
 

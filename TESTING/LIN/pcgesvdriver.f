@@ -1,10 +1,10 @@
-      PROGRAM PZGESVDRIVER
+      PROGRAM PCGESVDRIVER
 *
 *  -- ScaLAPACK testing driver --
 *
 *     Modifications Copyright (c) 2025 Advanced Micro Devices, Inc. All rights reserved.
 *
-*     PZGESVDRIVER is the main test program for routine PZGESV,
+*     PCGESVDRIVER is the main test program for routine PCGESV,
 *     solves a linear system
 *     The program must be driven by a short data file. An annotated
 *     example of a data file can be obtained by deleting the first 3
@@ -53,15 +53,15 @@
 *
       use,intrinsic :: ieee_arithmetic
 *     .. Parameters ..
-      INTEGER            CP16SZ, INTGSZ, MEMSIZ, TOTMEM
-      PARAMETER          ( CP16SZ = 16, INTGSZ = 4, TOTMEM = 2000000,
-     $                     MEMSIZ = TOTMEM / CP16SZ )
+      INTEGER            CPLXSZ, INTGSZ, MEMSIZ, TOTMEM
+      PARAMETER          ( CPLXSZ = 8, INTGSZ = 4, TOTMEM = 2000000,
+     $                     MEMSIZ = TOTMEM / CPLXSZ )
       INTEGER            BLOCK_CYCLIC_2D, CSRC_, CTXT_, DLEN_, DT_,
      $                   LLD_, MB_, M_, NB_, N_, RSRC_
       PARAMETER          ( BLOCK_CYCLIC_2D = 1, DLEN_ = 9, DT_ = 1,
      $                     CTXT_ = 2, M_ = 3, N_ = 4, MB_ = 5, NB_ = 6,
      $                     RSRC_ = 7, CSRC_ = 8, LLD_ = 9 )
-      COMPLEX*16         ONE
+      COMPLEX            ONE
       PARAMETER          ( ONE = (1.0D+0,0.0D+0) )
 *     ..
 *     .. Local Scalars ..
@@ -72,26 +72,26 @@
      $                   IPW, LIPIV, MYCOL, MYROW, N, NB, NOUT, NPCOL,
      $                   NPROCS, NPROW, NP, NQ, NQRHS, NRHS, WORKSIZ,
      $                   KPASS, KSKIP, KTESTS, KFAIL, NMAT, NGRIDS, NNB
-      DOUBLE PRECISION   ANORM, BNORM, EPS, XNORM, RESID, TMFLOPS
+      REAL   ANORM, BNORM, EPS, XNORM, RESID, TMFLOPS
 *     ..
 *     .. Local Arrays ..
       INTEGER            DESCA( DLEN_ ), DESCB( DLEN_ ), DESCX(DLEN_ ),
      $                   ISEED( 4 ), MVAL(10), NBVAL(10), PVAL(10),
      $                   QVAL(10), NVAL(10), IERR(2)
-      COMPLEX*16         MEM( MEMSIZ )
+      COMPLEX            MEM( MEMSIZ )
       DOUBLE PRECISION   CTIME(2), WTIME(2)
 *     ..
 *     .. External Subroutines ..
       EXTERNAL           BLACS_EXIT, BLACS_GET, BLACS_GRIDEXIT,
      $                   BLACS_GRIDINFO, BLACS_GRIDINIT, BLACS_PINFO,
-     $                   DESCINIT, IGSUM2D, PXGESVINFO, PZGESV,
-     $                   PZMATGEN, PZGEMM, PZLACPY, SLBOOT,
+     $                   DESCINIT, IGSUM2D, PXGESVINFO, PCGESV,
+     $                   PCMATGEN, PCGEMM, PCLACPY, SLBOOT,
      $                   SLCOMBINE, SLTIMER
 *     ..
 *     .. External Functions ..
       INTEGER            ICEIL, NUMROC
-      DOUBLE PRECISION   PDLAMCH, PZLANGE
-      EXTERNAL           ICEIL, NUMROC, PDLAMCH, PZLANGE
+      REAL               PSLAMCH, PCLANGE
+      EXTERNAL           ICEIL, NUMROC, PSLAMCH, PCLANGE
 *     ..
 *     .. Intrinsic Functions ..
       INTRINSIC          DBLE, MAX
@@ -187,12 +187,15 @@
 *
 *        Define process grid
 *
-*
-*       Define process grid
-*
         CALL BLACS_GET( -1, 0, ICTXT )
         CALL BLACS_GRIDINIT( ICTXT, 'Row-major', NPROW, NPCOL )
         CALL BLACS_GRIDINFO( ICTXT, NPROW, NPCOL, MYROW, MYCOL )
+*
+*
+*        Go to bottom of loop if this case doesn't use my process
+*
+        IF( ( MYROW.GE.NPROW ).OR.( MYCOL.GE.NPCOL ) )
+     $      GO TO 30
 *
         DO 20 J = 1, NMAT
 *
@@ -278,7 +281,7 @@
                   IPB = IPACPY + DESCA( LLD_ )*NQ
                   IPX = IPB + DESCB( LLD_ )*NQRHS
                   IPPIV = IPX + DESCB( LLD_ )*NQRHS
-                  LIPIV = ICEIL( INTGSZ*( NP+NB ), CP16SZ )
+                  LIPIV = ICEIL( INTGSZ*( NP+NB ), CPLXSZ )
                   IPW = IPPIV + MAX( NP, LIPIV )
 *
                   WORKSIZ = NB
@@ -289,7 +292,7 @@
                   IF( IPW+WORKSIZ.GT.MEMSIZ ) THEN
                   IF( IAM.EQ.0 )
      $            WRITE( NOUT, FMT = 9998 ) 'test',
-     $                          ( IPW+WORKSIZ )*CP16SZ
+     $                          ( IPW+WORKSIZ )*CPLXSZ
                   INFO = 1
                   END IF
 *
@@ -316,13 +319,13 @@
 *     Generate matrices A and B
 *
                   IF(N .GT. 0) THEN
-                   CALL PZMATGEN( DESCA( CTXT_ ), 'N', 'N', N, N,
+                   CALL PCMATGEN( DESCA( CTXT_ ), 'N', 'N', N, N,
      $             DESCA( MB_ ),
      $             DESCA( NB_ ), MEM(IPA), DESCA( LLD_ ),
      $             DESCA( RSRC_ ), DESCA( CSRC_ ), ISEED( 1 ), 0,
      $             NP, 0, NQ, MYROW, MYCOL, NPROW, NPCOL )
 *
-                   CALL PZMATGEN( DESCB( CTXT_ ), 'N', 'N', N, N,
+                   CALL PCMATGEN( DESCB( CTXT_ ), 'N', 'N', N, N,
      $             DESCB( MB_ ),
      $             DESCB( NB_ ), MEM(IPB), DESCB( LLD_ ),
      $             DESCB( RSRC_ ), DESCB( CSRC_ ), ISEED( 2 ), 0, NP,
@@ -332,14 +335,14 @@
 *
 *     Make a copy of A and the rhs for checking purposes
 *
-                   CALL PZLACPY( 'All', N, N, MEM( IPA ), 1, 1, DESCA,
+                   CALL PCLACPY( 'All', N, N, MEM( IPA ), 1, 1, DESCA,
      $              MEM( IPACPY ), 1, 1, DESCA )
-                   CALL PZLACPY( 'All', N, NRHS, MEM( IPB ), 1, 1,
+                   CALL PCLACPY( 'All', N, NRHS, MEM( IPB ), 1, 1,
      $              DESCB, MEM( IPX ), 1, 1, DESCX )
                   END IF
 *
 **********************************************************************
-*     Call ScaLAPACK PZGESV routine
+*     Call ScaLAPACK PCGESV routine
 **********************************************************************
 *
 *
@@ -347,7 +350,7 @@
                   CALL SLTIMER( 1 )
                   CALL SLTIMER( 6 )
 *
-                  CALL PZGESV( N, NRHS, MEM( IPA ), 1, 1, DESCA,
+                  CALL PCGESV( N, NRHS, MEM( IPA ), 1, 1, DESCA,
      $             MEM( IPPIV ), MEM( IPB ), 1, 1, DESCB, INFO )
 *
                   CALL SLTIMER( 6 )
@@ -357,7 +360,7 @@
      $                        INFO .NE. 0) THEN
                    WRITE( NOUT, FMT = * )
                    WRITE( NOUT, FMT = * )
-     $                     'INFO code returned by PZGESV = ', INFO
+     $                     'INFO code returned by PCGESV = ', INFO
                    WRITE( NOUT, FMT = * )
                    END IF
 *
@@ -428,16 +431,16 @@
 *
 *     Compute residual ||A * X  - B|| / ( ||X|| * ||A|| * eps * N )
 *
-                  EPS = PDLAMCH( ICTXT, 'Epsilon' )
-                  ANORM = PZLANGE( 'I', N, N, MEM( IPA ), 1, 1,
+                  EPS = PSLAMCH( ICTXT, 'Epsilon' )
+                  ANORM = PCLANGE( 'I', N, N, MEM( IPA ), 1, 1,
      $                              DESCA, MEM( IPW ) )
-                  BNORM = PZLANGE( 'I', N, NRHS, MEM( IPB ), 1, 1,
+                  BNORM = PCLANGE( 'I', N, NRHS, MEM( IPB ), 1, 1,
      $                  DESCB, MEM( IPW ) )
-                  CALL PZGEMM( 'No transpose', 'No transpose', N,
+                  CALL PCGEMM( 'No transpose', 'No transpose', N,
      $             NRHS, N, ONE,
      $             MEM( IPACPY ), 1, 1, DESCA, MEM( IPB ), 1, 1,
      $             DESCB, -ONE, MEM( IPX ), 1, 1, DESCX )
-                  XNORM = PZLANGE( 'I', N, NRHS, MEM( IPX ), 1, 1,
+                  XNORM = PCLANGE( 'I', N, NRHS, MEM( IPX ), 1, 1,
      $                 DESCX, MEM( IPW ) )
                   RESID = XNORM / ( ANORM * BNORM * EPS * DBLE( N ) )
 *
@@ -539,6 +542,6 @@
 *
       STOP
 *
-*     End of PZGESVDRIVER
+*     End of PCGESVDRIVER
 *
       END

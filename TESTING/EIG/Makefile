@@ -61,11 +61,6 @@ zheevrexe = ../xzheevr
 shseqrexe = ../xshseqr
 dhseqrexe = ../xdhseqr
 
-sgesvexe = ../xsgesv
-dgesvexe = ../xdgesv
-cgesvexe = ../xcgesv
-zgesvexe = ../xzgesv
-
 smatgen = psmatgen.o pmatgeninc.o
 dmatgen = pdmatgen.o pmatgeninc.o
 cmatgen = pcmatgen.o pmatgeninc.o
