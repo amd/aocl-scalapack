@@ -219,7 +219,7 @@
 *
 *           Make sure no one had error
 *
-            CALL IGSUM2D( ICTXT, 'All', ' ', 1, 1, IERR, 1, -1, 0 )
+            CALL IGSUM2D( ICTXT, 'All', ' ', 1, 1, IERR(1), 1, -1, 0 )
 *
             IF( IERR( 1 ).GT.0 ) THEN
                IF( IAM.EQ.0 )
@@ -243,7 +243,7 @@
 *
 *              Check all processes for an error
 *
-                  CALL IGSUM2D( ICTXT, 'All', ' ', 1, 1, IERR,
+                  CALL IGSUM2D( ICTXT, 'All', ' ', 1, 1, IERR(1),
      $                           1, -1, 0 )
 
                   IF( IERR( 1 ).GT.0 ) THEN
