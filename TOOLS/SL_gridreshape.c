@@ -72,3 +72,9 @@ Int sl_gridreshape(Int *ctxt, Int *pstart, Int *row_major_in, Int *row_major_out
    return( SL_Cgridreshape(*ctxt, *pstart, *row_major_in, *row_major_out,
                            *P, *Q) );
 }
+
+Int SL_GRIDRESHAPE_(Int *ctxt, Int *pstart, Int *row_major_in, Int *row_major_out, Int *P, Int *Q)
+{
+   return( SL_Cgridreshape(*ctxt, *pstart, *row_major_in, *row_major_out,
+                           *P, *Q) );
+}
