@@ -6,12 +6,14 @@ if(ENABLE_DTL)
 set (ALLAUX-C
    pbchkvect.c getpbbuf.c pcrot.c pslaiect.c pdlaiect.c pzrot.c
    slamov.c clamov.c dlamov.c zlamov.c aocl_scalapack_progress.c
-   get_aocl_scalapack_version.c aocl_dtl_trace_entry.c aocl_dtl_trace_exit.c)
+   get_aocl_scalapack_version.c aocl_dtl_trace_entry.c aocl_dtl_trace_exit.c
+   aocl_f2c_src_wrappers.c)
 else(ENABLE_DTL)
 set (ALLAUX-C
    pbchkvect.c getpbbuf.c pcrot.c pslaiect.c pdlaiect.c pzrot.c
    slamov.c clamov.c dlamov.c zlamov.c aocl_scalapack_progress.c
-   get_aocl_scalapack_version.c aocl_dtl_trace_entry.c aocl_dtl_trace_exit.c)
+   get_aocl_scalapack_version.c aocl_dtl_trace_entry.c aocl_dtl_trace_exit.c
+   aocl_f2c_src_wrappers.c)
 ENDIF(ENABLE_DTL)
 
 set (SCLAUX  

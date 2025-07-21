@@ -98,6 +98,13 @@ void reshape_( Int* context_in, Int* major_in, Int* context_out, Int* major_out,
                     *first_proc, *nprow_new, *npcol_new );
 }
 /*************************************************************************/
+void RESHAPE_( Int* context_in, Int* major_in, Int* context_out, Int* major_out,
+                    Int* first_proc, Int* nprow_new, Int* npcol_new )
+{
+   Creshape( *context_in, *major_in, context_out, *major_out,
+                    *first_proc, *nprow_new, *npcol_new );
+}
+/*************************************************************************/
 void proc_inc( Int* myrow, Int* mycol, Int nprow, Int npcol, Int major )
 {
    if( major == 1) /* row major */

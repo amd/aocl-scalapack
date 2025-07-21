@@ -6,14 +6,6 @@
  *  ---------------------------------------------------------------------
  */
 
-#ifdef ENABLE_AOCL_WRAPPERS
-
-#include "aocl_src_mangle_function_prototypes.h"
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 typedef struct scomplex {
   float real, imag;
 } scomplex;
@@ -21,61 +13,61 @@ typedef struct dcomplex {
   double real, imag;
 } dcomplex;
 
-void mangle_bdlaapp(int *ISIDE, int *M, int *N, int *NB, double *A, int *LDA,
+void bdlaapp(int *ISIDE, int *M, int *N, int *NB, double *A, int *LDA,
              int *NITRAF, int *ITRAF, double *DTRAF, double *WORK);
 void BDLAAPP(int *ISIDE, int *M, int *N, int *NB, double *A, int *LDA,
              int *NITRAF, int *ITRAF, double *DTRAF, double *WORK);
 void BDLAAPP_(int *ISIDE, int *M, int *N, int *NB, double *A, int *LDA,
               int *NITRAF, int *ITRAF, double *DTRAF, double *WORK);
-void mangle_bdlaexc(int *N, double *T, int *LDT, int *J1, int *N1, int *N2, int *ITRAF,
+void bdlaexc(int *N, double *T, int *LDT, int *J1, int *N1, int *N2, int *ITRAF,
              double *DTRAF, double *WORK, int *INFO);
 void BDLAEXC(int *N, double *T, int *LDT, int *J1, int *N1, int *N2, int *ITRAF,
              double *DTRAF, double *WORK, int *INFO);
 void BDLAEXC_(int *N, double *T, int *LDT, int *J1, int *N1, int *N2,
               int *ITRAF, double *DTRAF, double *WORK, int *INFO);
-void mangle_bdtrexc(int *N, double *T, int *LDT, int *IFST, int *ILST, int *NITRAF,
+void bdtrexc(int *N, double *T, int *LDT, int *IFST, int *ILST, int *NITRAF,
              int *ITRAF, int *NDTRAF, double *DTRAF, double *WORK, int *INFO);
 void BDTREXC(int *N, double *T, int *LDT, int *IFST, int *ILST, int *NITRAF,
              int *ITRAF, int *NDTRAF, double *DTRAF, double *WORK, int *INFO);
 void BDTREXC_(int *N, double *T, int *LDT, int *IFST, int *ILST, int *NITRAF,
               int *ITRAF, int *NDTRAF, double *DTRAF, double *WORK, int *INFO);
-void mangle_bslaapp(int *ISIDE, int *M, int *N, int *NB, float *A, int *LDA,
+void bslaapp(int *ISIDE, int *M, int *N, int *NB, float *A, int *LDA,
              int *NITRAF, int *ITRAF, float *DTRAF, float *WORK);
 void BSLAAPP(int *ISIDE, int *M, int *N, int *NB, float *A, int *LDA,
              int *NITRAF, int *ITRAF, float *DTRAF, float *WORK);
 void BSLAAPP_(int *ISIDE, int *M, int *N, int *NB, float *A, int *LDA,
               int *NITRAF, int *ITRAF, float *DTRAF, float *WORK);
-void mangle_bslaexc(int *N, float *T, int *LDT, int *J1, int *N1, int *N2, int *ITRAF,
+void bslaexc(int *N, float *T, int *LDT, int *J1, int *N1, int *N2, int *ITRAF,
              float *DTRAF, float *WORK, int *INFO);
 void BSLAEXC(int *N, float *T, int *LDT, int *J1, int *N1, int *N2, int *ITRAF,
              float *DTRAF, float *WORK, int *INFO);
 void BSLAEXC_(int *N, float *T, int *LDT, int *J1, int *N1, int *N2, int *ITRAF,
               float *DTRAF, float *WORK, int *INFO);
-void mangle_bstrexc(int *N, float *T, int *LDT, int *IFST, int *ILST, int *NITRAF,
+void bstrexc(int *N, float *T, int *LDT, int *IFST, int *ILST, int *NITRAF,
              int *ITRAF, int *NDTRAF, float *DTRAF, float *WORK, int *INFO);
 void BSTREXC(int *N, float *T, int *LDT, int *IFST, int *ILST, int *NITRAF,
              int *ITRAF, int *NDTRAF, float *DTRAF, float *WORK, int *INFO);
 void BSTREXC_(int *N, float *T, int *LDT, int *IFST, int *ILST, int *NITRAF,
               int *ITRAF, int *NDTRAF, float *DTRAF, float *WORK, int *INFO);
-void mangle_cdbtf2(int *M, int *N, int *KL, int *KU, scomplex *AB, int *LDAB,
+void cdbtf2(int *M, int *N, int *KL, int *KU, scomplex *AB, int *LDAB,
             int *INFO);
 void CDBTF2(int *M, int *N, int *KL, int *KU, scomplex *AB, int *LDAB,
             int *INFO);
 void CDBTF2_(int *M, int *N, int *KL, int *KU, scomplex *AB, int *LDAB,
              int *INFO);
-void mangle_cdbtrf(int *M, int *N, int *KL, int *KU, float *AB, int *LDAB, int *INFO);
+void cdbtrf(int *M, int *N, int *KL, int *KU, float *AB, int *LDAB, int *INFO);
 void CDBTRF(int *M, int *N, int *KL, int *KU, float *AB, int *LDAB, int *INFO);
 void CDBTRF_(int *M, int *N, int *KL, int *KU, float *AB, int *LDAB, int *INFO);
-void mangle_cdttrf(int *N, scomplex *DL, scomplex *D, scomplex *DU, int *INFO);
+void cdttrf(int *N, scomplex *DL, scomplex *D, scomplex *DU, int *INFO);
 void CDTTRF(int *N, scomplex *DL, scomplex *D, scomplex *DU, int *INFO);
 void CDTTRF_(int *N, scomplex *DL, scomplex *D, scomplex *DU, int *INFO);
-void mangle_cdttrsv(char *UPLO, char *TRANS, int *N, int *NRHS, scomplex *DL,
+void cdttrsv(char *UPLO, char *TRANS, int *N, int *NRHS, scomplex *DL,
              scomplex *D, scomplex *DU, scomplex *B, int *LDB, int *INFO);
 void CDTTRSV(char *UPLO, char *TRANS, int *N, int *NRHS, scomplex *DL,
              scomplex *D, scomplex *DU, scomplex *B, int *LDB, int *INFO);
 void CDTTRSV_(char *UPLO, char *TRANS, int *N, int *NRHS, scomplex *DL,
               scomplex *D, scomplex *DU, scomplex *B, int *LDB, int *INFO);
-void mangle_clahqr2(int *WANTT, int *WANTZ, int *N, int *ILO, int *IHI, scomplex *H,
+void clahqr2(int *WANTT, int *WANTZ, int *N, int *ILO, int *IHI, scomplex *H,
              int *LDH, scomplex *W, int *ILOZ, int *IHIZ, scomplex *Z, int *LDZ,
              int *INFO);
 void CLAHQR2(int *WANTT, int *WANTZ, int *N, int *ILO, int *IHI, scomplex *H,
@@ -84,19 +76,19 @@ void CLAHQR2(int *WANTT, int *WANTZ, int *N, int *ILO, int *IHI, scomplex *H,
 void CLAHQR2_(int *WANTT, int *WANTZ, int *N, int *ILO, int *IHI, scomplex *H,
               int *LDH, scomplex *W, int *ILOZ, int *IHIZ, scomplex *Z,
               int *LDZ, int *INFO);
-void mangle_clamsh(scomplex *S, int *LDS, int *NBULGE, int *JBLK, scomplex *H,
+void clamsh(scomplex *S, int *LDS, int *NBULGE, int *JBLK, scomplex *H,
             int *LDH, int *N, float *ULP);
 void CLAMSH(scomplex *S, int *LDS, int *NBULGE, int *JBLK, scomplex *H,
             int *LDH, int *N, float *ULP);
 void CLAMSH_(scomplex *S, int *LDS, int *NBULGE, int *JBLK, scomplex *H,
              int *LDH, int *N, float *ULP);
-void mangle_clanv2(scomplex *A, scomplex *B, scomplex *C, scomplex *D, scomplex *RT1,
+void clanv2(scomplex *A, scomplex *B, scomplex *C, scomplex *D, scomplex *RT1,
             scomplex *RT2, float *CS, scomplex *SN);
 void CLANV2(scomplex *A, scomplex *B, scomplex *C, scomplex *D, scomplex *RT1,
             scomplex *RT2, float *CS, scomplex *SN);
 void CLANV2_(scomplex *A, scomplex *B, scomplex *C, scomplex *D, scomplex *RT1,
              scomplex *RT2, float *CS, scomplex *SN);
-void mangle_claref(char *TYPE, scomplex *A, int *LDA, int *WANTZ, scomplex *Z,
+void claref(char *TYPE, scomplex *A, int *LDA, int *WANTZ, scomplex *Z,
             int *LDZ, int *BLOCK, int *IROW1, int *ICOL1, int *ISTART,
             int *ISTOP, int *ITMP1, int *ITMP2, int *LILOZ, int *LIHIZ,
             scomplex *VECS, scomplex *V2, scomplex *V3, scomplex *T1,
@@ -111,19 +103,19 @@ void CLAREF_(char *TYPE, scomplex *A, int *LDA, int *WANTZ, scomplex *Z,
              int *ISTOP, int *ITMP1, int *ITMP2, int *LILOZ, int *LIHIZ,
              scomplex *VECS, scomplex *V2, scomplex *V3, scomplex *T1,
              scomplex *T2, scomplex *T3);
-void mangle_cpttrsv(char *UPLO, char *TRANS, int *N, int *NRHS, float *D, scomplex *E,
+void cpttrsv(char *UPLO, char *TRANS, int *N, int *NRHS, float *D, scomplex *E,
              scomplex *B, int *LDB, int *INFO);
 void CPTTRSV(char *UPLO, char *TRANS, int *N, int *NRHS, float *D, scomplex *E,
              scomplex *B, int *LDB, int *INFO);
 void CPTTRSV_(char *UPLO, char *TRANS, int *N, int *NRHS, float *D, scomplex *E,
               scomplex *B, int *LDB, int *INFO);
-void mangle_csteqr2(char *COMPZ, int *N, float *D, float *E, scomplex *Z, int *LDZ,
+void csteqr2(char *COMPZ, int *N, float *D, float *E, scomplex *Z, int *LDZ,
              int *NR, float *WORK, int *INFO);
 void CSTEQR2(char *COMPZ, int *N, float *D, float *E, scomplex *Z, int *LDZ,
              int *NR, float *WORK, int *INFO);
 void CSTEQR2_(char *COMPZ, int *N, float *D, float *E, scomplex *Z, int *LDZ,
               int *NR, float *WORK, int *INFO);
-void mangle_ctrmvt(char *UPLO, int *N, scomplex *T, int *LDT, scomplex *X, int *INCX,
+void ctrmvt(char *UPLO, int *N, scomplex *T, int *LDT, scomplex *X, int *INCX,
             scomplex *Y, int *INCY, scomplex *W, int *INCW, scomplex *Z,
             int *INCZ);
 void CTRMVT(char *UPLO, int *N, scomplex *T, int *LDT, scomplex *X, int *INCX,
@@ -132,32 +124,32 @@ void CTRMVT(char *UPLO, int *N, scomplex *T, int *LDT, scomplex *X, int *INCX,
 void CTRMVT_(char *UPLO, int *N, scomplex *T, int *LDT, scomplex *X, int *INCX,
              scomplex *Y, int *INCY, scomplex *W, int *INCW, scomplex *Z,
              int *INCZ);
-void mangle_ddbtf2(int *M, int *N, int *KL, int *KU, double *AB, int *LDAB, int *INFO);
+void ddbtf2(int *M, int *N, int *KL, int *KU, double *AB, int *LDAB, int *INFO);
 void DDBTF2(int *M, int *N, int *KL, int *KU, double *AB, int *LDAB, int *INFO);
 void DDBTF2_(int *M, int *N, int *KL, int *KU, double *AB, int *LDAB,
              int *INFO);
-void mangle_ddbtrf(int *M, int *N, int *KL, int *KU, float *AB, int *LDAB, int *INFO);
+void ddbtrf(int *M, int *N, int *KL, int *KU, float *AB, int *LDAB, int *INFO);
 void DDBTRF(int *M, int *N, int *KL, int *KU, float *AB, int *LDAB, int *INFO);
 void DDBTRF_(int *M, int *N, int *KL, int *KU, float *AB, int *LDAB, int *INFO);
-void mangle_ddttrf(int *N, scomplex *DL, scomplex *D, scomplex *DU, int *INFO);
+void ddttrf(int *N, scomplex *DL, scomplex *D, scomplex *DU, int *INFO);
 void DDTTRF(int *N, scomplex *DL, scomplex *D, scomplex *DU, int *INFO);
 void DDTTRF_(int *N, scomplex *DL, scomplex *D, scomplex *DU, int *INFO);
-void mangle_ddttrsv(char *UPLO, char *TRANS, int *N, int *NRHS, scomplex *DL,
+void ddttrsv(char *UPLO, char *TRANS, int *N, int *NRHS, scomplex *DL,
              scomplex *D, scomplex *DU, scomplex *B, int *LDB, int *INFO);
 void DDTTRSV(char *UPLO, char *TRANS, int *N, int *NRHS, scomplex *DL,
              scomplex *D, scomplex *DU, scomplex *B, int *LDB, int *INFO);
 void DDTTRSV_(char *UPLO, char *TRANS, int *N, int *NRHS, scomplex *DL,
               scomplex *D, scomplex *DU, scomplex *B, int *LDB, int *INFO);
-void mangle_dlamsh(double *S, int *LDS, int *NBULGE, int *JBLK, double *H, int *LDH,
+void dlamsh(double *S, int *LDS, int *NBULGE, int *JBLK, double *H, int *LDH,
             int *N, double *ULP);
 void DLAMSH(double *S, int *LDS, int *NBULGE, int *JBLK, double *H, int *LDH,
             int *N, double *ULP);
 void DLAMSH_(double *S, int *LDS, int *NBULGE, int *JBLK, double *H, int *LDH,
              int *N, double *ULP);
-void mangle_dlapst(char *ID, int *N, double *D, int *INDX, int *INFO);
+void dlapst(char *ID, int *N, double *D, int *INDX, int *INFO);
 void DLAPST(char *ID, int *N, double *D, int *INDX, int *INFO);
 void DLAPST_(char *ID, int *N, double *D, int *INDX, int *INFO);
-void mangle_dlaqr6(char *JOB, int *WANTT, int *WANTZ, int *KACC22, int *N, int *KTOP,
+void dlaqr6(char *JOB, int *WANTT, int *WANTZ, int *KACC22, int *N, int *KTOP,
             int *KBOT, int *NSHFTS, double *SR, double *SI, double *H, int *LDH,
             int *ILOZ, int *IHIZ, double *Z, int *LDZ, double *V, int *LDV,
             double *U, int *LDU, int *NV, double *WV, int *LDWV, int *NH,
@@ -172,7 +164,7 @@ void DLAQR6_(char *JOB, int *WANTT, int *WANTZ, int *KACC22, int *N, int *KTOP,
              int *LDH, int *ILOZ, int *IHIZ, double *Z, int *LDZ, double *V,
              int *LDV, double *U, int *LDU, int *NV, double *WV, int *LDWV,
              int *NH, double *WH, int *LDWH);
-void mangle_dlar1va(int *N, int *B1, int *BN, double *LAMBDA, double *D, double *L,
+void dlar1va(int *N, int *B1, int *BN, double *LAMBDA, double *D, double *L,
              double *LD, double *LLD, double *PIVMIN, double *GAPTOL, double *Z,
              int *WANTNC, int *NEGCNT, double *ZTZ, double *MINGMA, int *R,
              int *ISUPPZ, double *NRMINV, double *RESID, double *RQCORR,
@@ -187,7 +179,7 @@ void DLAR1VA_(int *N, int *B1, int *BN, double *LAMBDA, double *D, double *L,
               double *Z, int *WANTNC, int *NEGCNT, double *ZTZ, double *MINGMA,
               int *R, int *ISUPPZ, double *NRMINV, double *RESID,
               double *RQCORR, double *WORK);
-void mangle_dlaref(char *TYPE, double *A, int *LDA, int *WANTZ, double *Z, int *LDZ,
+void dlaref(char *TYPE, double *A, int *LDA, int *WANTZ, double *Z, int *LDZ,
             int *BLOCK, int *IROW1, int *ICOL1, int *ISTART, int *ISTOP,
             int *ITMP1, int *ITMP2, int *LILOZ, int *LIHIZ, double *VECS,
             double *V2, double *V3, double *T1, double *T2, double *T3);
@@ -199,7 +191,7 @@ void DLAREF_(char *TYPE, double *A, int *LDA, int *WANTZ, double *Z, int *LDZ,
              int *BLOCK, int *IROW1, int *ICOL1, int *ISTART, int *ISTOP,
              int *ITMP1, int *ITMP2, int *LILOZ, int *LIHIZ, double *VECS,
              double *V2, double *V3, double *T1, double *T2, double *T3);
-void mangle_dlarrb2(int *N, double *D, double *LLD, int *IFIRST, int *ILAST,
+void dlarrb2(int *N, double *D, double *LLD, int *IFIRST, int *ILAST,
              double *RTOL1, double *RTOL2, int *OFFSET, double *W, double *WGAP,
              double *WERR, double *WORK, int *IWORK, double *PIVMIN,
              double *LGPVMN, double *LGSPDM, int *TWIST, int *INFO);
@@ -212,7 +204,16 @@ void DLARRB2_(int *N, double *D, double *LLD, int *IFIRST, int *ILAST,
               double *WGAP, double *WERR, double *WORK, int *IWORK,
               double *PIVMIN, double *LGPVMN, double *LGSPDM, int *TWIST,
               int *INFO);
-void mangle_dlarrd2(char *RANGE, char *ORDER, int *N, double *VL, double *VU, int *IL,
+void dlaneg2(int *N, double *D, double *LLD, double *SIGMA, double *PIVMIN,
+             int *R);
+void DLANEG2(int *N, double *D, double *LLD, double *SIGMA, double *PIVMIN,
+             int *R);
+void DLANEG2_(int *N, double *D, double *LLD, double *SIGMA, double *PIVMIN,
+              int *R);
+void dlaneg2a(int *N, double *DLLD, double *SIGMA, double *PIVMIN, int *R);
+void DLANEG2A(int *N, double *DLLD, double *SIGMA, double *PIVMIN, int *R);
+void DLANEG2A_(int *N, double *DLLD, double *SIGMA, double *PIVMIN, int *R);
+void dlarrd2(char *RANGE, char *ORDER, int *N, double *VL, double *VU, int *IL,
              int *IU, double *GERS, double *RELTOL, double *D, double *E,
              double *E2, double *PIVMIN, int *NSPLIT, int *ISPLIT, int *M,
              double *W, double *WERR, double *WL, double *WU, int *IBLOCK,
@@ -230,7 +231,7 @@ void DLARRD2_(char *RANGE, char *ORDER, int *N, double *VL, double *VU, int *IL,
               double *W, double *WERR, double *WL, double *WU, int *IBLOCK,
               int *INDEXW, double *WORK, int *IWORK, int *DOL, int *DOU,
               int *INFO);
-void mangle_dlarre2(char *RANGE, int *N, double *VL, double *VU, int *IL, int *IU,
+void dlarre2(char *RANGE, int *N, double *VL, double *VU, int *IL, int *IU,
              double *D, double *E, double *E2, double *RTOL1, double *RTOL2,
              double *SPLTOL, int *NSPLIT, int *ISPLIT, int *M, int *DOL,
              int *DOU, double *W, double *WERR, double *WGAP, int *IBLOCK,
@@ -248,7 +249,7 @@ void DLARRE2_(char *RANGE, int *N, double *VL, double *VU, int *IL, int *IU,
               int *DOU, double *W, double *WERR, double *WGAP, int *IBLOCK,
               int *INDEXW, double *GERS, double *PIVMIN, double *WORK,
               int *IWORK, int *INFO);
-void mangle_dlarre2a(char *RANGE, int *N, double *VL, double *VU, int *IL, int *IU,
+void dlarre2a(char *RANGE, int *N, double *VL, double *VU, int *IL, int *IU,
               double *D, double *E, double *E2, double *RTOL1, double *RTOL2,
               double *SPLTOL, int *NSPLIT, int *ISPLIT, int *M, int *DOL,
               int *DOU, int *NEEDIL, int *NEEDIU, double *W, double *WERR,
@@ -269,7 +270,7 @@ void DLARRE2A_(char *RANGE, int *N, double *VL, double *VU, int *IL, int *IU,
                double *WGAP, int *IBLOCK, int *INDEXW, double *GERS,
                double *SDIAM, double *PIVMIN, double *WORK, int *IWORK,
                double *MINRGP, int *INFO);
-void mangle_dlarrf2(int *N, double *D, double *L, double *LD, int *CLSTRT, int *CLEND,
+void dlarrf2(int *N, double *D, double *L, double *LD, int *CLSTRT, int *CLEND,
              int *CLMID1, int *CLMID2, double *W, double *WGAP, double *WERR,
              int *TRYMID, double *SPDIAM, double *CLGAPL, double *CLGAPR,
              double *PIVMIN, double *SIGMA, double *DPLUS, double *LPLUS,
@@ -284,7 +285,7 @@ void DLARRF2_(int *N, double *D, double *L, double *LD, int *CLSTRT, int *CLEND,
               int *TRYMID, double *SPDIAM, double *CLGAPL, double *CLGAPR,
               double *PIVMIN, double *SIGMA, double *DPLUS, double *LPLUS,
               double *WORK, int *INFO);
-void mangle_dlarrv2(int *N, double *VL, double *VU, double *D, double *L,
+void dlarrv2(int *N, double *VL, double *VU, double *D, double *L,
              double *PIVMIN, int *ISPLIT, int *M, int *DOL, int *DOU,
              int *NEEDIL, int *NEEDIU, double *MINRGP, double *RTOL1,
              double *RTOL2, double *W, double *WERR, double *WGAP, int *IBLOCK,
@@ -305,19 +306,19 @@ void DLARRV2_(int *N, double *VL, double *VU, double *D, double *L,
               int *INDEXW, double *GERS, double *SDIAM, double *Z, int *LDZ,
               int *ISUPPZ, double *WORK, int *IWORK, int *VSTART, int *FINISH,
               int *MAXCLS, int *NDEPTH, int *PARITY, int *ZOFFSET, int *INFO);
-void mangle_dlasorte(double *S, int *LDS, int *J, double *OUT, int *INFO);
+void dlasorte(double *S, int *LDS, int *J, double *OUT, int *INFO);
 void DLASORTE(double *S, int *LDS, int *J, double *OUT, int *INFO);
 void DLASORTE_(double *S, int *LDS, int *J, double *OUT, int *INFO);
-void mangle_dlasrt2(char *ID, int *N, double *D, int *KEY, int *INFO);
+void dlasrt2(char *ID, int *N, double *D, int *KEY, int *INFO);
 void DLASRT2(char *ID, int *N, double *D, int *KEY, int *INFO);
 void DLASRT2_(char *ID, int *N, double *D, int *KEY, int *INFO);
-void mangle_dpttrsv(char *TRANS, int *N, int *NRHS, float *D, scomplex *E, scomplex *B,
+void dpttrsv(char *TRANS, int *N, int *NRHS, float *D, scomplex *E, scomplex *B,
              int *LDB, int *INFO);
 void DPTTRSV(char *TRANS, int *N, int *NRHS, float *D, scomplex *E, scomplex *B,
              int *LDB, int *INFO);
 void DPTTRSV_(char *TRANS, int *N, int *NRHS, float *D, scomplex *E,
               scomplex *B, int *LDB, int *INFO);
-void mangle_dstegr2(char *JOBZ, char *RANGE, int *N, double *D, double *E, double *VL,
+void dstegr2(char *JOBZ, char *RANGE, int *N, double *D, double *E, double *VL,
              double *VU, int *IL, int *IU, int *M, double *W, double *Z,
              int *LDZ, int *NZC, int *ISUPPZ, double *WORK, int *LWORK,
              int *IWORK, int *LIWORK, int *DOL, int *DOU, int *ZOFFSET,
@@ -332,7 +333,7 @@ void DSTEGR2_(char *JOBZ, char *RANGE, int *N, double *D, double *E, double *VL,
               int *LDZ, int *NZC, int *ISUPPZ, double *WORK, int *LWORK,
               int *IWORK, int *LIWORK, int *DOL, int *DOU, int *ZOFFSET,
               int *INFO);
-void mangle_dstegr2a(char *JOBZ, char *RANGE, int *N, double *D, double *E, double *VL,
+void dstegr2a(char *JOBZ, char *RANGE, int *N, double *D, double *E, double *VL,
               double *VU, int *IL, int *IU, int *M, double *W, double *Z,
               int *LDZ, int *NZC, double *WORK, int *LWORK, int *IWORK,
               int *LIWORK, int *DOL, int *DOU, int *NEEDIL, int *NEEDIU,
@@ -350,7 +351,7 @@ void DSTEGR2A_(char *JOBZ, char *RANGE, int *N, double *D, double *E,
                int *IWORK, int *LIWORK, int *DOL, int *DOU, int *NEEDIL,
                int *NEEDIU, int *INDERR, int *NSPLIT, double *PIVMIN,
                double *SCALE, double *WL, double *WU, int *INFO);
-void mangle_dstegr2b(char *JOBZ, int *N, double *D, double *E, int *M, double *W,
+void dstegr2b(char *JOBZ, int *N, double *D, double *E, int *M, double *W,
               double *Z, int *LDZ, int *NZC, int *ISUPPZ, double *WORK,
               int *LWORK, int *IWORK, int *LIWORK, int *DOL, int *DOU,
               int *NEEDIL, int *NEEDIU, double *INDWLC, double *PIVMIN,
@@ -368,7 +369,7 @@ void DSTEGR2B_(char *JOBZ, int *N, double *D, double *E, int *M, double *W,
                int *NEEDIL, int *NEEDIU, double *INDWLC, double *PIVMIN,
                double *SCALE, double *WL, double *WU, int *VSTART, int *FINISH,
                int *MAXCLS, int *NDEPTH, int *PARITY, int *ZOFFSET, int *INFO);
-void mangle_dstein2(int *N, double *D, double *E, int *M, double *W, int *IBLOCK,
+void dstein2(int *N, double *D, double *E, int *M, double *W, int *IBLOCK,
              int *ISPLIT, double *ORFAC, double *Z, int *LDZ, double *WORK,
              int *IWORK, int *IFAIL, int *INFO);
 void DSTEIN2(int *N, double *D, double *E, int *M, double *W, int *IBLOCK,
@@ -377,25 +378,25 @@ void DSTEIN2(int *N, double *D, double *E, int *M, double *W, int *IBLOCK,
 void DSTEIN2_(int *N, double *D, double *E, int *M, double *W, int *IBLOCK,
               int *ISPLIT, double *ORFAC, double *Z, int *LDZ, double *WORK,
               int *IWORK, int *IFAIL, int *INFO);
-void mangle_dsteqr2(char *COMPZ, int *N, double *D, double *E, double *Z, int *LDZ,
+void dsteqr2(char *COMPZ, int *N, double *D, double *E, double *Z, int *LDZ,
              int *NR, double *WORK, int *INFO);
 void DSTEQR2(char *COMPZ, int *N, double *D, double *E, double *Z, int *LDZ,
              int *NR, double *WORK, int *INFO);
 void DSTEQR2_(char *COMPZ, int *N, double *D, double *E, double *Z, int *LDZ,
               int *NR, double *WORK, int *INFO);
-void mangle_dtrmvt(char *UPLO, int *N, double *T, int *LDT, double *X, int *INCX,
+void dtrmvt(char *UPLO, int *N, double *T, int *LDT, double *X, int *INCX,
             double *Y, int *INCY, double *W, int *INCW, double *Z, int *INCZ);
 void DTRMVT(char *UPLO, int *N, double *T, int *LDT, double *X, int *INCX,
             double *Y, int *INCY, double *W, int *INCW, double *Z, int *INCZ);
 void DTRMVT_(char *UPLO, int *N, double *T, int *LDT, double *X, int *INCX,
              double *Y, int *INCY, double *W, int *INCW, double *Z, int *INCZ);
-void mangle_icopypv(int *M, int *N, double *A, int *IA, int *JA, int *DESCA, int *TPIV,
+void icopypv(int *M, int *N, double *A, int *IA, int *JA, int *DESCA, int *TPIV,
              int *IPIV, int *INFO);
 void ICOPYPV(int *M, int *N, double *A, int *IA, int *JA, int *DESCA, int *TPIV,
              int *IPIV, int *INFO);
 void ICOPYPV_(int *M, int *N, double *A, int *IA, int *JA, int *DESCA,
               int *TPIV, int *IPIV, int *INFO);
-void mangle_pcdbsv(int *N, int *BWL, int *BWU, int *NRHS, scomplex *A, int *JA,
+void pcdbsv(int *N, int *BWL, int *BWU, int *NRHS, scomplex *A, int *JA,
             int *DESCA, scomplex *B, int *IB, int *DESCB, scomplex *WORK,
             int *LWORK, int *INFO);
 void PCDBSV(int *N, int *BWL, int *BWU, int *NRHS, scomplex *A, int *JA,
@@ -404,13 +405,13 @@ void PCDBSV(int *N, int *BWL, int *BWU, int *NRHS, scomplex *A, int *JA,
 void PCDBSV_(int *N, int *BWL, int *BWU, int *NRHS, scomplex *A, int *JA,
              int *DESCA, scomplex *B, int *IB, int *DESCB, scomplex *WORK,
              int *LWORK, int *INFO);
-void mangle_pcdbtrf(int *N, int *BWL, int *BWU, scomplex *A, int *JA, int *DESCA,
+void pcdbtrf(int *N, int *BWL, int *BWU, scomplex *A, int *JA, int *DESCA,
              scomplex *AF, int *LAF, scomplex *WORK, int *LWORK, int *INFO);
 void PCDBTRF(int *N, int *BWL, int *BWU, scomplex *A, int *JA, int *DESCA,
              scomplex *AF, int *LAF, scomplex *WORK, int *LWORK, int *INFO);
 void PCDBTRF_(int *N, int *BWL, int *BWU, scomplex *A, int *JA, int *DESCA,
               scomplex *AF, int *LAF, scomplex *WORK, int *LWORK, int *INFO);
-void mangle_pcdbtrs(char *TRANS, int *N, int *BWL, int *BWU, int *NRHS, scomplex *A,
+void pcdbtrs(char *TRANS, int *N, int *BWL, int *BWU, int *NRHS, scomplex *A,
              int *JA, int *DESCA, scomplex *B, int *IB, int *DESCB,
              scomplex *AF, int *LAF, scomplex *WORK, int *LWORK, int *INFO);
 void PCDBTRS(char *TRANS, int *N, int *BWL, int *BWU, int *NRHS, scomplex *A,
@@ -419,7 +420,7 @@ void PCDBTRS(char *TRANS, int *N, int *BWL, int *BWU, int *NRHS, scomplex *A,
 void PCDBTRS_(char *TRANS, int *N, int *BWL, int *BWU, int *NRHS, scomplex *A,
               int *JA, int *DESCA, scomplex *B, int *IB, int *DESCB,
               scomplex *AF, int *LAF, scomplex *WORK, int *LWORK, int *INFO);
-void mangle_pcdbtrsv(char *UPLO, char *TRANS, int *N, int *BWL, int *BWU, int *NRHS,
+void pcdbtrsv(char *UPLO, char *TRANS, int *N, int *BWL, int *BWU, int *NRHS,
               scomplex *A, int *JA, int *DESCA, scomplex *B, int *IB,
               int *DESCB, scomplex *AF, int *LAF, scomplex *WORK, int *LWORK,
               int *INFO);
@@ -431,7 +432,7 @@ void PCDBTRSV_(char *UPLO, char *TRANS, int *N, int *BWL, int *BWU, int *NRHS,
                scomplex *A, int *JA, int *DESCA, scomplex *B, int *IB,
                int *DESCB, scomplex *AF, int *LAF, scomplex *WORK, int *LWORK,
                int *INFO);
-void mangle_pcdtsv(int *N, int *NRHS, scomplex *DL, scomplex *D, scomplex *DU, int *JA,
+void pcdtsv(int *N, int *NRHS, scomplex *DL, scomplex *D, scomplex *DU, int *JA,
             int *DESCA, scomplex *B, int *IB, int *DESCB, scomplex *WORK,
             int *LWORK, int *INFO);
 void PCDTSV(int *N, int *NRHS, scomplex *DL, scomplex *D, scomplex *DU, int *JA,
@@ -440,7 +441,7 @@ void PCDTSV(int *N, int *NRHS, scomplex *DL, scomplex *D, scomplex *DU, int *JA,
 void PCDTSV_(int *N, int *NRHS, scomplex *DL, scomplex *D, scomplex *DU,
              int *JA, int *DESCA, scomplex *B, int *IB, int *DESCB,
              scomplex *WORK, int *LWORK, int *INFO);
-void mangle_pcdttrf(int *N, scomplex *DL, scomplex *D, scomplex *DU, int *JA,
+void pcdttrf(int *N, scomplex *DL, scomplex *D, scomplex *DU, int *JA,
              int *DESCA, scomplex *AF, int *LAF, scomplex *WORK, int *LWORK,
              int *INFO);
 void PCDTTRF(int *N, scomplex *DL, scomplex *D, scomplex *DU, int *JA,
@@ -449,7 +450,7 @@ void PCDTTRF(int *N, scomplex *DL, scomplex *D, scomplex *DU, int *JA,
 void PCDTTRF_(int *N, scomplex *DL, scomplex *D, scomplex *DU, int *JA,
               int *DESCA, scomplex *AF, int *LAF, scomplex *WORK, int *LWORK,
               int *INFO);
-void mangle_pcdttrs(char *TRANS, int *N, int *NRHS, scomplex *DL, scomplex *D,
+void pcdttrs(char *TRANS, int *N, int *NRHS, scomplex *DL, scomplex *D,
              scomplex *DU, int *JA, int *DESCA, scomplex *B, int *IB,
              int *DESCB, scomplex *AF, int *LAF, scomplex *WORK, int *LWORK,
              int *INFO);
@@ -461,7 +462,7 @@ void PCDTTRS_(char *TRANS, int *N, int *NRHS, scomplex *DL, scomplex *D,
               scomplex *DU, int *JA, int *DESCA, scomplex *B, int *IB,
               int *DESCB, scomplex *AF, int *LAF, scomplex *WORK, int *LWORK,
               int *INFO);
-void mangle_pcdttrsv(char *UPLO, char *TRANS, int *N, int *NRHS, scomplex *DL,
+void pcdttrsv(char *UPLO, char *TRANS, int *N, int *NRHS, scomplex *DL,
               scomplex *D, scomplex *DU, int *JA, int *DESCA, scomplex *B,
               int *IB, int *DESCB, scomplex *AF, int *LAF, scomplex *WORK,
               int *LWORK, int *INFO);
@@ -473,7 +474,7 @@ void PCDTTRSV_(char *UPLO, char *TRANS, int *N, int *NRHS, scomplex *DL,
                scomplex *D, scomplex *DU, int *JA, int *DESCA, scomplex *B,
                int *IB, int *DESCB, scomplex *AF, int *LAF, scomplex *WORK,
                int *LWORK, int *INFO);
-void mangle_pcgbsv(int *N, int *BWL, int *BWU, int *NRHS, scomplex *A, int *JA,
+void pcgbsv(int *N, int *BWL, int *BWU, int *NRHS, scomplex *A, int *JA,
             int *DESCA, int *IPIV, scomplex *B, int *IB, int *DESCB,
             scomplex *WORK, int *LWORK, int *INFO);
 void PCGBSV(int *N, int *BWL, int *BWU, int *NRHS, scomplex *A, int *JA,
@@ -482,7 +483,7 @@ void PCGBSV(int *N, int *BWL, int *BWU, int *NRHS, scomplex *A, int *JA,
 void PCGBSV_(int *N, int *BWL, int *BWU, int *NRHS, scomplex *A, int *JA,
              int *DESCA, int *IPIV, scomplex *B, int *IB, int *DESCB,
              scomplex *WORK, int *LWORK, int *INFO);
-void mangle_pcgbtrf(int *N, int *BWL, int *BWU, scomplex *A, int *JA, int *DESCA,
+void pcgbtrf(int *N, int *BWL, int *BWU, scomplex *A, int *JA, int *DESCA,
              int *IPIV, scomplex *AF, int *LAF, scomplex *WORK, int *LWORK,
              int *INFO);
 void PCGBTRF(int *N, int *BWL, int *BWU, scomplex *A, int *JA, int *DESCA,
@@ -491,7 +492,7 @@ void PCGBTRF(int *N, int *BWL, int *BWU, scomplex *A, int *JA, int *DESCA,
 void PCGBTRF_(int *N, int *BWL, int *BWU, scomplex *A, int *JA, int *DESCA,
               int *IPIV, scomplex *AF, int *LAF, scomplex *WORK, int *LWORK,
               int *INFO);
-void mangle_pcgbtrs(char *TRANS, int *N, int *BWL, int *BWU, int *NRHS, scomplex *A,
+void pcgbtrs(char *TRANS, int *N, int *BWL, int *BWU, int *NRHS, scomplex *A,
              int *JA, int *DESCA, int *IPIV, scomplex *B, int *IB, int *DESCB,
              scomplex *AF, int *LAF, scomplex *WORK, int *LWORK, int *INFO);
 void PCGBTRS(char *TRANS, int *N, int *BWL, int *BWU, int *NRHS, scomplex *A,
@@ -500,7 +501,7 @@ void PCGBTRS(char *TRANS, int *N, int *BWL, int *BWU, int *NRHS, scomplex *A,
 void PCGBTRS_(char *TRANS, int *N, int *BWL, int *BWU, int *NRHS, scomplex *A,
               int *JA, int *DESCA, int *IPIV, scomplex *B, int *IB, int *DESCB,
               scomplex *AF, int *LAF, scomplex *WORK, int *LWORK, int *INFO);
-void mangle_pcgebd2(int *M, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
+void pcgebd2(int *M, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
              float *D, float *E, scomplex *TAUQ, scomplex *TAUP, scomplex *WORK,
              int *LWORK, int *INFO);
 void PCGEBD2(int *M, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
@@ -509,7 +510,7 @@ void PCGEBD2(int *M, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
 void PCGEBD2_(int *M, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
               float *D, float *E, scomplex *TAUQ, scomplex *TAUP,
               scomplex *WORK, int *LWORK, int *INFO);
-void mangle_pcgebrd(int *M, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
+void pcgebrd(int *M, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
              float *D, float *E, scomplex *TAUQ, scomplex *TAUP, scomplex *WORK,
              int *LWORK, int *INFO);
 void PCGEBRD(int *M, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
@@ -518,7 +519,7 @@ void PCGEBRD(int *M, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
 void PCGEBRD_(int *M, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
               float *D, float *E, scomplex *TAUQ, scomplex *TAUP,
               scomplex *WORK, int *LWORK, int *INFO);
-void mangle_pcgecon(char *NORM, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
+void pcgecon(char *NORM, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
              float *ANORM, float *RCOND, scomplex *WORK, int *LWORK,
              float *RWORK, int *LRWORK, int *INFO);
 void PCGECON(char *NORM, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
@@ -527,7 +528,7 @@ void PCGECON(char *NORM, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
 void PCGECON_(char *NORM, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
               float *ANORM, float *RCOND, scomplex *WORK, int *LWORK,
               float *RWORK, int *LRWORK, int *INFO);
-void mangle_pcgeequ(int *M, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
+void pcgeequ(int *M, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
              float *R, float *C, float *ROWCND, float *COLCND, float *AMAX,
              int *INFO);
 void PCGEEQU(int *M, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
@@ -536,31 +537,31 @@ void PCGEEQU(int *M, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
 void PCGEEQU_(int *M, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
               float *R, float *C, float *ROWCND, float *COLCND, float *AMAX,
               int *INFO);
-void mangle_pcgehd2(int *N, int *ILO, int *IHI, scomplex *A, int *IA, int *JA,
+void pcgehd2(int *N, int *ILO, int *IHI, scomplex *A, int *IA, int *JA,
              int *DESCA, scomplex *TAU, scomplex *WORK, int *LWORK, int *INFO);
 void PCGEHD2(int *N, int *ILO, int *IHI, scomplex *A, int *IA, int *JA,
              int *DESCA, scomplex *TAU, scomplex *WORK, int *LWORK, int *INFO);
 void PCGEHD2_(int *N, int *ILO, int *IHI, scomplex *A, int *IA, int *JA,
               int *DESCA, scomplex *TAU, scomplex *WORK, int *LWORK, int *INFO);
-void mangle_pcgehrd(int *N, int *ILO, int *IHI, scomplex *A, int *IA, int *JA,
+void pcgehrd(int *N, int *ILO, int *IHI, scomplex *A, int *IA, int *JA,
              int *DESCA, scomplex *TAU, scomplex *WORK, int *LWORK, int *INFO);
 void PCGEHRD(int *N, int *ILO, int *IHI, scomplex *A, int *IA, int *JA,
              int *DESCA, scomplex *TAU, scomplex *WORK, int *LWORK, int *INFO);
 void PCGEHRD_(int *N, int *ILO, int *IHI, scomplex *A, int *IA, int *JA,
               int *DESCA, scomplex *TAU, scomplex *WORK, int *LWORK, int *INFO);
-void mangle_pcgelq2(int *M, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
+void pcgelq2(int *M, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
              scomplex *TAU, scomplex *WORK, int *LWORK, int *INFO);
 void PCGELQ2(int *M, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
              scomplex *TAU, scomplex *WORK, int *LWORK, int *INFO);
 void PCGELQ2_(int *M, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
               scomplex *TAU, scomplex *WORK, int *LWORK, int *INFO);
-void mangle_pcgelqf(int *M, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
+void pcgelqf(int *M, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
              scomplex *TAU, scomplex *WORK, int *LWORK, int *INFO);
 void PCGELQF(int *M, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
              scomplex *TAU, scomplex *WORK, int *LWORK, int *INFO);
 void PCGELQF_(int *M, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
               scomplex *TAU, scomplex *WORK, int *LWORK, int *INFO);
-void mangle_pcgels(char *TRANS, int *M, int *N, int *NRHS, scomplex *A, int *IA,
+void pcgels(char *TRANS, int *M, int *N, int *NRHS, scomplex *A, int *IA,
             int *JA, int *DESCA, scomplex *B, int *IB, int *JB, int *DESCB,
             scomplex *WORK, int *LWORK, int *INFO);
 void PCGELS(char *TRANS, int *M, int *N, int *NRHS, scomplex *A, int *IA,
@@ -569,19 +570,19 @@ void PCGELS(char *TRANS, int *M, int *N, int *NRHS, scomplex *A, int *IA,
 void PCGELS_(char *TRANS, int *M, int *N, int *NRHS, scomplex *A, int *IA,
              int *JA, int *DESCA, scomplex *B, int *IB, int *JB, int *DESCB,
              scomplex *WORK, int *LWORK, int *INFO);
-void mangle_pcgeql2(int *M, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
+void pcgeql2(int *M, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
              scomplex *TAU, scomplex *WORK, int *LWORK, int *INFO);
 void PCGEQL2(int *M, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
              scomplex *TAU, scomplex *WORK, int *LWORK, int *INFO);
 void PCGEQL2_(int *M, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
               scomplex *TAU, scomplex *WORK, int *LWORK, int *INFO);
-void mangle_pcgeqlf(int *M, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
+void pcgeqlf(int *M, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
              scomplex *TAU, scomplex *WORK, int *LWORK, int *INFO);
 void PCGEQLF(int *M, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
              scomplex *TAU, scomplex *WORK, int *LWORK, int *INFO);
 void PCGEQLF_(int *M, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
               scomplex *TAU, scomplex *WORK, int *LWORK, int *INFO);
-void mangle_pcgeqpf(int *M, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
+void pcgeqpf(int *M, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
              int *IPIV, scomplex *TAU, scomplex *WORK, int *LWORK, float *RWORK,
              int *LRWORK, int *INFO);
 void PCGEQPF(int *M, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
@@ -590,19 +591,19 @@ void PCGEQPF(int *M, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
 void PCGEQPF_(int *M, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
               int *IPIV, scomplex *TAU, scomplex *WORK, int *LWORK,
               float *RWORK, int *LRWORK, int *INFO);
-void mangle_pcgeqr2(int *M, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
+void pcgeqr2(int *M, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
              scomplex *TAU, scomplex *WORK, int *LWORK, int *INFO);
 void PCGEQR2(int *M, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
              scomplex *TAU, scomplex *WORK, int *LWORK, int *INFO);
 void PCGEQR2_(int *M, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
               scomplex *TAU, scomplex *WORK, int *LWORK, int *INFO);
-void mangle_pcgeqrf(int *M, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
+void pcgeqrf(int *M, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
              scomplex *TAU, scomplex *WORK, int *LWORK, int *INFO);
 void PCGEQRF(int *M, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
              scomplex *TAU, scomplex *WORK, int *LWORK, int *INFO);
 void PCGEQRF_(int *M, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
               scomplex *TAU, scomplex *WORK, int *LWORK, int *INFO);
-void mangle_pcgerfs(char *TRANS, int *N, int *NRHS, scomplex *A, int *IA, int *JA,
+void pcgerfs(char *TRANS, int *N, int *NRHS, scomplex *A, int *IA, int *JA,
              int *DESCA, scomplex *AF, int *IAF, int *JAF, int *DESCAF,
              int *IPIV, scomplex *B, int *IB, int *JB, int *DESCB, scomplex *X,
              int *IX, int *JX, int *DESCX, float *FERR, float *BERR,
@@ -617,25 +618,25 @@ void PCGERFS_(char *TRANS, int *N, int *NRHS, scomplex *A, int *IA, int *JA,
               int *IPIV, scomplex *B, int *IB, int *JB, int *DESCB, scomplex *X,
               int *IX, int *JX, int *DESCX, float *FERR, float *BERR,
               scomplex *WORK, int *LWORK, float *RWORK, int *LRWORK, int *INFO);
-void mangle_pcgerq2(int *M, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
+void pcgerq2(int *M, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
              scomplex *TAU, scomplex *WORK, int *LWORK, int *INFO);
 void PCGERQ2(int *M, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
              scomplex *TAU, scomplex *WORK, int *LWORK, int *INFO);
 void PCGERQ2_(int *M, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
               scomplex *TAU, scomplex *WORK, int *LWORK, int *INFO);
-void mangle_pcgerqf(int *M, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
+void pcgerqf(int *M, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
              scomplex *TAU, scomplex *WORK, int *LWORK, int *INFO);
 void PCGERQF(int *M, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
              scomplex *TAU, scomplex *WORK, int *LWORK, int *INFO);
 void PCGERQF_(int *M, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
               scomplex *TAU, scomplex *WORK, int *LWORK, int *INFO);
-void mangle_pcgesv( int *N,  int *NRHS, scomplex *A,  int *IA,  int *JA,  int *DESCA,
-            int *IPIV, scomplex *B,  int *IB,  int *JB,  int *DESCB, int *INFO);
-void PCGESV( int *N,  int *NRHS, scomplex *A,  int *IA,  int *JA,  int *DESCA,
-            int *IPIV, scomplex *B,  int *IB,  int *JB,  int *DESCB, int *INFO);
-void PCGESV_( int *N,  int *NRHS, scomplex *A,  int *IA,  int *JA,  int *DESCA,
-            int *IPIV, scomplex *B,  int *IB,  int *JB,  int *DESCB, int *INFO);
-void mangle_pcgesvd(char *JOBU, char *JOBVT, int *M, int *N, scomplex *A, int *IA,
+void pcgesv(int *N, int *NRHS, scomplex *A, int *IA, int *JA, int *DESCA,
+            int *IPIV, scomplex *B, int *IB, int *JB, int *DESCB, int *INFO);
+void PCGESV(int *N, int *NRHS, scomplex *A, int *IA, int *JA, int *DESCA,
+            int *IPIV, scomplex *B, int *IB, int *JB, int *DESCB, int *INFO);
+void PCGESV_(int *N, int *NRHS, scomplex *A, int *IA, int *JA, int *DESCA,
+             int *IPIV, scomplex *B, int *IB, int *JB, int *DESCB, int *INFO);
+void pcgesvd(char *JOBU, char *JOBVT, int *M, int *N, scomplex *A, int *IA,
              int *JA, int *DESCA, float *S, scomplex *U, int *IU, int *JU,
              int *DESCU, scomplex *VT, int *IVT, int *JVT, int *DESCVT,
              scomplex *WORK, int *LWORK, float *RWORK, int *INFO);
@@ -647,7 +648,7 @@ void PCGESVD_(char *JOBU, char *JOBVT, int *M, int *N, scomplex *A, int *IA,
               int *JA, int *DESCA, float *S, scomplex *U, int *IU, int *JU,
               int *DESCU, scomplex *VT, int *IVT, int *JVT, int *DESCVT,
               scomplex *WORK, int *LWORK, float *RWORK, int *INFO);
-void mangle_pcgesvx(char *FACT, char *TRANS, int *N, int *NRHS, scomplex *A, int *IA,
+void pcgesvx(char *FACT, char *TRANS, int *N, int *NRHS, scomplex *A, int *IA,
              int *JA, int *DESCA, scomplex *AF, int *IAF, int *JAF, int *DESCAF,
              int *IPIV, char *EQUED, float *R, float *C, scomplex *B, int *IB,
              int *JB, int *DESCB, scomplex *X, int *IX, int *JX, int *DESCX,
@@ -665,34 +666,34 @@ void PCGESVX_(char *FACT, char *TRANS, int *N, int *NRHS, scomplex *A, int *IA,
               scomplex *B, int *IB, int *JB, int *DESCB, scomplex *X, int *IX,
               int *JX, int *DESCX, float *RCOND, float *FERR, float *BERR,
               scomplex *WORK, int *LWORK, float *RWORK, int *LRWORK, int *INFO);
-void mangle_pcgetf2(int *M, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
+void pcgetf2(int *M, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
              int *IPIV, int *INFO);
 void PCGETF2(int *M, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
              int *IPIV, int *INFO);
 void PCGETF2_(int *M, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
               int *IPIV, int *INFO);
-void mangle_pcgetrf( int *M,  int *N, scomplex *A,  int *IA,  int *JA,
-              int *DESCA, int *IPIV, int *INFO);
-void PCGETRF( int *M,  int *N, scomplex *A,  int *IA,  int *JA,
-              int *DESCA, int *IPIV, int *INFO);
-void PCGETRF_( int *M,  int *N, scomplex *A,  int *IA,  int *JA,
-              int *DESCA, int *IPIV, int *INFO);
-void mangle_pcgetri( int *N, scomplex *A,  int *IA,  int *JA,  int *DESCA,  int *IPIV,
-             scomplex *WORK,  int *LWORK, int *IWORK,  int *LIWORK, int *INFO);
-void PCGETRI( int *N, scomplex *A,  int *IA,  int *JA,  int *DESCA,  int *IPIV,
-             scomplex *WORK,  int *LWORK, int *IWORK,  int *LIWORK, int *INFO);
-void PCGETRI_( int *N, scomplex *A,  int *IA,  int *JA,  int *DESCA,  int *IPIV,
-             scomplex *WORK,  int *LWORK, int *IWORK,  int *LIWORK, int *INFO);
-void mangle_pcgetrs( char *TRANS,  int *N,  int *NRHS,  scomplex *A,  int *IA,  int *JA,
-              int *DESCA,  int *IPIV, scomplex *B,  int *IB,  int *JB,  int *DESCB,
+void pcgetrf(int *M, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
+             int *IPIV, int *INFO);
+void PCGETRF(int *M, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
+             int *IPIV, int *INFO);
+void PCGETRF_(int *M, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
+              int *IPIV, int *INFO);
+void pcgetri(int *N, scomplex *A, int *IA, int *JA, int *DESCA, int *IPIV,
+             scomplex *WORK, int *LWORK, int *IWORK, int *LIWORK, int *INFO);
+void PCGETRI(int *N, scomplex *A, int *IA, int *JA, int *DESCA, int *IPIV,
+             scomplex *WORK, int *LWORK, int *IWORK, int *LIWORK, int *INFO);
+void PCGETRI_(int *N, scomplex *A, int *IA, int *JA, int *DESCA, int *IPIV,
+              scomplex *WORK, int *LWORK, int *IWORK, int *LIWORK, int *INFO);
+void pcgetrs(char *TRANS, int *N, int *NRHS, scomplex *A, int *IA, int *JA,
+             int *DESCA, int *IPIV, scomplex *B, int *IB, int *JB, int *DESCB,
              int *INFO);
-void PCGETRS( char *TRANS,  int *N,  int *NRHS,  scomplex *A,  int *IA,  int *JA,
-              int *DESCA,  int *IPIV, scomplex *B,  int *IB,  int *JB,  int *DESCB,
+void PCGETRS(char *TRANS, int *N, int *NRHS, scomplex *A, int *IA, int *JA,
+             int *DESCA, int *IPIV, scomplex *B, int *IB, int *JB, int *DESCB,
              int *INFO);
-void PCGETRS_( char *TRANS,  int *N,  int *NRHS,  scomplex *A,  int *IA,  int *JA,
-              int *DESCA,  int *IPIV, scomplex *B,  int *IB,  int *JB,  int *DESCB,
-             int *INFO);
-void mangle_pcggqrf(int *N, int *M, int *P, scomplex *A, int *IA, int *JA, int *DESCA,
+void PCGETRS_(char *TRANS, int *N, int *NRHS, scomplex *A, int *IA, int *JA,
+              int *DESCA, int *IPIV, scomplex *B, int *IB, int *JB, int *DESCB,
+              int *INFO);
+void pcggqrf(int *N, int *M, int *P, scomplex *A, int *IA, int *JA, int *DESCA,
              scomplex *TAUA, scomplex *B, int *IB, int *JB, int *DESCB,
              scomplex *TAUB, scomplex *WORK, int *LWORK, int *INFO);
 void PCGGQRF(int *N, int *M, int *P, scomplex *A, int *IA, int *JA, int *DESCA,
@@ -701,7 +702,7 @@ void PCGGQRF(int *N, int *M, int *P, scomplex *A, int *IA, int *JA, int *DESCA,
 void PCGGQRF_(int *N, int *M, int *P, scomplex *A, int *IA, int *JA, int *DESCA,
               scomplex *TAUA, scomplex *B, int *IB, int *JB, int *DESCB,
               scomplex *TAUB, scomplex *WORK, int *LWORK, int *INFO);
-void mangle_pcggrqf(int *M, int *P, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
+void pcggrqf(int *M, int *P, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
              scomplex *TAUA, scomplex *B, int *IB, int *JB, int *DESCB,
              scomplex *TAUB, scomplex *WORK, int *LWORK, int *INFO);
 void PCGGRQF(int *M, int *P, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
@@ -710,7 +711,7 @@ void PCGGRQF(int *M, int *P, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
 void PCGGRQF_(int *M, int *P, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
               scomplex *TAUA, scomplex *B, int *IB, int *JB, int *DESCB,
               scomplex *TAUB, scomplex *WORK, int *LWORK, int *INFO);
-void mangle_pcheev(char *JOBZ, char *UPLO, int *N, scomplex *A, int *IA, int *JA,
+void pcheev(char *JOBZ, char *UPLO, int *N, scomplex *A, int *IA, int *JA,
             int *DESCA, float *W, scomplex *Z, int *IZ, int *JZ, int *DESCZ,
             scomplex *WORK, int *LWORK, scomplex *RWORK, int *LRWORK,
             int *INFO);
@@ -722,7 +723,7 @@ void PCHEEV_(char *JOBZ, char *UPLO, int *N, scomplex *A, int *IA, int *JA,
              int *DESCA, float *W, scomplex *Z, int *IZ, int *JZ, int *DESCZ,
              scomplex *WORK, int *LWORK, scomplex *RWORK, int *LRWORK,
              int *INFO);
-void mangle_pcheevd(char *JOBZ, char *UPLO, int *N, scomplex *A, int *IA, int *JA,
+void pcheevd(char *JOBZ, char *UPLO, int *N, scomplex *A, int *IA, int *JA,
              int *DESCA, float *W, scomplex *Z, int *IZ, int *JZ, int *DESCZ,
              scomplex *WORK, int *LWORK, float *RWORK, int *LRWORK, int *IWORK,
              int *LIWORK, int *INFO);
@@ -734,7 +735,7 @@ void PCHEEVD_(char *JOBZ, char *UPLO, int *N, scomplex *A, int *IA, int *JA,
               int *DESCA, float *W, scomplex *Z, int *IZ, int *JZ, int *DESCZ,
               scomplex *WORK, int *LWORK, float *RWORK, int *LRWORK, int *IWORK,
               int *LIWORK, int *INFO);
-void mangle_pcheevr(char *JOBZ, char *RANGE, char *UPLO, int *N, scomplex *A, int *IA,
+void pcheevr(char *JOBZ, char *RANGE, char *UPLO, int *N, scomplex *A, int *IA,
              int *JA, int *DESCA, float *VL, float *VU, int *IL, int *IU,
              int *M, int *NZ, float *W, scomplex *Z, int *IZ, int *JZ,
              int *DESCZ, scomplex *WORK, int *LWORK, float *RWORK, int *LRWORK,
@@ -749,7 +750,7 @@ void PCHEEVR_(char *JOBZ, char *RANGE, char *UPLO, int *N, scomplex *A, int *IA,
               int *M, int *NZ, float *W, scomplex *Z, int *IZ, int *JZ,
               int *DESCZ, scomplex *WORK, int *LWORK, float *RWORK, int *LRWORK,
               int *IWORK, int *LIWORK, int *INFO);
-void mangle_pcheevx(char *JOBZ, char *RANGE, char *UPLO, int *N, scomplex *A, int *IA,
+void pcheevx(char *JOBZ, char *RANGE, char *UPLO, int *N, scomplex *A, int *IA,
              int *JA, int *DESCA, float *VL, float *VU, int *IL, int *IU,
              float *ABSTOL, int *M, int *NZ, float *W, float *ORFAC,
              scomplex *Z, int *IZ, int *JZ, int *DESCZ, scomplex *WORK,
@@ -767,13 +768,13 @@ void PCHEEVX_(char *JOBZ, char *RANGE, char *UPLO, int *N, scomplex *A, int *IA,
               scomplex *Z, int *IZ, int *JZ, int *DESCZ, scomplex *WORK,
               int *LWORK, float *RWORK, int *LRWORK, int *IWORK, int *LIWORK,
               int *IFAIL, int *ICLUSTR, float *GAP, int *INFO);
-void mangle_pchegs2(int *IBTYPE, char *UPLO, int *N, scomplex *A, int *IA, int *JA,
+void pchegs2(int *IBTYPE, char *UPLO, int *N, scomplex *A, int *IA, int *JA,
              int *DESCA, scomplex *B, int *IB, int *JB, int *DESCB, int *INFO);
 void PCHEGS2(int *IBTYPE, char *UPLO, int *N, scomplex *A, int *IA, int *JA,
              int *DESCA, scomplex *B, int *IB, int *JB, int *DESCB, int *INFO);
 void PCHEGS2_(int *IBTYPE, char *UPLO, int *N, scomplex *A, int *IA, int *JA,
               int *DESCA, scomplex *B, int *IB, int *JB, int *DESCB, int *INFO);
-void mangle_pchegst(int *IBTYPE, char *UPLO, int *N, scomplex *A, int *IA, int *JA,
+void pchegst(int *IBTYPE, char *UPLO, int *N, scomplex *A, int *IA, int *JA,
              int *DESCA, scomplex *B, int *IB, int *JB, int *DESCB,
              float *SCALE, int *INFO);
 void PCHEGST(int *IBTYPE, char *UPLO, int *N, scomplex *A, int *IA, int *JA,
@@ -782,7 +783,7 @@ void PCHEGST(int *IBTYPE, char *UPLO, int *N, scomplex *A, int *IA, int *JA,
 void PCHEGST_(int *IBTYPE, char *UPLO, int *N, scomplex *A, int *IA, int *JA,
               int *DESCA, scomplex *B, int *IB, int *JB, int *DESCB,
               float *SCALE, int *INFO);
-void mangle_pchegvx(int *IBTYPE, char *JOBZ, char *RANGE, char *UPLO, int *N,
+void pchegvx(int *IBTYPE, char *JOBZ, char *RANGE, char *UPLO, int *N,
              scomplex *A, int *IA, int *JA, int *DESCA, scomplex *B, int *IB,
              int *JB, int *DESCB, float *VL, float *VU, int *IL, int *IU,
              float *ABSTOL, int *M, int *NZ, float *W, float *ORFAC,
@@ -803,7 +804,7 @@ void PCHEGVX_(int *IBTYPE, char *JOBZ, char *RANGE, char *UPLO, int *N,
               scomplex *Z, int *IZ, int *JZ, int *DESCZ, scomplex *WORK,
               int *LWORK, float *RWORK, int *LRWORK, int *IWORK, int *LIWORK,
               int *IFAIL, int *ICLUSTR, float *GAP, int *INFO);
-void mangle_pchengst(int *IBTYPE, char *UPLO, int *N, scomplex *A, int *IA, int *JA,
+void pchengst(int *IBTYPE, char *UPLO, int *N, scomplex *A, int *IA, int *JA,
               int *DESCA, scomplex *B, int *IB, int *JB, int *DESCB,
               float *SCALE, scomplex *WORK, int *LWORK, int *INFO);
 void PCHENGST(int *IBTYPE, char *UPLO, int *N, scomplex *A, int *IA, int *JA,
@@ -812,7 +813,7 @@ void PCHENGST(int *IBTYPE, char *UPLO, int *N, scomplex *A, int *IA, int *JA,
 void PCHENGST_(int *IBTYPE, char *UPLO, int *N, scomplex *A, int *IA, int *JA,
                int *DESCA, scomplex *B, int *IB, int *JB, int *DESCB,
                float *SCALE, scomplex *WORK, int *LWORK, int *INFO);
-void mangle_pchentrd(char *UPLO, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
+void pchentrd(char *UPLO, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
               float *D, float *E, scomplex *TAU, scomplex *WORK, int *LWORK,
               scomplex *RWORK, int *LRWORK, int *INFO);
 void PCHENTRD(char *UPLO, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
@@ -821,7 +822,7 @@ void PCHENTRD(char *UPLO, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
 void PCHENTRD_(char *UPLO, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
                float *D, float *E, scomplex *TAU, scomplex *WORK, int *LWORK,
                scomplex *RWORK, int *LRWORK, int *INFO);
-void mangle_pchetd2(char *UPLO, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
+void pchetd2(char *UPLO, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
              float *D, float *E, scomplex *TAU, scomplex *WORK, int *LWORK,
              int *INFO);
 void PCHETD2(char *UPLO, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
@@ -830,7 +831,7 @@ void PCHETD2(char *UPLO, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
 void PCHETD2_(char *UPLO, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
               float *D, float *E, scomplex *TAU, scomplex *WORK, int *LWORK,
               int *INFO);
-void mangle_pchetrd(char *UPLO, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
+void pchetrd(char *UPLO, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
              float *D, float *E, scomplex *TAU, scomplex *WORK, int *LWORK,
              int *INFO);
 void PCHETRD(char *UPLO, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
@@ -839,7 +840,7 @@ void PCHETRD(char *UPLO, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
 void PCHETRD_(char *UPLO, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
               float *D, float *E, scomplex *TAU, scomplex *WORK, int *LWORK,
               int *INFO);
-void mangle_pchettrd(char *UPLO, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
+void pchettrd(char *UPLO, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
               float *D, float *E, scomplex *TAU, scomplex *WORK, int *LWORK,
               int *INFO);
 void PCHETTRD(char *UPLO, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
@@ -848,7 +849,7 @@ void PCHETTRD(char *UPLO, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
 void PCHETTRD_(char *UPLO, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
                float *D, float *E, scomplex *TAU, scomplex *WORK, int *LWORK,
                int *INFO);
-void mangle_pclabrd(int *M, int *N, int *NB, scomplex *A, int *IA, int *JA, int *DESCA,
+void pclabrd(int *M, int *N, int *NB, scomplex *A, int *IA, int *JA, int *DESCA,
              float *D, float *E, scomplex *TAUQ, scomplex *TAUP, scomplex *X,
              int *IX, int *JX, int *DESCX, scomplex *Y, int *IY, int *JY,
              int *DESCY, scomplex *WORK);
@@ -860,46 +861,46 @@ void PCLABRD_(int *M, int *N, int *NB, scomplex *A, int *IA, int *JA,
               int *DESCA, float *D, float *E, scomplex *TAUQ, scomplex *TAUP,
               scomplex *X, int *IX, int *JX, int *DESCX, scomplex *Y, int *IY,
               int *JY, int *DESCY, scomplex *WORK);
-void mangle_pclacgv(int *N, scomplex *X, int *IX, int *JX, int *DESCX, int *INCX);
+void pclacgv(int *N, scomplex *X, int *IX, int *JX, int *DESCX, int *INCX);
 void PCLACGV(int *N, scomplex *X, int *IX, int *JX, int *DESCX, int *INCX);
 void PCLACGV_(int *N, scomplex *X, int *IX, int *JX, int *DESCX, int *INCX);
-void mangle_pclacon(int *N, scomplex *V, int *IV, int *JV, int *DESCV, scomplex *X,
+void pclacon(int *N, scomplex *V, int *IV, int *JV, int *DESCV, scomplex *X,
              int *IX, int *JX, int *DESCX, float *EST, int *KASE);
 void PCLACON(int *N, scomplex *V, int *IV, int *JV, int *DESCV, scomplex *X,
              int *IX, int *JX, int *DESCX, float *EST, int *KASE);
 void PCLACON_(int *N, scomplex *V, int *IV, int *JV, int *DESCV, scomplex *X,
               int *IX, int *JX, int *DESCX, float *EST, int *KASE);
-void mangle_pclaconsb(scomplex *A, int *DESCA, int *I, int *L, int *M, scomplex *H44,
+void pclaconsb(scomplex *A, int *DESCA, int *I, int *L, int *M, scomplex *H44,
                scomplex *H33, scomplex *H43H34, scomplex *BUF, int *LWORK);
 void PCLACONSB(scomplex *A, int *DESCA, int *I, int *L, int *M, scomplex *H44,
                scomplex *H33, scomplex *H43H34, scomplex *BUF, int *LWORK);
 void PCLACONSB_(scomplex *A, int *DESCA, int *I, int *L, int *M, scomplex *H44,
                 scomplex *H33, scomplex *H43H34, scomplex *BUF, int *LWORK);
-void mangle_pclacp2(char *UPLO, int *M, int *N, scomplex *A, int *IA, int *JA,
+void pclacp2(char *UPLO, int *M, int *N, scomplex *A, int *IA, int *JA,
              int *DESCA, scomplex *B, int *IB, int *JB, int *DESCB);
 void PCLACP2(char *UPLO, int *M, int *N, scomplex *A, int *IA, int *JA,
              int *DESCA, scomplex *B, int *IB, int *JB, int *DESCB);
 void PCLACP2_(char *UPLO, int *M, int *N, scomplex *A, int *IA, int *JA,
               int *DESCA, scomplex *B, int *IB, int *JB, int *DESCB);
-void mangle_pclacp3(int *M, int *I, scomplex *A, int *DESCA, scomplex *B, int *LDB,
+void pclacp3(int *M, int *I, scomplex *A, int *DESCA, scomplex *B, int *LDB,
              int *II, int *JJ, int *REV);
 void PCLACP3(int *M, int *I, scomplex *A, int *DESCA, scomplex *B, int *LDB,
              int *II, int *JJ, int *REV);
 void PCLACP3_(int *M, int *I, scomplex *A, int *DESCA, scomplex *B, int *LDB,
               int *II, int *JJ, int *REV);
-void mangle_pclacpy(char *UPLO, int *M, int *N, scomplex *A, int *IA, int *JA,
+void pclacpy(char *UPLO, int *M, int *N, scomplex *A, int *IA, int *JA,
              int *DESCA, scomplex *B, int *IB, int *JB, int *DESCB);
 void PCLACPY(char *UPLO, int *M, int *N, scomplex *A, int *IA, int *JA,
              int *DESCA, scomplex *B, int *IB, int *JB, int *DESCB);
 void PCLACPY_(char *UPLO, int *M, int *N, scomplex *A, int *IA, int *JA,
               int *DESCA, scomplex *B, int *IB, int *JB, int *DESCB);
-void mangle_pclaevswp(int *N, float *ZIN, int *LDZI, scomplex *Z, int *IZ, int *JZ,
+void pclaevswp(int *N, float *ZIN, int *LDZI, scomplex *Z, int *IZ, int *JZ,
                int *DESCZ, int *NVS, int *KEY, float *RWORK, int *LRWORK);
 void PCLAEVSWP(int *N, float *ZIN, int *LDZI, scomplex *Z, int *IZ, int *JZ,
                int *DESCZ, int *NVS, int *KEY, float *RWORK, int *LRWORK);
 void PCLAEVSWP_(int *N, float *ZIN, int *LDZI, scomplex *Z, int *IZ, int *JZ,
                 int *DESCZ, int *NVS, int *KEY, float *RWORK, int *LRWORK);
-void mangle_pclahqr(int *WANTT, int *WANTZ, int *N, int *ILO, int *IHI, scomplex *A,
+void pclahqr(int *WANTT, int *WANTZ, int *N, int *ILO, int *IHI, scomplex *A,
              int *DESCA, scomplex *W, int *ILOZ, int *IHIZ, scomplex *Z,
              int *DESCZ, scomplex *WORK, int *LWORK, int *IWORK, int *ILWORK,
              int *INFO);
@@ -911,7 +912,7 @@ void PCLAHQR_(int *WANTT, int *WANTZ, int *N, int *ILO, int *IHI, scomplex *A,
               int *DESCA, scomplex *W, int *ILOZ, int *IHIZ, scomplex *Z,
               int *DESCZ, scomplex *WORK, int *LWORK, int *IWORK, int *ILWORK,
               int *INFO);
-void mangle_pclahrd(int *N, int *K, int *NB, scomplex *A, int *IA, int *JA, int *DESCA,
+void pclahrd(int *N, int *K, int *NB, scomplex *A, int *IA, int *JA, int *DESCA,
              scomplex *TAU, scomplex *T, scomplex *Y, int *IY, int *JY,
              int *DESCY, scomplex *WORK);
 void PCLAHRD(int *N, int *K, int *NB, scomplex *A, int *IA, int *JA, int *DESCA,
@@ -920,13 +921,13 @@ void PCLAHRD(int *N, int *K, int *NB, scomplex *A, int *IA, int *JA, int *DESCA,
 void PCLAHRD_(int *N, int *K, int *NB, scomplex *A, int *IA, int *JA,
               int *DESCA, scomplex *TAU, scomplex *T, scomplex *Y, int *IY,
               int *JY, int *DESCY, scomplex *WORK);
-void mangle_pclamr1d(int *N, dcomplex *A, int *IA, int *JA, int *DESCA, dcomplex *B,
+void pclamr1d(int *N, dcomplex *A, int *IA, int *JA, int *DESCA, dcomplex *B,
               int *IB, int *JB, int *DESCB);
 void PCLAMR1D(int *N, dcomplex *A, int *IA, int *JA, int *DESCA, dcomplex *B,
               int *IB, int *JB, int *DESCB);
 void PCLAMR1D_(int *N, dcomplex *A, int *IA, int *JA, int *DESCA, dcomplex *B,
                int *IB, int *JB, int *DESCB);
-void mangle_pclapiv(char *DIREC, char *ROWCOL, char *PIVROC, int *M, int *N,
+void pclapiv(char *DIREC, char *ROWCOL, char *PIVROC, int *M, int *N,
              scomplex *A, int *IA, int *JA, int *DESCA, int *IPIV, int *IP,
              int *JP, int *DESCIP, int *IWORK);
 void PCLAPIV(char *DIREC, char *ROWCOL, char *PIVROC, int *M, int *N,
@@ -935,13 +936,13 @@ void PCLAPIV(char *DIREC, char *ROWCOL, char *PIVROC, int *M, int *N,
 void PCLAPIV_(char *DIREC, char *ROWCOL, char *PIVROC, int *M, int *N,
               scomplex *A, int *IA, int *JA, int *DESCA, int *IPIV, int *IP,
               int *JP, int *DESCIP, int *IWORK);
-void mangle_pclapv2(char *DIREC, char *ROWCOL, int *M, int *N, scomplex *A, int *IA,
+void pclapv2(char *DIREC, char *ROWCOL, int *M, int *N, scomplex *A, int *IA,
              int *JA, int *DESCA, int *IPIV, int *IP, int *JP, int *DESCIP);
 void PCLAPV2(char *DIREC, char *ROWCOL, int *M, int *N, scomplex *A, int *IA,
              int *JA, int *DESCA, int *IPIV, int *IP, int *JP, int *DESCIP);
 void PCLAPV2_(char *DIREC, char *ROWCOL, int *M, int *N, scomplex *A, int *IA,
               int *JA, int *DESCA, int *IPIV, int *IP, int *JP, int *DESCIP);
-void mangle_pclaqge(int *M, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
+void pclaqge(int *M, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
              float *R, float *C, float *ROWCND, float *COLCND, float *AMAX,
              char *EQUED);
 void PCLAQGE(int *M, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
@@ -950,13 +951,13 @@ void PCLAQGE(int *M, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
 void PCLAQGE_(int *M, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
               float *R, float *C, float *ROWCND, float *COLCND, float *AMAX,
               char *EQUED);
-void mangle_pclaqsy(char *UPLO, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
+void pclaqsy(char *UPLO, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
              float *SR, float *SC, float *SCOND, float *AMAX, char *EQUED);
 void PCLAQSY(char *UPLO, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
              float *SR, float *SC, float *SCOND, float *AMAX, char *EQUED);
 void PCLAQSY_(char *UPLO, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
               float *SR, float *SC, float *SCOND, float *AMAX, char *EQUED);
-void mangle_pclarf(char *SIDE, int *M, int *N, scomplex *V, int *IV, int *JV,
+void pclarf(char *SIDE, int *M, int *N, scomplex *V, int *IV, int *JV,
             int *DESCV, int *INCV, scomplex *TAU, scomplex *C, int *IC, int *JC,
             int *DESCC, scomplex *WORK);
 void PCLARF(char *SIDE, int *M, int *N, scomplex *V, int *IV, int *JV,
@@ -965,7 +966,7 @@ void PCLARF(char *SIDE, int *M, int *N, scomplex *V, int *IV, int *JV,
 void PCLARF_(char *SIDE, int *M, int *N, scomplex *V, int *IV, int *JV,
              int *DESCV, int *INCV, scomplex *TAU, scomplex *C, int *IC,
              int *JC, int *DESCC, scomplex *WORK);
-void mangle_pclarfb(char *SIDE, char *TRANS, char *DIRECT, char *STOREV, int *M,
+void pclarfb(char *SIDE, char *TRANS, char *DIRECT, char *STOREV, int *M,
              int *N, int *K, scomplex *V, int *IV, int *JV, int *DESCV,
              scomplex *T, scomplex *C, int *IC, int *JC, int *DESCC,
              scomplex *WORK);
@@ -977,7 +978,7 @@ void PCLARFB_(char *SIDE, char *TRANS, char *DIRECT, char *STOREV, int *M,
               int *N, int *K, scomplex *V, int *IV, int *JV, int *DESCV,
               scomplex *T, scomplex *C, int *IC, int *JC, int *DESCC,
               scomplex *WORK);
-void mangle_pclarfc(char *SIDE, int *M, int *N, scomplex *V, int *IV, int *JV,
+void pclarfc(char *SIDE, int *M, int *N, scomplex *V, int *IV, int *JV,
              int *DESCV, int *INCV, scomplex *TAU, scomplex *C, int *IC,
              int *JC, int *DESCC, scomplex *WORK);
 void PCLARFC(char *SIDE, int *M, int *N, scomplex *V, int *IV, int *JV,
@@ -986,19 +987,19 @@ void PCLARFC(char *SIDE, int *M, int *N, scomplex *V, int *IV, int *JV,
 void PCLARFC_(char *SIDE, int *M, int *N, scomplex *V, int *IV, int *JV,
               int *DESCV, int *INCV, scomplex *TAU, scomplex *C, int *IC,
               int *JC, int *DESCC, scomplex *WORK);
-void mangle_pclarfg(int *N, scomplex *ALPHA, int *IAX, int *JAX, scomplex *X, int *IX,
+void pclarfg(int *N, scomplex *ALPHA, int *IAX, int *JAX, scomplex *X, int *IX,
              int *JX, int *DESCX, int *INCX, scomplex *TAU);
 void PCLARFG(int *N, scomplex *ALPHA, int *IAX, int *JAX, scomplex *X, int *IX,
              int *JX, int *DESCX, int *INCX, scomplex *TAU);
 void PCLARFG_(int *N, scomplex *ALPHA, int *IAX, int *JAX, scomplex *X, int *IX,
               int *JX, int *DESCX, int *INCX, scomplex *TAU);
-void mangle_pclarft(char *DIRECT, char *STOREV, int *N, int *K, scomplex *V, int *IV,
+void pclarft(char *DIRECT, char *STOREV, int *N, int *K, scomplex *V, int *IV,
              int *JV, int *DESCV, scomplex *TAU, scomplex *T, scomplex *WORK);
 void PCLARFT(char *DIRECT, char *STOREV, int *N, int *K, scomplex *V, int *IV,
              int *JV, int *DESCV, scomplex *TAU, scomplex *T, scomplex *WORK);
 void PCLARFT_(char *DIRECT, char *STOREV, int *N, int *K, scomplex *V, int *IV,
               int *JV, int *DESCV, scomplex *TAU, scomplex *T, scomplex *WORK);
-void mangle_pclarz(char *SIDE, int *M, int *N, int *L, scomplex *V, int *IV, int *JV,
+void pclarz(char *SIDE, int *M, int *N, int *L, scomplex *V, int *IV, int *JV,
             int *DESCV, int *INCV, scomplex *TAU, scomplex *C, int *IC, int *JC,
             int *DESCC, scomplex *WORK);
 void PCLARZ(char *SIDE, int *M, int *N, int *L, scomplex *V, int *IV, int *JV,
@@ -1007,7 +1008,7 @@ void PCLARZ(char *SIDE, int *M, int *N, int *L, scomplex *V, int *IV, int *JV,
 void PCLARZ_(char *SIDE, int *M, int *N, int *L, scomplex *V, int *IV, int *JV,
              int *DESCV, int *INCV, scomplex *TAU, scomplex *C, int *IC,
              int *JC, int *DESCC, scomplex *WORK);
-void mangle_pclarzb(char *SIDE, char *TRANS, char *DIRECT, char *STOREV, int *M,
+void pclarzb(char *SIDE, char *TRANS, char *DIRECT, char *STOREV, int *M,
              int *N, int *K, int *L, scomplex *V, int *IV, int *JV, int *DESCV,
              scomplex *T, scomplex *C, int *IC, int *JC, int *DESCC,
              scomplex *WORK);
@@ -1019,7 +1020,7 @@ void PCLARZB_(char *SIDE, char *TRANS, char *DIRECT, char *STOREV, int *M,
               int *N, int *K, int *L, scomplex *V, int *IV, int *JV, int *DESCV,
               scomplex *T, scomplex *C, int *IC, int *JC, int *DESCC,
               scomplex *WORK);
-void mangle_pclarzc(char *SIDE, int *M, int *N, int *L, scomplex *V, int *IV, int *JV,
+void pclarzc(char *SIDE, int *M, int *N, int *L, scomplex *V, int *IV, int *JV,
              int *DESCV, int *INCV, scomplex *TAU, scomplex *C, int *IC,
              int *JC, int *DESCC, scomplex *WORK);
 void PCLARZC(char *SIDE, int *M, int *N, int *L, scomplex *V, int *IV, int *JV,
@@ -1028,49 +1029,49 @@ void PCLARZC(char *SIDE, int *M, int *N, int *L, scomplex *V, int *IV, int *JV,
 void PCLARZC_(char *SIDE, int *M, int *N, int *L, scomplex *V, int *IV, int *JV,
               int *DESCV, int *INCV, scomplex *TAU, scomplex *C, int *IC,
               int *JC, int *DESCC, scomplex *WORK);
-void mangle_pclarzt(char *DIRECT, char *STOREV, int *N, int *K, scomplex *V, int *IV,
+void pclarzt(char *DIRECT, char *STOREV, int *N, int *K, scomplex *V, int *IV,
              int *JV, int *DESCV, scomplex *TAU, scomplex *T, scomplex *WORK);
 void PCLARZT(char *DIRECT, char *STOREV, int *N, int *K, scomplex *V, int *IV,
              int *JV, int *DESCV, scomplex *TAU, scomplex *T, scomplex *WORK);
 void PCLARZT_(char *DIRECT, char *STOREV, int *N, int *K, scomplex *V, int *IV,
               int *JV, int *DESCV, scomplex *TAU, scomplex *T, scomplex *WORK);
-void mangle_pclascl(char *TYPE, float *CFROM, float *CTO, int *M, int *N, scomplex *A,
+void pclascl(char *TYPE, float *CFROM, float *CTO, int *M, int *N, scomplex *A,
              int *IA, int *JA, int *DESCA, int *INFO);
 void PCLASCL(char *TYPE, float *CFROM, float *CTO, int *M, int *N, scomplex *A,
              int *IA, int *JA, int *DESCA, int *INFO);
 void PCLASCL_(char *TYPE, float *CFROM, float *CTO, int *M, int *N, scomplex *A,
               int *IA, int *JA, int *DESCA, int *INFO);
-void mangle_pclase2(char *UPLO, int *M, int *N, scomplex *ALPHA, scomplex *BETA,
+void pclase2(char *UPLO, int *M, int *N, scomplex *ALPHA, scomplex *BETA,
              scomplex *A, int *IA, int *JA, int *DESCA);
 void PCLASE2(char *UPLO, int *M, int *N, scomplex *ALPHA, scomplex *BETA,
              scomplex *A, int *IA, int *JA, int *DESCA);
 void PCLASE2_(char *UPLO, int *M, int *N, scomplex *ALPHA, scomplex *BETA,
               scomplex *A, int *IA, int *JA, int *DESCA);
-void mangle_pclaset(char *UPLO, int *M, int *N, scomplex *ALPHA, scomplex *BETA,
+void pclaset(char *UPLO, int *M, int *N, scomplex *ALPHA, scomplex *BETA,
              scomplex *A, int *IA, int *JA, int *DESCA);
 void PCLASET(char *UPLO, int *M, int *N, scomplex *ALPHA, scomplex *BETA,
              scomplex *A, int *IA, int *JA, int *DESCA);
 void PCLASET_(char *UPLO, int *M, int *N, scomplex *ALPHA, scomplex *BETA,
               scomplex *A, int *IA, int *JA, int *DESCA);
-void mangle_pclasmsub(scomplex *A, int *DESCA, int *I, int *L, int *K, float *SMLNUM,
+void pclasmsub(scomplex *A, int *DESCA, int *I, int *L, int *K, float *SMLNUM,
                scomplex *BUF, int *LWORK);
 void PCLASMSUB(scomplex *A, int *DESCA, int *I, int *L, int *K, float *SMLNUM,
                scomplex *BUF, int *LWORK);
 void PCLASMSUB_(scomplex *A, int *DESCA, int *I, int *L, int *K, float *SMLNUM,
                 scomplex *BUF, int *LWORK);
-void mangle_pclassq(int *N, scomplex *X, int *IX, int *JX, int *DESCX, int *INCX,
+void pclassq(int *N, scomplex *X, int *IX, int *JX, int *DESCX, int *INCX,
              float *SCALE, float *SUMSQ);
 void PCLASSQ(int *N, scomplex *X, int *IX, int *JX, int *DESCX, int *INCX,
              float *SCALE, float *SUMSQ);
 void PCLASSQ_(int *N, scomplex *X, int *IX, int *JX, int *DESCX, int *INCX,
               float *SCALE, float *SUMSQ);
-void mangle_pclaswp(char *DIREC, char *ROWCOL, int *N, scomplex *A, int *IA, int *JA,
+void pclaswp(char *DIREC, char *ROWCOL, int *N, scomplex *A, int *IA, int *JA,
              int *DESCA, int *K1, int *K2, int *IPIV);
 void PCLASWP(char *DIREC, char *ROWCOL, int *N, scomplex *A, int *IA, int *JA,
              int *DESCA, int *K1, int *K2, int *IPIV);
 void PCLASWP_(char *DIREC, char *ROWCOL, int *N, scomplex *A, int *IA, int *JA,
               int *DESCA, int *K1, int *K2, int *IPIV);
-void mangle_pclatrd(char *UPLO, int *N, int *NB, scomplex *A, int *IA, int *JA,
+void pclatrd(char *UPLO, int *N, int *NB, scomplex *A, int *IA, int *JA,
              int *DESCA, float *D, float *E, scomplex *TAU, scomplex *W,
              int *IW, int *JW, int *DESCW, scomplex *WORK);
 void PCLATRD(char *UPLO, int *N, int *NB, scomplex *A, int *IA, int *JA,
@@ -1079,7 +1080,7 @@ void PCLATRD(char *UPLO, int *N, int *NB, scomplex *A, int *IA, int *JA,
 void PCLATRD_(char *UPLO, int *N, int *NB, scomplex *A, int *IA, int *JA,
               int *DESCA, float *D, float *E, scomplex *TAU, scomplex *W,
               int *IW, int *JW, int *DESCW, scomplex *WORK);
-void mangle_pclatrs(char *UPLO, char *TRANS, char *DIAG, char *NORMIN, int *N,
+void pclatrs(char *UPLO, char *TRANS, char *DIAG, char *NORMIN, int *N,
              scomplex *A, int *IA, int *JA, int *DESCA, scomplex *X, int *IX,
              int *JX, int *DESCX, float *SCALE, float *CNORM, scomplex *WORK);
 void PCLATRS(char *UPLO, char *TRANS, char *DIAG, char *NORMIN, int *N,
@@ -1088,13 +1089,13 @@ void PCLATRS(char *UPLO, char *TRANS, char *DIAG, char *NORMIN, int *N,
 void PCLATRS_(char *UPLO, char *TRANS, char *DIAG, char *NORMIN, int *N,
               scomplex *A, int *IA, int *JA, int *DESCA, scomplex *X, int *IX,
               int *JX, int *DESCX, float *SCALE, float *CNORM, scomplex *WORK);
-void mangle_pclatrz(int *M, int *N, int *L, scomplex *A, int *IA, int *JA, int *DESCA,
+void pclatrz(int *M, int *N, int *L, scomplex *A, int *IA, int *JA, int *DESCA,
              scomplex *TAU, scomplex *WORK);
 void PCLATRZ(int *M, int *N, int *L, scomplex *A, int *IA, int *JA, int *DESCA,
              scomplex *TAU, scomplex *WORK);
 void PCLATRZ_(int *M, int *N, int *L, scomplex *A, int *IA, int *JA, int *DESCA,
               scomplex *TAU, scomplex *WORK);
-void mangle_pclattrs(char *UPLO, char *TRANS, char *DIAG, char *NORMIN, int *N,
+void pclattrs(char *UPLO, char *TRANS, char *DIAG, char *NORMIN, int *N,
               scomplex *A, int *IA, int *JA, int *DESCA, scomplex *X, int *IX,
               int *JX, int *DESCX, float *SCALE, float *CNORM, int *INFO);
 void PCLATTRS(char *UPLO, char *TRANS, char *DIAG, char *NORMIN, int *N,
@@ -1103,25 +1104,28 @@ void PCLATTRS(char *UPLO, char *TRANS, char *DIAG, char *NORMIN, int *N,
 void PCLATTRS_(char *UPLO, char *TRANS, char *DIAG, char *NORMIN, int *N,
                scomplex *A, int *IA, int *JA, int *DESCA, scomplex *X, int *IX,
                int *JX, int *DESCX, float *SCALE, float *CNORM, int *INFO);
-void mangle_pclauu2(char *UPLO, int *N, scomplex *A, int *IA, int *JA, int *DESCA);
+void pclauu2(char *UPLO, int *N, scomplex *A, int *IA, int *JA, int *DESCA);
 void PCLAUU2(char *UPLO, int *N, scomplex *A, int *IA, int *JA, int *DESCA);
 void PCLAUU2_(char *UPLO, int *N, scomplex *A, int *IA, int *JA, int *DESCA);
-void mangle_pclauum(char *UPLO, int *N, scomplex *A, int *IA, int *JA, int *DESCA);
+void pclauum(char *UPLO, int *N, scomplex *A, int *IA, int *JA, int *DESCA);
 void PCLAUUM(char *UPLO, int *N, scomplex *A, int *IA, int *JA, int *DESCA);
 void PCLAUUM_(char *UPLO, int *N, scomplex *A, int *IA, int *JA, int *DESCA);
-void mangle_pclawil(int *II, int *JJ, int *M, scomplex *A, int *DESCA, scomplex *H44,
+void pclawil(int *II, int *JJ, int *M, scomplex *A, int *DESCA, scomplex *H44,
              scomplex *H33, scomplex *H43H34, scomplex *V);
 void PCLAWIL(int *II, int *JJ, int *M, scomplex *A, int *DESCA, scomplex *H44,
              scomplex *H33, scomplex *H43H34, scomplex *V);
 void PCLAWIL_(int *II, int *JJ, int *M, scomplex *A, int *DESCA, scomplex *H44,
               scomplex *H33, scomplex *H43H34, scomplex *V);
-void mangle_pcmax1(int *N, scomplex *AMAX, int *INDX, scomplex *X, int *IX, int *JX,
+void pcmax1(int *N, scomplex *AMAX, int *INDX, scomplex *X, int *IX, int *JX,
             int *DESCX, int *INCX);
 void PCMAX1(int *N, scomplex *AMAX, int *INDX, scomplex *X, int *IX, int *JX,
             int *DESCX, int *INCX);
 void PCMAX1_(int *N, scomplex *AMAX, int *INDX, scomplex *X, int *IX, int *JX,
              int *DESCX, int *INCX);
-void mangle_pcpbsv(char *UPLO, int *N, int *BW, int *NRHS, scomplex *A, int *JA,
+void ccombamax1(scomplex *V1, scomplex *V2);
+void CCOMBAMAX1(scomplex *V1, scomplex *V2);
+void CCOMBAMAX1_(scomplex *V1, scomplex *V2);
+void pcpbsv(char *UPLO, int *N, int *BW, int *NRHS, scomplex *A, int *JA,
             int *DESCA, scomplex *B, int *IB, int *DESCB, scomplex *WORK,
             int *LWORK, int *INFO);
 void PCPBSV(char *UPLO, int *N, int *BW, int *NRHS, scomplex *A, int *JA,
@@ -1130,13 +1134,13 @@ void PCPBSV(char *UPLO, int *N, int *BW, int *NRHS, scomplex *A, int *JA,
 void PCPBSV_(char *UPLO, int *N, int *BW, int *NRHS, scomplex *A, int *JA,
              int *DESCA, scomplex *B, int *IB, int *DESCB, scomplex *WORK,
              int *LWORK, int *INFO);
-void mangle_pcpbtrf(char *UPLO, int *N, int *BW, scomplex *A, int *JA, int *DESCA,
+void pcpbtrf(char *UPLO, int *N, int *BW, scomplex *A, int *JA, int *DESCA,
              scomplex *AF, int *LAF, scomplex *WORK, int *LWORK, int *INFO);
 void PCPBTRF(char *UPLO, int *N, int *BW, scomplex *A, int *JA, int *DESCA,
              scomplex *AF, int *LAF, scomplex *WORK, int *LWORK, int *INFO);
 void PCPBTRF_(char *UPLO, int *N, int *BW, scomplex *A, int *JA, int *DESCA,
               scomplex *AF, int *LAF, scomplex *WORK, int *LWORK, int *INFO);
-void mangle_pcpbtrs(char *UPLO, int *N, int *BW, int *NRHS, scomplex *A, int *JA,
+void pcpbtrs(char *UPLO, int *N, int *BW, int *NRHS, scomplex *A, int *JA,
              int *DESCA, scomplex *B, int *IB, int *DESCB, scomplex *AF,
              int *LAF, scomplex *WORK, int *LWORK, int *INFO);
 void PCPBTRS(char *UPLO, int *N, int *BW, int *NRHS, scomplex *A, int *JA,
@@ -1145,7 +1149,7 @@ void PCPBTRS(char *UPLO, int *N, int *BW, int *NRHS, scomplex *A, int *JA,
 void PCPBTRS_(char *UPLO, int *N, int *BW, int *NRHS, scomplex *A, int *JA,
               int *DESCA, scomplex *B, int *IB, int *DESCB, scomplex *AF,
               int *LAF, scomplex *WORK, int *LWORK, int *INFO);
-void mangle_pcpbtrsv(char *UPLO, char *TRANS, int *N, int *BW, int *NRHS, scomplex *A,
+void pcpbtrsv(char *UPLO, char *TRANS, int *N, int *BW, int *NRHS, scomplex *A,
               int *JA, int *DESCA, scomplex *B, int *IB, int *DESCB,
               scomplex *AF, int *LAF, scomplex *WORK, int *LWORK, int *INFO);
 void PCPBTRSV(char *UPLO, char *TRANS, int *N, int *BW, int *NRHS, scomplex *A,
@@ -1154,7 +1158,7 @@ void PCPBTRSV(char *UPLO, char *TRANS, int *N, int *BW, int *NRHS, scomplex *A,
 void PCPBTRSV_(char *UPLO, char *TRANS, int *N, int *BW, int *NRHS, scomplex *A,
                int *JA, int *DESCA, scomplex *B, int *IB, int *DESCB,
                scomplex *AF, int *LAF, scomplex *WORK, int *LWORK, int *INFO);
-void mangle_pcpocon(char *UPLO, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
+void pcpocon(char *UPLO, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
              float *ANORM, float *RCOND, scomplex *WORK, int *LWORK,
              float *RWORK, int *LRWORK, int *INFO);
 void PCPOCON(char *UPLO, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
@@ -1163,13 +1167,13 @@ void PCPOCON(char *UPLO, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
 void PCPOCON_(char *UPLO, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
               float *ANORM, float *RCOND, scomplex *WORK, int *LWORK,
               float *RWORK, int *LRWORK, int *INFO);
-void mangle_pcpoequ(int *N, scomplex *A, int *IA, int *JA, int *DESCA, float *SR,
+void pcpoequ(int *N, scomplex *A, int *IA, int *JA, int *DESCA, float *SR,
              float *SC, float *SCOND, float *AMAX, int *INFO);
 void PCPOEQU(int *N, scomplex *A, int *IA, int *JA, int *DESCA, float *SR,
              float *SC, float *SCOND, float *AMAX, int *INFO);
 void PCPOEQU_(int *N, scomplex *A, int *IA, int *JA, int *DESCA, float *SR,
               float *SC, float *SCOND, float *AMAX, int *INFO);
-void mangle_pcporfs(char *UPLO, int *N, int *NRHS, scomplex *A, int *IA, int *JA,
+void pcporfs(char *UPLO, int *N, int *NRHS, scomplex *A, int *IA, int *JA,
              int *DESCA, scomplex *AF, int *IAF, int *JAF, int *DESCAF,
              scomplex *B, int *IB, int *JB, int *DESCB, scomplex *X, int *IX,
              int *JX, int *DESCX, float *FERR, float *BERR, scomplex *WORK,
@@ -1184,13 +1188,13 @@ void PCPORFS_(char *UPLO, int *N, int *NRHS, scomplex *A, int *IA, int *JA,
               scomplex *B, int *IB, int *JB, int *DESCB, scomplex *X, int *IX,
               int *JX, int *DESCX, float *FERR, float *BERR, scomplex *WORK,
               int *LWORK, float *RWORK, int *LRWORK, int *INFO);
-void mangle_pcposv(char *UPLO, int *N, int *NRHS, scomplex *A, int *IA, int *JA,
+void pcposv(char *UPLO, int *N, int *NRHS, scomplex *A, int *IA, int *JA,
             int *DESCA, scomplex *B, int *IB, int *JB, int *DESCB, int *INFO);
 void PCPOSV(char *UPLO, int *N, int *NRHS, scomplex *A, int *IA, int *JA,
             int *DESCA, scomplex *B, int *IB, int *JB, int *DESCB, int *INFO);
 void PCPOSV_(char *UPLO, int *N, int *NRHS, scomplex *A, int *IA, int *JA,
              int *DESCA, scomplex *B, int *IB, int *JB, int *DESCB, int *INFO);
-void mangle_pcposvx(char *FACT, char *UPLO, int *N, int *NRHS, scomplex *A, int *IA,
+void pcposvx(char *FACT, char *UPLO, int *N, int *NRHS, scomplex *A, int *IA,
              int *JA, int *DESCA, scomplex *AF, int *IAF, int *JAF, int *DESCAF,
              char *EQUED, scomplex *SR, scomplex *SC, scomplex *B, int *IB,
              int *JB, int *DESCB, scomplex *X, int *IX, int *JX, int *DESCX,
@@ -1208,31 +1212,31 @@ void PCPOSVX_(char *FACT, char *UPLO, int *N, int *NRHS, scomplex *A, int *IA,
               int *IB, int *JB, int *DESCB, scomplex *X, int *IX, int *JX,
               int *DESCX, float *RCOND, float *FERR, float *BERR,
               scomplex *WORK, int *LWORK, float *RWORK, int *LRWORK, int *INFO);
-void mangle_pcpotf2(char *UPLO, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
+void pcpotf2(char *UPLO, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
              int *INFO);
 void PCPOTF2(char *UPLO, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
              int *INFO);
 void PCPOTF2_(char *UPLO, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
               int *INFO);
-void mangle_pcpotrf(char *UPLO, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
+void pcpotrf(char *UPLO, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
              int *INFO);
 void PCPOTRF(char *UPLO, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
              int *INFO);
 void PCPOTRF_(char *UPLO, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
               int *INFO);
-void mangle_pcpotri(char *UPLO, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
+void pcpotri(char *UPLO, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
              int *INFO);
 void PCPOTRI(char *UPLO, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
              int *INFO);
 void PCPOTRI_(char *UPLO, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
               int *INFO);
-void mangle_pcpotrs(char *UPLO, int *N, int *NRHS, scomplex *A, int *IA, int *JA,
+void pcpotrs(char *UPLO, int *N, int *NRHS, scomplex *A, int *IA, int *JA,
              int *DESCA, scomplex *B, int *IB, int *JB, int *DESCB, int *INFO);
 void PCPOTRS(char *UPLO, int *N, int *NRHS, scomplex *A, int *IA, int *JA,
              int *DESCA, scomplex *B, int *IB, int *JB, int *DESCB, int *INFO);
 void PCPOTRS_(char *UPLO, int *N, int *NRHS, scomplex *A, int *IA, int *JA,
               int *DESCA, scomplex *B, int *IB, int *JB, int *DESCB, int *INFO);
-void mangle_pcptsv(char *UPLO, int *N, int *NRHS, scomplex *D, scomplex *E, int *JA,
+void pcptsv(char *UPLO, int *N, int *NRHS, scomplex *D, scomplex *E, int *JA,
             int *DESCA, scomplex *B, int *IB, int *DESCB, scomplex *WORK,
             int *LWORK, int *INFO);
 void PCPTSV(char *UPLO, int *N, int *NRHS, scomplex *D, scomplex *E, int *JA,
@@ -1241,13 +1245,13 @@ void PCPTSV(char *UPLO, int *N, int *NRHS, scomplex *D, scomplex *E, int *JA,
 void PCPTSV_(char *UPLO, int *N, int *NRHS, scomplex *D, scomplex *E, int *JA,
              int *DESCA, scomplex *B, int *IB, int *DESCB, scomplex *WORK,
              int *LWORK, int *INFO);
-void mangle_pcpttrf(int *N, scomplex *D, scomplex *E, int *JA, int *DESCA,
+void pcpttrf(int *N, scomplex *D, scomplex *E, int *JA, int *DESCA,
              scomplex *AF, int *LAF, scomplex *WORK, int *LWORK, int *INFO);
 void PCPTTRF(int *N, scomplex *D, scomplex *E, int *JA, int *DESCA,
              scomplex *AF, int *LAF, scomplex *WORK, int *LWORK, int *INFO);
 void PCPTTRF_(int *N, scomplex *D, scomplex *E, int *JA, int *DESCA,
               scomplex *AF, int *LAF, scomplex *WORK, int *LWORK, int *INFO);
-void mangle_pcpttrs(char *UPLO, int *N, int *NRHS, scomplex *D, scomplex *E, int *JA,
+void pcpttrs(char *UPLO, int *N, int *NRHS, scomplex *D, scomplex *E, int *JA,
              int *DESCA, scomplex *B, int *IB, int *DESCB, scomplex *AF,
              int *LAF, scomplex *WORK, int *LWORK, int *INFO);
 void PCPTTRS(char *UPLO, int *N, int *NRHS, scomplex *D, scomplex *E, int *JA,
@@ -1256,7 +1260,7 @@ void PCPTTRS(char *UPLO, int *N, int *NRHS, scomplex *D, scomplex *E, int *JA,
 void PCPTTRS_(char *UPLO, int *N, int *NRHS, scomplex *D, scomplex *E, int *JA,
               int *DESCA, scomplex *B, int *IB, int *DESCB, scomplex *AF,
               int *LAF, scomplex *WORK, int *LWORK, int *INFO);
-void mangle_pcpttrsv(char *UPLO, char *TRANS, int *N, int *NRHS, scomplex *D,
+void pcpttrsv(char *UPLO, char *TRANS, int *N, int *NRHS, scomplex *D,
               scomplex *E, int *JA, int *DESCA, scomplex *B, int *IB,
               int *DESCB, scomplex *AF, int *LAF, scomplex *WORK, int *LWORK,
               int *INFO);
@@ -1268,13 +1272,13 @@ void PCPTTRSV_(char *UPLO, char *TRANS, int *N, int *NRHS, scomplex *D,
                scomplex *E, int *JA, int *DESCA, scomplex *B, int *IB,
                int *DESCB, scomplex *AF, int *LAF, scomplex *WORK, int *LWORK,
                int *INFO);
-void mangle_pcsrscl(int *N, float *SA, scomplex *SX, int *IX, int *JX, int *DESCX,
+void pcsrscl(int *N, float *SA, scomplex *SX, int *IX, int *JX, int *DESCX,
              int *INCX);
 void PCSRSCL(int *N, float *SA, scomplex *SX, int *IX, int *JX, int *DESCX,
              int *INCX);
 void PCSRSCL_(int *N, float *SA, scomplex *SX, int *IX, int *JX, int *DESCX,
               int *INCX);
-void mangle_pcstein(int *N, float *D, float *E, int *M, float *W, int *IBLOCK,
+void pcstein(int *N, float *D, float *E, int *M, float *W, int *IBLOCK,
              int *ISPLIT, float *ORFAC, scomplex *Z, int *IZ, int *JZ,
              int *DESCZ, float *WORK, int *LWORK, int *IWORK, int *LIWORK,
              int *IFAIL, int *ICLUSTR, float *GAP, int *INFO);
@@ -1286,7 +1290,7 @@ void PCSTEIN_(int *N, float *D, float *E, int *M, float *W, int *IBLOCK,
               int *ISPLIT, float *ORFAC, scomplex *Z, int *IZ, int *JZ,
               int *DESCZ, float *WORK, int *LWORK, int *IWORK, int *LIWORK,
               int *IFAIL, int *ICLUSTR, float *GAP, int *INFO);
-void mangle_pctrcon(char *NORM, char *UPLO, char *DIAG, int *N, scomplex *A, int *IA,
+void pctrcon(char *NORM, char *UPLO, char *DIAG, int *N, scomplex *A, int *IA,
              int *JA, int *DESCA, float *RCOND, scomplex *WORK, int *LWORK,
              float *RWORK, int *LRWORK, int *INFO);
 void PCTRCON(char *NORM, char *UPLO, char *DIAG, int *N, scomplex *A, int *IA,
@@ -1295,7 +1299,7 @@ void PCTRCON(char *NORM, char *UPLO, char *DIAG, int *N, scomplex *A, int *IA,
 void PCTRCON_(char *NORM, char *UPLO, char *DIAG, int *N, scomplex *A, int *IA,
               int *JA, int *DESCA, float *RCOND, scomplex *WORK, int *LWORK,
               float *RWORK, int *LRWORK, int *INFO);
-void mangle_pctrevc(char *SIDE, char *HOWMNY, int *SELECT, int *N, scomplex *T,
+void pctrevc(char *SIDE, char *HOWMNY, int *SELECT, int *N, scomplex *T,
              int *DESCT, scomplex *VL, int *DESCVL, scomplex *VR, int *DESCVR,
              int *MM, int *M, scomplex *WORK, float *RWORK, int *INFO);
 void PCTREVC(char *SIDE, char *HOWMNY, int *SELECT, int *N, scomplex *T,
@@ -1304,7 +1308,7 @@ void PCTREVC(char *SIDE, char *HOWMNY, int *SELECT, int *N, scomplex *T,
 void PCTREVC_(char *SIDE, char *HOWMNY, int *SELECT, int *N, scomplex *T,
               int *DESCT, scomplex *VL, int *DESCVL, scomplex *VR, int *DESCVR,
               int *MM, int *M, scomplex *WORK, float *RWORK, int *INFO);
-void mangle_pctrrfs(char *UPLO, char *TRANS, char *DIAG, int *N, int *NRHS,
+void pctrrfs(char *UPLO, char *TRANS, char *DIAG, int *N, int *NRHS,
              scomplex *A, int *IA, int *JA, int *DESCA, scomplex *B, int *IB,
              int *JB, int *DESCB, scomplex *X, int *IX, int *JX, int *DESCX,
              float *FERR, float *BERR, scomplex *WORK, int *LWORK, float *RWORK,
@@ -1319,19 +1323,19 @@ void PCTRRFS_(char *UPLO, char *TRANS, char *DIAG, int *N, int *NRHS,
               int *JB, int *DESCB, scomplex *X, int *IX, int *JX, int *DESCX,
               float *FERR, float *BERR, scomplex *WORK, int *LWORK,
               float *RWORK, int *LRWORK, int *INFO);
-void mangle_pctrti2(char *UPLO, char *DIAG, int *N, scomplex *A, int *IA, int *JA,
+void pctrti2(char *UPLO, char *DIAG, int *N, scomplex *A, int *IA, int *JA,
              int *DESCA, int *INFO);
 void PCTRTI2(char *UPLO, char *DIAG, int *N, scomplex *A, int *IA, int *JA,
              int *DESCA, int *INFO);
 void PCTRTI2_(char *UPLO, char *DIAG, int *N, scomplex *A, int *IA, int *JA,
               int *DESCA, int *INFO);
-void mangle_pctrtri(char *UPLO, char *DIAG, int *N, scomplex *A, int *IA, int *JA,
+void pctrtri(char *UPLO, char *DIAG, int *N, scomplex *A, int *IA, int *JA,
              int *DESCA, int *INFO);
 void PCTRTRI(char *UPLO, char *DIAG, int *N, scomplex *A, int *IA, int *JA,
              int *DESCA, int *INFO);
 void PCTRTRI_(char *UPLO, char *DIAG, int *N, scomplex *A, int *IA, int *JA,
               int *DESCA, int *INFO);
-void mangle_pctrtrs(char *UPLO, char *TRANS, char *DIAG, int *N, int *NRHS,
+void pctrtrs(char *UPLO, char *TRANS, char *DIAG, int *N, int *NRHS,
              scomplex *A, int *IA, int *JA, int *DESCA, scomplex *B, int *IB,
              int *JB, int *DESCB, int *INFO);
 void PCTRTRS(char *UPLO, char *TRANS, char *DIAG, int *N, int *NRHS,
@@ -1340,61 +1344,61 @@ void PCTRTRS(char *UPLO, char *TRANS, char *DIAG, int *N, int *NRHS,
 void PCTRTRS_(char *UPLO, char *TRANS, char *DIAG, int *N, int *NRHS,
               scomplex *A, int *IA, int *JA, int *DESCA, scomplex *B, int *IB,
               int *JB, int *DESCB, int *INFO);
-void mangle_pctzrzf(int *M, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
+void pctzrzf(int *M, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
              scomplex *TAU, scomplex *WORK, int *LWORK, int *INFO);
 void PCTZRZF(int *M, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
              scomplex *TAU, scomplex *WORK, int *LWORK, int *INFO);
 void PCTZRZF_(int *M, int *N, scomplex *A, int *IA, int *JA, int *DESCA,
               scomplex *TAU, scomplex *WORK, int *LWORK, int *INFO);
-void mangle_pcung2l(int *M, int *N, int *K, scomplex *A, int *IA, int *JA, int *DESCA,
+void pcung2l(int *M, int *N, int *K, scomplex *A, int *IA, int *JA, int *DESCA,
              scomplex *TAU, scomplex *WORK, int *LWORK, int *INFO);
 void PCUNG2L(int *M, int *N, int *K, scomplex *A, int *IA, int *JA, int *DESCA,
              scomplex *TAU, scomplex *WORK, int *LWORK, int *INFO);
 void PCUNG2L_(int *M, int *N, int *K, scomplex *A, int *IA, int *JA, int *DESCA,
               scomplex *TAU, scomplex *WORK, int *LWORK, int *INFO);
-void mangle_pcung2r(int *M, int *N, int *K, scomplex *A, int *IA, int *JA, int *DESCA,
+void pcung2r(int *M, int *N, int *K, scomplex *A, int *IA, int *JA, int *DESCA,
              scomplex *TAU, scomplex *WORK, int *LWORK, int *INFO);
 void PCUNG2R(int *M, int *N, int *K, scomplex *A, int *IA, int *JA, int *DESCA,
              scomplex *TAU, scomplex *WORK, int *LWORK, int *INFO);
 void PCUNG2R_(int *M, int *N, int *K, scomplex *A, int *IA, int *JA, int *DESCA,
               scomplex *TAU, scomplex *WORK, int *LWORK, int *INFO);
-void mangle_pcungl2(int *M, int *N, int *K, scomplex *A, int *IA, int *JA, int *DESCA,
+void pcungl2(int *M, int *N, int *K, scomplex *A, int *IA, int *JA, int *DESCA,
              scomplex *TAU, scomplex *WORK, int *LWORK, int *INFO);
 void PCUNGL2(int *M, int *N, int *K, scomplex *A, int *IA, int *JA, int *DESCA,
              scomplex *TAU, scomplex *WORK, int *LWORK, int *INFO);
 void PCUNGL2_(int *M, int *N, int *K, scomplex *A, int *IA, int *JA, int *DESCA,
               scomplex *TAU, scomplex *WORK, int *LWORK, int *INFO);
-void mangle_pcunglq(int *M, int *N, int *K, scomplex *A, int *IA, int *JA, int *DESCA,
+void pcunglq(int *M, int *N, int *K, scomplex *A, int *IA, int *JA, int *DESCA,
              scomplex *TAU, scomplex *WORK, int *LWORK, int *INFO);
 void PCUNGLQ(int *M, int *N, int *K, scomplex *A, int *IA, int *JA, int *DESCA,
              scomplex *TAU, scomplex *WORK, int *LWORK, int *INFO);
 void PCUNGLQ_(int *M, int *N, int *K, scomplex *A, int *IA, int *JA, int *DESCA,
               scomplex *TAU, scomplex *WORK, int *LWORK, int *INFO);
-void mangle_pcungql(int *M, int *N, int *K, scomplex *A, int *IA, int *JA, int *DESCA,
+void pcungql(int *M, int *N, int *K, scomplex *A, int *IA, int *JA, int *DESCA,
              scomplex *TAU, scomplex *WORK, int *LWORK, int *INFO);
 void PCUNGQL(int *M, int *N, int *K, scomplex *A, int *IA, int *JA, int *DESCA,
              scomplex *TAU, scomplex *WORK, int *LWORK, int *INFO);
 void PCUNGQL_(int *M, int *N, int *K, scomplex *A, int *IA, int *JA, int *DESCA,
               scomplex *TAU, scomplex *WORK, int *LWORK, int *INFO);
-void mangle_pcungqr(int *M, int *N, int *K, scomplex *A, int *IA, int *JA, int *DESCA,
+void pcungqr(int *M, int *N, int *K, scomplex *A, int *IA, int *JA, int *DESCA,
              scomplex *TAU, scomplex *WORK, int *LWORK, int *INFO);
 void PCUNGQR(int *M, int *N, int *K, scomplex *A, int *IA, int *JA, int *DESCA,
              scomplex *TAU, scomplex *WORK, int *LWORK, int *INFO);
 void PCUNGQR_(int *M, int *N, int *K, scomplex *A, int *IA, int *JA, int *DESCA,
               scomplex *TAU, scomplex *WORK, int *LWORK, int *INFO);
-void mangle_pcungr2(int *M, int *N, int *K, scomplex *A, int *IA, int *JA, int *DESCA,
+void pcungr2(int *M, int *N, int *K, scomplex *A, int *IA, int *JA, int *DESCA,
              scomplex *TAU, scomplex *WORK, int *LWORK, int *INFO);
 void PCUNGR2(int *M, int *N, int *K, scomplex *A, int *IA, int *JA, int *DESCA,
              scomplex *TAU, scomplex *WORK, int *LWORK, int *INFO);
 void PCUNGR2_(int *M, int *N, int *K, scomplex *A, int *IA, int *JA, int *DESCA,
               scomplex *TAU, scomplex *WORK, int *LWORK, int *INFO);
-void mangle_pcungrq(int *M, int *N, int *K, scomplex *A, int *IA, int *JA, int *DESCA,
+void pcungrq(int *M, int *N, int *K, scomplex *A, int *IA, int *JA, int *DESCA,
              scomplex *TAU, scomplex *WORK, int *LWORK, int *INFO);
 void PCUNGRQ(int *M, int *N, int *K, scomplex *A, int *IA, int *JA, int *DESCA,
              scomplex *TAU, scomplex *WORK, int *LWORK, int *INFO);
 void PCUNGRQ_(int *M, int *N, int *K, scomplex *A, int *IA, int *JA, int *DESCA,
               scomplex *TAU, scomplex *WORK, int *LWORK, int *INFO);
-void mangle_pcunm2l(char *SIDE, char *TRANS, int *M, int *N, int *K, scomplex *A,
+void pcunm2l(char *SIDE, char *TRANS, int *M, int *N, int *K, scomplex *A,
              int *IA, int *JA, int *DESCA, scomplex *TAU, scomplex *C, int *IC,
              int *JC, int *DESCC, scomplex *WORK, int *LWORK, int *INFO);
 void PCUNM2L(char *SIDE, char *TRANS, int *M, int *N, int *K, scomplex *A,
@@ -1403,7 +1407,7 @@ void PCUNM2L(char *SIDE, char *TRANS, int *M, int *N, int *K, scomplex *A,
 void PCUNM2L_(char *SIDE, char *TRANS, int *M, int *N, int *K, scomplex *A,
               int *IA, int *JA, int *DESCA, scomplex *TAU, scomplex *C, int *IC,
               int *JC, int *DESCC, scomplex *WORK, int *LWORK, int *INFO);
-void mangle_pcunm2r(char *SIDE, char *TRANS, int *M, int *N, int *K, scomplex *A,
+void pcunm2r(char *SIDE, char *TRANS, int *M, int *N, int *K, scomplex *A,
              int *IA, int *JA, int *DESCA, scomplex *TAU, scomplex *C, int *IC,
              int *JC, int *DESCC, scomplex *WORK, int *LWORK, int *INFO);
 void PCUNM2R(char *SIDE, char *TRANS, int *M, int *N, int *K, scomplex *A,
@@ -1412,7 +1416,7 @@ void PCUNM2R(char *SIDE, char *TRANS, int *M, int *N, int *K, scomplex *A,
 void PCUNM2R_(char *SIDE, char *TRANS, int *M, int *N, int *K, scomplex *A,
               int *IA, int *JA, int *DESCA, scomplex *TAU, scomplex *C, int *IC,
               int *JC, int *DESCC, scomplex *WORK, int *LWORK, int *INFO);
-void mangle_pcunmbr(char *VECT, char *SIDE, char *TRANS, int *M, int *N, int *K,
+void pcunmbr(char *VECT, char *SIDE, char *TRANS, int *M, int *N, int *K,
              scomplex *A, int *IA, int *JA, int *DESCA, scomplex *TAU,
              scomplex *C, int *IC, int *JC, int *DESCC, scomplex *WORK,
              int *LWORK, int *INFO);
@@ -1424,7 +1428,7 @@ void PCUNMBR_(char *VECT, char *SIDE, char *TRANS, int *M, int *N, int *K,
               scomplex *A, int *IA, int *JA, int *DESCA, scomplex *TAU,
               scomplex *C, int *IC, int *JC, int *DESCC, scomplex *WORK,
               int *LWORK, int *INFO);
-void mangle_pcunmhr(char *SIDE, char *TRANS, int *M, int *N, int *ILO, int *IHI,
+void pcunmhr(char *SIDE, char *TRANS, int *M, int *N, int *ILO, int *IHI,
              scomplex *A, int *IA, int *JA, int *DESCA, scomplex *TAU,
              scomplex *C, int *IC, int *JC, int *DESCC, scomplex *WORK,
              int *LWORK, int *INFO);
@@ -1436,7 +1440,7 @@ void PCUNMHR_(char *SIDE, char *TRANS, int *M, int *N, int *ILO, int *IHI,
               scomplex *A, int *IA, int *JA, int *DESCA, scomplex *TAU,
               scomplex *C, int *IC, int *JC, int *DESCC, scomplex *WORK,
               int *LWORK, int *INFO);
-void mangle_pcunml2(char *SIDE, char *TRANS, int *M, int *N, int *K, scomplex *A,
+void pcunml2(char *SIDE, char *TRANS, int *M, int *N, int *K, scomplex *A,
              int *IA, int *JA, int *DESCA, scomplex *TAU, scomplex *C, int *IC,
              int *JC, int *DESCC, scomplex *WORK, int *LWORK, int *INFO);
 void PCUNML2(char *SIDE, char *TRANS, int *M, int *N, int *K, scomplex *A,
@@ -1445,7 +1449,7 @@ void PCUNML2(char *SIDE, char *TRANS, int *M, int *N, int *K, scomplex *A,
 void PCUNML2_(char *SIDE, char *TRANS, int *M, int *N, int *K, scomplex *A,
               int *IA, int *JA, int *DESCA, scomplex *TAU, scomplex *C, int *IC,
               int *JC, int *DESCC, scomplex *WORK, int *LWORK, int *INFO);
-void mangle_pcunmlq(char *SIDE, char *TRANS, int *M, int *N, int *K, scomplex *A,
+void pcunmlq(char *SIDE, char *TRANS, int *M, int *N, int *K, scomplex *A,
              int *IA, int *JA, int *DESCA, scomplex *TAU, scomplex *C, int *IC,
              int *JC, int *DESCC, scomplex *WORK, int *LWORK, int *INFO);
 void PCUNMLQ(char *SIDE, char *TRANS, int *M, int *N, int *K, scomplex *A,
@@ -1454,7 +1458,7 @@ void PCUNMLQ(char *SIDE, char *TRANS, int *M, int *N, int *K, scomplex *A,
 void PCUNMLQ_(char *SIDE, char *TRANS, int *M, int *N, int *K, scomplex *A,
               int *IA, int *JA, int *DESCA, scomplex *TAU, scomplex *C, int *IC,
               int *JC, int *DESCC, scomplex *WORK, int *LWORK, int *INFO);
-void mangle_pcunmql(char *SIDE, char *TRANS, int *M, int *N, int *K, scomplex *A,
+void pcunmql(char *SIDE, char *TRANS, int *M, int *N, int *K, scomplex *A,
              int *IA, int *JA, int *DESCA, scomplex *TAU, scomplex *C, int *IC,
              int *JC, int *DESCC, scomplex *WORK, int *LWORK, int *INFO);
 void PCUNMQL(char *SIDE, char *TRANS, int *M, int *N, int *K, scomplex *A,
@@ -1463,7 +1467,7 @@ void PCUNMQL(char *SIDE, char *TRANS, int *M, int *N, int *K, scomplex *A,
 void PCUNMQL_(char *SIDE, char *TRANS, int *M, int *N, int *K, scomplex *A,
               int *IA, int *JA, int *DESCA, scomplex *TAU, scomplex *C, int *IC,
               int *JC, int *DESCC, scomplex *WORK, int *LWORK, int *INFO);
-void mangle_pcunmqr(char *SIDE, char *TRANS, int *M, int *N, int *K, scomplex *A,
+void pcunmqr(char *SIDE, char *TRANS, int *M, int *N, int *K, scomplex *A,
              int *IA, int *JA, int *DESCA, scomplex *TAU, scomplex *C, int *IC,
              int *JC, int *DESCC, scomplex *WORK, int *LWORK, int *INFO);
 void PCUNMQR(char *SIDE, char *TRANS, int *M, int *N, int *K, scomplex *A,
@@ -1472,7 +1476,7 @@ void PCUNMQR(char *SIDE, char *TRANS, int *M, int *N, int *K, scomplex *A,
 void PCUNMQR_(char *SIDE, char *TRANS, int *M, int *N, int *K, scomplex *A,
               int *IA, int *JA, int *DESCA, scomplex *TAU, scomplex *C, int *IC,
               int *JC, int *DESCC, scomplex *WORK, int *LWORK, int *INFO);
-void mangle_pcunmr2(char *SIDE, char *TRANS, int *M, int *N, int *K, scomplex *A,
+void pcunmr2(char *SIDE, char *TRANS, int *M, int *N, int *K, scomplex *A,
              int *IA, int *JA, int *DESCA, scomplex *TAU, scomplex *C, int *IC,
              int *JC, int *DESCC, scomplex *WORK, int *LWORK, int *INFO);
 void PCUNMR2(char *SIDE, char *TRANS, int *M, int *N, int *K, scomplex *A,
@@ -1481,7 +1485,7 @@ void PCUNMR2(char *SIDE, char *TRANS, int *M, int *N, int *K, scomplex *A,
 void PCUNMR2_(char *SIDE, char *TRANS, int *M, int *N, int *K, scomplex *A,
               int *IA, int *JA, int *DESCA, scomplex *TAU, scomplex *C, int *IC,
               int *JC, int *DESCC, scomplex *WORK, int *LWORK, int *INFO);
-void mangle_pcunmr3(char *SIDE, char *TRANS, int *M, int *N, int *K, int *L,
+void pcunmr3(char *SIDE, char *TRANS, int *M, int *N, int *K, int *L,
              scomplex *A, int *IA, int *JA, int *DESCA, scomplex *TAU,
              scomplex *C, int *IC, int *JC, int *DESCC, scomplex *WORK,
              int *LWORK, int *INFO);
@@ -1493,7 +1497,7 @@ void PCUNMR3_(char *SIDE, char *TRANS, int *M, int *N, int *K, int *L,
               scomplex *A, int *IA, int *JA, int *DESCA, scomplex *TAU,
               scomplex *C, int *IC, int *JC, int *DESCC, scomplex *WORK,
               int *LWORK, int *INFO);
-void mangle_pcunmrq(char *SIDE, char *TRANS, int *M, int *N, int *K, scomplex *A,
+void pcunmrq(char *SIDE, char *TRANS, int *M, int *N, int *K, scomplex *A,
              int *IA, int *JA, int *DESCA, scomplex *TAU, scomplex *C, int *IC,
              int *JC, int *DESCC, scomplex *WORK, int *LWORK, int *INFO);
 void PCUNMRQ(char *SIDE, char *TRANS, int *M, int *N, int *K, scomplex *A,
@@ -1502,7 +1506,7 @@ void PCUNMRQ(char *SIDE, char *TRANS, int *M, int *N, int *K, scomplex *A,
 void PCUNMRQ_(char *SIDE, char *TRANS, int *M, int *N, int *K, scomplex *A,
               int *IA, int *JA, int *DESCA, scomplex *TAU, scomplex *C, int *IC,
               int *JC, int *DESCC, scomplex *WORK, int *LWORK, int *INFO);
-void mangle_pcunmrz(char *SIDE, char *TRANS, int *M, int *N, int *K, int *L,
+void pcunmrz(char *SIDE, char *TRANS, int *M, int *N, int *K, int *L,
              scomplex *A, int *IA, int *JA, int *DESCA, scomplex *TAU,
              scomplex *C, int *IC, int *JC, int *DESCC, scomplex *WORK,
              int *LWORK, int *INFO);
@@ -1514,7 +1518,7 @@ void PCUNMRZ_(char *SIDE, char *TRANS, int *M, int *N, int *K, int *L,
               scomplex *A, int *IA, int *JA, int *DESCA, scomplex *TAU,
               scomplex *C, int *IC, int *JC, int *DESCC, scomplex *WORK,
               int *LWORK, int *INFO);
-void mangle_pcunmtr(char *SIDE, char *UPLO, char *TRANS, int *M, int *N, scomplex *A,
+void pcunmtr(char *SIDE, char *UPLO, char *TRANS, int *M, int *N, scomplex *A,
              int *IA, int *JA, int *DESCA, scomplex *TAU, scomplex *C, int *IC,
              int *JC, int *DESCC, scomplex *WORK, int *LWORK, int *INFO);
 void PCUNMTR(char *SIDE, char *UPLO, char *TRANS, int *M, int *N, scomplex *A,
@@ -1523,7 +1527,7 @@ void PCUNMTR(char *SIDE, char *UPLO, char *TRANS, int *M, int *N, scomplex *A,
 void PCUNMTR_(char *SIDE, char *UPLO, char *TRANS, int *M, int *N, scomplex *A,
               int *IA, int *JA, int *DESCA, scomplex *TAU, scomplex *C, int *IC,
               int *JC, int *DESCC, scomplex *WORK, int *LWORK, int *INFO);
-void mangle_pddbsv(int *N, int *BWL, int *BWU, int *NRHS, double *A, int *JA,
+void pddbsv(int *N, int *BWL, int *BWU, int *NRHS, double *A, int *JA,
             int *DESCA, double *B, int *IB, int *DESCB, double *WORK,
             int *LWORK, int *INFO);
 void PDDBSV(int *N, int *BWL, int *BWU, int *NRHS, double *A, int *JA,
@@ -1532,13 +1536,13 @@ void PDDBSV(int *N, int *BWL, int *BWU, int *NRHS, double *A, int *JA,
 void PDDBSV_(int *N, int *BWL, int *BWU, int *NRHS, double *A, int *JA,
              int *DESCA, double *B, int *IB, int *DESCB, double *WORK,
              int *LWORK, int *INFO);
-void mangle_pddbtrf(int *N, int *BWL, int *BWU, double *A, int *JA, int *DESCA,
+void pddbtrf(int *N, int *BWL, int *BWU, double *A, int *JA, int *DESCA,
              double *AF, int *LAF, double *WORK, int *LWORK, int *INFO);
 void PDDBTRF(int *N, int *BWL, int *BWU, double *A, int *JA, int *DESCA,
              double *AF, int *LAF, double *WORK, int *LWORK, int *INFO);
 void PDDBTRF_(int *N, int *BWL, int *BWU, double *A, int *JA, int *DESCA,
               double *AF, int *LAF, double *WORK, int *LWORK, int *INFO);
-void mangle_pddbtrs(char *TRANS, int *N, int *BWL, int *BWU, int *NRHS, double *A,
+void pddbtrs(char *TRANS, int *N, int *BWL, int *BWU, int *NRHS, double *A,
              int *JA, int *DESCA, double *B, int *IB, int *DESCB, double *AF,
              int *LAF, double *WORK, int *LWORK, int *INFO);
 void PDDBTRS(char *TRANS, int *N, int *BWL, int *BWU, int *NRHS, double *A,
@@ -1547,7 +1551,7 @@ void PDDBTRS(char *TRANS, int *N, int *BWL, int *BWU, int *NRHS, double *A,
 void PDDBTRS_(char *TRANS, int *N, int *BWL, int *BWU, int *NRHS, double *A,
               int *JA, int *DESCA, double *B, int *IB, int *DESCB, double *AF,
               int *LAF, double *WORK, int *LWORK, int *INFO);
-void mangle_pddbtrsv(char *UPLO, char *TRANS, int *N, int *BWL, int *BWU, int *NRHS,
+void pddbtrsv(char *UPLO, char *TRANS, int *N, int *BWL, int *BWU, int *NRHS,
               double *A, int *JA, int *DESCA, double *B, int *IB, int *DESCB,
               double *AF, int *LAF, double *WORK, int *LWORK, int *INFO);
 void PDDBTRSV(char *UPLO, char *TRANS, int *N, int *BWL, int *BWU, int *NRHS,
@@ -1556,7 +1560,7 @@ void PDDBTRSV(char *UPLO, char *TRANS, int *N, int *BWL, int *BWU, int *NRHS,
 void PDDBTRSV_(char *UPLO, char *TRANS, int *N, int *BWL, int *BWU, int *NRHS,
                double *A, int *JA, int *DESCA, double *B, int *IB, int *DESCB,
                double *AF, int *LAF, double *WORK, int *LWORK, int *INFO);
-void mangle_pddtsv(int *N, int *NRHS, double *DL, double *D, double *DU, int *JA,
+void pddtsv(int *N, int *NRHS, double *DL, double *D, double *DU, int *JA,
             int *DESCA, double *B, int *IB, int *DESCB, double *WORK,
             int *LWORK, int *INFO);
 void PDDTSV(int *N, int *NRHS, double *DL, double *D, double *DU, int *JA,
@@ -1565,13 +1569,13 @@ void PDDTSV(int *N, int *NRHS, double *DL, double *D, double *DU, int *JA,
 void PDDTSV_(int *N, int *NRHS, double *DL, double *D, double *DU, int *JA,
              int *DESCA, double *B, int *IB, int *DESCB, double *WORK,
              int *LWORK, int *INFO);
-void mangle_pddttrf(int *N, double *DL, double *D, double *DU, int *JA, int *DESCA,
+void pddttrf(int *N, double *DL, double *D, double *DU, int *JA, int *DESCA,
              double *AF, int *LAF, double *WORK, int *LWORK, int *INFO);
 void PDDTTRF(int *N, double *DL, double *D, double *DU, int *JA, int *DESCA,
              double *AF, int *LAF, double *WORK, int *LWORK, int *INFO);
 void PDDTTRF_(int *N, double *DL, double *D, double *DU, int *JA, int *DESCA,
               double *AF, int *LAF, double *WORK, int *LWORK, int *INFO);
-void mangle_pddttrs(char *TRANS, int *N, int *NRHS, double *DL, double *D, double *DU,
+void pddttrs(char *TRANS, int *N, int *NRHS, double *DL, double *D, double *DU,
              int *JA, int *DESCA, double *B, int *IB, int *DESCB, double *AF,
              int *LAF, double *WORK, int *LWORK, int *INFO);
 void PDDTTRS(char *TRANS, int *N, int *NRHS, double *DL, double *D, double *DU,
@@ -1580,7 +1584,7 @@ void PDDTTRS(char *TRANS, int *N, int *NRHS, double *DL, double *D, double *DU,
 void PDDTTRS_(char *TRANS, int *N, int *NRHS, double *DL, double *D, double *DU,
               int *JA, int *DESCA, double *B, int *IB, int *DESCB, double *AF,
               int *LAF, double *WORK, int *LWORK, int *INFO);
-void mangle_pddttrsv(char *UPLO, char *TRANS, int *N, int *NRHS, double *DL, double *D,
+void pddttrsv(char *UPLO, char *TRANS, int *N, int *NRHS, double *DL, double *D,
               double *DU, int *JA, int *DESCA, double *B, int *IB, int *DESCB,
               double *AF, int *LAF, double *WORK, int *LWORK, int *INFO);
 void PDDTTRSV(char *UPLO, char *TRANS, int *N, int *NRHS, double *DL, double *D,
@@ -1590,7 +1594,7 @@ void PDDTTRSV_(char *UPLO, char *TRANS, int *N, int *NRHS, double *DL,
                double *D, double *DU, int *JA, int *DESCA, double *B, int *IB,
                int *DESCB, double *AF, int *LAF, double *WORK, int *LWORK,
                int *INFO);
-void mangle_pdgbsv(int *N, int *BWL, int *BWU, int *NRHS, double *A, int *JA,
+void pdgbsv(int *N, int *BWL, int *BWU, int *NRHS, double *A, int *JA,
             int *DESCA, int *IPIV, double *B, int *IB, int *DESCB, double *WORK,
             int *LWORK, int *INFO);
 void PDGBSV(int *N, int *BWL, int *BWU, int *NRHS, double *A, int *JA,
@@ -1599,7 +1603,7 @@ void PDGBSV(int *N, int *BWL, int *BWU, int *NRHS, double *A, int *JA,
 void PDGBSV_(int *N, int *BWL, int *BWU, int *NRHS, double *A, int *JA,
              int *DESCA, int *IPIV, double *B, int *IB, int *DESCB,
              double *WORK, int *LWORK, int *INFO);
-void mangle_pdgbtrf(int *N, int *BWL, int *BWU, double *A, int *JA, int *DESCA,
+void pdgbtrf(int *N, int *BWL, int *BWU, double *A, int *JA, int *DESCA,
              int *IPIV, double *AF, int *LAF, double *WORK, int *LWORK,
              int *INFO);
 void PDGBTRF(int *N, int *BWL, int *BWU, double *A, int *JA, int *DESCA,
@@ -1608,7 +1612,7 @@ void PDGBTRF(int *N, int *BWL, int *BWU, double *A, int *JA, int *DESCA,
 void PDGBTRF_(int *N, int *BWL, int *BWU, double *A, int *JA, int *DESCA,
               int *IPIV, double *AF, int *LAF, double *WORK, int *LWORK,
               int *INFO);
-void mangle_pdgbtrs(char *TRANS, int *N, int *BWL, int *BWU, int *NRHS, double *A,
+void pdgbtrs(char *TRANS, int *N, int *BWL, int *BWU, int *NRHS, double *A,
              int *JA, int *DESCA, int *IPIV, double *B, int *IB, int *DESCB,
              double *AF, int *LAF, double *WORK, int *LWORK, int *INFO);
 void PDGBTRS(char *TRANS, int *N, int *BWL, int *BWU, int *NRHS, double *A,
@@ -1617,13 +1621,13 @@ void PDGBTRS(char *TRANS, int *N, int *BWL, int *BWU, int *NRHS, double *A,
 void PDGBTRS_(char *TRANS, int *N, int *BWL, int *BWU, int *NRHS, double *A,
               int *JA, int *DESCA, int *IPIV, double *B, int *IB, int *DESCB,
               double *AF, int *LAF, double *WORK, int *LWORK, int *INFO);
-void mangle_pdgebal(char *JOB, int *N, double *A, int *DESCA, int *ILO, int *IHI,
+void pdgebal(char *JOB, int *N, double *A, int *DESCA, int *ILO, int *IHI,
              double *SCALE, int *INFO);
 void PDGEBAL(char *JOB, int *N, double *A, int *DESCA, int *ILO, int *IHI,
              double *SCALE, int *INFO);
 void PDGEBAL_(char *JOB, int *N, double *A, int *DESCA, int *ILO, int *IHI,
               double *SCALE, int *INFO);
-void mangle_pdgebd2(int *M, int *N, double *A, int *IA, int *JA, int *DESCA, double *D,
+void pdgebd2(int *M, int *N, double *A, int *IA, int *JA, int *DESCA, double *D,
              double *E, double *TAUQ, double *TAUP, double *WORK, int *LWORK,
              int *INFO);
 void PDGEBD2(int *M, int *N, double *A, int *IA, int *JA, int *DESCA, double *D,
@@ -1632,7 +1636,7 @@ void PDGEBD2(int *M, int *N, double *A, int *IA, int *JA, int *DESCA, double *D,
 void PDGEBD2_(int *M, int *N, double *A, int *IA, int *JA, int *DESCA,
               double *D, double *E, double *TAUQ, double *TAUP, double *WORK,
               int *LWORK, int *INFO);
-void mangle_pdgebrd(int *M, int *N, double *A, int *IA, int *JA, int *DESCA, double *D,
+void pdgebrd(int *M, int *N, double *A, int *IA, int *JA, int *DESCA, double *D,
              double *E, double *TAUQ, double *TAUP, double *WORK, int *LWORK,
              int *INFO);
 void PDGEBRD(int *M, int *N, double *A, int *IA, int *JA, int *DESCA, double *D,
@@ -1641,7 +1645,7 @@ void PDGEBRD(int *M, int *N, double *A, int *IA, int *JA, int *DESCA, double *D,
 void PDGEBRD_(int *M, int *N, double *A, int *IA, int *JA, int *DESCA,
               double *D, double *E, double *TAUQ, double *TAUP, double *WORK,
               int *LWORK, int *INFO);
-void mangle_pdgecon(char *NORM, int *N, double *A, int *IA, int *JA, int *DESCA,
+void pdgecon(char *NORM, int *N, double *A, int *IA, int *JA, int *DESCA,
              double *ANORM, double *RCOND, double *WORK, int *LWORK, int *IWORK,
              int *LIWORK, int *INFO);
 void PDGECON(char *NORM, int *N, double *A, int *IA, int *JA, int *DESCA,
@@ -1650,7 +1654,7 @@ void PDGECON(char *NORM, int *N, double *A, int *IA, int *JA, int *DESCA,
 void PDGECON_(char *NORM, int *N, double *A, int *IA, int *JA, int *DESCA,
               double *ANORM, double *RCOND, double *WORK, int *LWORK,
               int *IWORK, int *LIWORK, int *INFO);
-void mangle_pdgeequ(int *M, int *N, double *A, int *IA, int *JA, int *DESCA, double *R,
+void pdgeequ(int *M, int *N, double *A, int *IA, int *JA, int *DESCA, double *R,
              double *C, double *ROWCND, double *COLCND, double *AMAX,
              int *INFO);
 void PDGEEQU(int *M, int *N, double *A, int *IA, int *JA, int *DESCA, double *R,
@@ -1659,31 +1663,31 @@ void PDGEEQU(int *M, int *N, double *A, int *IA, int *JA, int *DESCA, double *R,
 void PDGEEQU_(int *M, int *N, double *A, int *IA, int *JA, int *DESCA,
               double *R, double *C, double *ROWCND, double *COLCND,
               double *AMAX, int *INFO);
-void mangle_pdgehd2(int *N, int *ILO, int *IHI, double *A, int *IA, int *JA,
+void pdgehd2(int *N, int *ILO, int *IHI, double *A, int *IA, int *JA,
              int *DESCA, double *TAU, double *WORK, int *LWORK, int *INFO);
 void PDGEHD2(int *N, int *ILO, int *IHI, double *A, int *IA, int *JA,
              int *DESCA, double *TAU, double *WORK, int *LWORK, int *INFO);
 void PDGEHD2_(int *N, int *ILO, int *IHI, double *A, int *IA, int *JA,
               int *DESCA, double *TAU, double *WORK, int *LWORK, int *INFO);
-void mangle_pdgehrd(int *N, int *ILO, int *IHI, double *A, int *IA, int *JA,
+void pdgehrd(int *N, int *ILO, int *IHI, double *A, int *IA, int *JA,
              int *DESCA, double *TAU, double *WORK, int *LWORK, int *INFO);
 void PDGEHRD(int *N, int *ILO, int *IHI, double *A, int *IA, int *JA,
              int *DESCA, double *TAU, double *WORK, int *LWORK, int *INFO);
 void PDGEHRD_(int *N, int *ILO, int *IHI, double *A, int *IA, int *JA,
               int *DESCA, double *TAU, double *WORK, int *LWORK, int *INFO);
-void mangle_pdgelq2(int *M, int *N, double *A, int *IA, int *JA, int *DESCA,
+void pdgelq2(int *M, int *N, double *A, int *IA, int *JA, int *DESCA,
              double *TAU, double *WORK, int *LWORK, int *INFO);
 void PDGELQ2(int *M, int *N, double *A, int *IA, int *JA, int *DESCA,
              double *TAU, double *WORK, int *LWORK, int *INFO);
 void PDGELQ2_(int *M, int *N, double *A, int *IA, int *JA, int *DESCA,
               double *TAU, double *WORK, int *LWORK, int *INFO);
-void mangle_pdgelqf(int *M, int *N, double *A, int *IA, int *JA, int *DESCA,
+void pdgelqf(int *M, int *N, double *A, int *IA, int *JA, int *DESCA,
              double *TAU, double *WORK, int *LWORK, int *INFO);
 void PDGELQF(int *M, int *N, double *A, int *IA, int *JA, int *DESCA,
              double *TAU, double *WORK, int *LWORK, int *INFO);
 void PDGELQF_(int *M, int *N, double *A, int *IA, int *JA, int *DESCA,
               double *TAU, double *WORK, int *LWORK, int *INFO);
-void mangle_pdgels(char *TRANS, int *M, int *N, int *NRHS, double *A, int *IA, int *JA,
+void pdgels(char *TRANS, int *M, int *N, int *NRHS, double *A, int *IA, int *JA,
             int *DESCA, double *B, int *IB, int *JB, int *DESCB, double *WORK,
             int *LWORK, int *INFO);
 void PDGELS(char *TRANS, int *M, int *N, int *NRHS, double *A, int *IA, int *JA,
@@ -1692,37 +1696,37 @@ void PDGELS(char *TRANS, int *M, int *N, int *NRHS, double *A, int *IA, int *JA,
 void PDGELS_(char *TRANS, int *M, int *N, int *NRHS, double *A, int *IA,
              int *JA, int *DESCA, double *B, int *IB, int *JB, int *DESCB,
              double *WORK, int *LWORK, int *INFO);
-void mangle_pdgeql2(int *M, int *N, double *A, int *IA, int *JA, int *DESCA,
+void pdgeql2(int *M, int *N, double *A, int *IA, int *JA, int *DESCA,
              double *TAU, double *WORK, int *LWORK, int *INFO);
 void PDGEQL2(int *M, int *N, double *A, int *IA, int *JA, int *DESCA,
              double *TAU, double *WORK, int *LWORK, int *INFO);
 void PDGEQL2_(int *M, int *N, double *A, int *IA, int *JA, int *DESCA,
               double *TAU, double *WORK, int *LWORK, int *INFO);
-void mangle_pdgeqlf(int *M, int *N, double *A, int *IA, int *JA, int *DESCA,
+void pdgeqlf(int *M, int *N, double *A, int *IA, int *JA, int *DESCA,
              double *TAU, double *WORK, int *LWORK, int *INFO);
 void PDGEQLF(int *M, int *N, double *A, int *IA, int *JA, int *DESCA,
              double *TAU, double *WORK, int *LWORK, int *INFO);
 void PDGEQLF_(int *M, int *N, double *A, int *IA, int *JA, int *DESCA,
               double *TAU, double *WORK, int *LWORK, int *INFO);
-void mangle_pdgeqpf(int *M, int *N, double *A, int *IA, int *JA, int *DESCA, int *IPIV,
+void pdgeqpf(int *M, int *N, double *A, int *IA, int *JA, int *DESCA, int *IPIV,
              double *TAU, double *WORK, int *LWORK, int *INFO);
 void PDGEQPF(int *M, int *N, double *A, int *IA, int *JA, int *DESCA, int *IPIV,
              double *TAU, double *WORK, int *LWORK, int *INFO);
 void PDGEQPF_(int *M, int *N, double *A, int *IA, int *JA, int *DESCA,
               int *IPIV, double *TAU, double *WORK, int *LWORK, int *INFO);
-void mangle_pdgeqr2(int *M, int *N, double *A, int *IA, int *JA, int *DESCA,
+void pdgeqr2(int *M, int *N, double *A, int *IA, int *JA, int *DESCA,
              double *TAU, double *WORK, int *LWORK, int *INFO);
 void PDGEQR2(int *M, int *N, double *A, int *IA, int *JA, int *DESCA,
              double *TAU, double *WORK, int *LWORK, int *INFO);
 void PDGEQR2_(int *M, int *N, double *A, int *IA, int *JA, int *DESCA,
               double *TAU, double *WORK, int *LWORK, int *INFO);
-void mangle_pdgeqrf(int *M, int *N, double *A, int *IA, int *JA, int *DESCA,
+void pdgeqrf(int *M, int *N, double *A, int *IA, int *JA, int *DESCA,
              double *TAU, double *WORK, int *LWORK, int *INFO);
 void PDGEQRF(int *M, int *N, double *A, int *IA, int *JA, int *DESCA,
              double *TAU, double *WORK, int *LWORK, int *INFO);
 void PDGEQRF_(int *M, int *N, double *A, int *IA, int *JA, int *DESCA,
               double *TAU, double *WORK, int *LWORK, int *INFO);
-void mangle_pdgerfs(char *TRANS, int *N, int *NRHS, double *A, int *IA, int *JA,
+void pdgerfs(char *TRANS, int *N, int *NRHS, double *A, int *IA, int *JA,
              int *DESCA, double *AF, int *IAF, int *JAF, int *DESCAF, int *IPIV,
              double *B, int *IB, int *JB, int *DESCB, double *X, int *IX,
              int *JX, int *DESCX, double *FERR, double *BERR, double *WORK,
@@ -1737,25 +1741,25 @@ void PDGERFS_(char *TRANS, int *N, int *NRHS, double *A, int *IA, int *JA,
               int *IPIV, double *B, int *IB, int *JB, int *DESCB, double *X,
               int *IX, int *JX, int *DESCX, double *FERR, double *BERR,
               double *WORK, int *LWORK, int *IWORK, int *LIWORK, int *INFO);
-void mangle_pdgerq2(int *M, int *N, double *A, int *IA, int *JA, int *DESCA,
+void pdgerq2(int *M, int *N, double *A, int *IA, int *JA, int *DESCA,
              double *TAU, double *WORK, int *LWORK, int *INFO);
 void PDGERQ2(int *M, int *N, double *A, int *IA, int *JA, int *DESCA,
              double *TAU, double *WORK, int *LWORK, int *INFO);
 void PDGERQ2_(int *M, int *N, double *A, int *IA, int *JA, int *DESCA,
               double *TAU, double *WORK, int *LWORK, int *INFO);
-void mangle_pdgerqf(int *M, int *N, double *A, int *IA, int *JA, int *DESCA,
+void pdgerqf(int *M, int *N, double *A, int *IA, int *JA, int *DESCA,
              double *TAU, double *WORK, int *LWORK, int *INFO);
 void PDGERQF(int *M, int *N, double *A, int *IA, int *JA, int *DESCA,
              double *TAU, double *WORK, int *LWORK, int *INFO);
 void PDGERQF_(int *M, int *N, double *A, int *IA, int *JA, int *DESCA,
               double *TAU, double *WORK, int *LWORK, int *INFO);
-void mangle_pdgesv(int *N, int *NRHS, double *A, int *IA, int *JA, int *DESCA,
+void pdgesv(int *N, int *NRHS, double *A, int *IA, int *JA, int *DESCA,
             int *IPIV, double *B, int *IB, int *JB, int *DESCB, int *INFO);
 void PDGESV(int *N, int *NRHS, double *A, int *IA, int *JA, int *DESCA,
             int *IPIV, double *B, int *IB, int *JB, int *DESCB, int *INFO);
 void PDGESV_(int *N, int *NRHS, double *A, int *IA, int *JA, int *DESCA,
              int *IPIV, double *B, int *IB, int *JB, int *DESCB, int *INFO);
-void mangle_pdgesvd(char *JOBU, char *JOBVT, int *M, int *N, double *A, int *IA,
+void pdgesvd(char *JOBU, char *JOBVT, int *M, int *N, double *A, int *IA,
              int *JA, int *DESCA, double *S, double *U, int *IU, int *JU,
              int *DESCU, double *VT, int *IVT, int *JVT, int *DESCVT,
              double *WORK, int *LWORK, int *INFO);
@@ -1767,7 +1771,7 @@ void PDGESVD_(char *JOBU, char *JOBVT, int *M, int *N, double *A, int *IA,
               int *JA, int *DESCA, double *S, double *U, int *IU, int *JU,
               int *DESCU, double *VT, int *IVT, int *JVT, int *DESCVT,
               double *WORK, int *LWORK, int *INFO);
-void mangle_pdgesvx(char *FACT, char *TRANS, int *N, int *NRHS, double *A, int *IA,
+void pdgesvx(char *FACT, char *TRANS, int *N, int *NRHS, double *A, int *IA,
              int *JA, int *DESCA, double *AF, int *IAF, int *JAF, int *DESCAF,
              int *IPIV, char *EQUED, double *R, double *C, double *B, int *IB,
              int *JB, int *DESCB, double *X, int *IX, int *JX, int *DESCX,
@@ -1785,37 +1789,37 @@ void PDGESVX_(char *FACT, char *TRANS, int *N, int *NRHS, double *A, int *IA,
               int *JB, int *DESCB, double *X, int *IX, int *JX, int *DESCX,
               double *RCOND, double *FERR, double *BERR, double *WORK,
               int *LWORK, int *IWORK, int *LIWORK, int *INFO);
-void mangle_pdgetf2(int *M, int *N, double *A, int *IA, int *JA, int *DESCA, int *IPIV,
+void pdgetf2(int *M, int *N, double *A, int *IA, int *JA, int *DESCA, int *IPIV,
              int *INFO);
 void PDGETF2(int *M, int *N, double *A, int *IA, int *JA, int *DESCA, int *IPIV,
              int *INFO);
 void PDGETF2_(int *M, int *N, double *A, int *IA, int *JA, int *DESCA,
               int *IPIV, int *INFO);
-void mangle_pdgetf2k(int *M, int *N, double *A, int *IA, int *JA, int *DESCA,
+void pdgetf2k(int *M, int *N, double *A, int *IA, int *JA, int *DESCA,
               int *IPIV, int *PANEL, int *INFO);
 void PDGETF2K(int *M, int *N, double *A, int *IA, int *JA, int *DESCA,
               int *IPIV, int *PANEL, int *INFO);
 void PDGETF2K_(int *M, int *N, double *A, int *IA, int *JA, int *DESCA,
                int *IPIV, int *PANEL, int *INFO);
-void mangle_pdgetf2_comm(int *M, int *N, double *A, int *IA, int *JA, int *DESCA,
+void pdgetf2_comm(int *M, int *N, double *A, int *IA, int *JA, int *DESCA,
                   int *IPIV, int *INFO);
 void PDGETF2_COMM(int *M, int *N, double *A, int *IA, int *JA, int *DESCA,
                   int *IPIV, int *INFO);
 void PDGETF2_COMM_(int *M, int *N, double *A, int *IA, int *JA, int *DESCA,
                    int *IPIV, int *INFO);
-void mangle_pdgetrf(int *M, int *N, double *A, int *IA, int *JA, int *DESCA, int *IPIV,
+void pdgetrf(int *M, int *N, double *A, int *IA, int *JA, int *DESCA, int *IPIV,
              int *INFO);
 void PDGETRF(int *M, int *N, double *A, int *IA, int *JA, int *DESCA, int *IPIV,
              int *INFO);
 void PDGETRF_(int *M, int *N, double *A, int *IA, int *JA, int *DESCA,
               int *IPIV, int *INFO);
-void mangle_pdgetri(int *N, double *A, int *IA, int *JA, int *DESCA, int *IPIV,
+void pdgetri(int *N, double *A, int *IA, int *JA, int *DESCA, int *IPIV,
              double *WORK, int *LWORK, int *IWORK, int *LIWORK, int *INFO);
 void PDGETRI(int *N, double *A, int *IA, int *JA, int *DESCA, int *IPIV,
              double *WORK, int *LWORK, int *IWORK, int *LIWORK, int *INFO);
 void PDGETRI_(int *N, double *A, int *IA, int *JA, int *DESCA, int *IPIV,
               double *WORK, int *LWORK, int *IWORK, int *LIWORK, int *INFO);
-void mangle_pdgetrs(char *TRANS, int *N, int *NRHS, double *A, int *IA, int *JA,
+void pdgetrs(char *TRANS, int *N, int *NRHS, double *A, int *IA, int *JA,
              int *DESCA, int *IPIV, double *B, int *IB, int *JB, int *DESCB,
              int *INFO);
 void PDGETRS(char *TRANS, int *N, int *NRHS, double *A, int *IA, int *JA,
@@ -1824,7 +1828,7 @@ void PDGETRS(char *TRANS, int *N, int *NRHS, double *A, int *IA, int *JA,
 void PDGETRS_(char *TRANS, int *N, int *NRHS, double *A, int *IA, int *JA,
               int *DESCA, int *IPIV, double *B, int *IB, int *JB, int *DESCB,
               int *INFO);
-void mangle_pdggqrf(int *N, int *M, int *P, double *A, int *IA, int *JA, int *DESCA,
+void pdggqrf(int *N, int *M, int *P, double *A, int *IA, int *JA, int *DESCA,
              double *TAUA, double *B, int *IB, int *JB, int *DESCB,
              double *TAUB, double *WORK, int *LWORK, int *INFO);
 void PDGGQRF(int *N, int *M, int *P, double *A, int *IA, int *JA, int *DESCA,
@@ -1833,7 +1837,7 @@ void PDGGQRF(int *N, int *M, int *P, double *A, int *IA, int *JA, int *DESCA,
 void PDGGQRF_(int *N, int *M, int *P, double *A, int *IA, int *JA, int *DESCA,
               double *TAUA, double *B, int *IB, int *JB, int *DESCB,
               double *TAUB, double *WORK, int *LWORK, int *INFO);
-void mangle_pdggrqf(int *M, int *P, int *N, double *A, int *IA, int *JA, int *DESCA,
+void pdggrqf(int *M, int *P, int *N, double *A, int *IA, int *JA, int *DESCA,
              double *TAUA, double *B, int *IB, int *JB, int *DESCB,
              double *TAUB, double *WORK, int *LWORK, int *INFO);
 void PDGGRQF(int *M, int *P, int *N, double *A, int *IA, int *JA, int *DESCA,
@@ -1842,7 +1846,7 @@ void PDGGRQF(int *M, int *P, int *N, double *A, int *IA, int *JA, int *DESCA,
 void PDGGRQF_(int *M, int *P, int *N, double *A, int *IA, int *JA, int *DESCA,
               double *TAUA, double *B, int *IB, int *JB, int *DESCB,
               double *TAUB, double *WORK, int *LWORK, int *INFO);
-void mangle_pdhseqr(char *JOB, char *COMPZ, int *N, int *ILO, int *IHI, double *H,
+void pdhseqr(char *JOB, char *COMPZ, int *N, int *ILO, int *IHI, double *H,
              int *DESCH, double *WR, double *WI, double *Z, int *DESCZ,
              double *WORK, int *LWORK, int *IWORK, int *LIWORK, int *INFO);
 void PDHSEQR(char *JOB, char *COMPZ, int *N, int *ILO, int *IHI, double *H,
@@ -1851,10 +1855,10 @@ void PDHSEQR(char *JOB, char *COMPZ, int *N, int *ILO, int *IHI, double *H,
 void PDHSEQR_(char *JOB, char *COMPZ, int *N, int *ILO, int *IHI, double *H,
               int *DESCH, double *WR, double *WI, double *Z, int *DESCZ,
               double *WORK, int *LWORK, int *IWORK, int *LIWORK, int *INFO);
-void mangle_pdlabad(int *ICTXT, double *SMALL, double *LARGE);
+void pdlabad(int *ICTXT, double *SMALL, double *LARGE);
 void PDLABAD(int *ICTXT, double *SMALL, double *LARGE);
 void PDLABAD_(int *ICTXT, double *SMALL, double *LARGE);
-void mangle_pdlabrd(int *M, int *N, int *NB, double *A, int *IA, int *JA, int *DESCA,
+void pdlabrd(int *M, int *N, int *NB, double *A, int *IA, int *JA, int *DESCA,
              double *D, double *E, double *TAUQ, double *TAUP, double *X,
              int *IX, int *JX, int *DESCX, double *Y, int *IY, int *JY,
              int *DESCY, double *WORK);
@@ -1866,49 +1870,49 @@ void PDLABRD_(int *M, int *N, int *NB, double *A, int *IA, int *JA, int *DESCA,
               double *D, double *E, double *TAUQ, double *TAUP, double *X,
               int *IX, int *JX, int *DESCX, double *Y, int *IY, int *JY,
               int *DESCY, double *WORK);
-void mangle_pdlacon(int *N, double *V, int *IV, int *JV, int *DESCV, double *X,
+void pdlacon(int *N, double *V, int *IV, int *JV, int *DESCV, double *X,
              int *IX, int *JX, int *DESCX, int *ISGN, double *EST, int *KASE);
 void PDLACON(int *N, double *V, int *IV, int *JV, int *DESCV, double *X,
              int *IX, int *JX, int *DESCX, int *ISGN, double *EST, int *KASE);
 void PDLACON_(int *N, double *V, int *IV, int *JV, int *DESCV, double *X,
               int *IX, int *JX, int *DESCX, int *ISGN, double *EST, int *KASE);
-void mangle_pdlaconsb(double *A, int *DESCA, int *I, int *L, int *M, double *H44,
+void pdlaconsb(double *A, int *DESCA, int *I, int *L, int *M, double *H44,
                double *H33, double *H43H34, double *BUF, int *LWORK);
 void PDLACONSB(double *A, int *DESCA, int *I, int *L, int *M, double *H44,
                double *H33, double *H43H34, double *BUF, int *LWORK);
 void PDLACONSB_(double *A, int *DESCA, int *I, int *L, int *M, double *H44,
                 double *H33, double *H43H34, double *BUF, int *LWORK);
-void mangle_pdlacp2(char *UPLO, int *M, int *N, double *A, int *IA, int *JA,
+void pdlacp2(char *UPLO, int *M, int *N, double *A, int *IA, int *JA,
              int *DESCA, double *B, int *IB, int *JB, int *DESCB);
 void PDLACP2(char *UPLO, int *M, int *N, double *A, int *IA, int *JA,
              int *DESCA, double *B, int *IB, int *JB, int *DESCB);
 void PDLACP2_(char *UPLO, int *M, int *N, double *A, int *IA, int *JA,
               int *DESCA, double *B, int *IB, int *JB, int *DESCB);
-void mangle_pdlacp3(int *M, int *I, double *A, int *DESCA, double *B, int *LDB,
+void pdlacp3(int *M, int *I, double *A, int *DESCA, double *B, int *LDB,
              int *II, int *JJ, int *REV);
 void PDLACP3(int *M, int *I, double *A, int *DESCA, double *B, int *LDB,
              int *II, int *JJ, int *REV);
 void PDLACP3_(int *M, int *I, double *A, int *DESCA, double *B, int *LDB,
               int *II, int *JJ, int *REV);
-void mangle_pdlacpy(char *UPLO, int *M, int *N, double *A, int *IA, int *JA,
+void pdlacpy(char *UPLO, int *M, int *N, double *A, int *IA, int *JA,
              int *DESCA, double *B, int *IB, int *JB, int *DESCB);
 void PDLACPY(char *UPLO, int *M, int *N, double *A, int *IA, int *JA,
              int *DESCA, double *B, int *IB, int *JB, int *DESCB);
 void PDLACPY_(char *UPLO, int *M, int *N, double *A, int *IA, int *JA,
               int *DESCA, double *B, int *IB, int *JB, int *DESCB);
-void mangle_pdlaed0(int *N, double *D, double *E, double *Q, int *IQ, int *JQ,
+void pdlaed0(int *N, double *D, double *E, double *Q, int *IQ, int *JQ,
              int *DESCQ, double *WORK, int *IWORK, int *INFO);
 void PDLAED0(int *N, double *D, double *E, double *Q, int *IQ, int *JQ,
              int *DESCQ, double *WORK, int *IWORK, int *INFO);
 void PDLAED0_(int *N, double *D, double *E, double *Q, int *IQ, int *JQ,
               int *DESCQ, double *WORK, int *IWORK, int *INFO);
-void mangle_pdlaed1(int *N, int *N1, double *D, int *ID, double *Q, int *IQ, int *JQ,
+void pdlaed1(int *N, int *N1, double *D, int *ID, double *Q, int *IQ, int *JQ,
              int *DESCQ, double *RHO, double *WORK, int *IWORK, int *INFO);
 void PDLAED1(int *N, int *N1, double *D, int *ID, double *Q, int *IQ, int *JQ,
              int *DESCQ, double *RHO, double *WORK, int *IWORK, int *INFO);
 void PDLAED1_(int *N, int *N1, double *D, int *ID, double *Q, int *IQ, int *JQ,
               int *DESCQ, double *RHO, double *WORK, int *IWORK, int *INFO);
-void mangle_pdlaed2(int *ICTXT, int *K, int *N, int *N1, int *NB, double *D, int *DROW,
+void pdlaed2(int *ICTXT, int *K, int *N, int *N1, int *NB, double *D, int *DROW,
              int *DCOL, double *Q, int *LDQ, double *RHO, double *Z, double *W,
              double *DLAMDA, double *Q2, int *LDQ2, double *QBUF, int *CTOT,
              int *PSM, int *NPCOL, int *INDX, int *INDXC, int *INDXP,
@@ -1926,7 +1930,7 @@ void PDLAED2_(int *ICTXT, int *K, int *N, int *N1, int *NB, double *D,
               int *CTOT, int *PSM, int *NPCOL, int *INDX, int *INDXC,
               int *INDXP, int *INDCOL, int *COLTYP, int *NN, int *NN1, int *NN2,
               int *IB1, int *IB2);
-void mangle_pdlaed3(int *ICTXT, int *K, int *N, int *NB, double *D, int *DROW,
+void pdlaed3(int *ICTXT, int *K, int *N, int *NB, double *D, int *DROW,
              int *DCOL, double *RHO, double *DLAMDA, double *W, double *Z,
              double *U, int *LDU, double *BUF, int *INDX, int *INDCOL,
              int *INDROW, int *INDXR, int *INDXC, int *CTOT, int *NPCOL,
@@ -1941,19 +1945,19 @@ void PDLAED3_(int *ICTXT, int *K, int *N, int *NB, double *D, int *DROW,
               double *U, int *LDU, double *BUF, int *INDX, int *INDCOL,
               int *INDROW, int *INDXR, int *INDXC, int *CTOT, int *NPCOL,
               int *INFO);
-void mangle_pdlaedz(int *N, int *N1, int *ID, double *Q, int *IQ, int *JQ, int *LDQ,
+void pdlaedz(int *N, int *N1, int *ID, double *Q, int *IQ, int *JQ, int *LDQ,
              int *DESCQ, double *Z, double *WORK);
 void PDLAEDZ(int *N, int *N1, int *ID, double *Q, int *IQ, int *JQ, int *LDQ,
              int *DESCQ, double *Z, double *WORK);
 void PDLAEDZ_(int *N, int *N1, int *ID, double *Q, int *IQ, int *JQ, int *LDQ,
               int *DESCQ, double *Z, double *WORK);
-void mangle_pdlaevswp(int *N, double *ZIN, int *LDZI, double *Z, int *IZ, int *JZ,
+void pdlaevswp(int *N, double *ZIN, int *LDZI, double *Z, int *IZ, int *JZ,
                int *DESCZ, int *NVS, int *KEY, double *WORK, int *LWORK);
 void PDLAEVSWP(int *N, double *ZIN, int *LDZI, double *Z, int *IZ, int *JZ,
                int *DESCZ, int *NVS, int *KEY, double *WORK, int *LWORK);
 void PDLAEVSWP_(int *N, double *ZIN, int *LDZI, double *Z, int *IZ, int *JZ,
                 int *DESCZ, int *NVS, int *KEY, double *WORK, int *LWORK);
-void mangle_pdlahqr(int *WANTT, int *WANTZ, int *N, int *ILO, int *IHI, double *A,
+void pdlahqr(int *WANTT, int *WANTZ, int *N, int *ILO, int *IHI, double *A,
              int *DESCA, double *WR, double *WI, int *ILOZ, int *IHIZ,
              double *Z, int *DESCZ, double *WORK, int *LWORK, int *IWORK,
              int *ILWORK, int *INFO);
@@ -1965,7 +1969,7 @@ void PDLAHQR_(int *WANTT, int *WANTZ, int *N, int *ILO, int *IHI, double *A,
               int *DESCA, double *WR, double *WI, int *ILOZ, int *IHIZ,
               double *Z, int *DESCZ, double *WORK, int *LWORK, int *IWORK,
               int *ILWORK, int *INFO);
-void mangle_pdlahrd(int *N, int *K, int *NB, double *A, int *IA, int *JA, int *DESCA,
+void pdlahrd(int *N, int *K, int *NB, double *A, int *IA, int *JA, int *DESCA,
              double *TAU, double *T, double *Y, int *IY, int *JY, int *DESCY,
              double *WORK);
 void PDLAHRD(int *N, int *K, int *NB, double *A, int *IA, int *JA, int *DESCA,
@@ -1974,13 +1978,13 @@ void PDLAHRD(int *N, int *K, int *NB, double *A, int *IA, int *JA, int *DESCA,
 void PDLAHRD_(int *N, int *K, int *NB, double *A, int *IA, int *JA, int *DESCA,
               double *TAU, double *T, double *Y, int *IY, int *JY, int *DESCY,
               double *WORK);
-void mangle_pdlamr1d(int *N, dcomplex *A, int *IA, int *JA, int *DESCA, dcomplex *B,
+void pdlamr1d(int *N, dcomplex *A, int *IA, int *JA, int *DESCA, dcomplex *B,
               int *IB, int *JB, int *DESCB);
 void PDLAMR1D(int *N, dcomplex *A, int *IA, int *JA, int *DESCA, dcomplex *B,
               int *IB, int *JB, int *DESCB);
 void PDLAMR1D_(int *N, dcomplex *A, int *IA, int *JA, int *DESCA, dcomplex *B,
                int *IB, int *JB, int *DESCB);
-void mangle_pdlamve(char *UPLO, int *M, int *N, double *A, int *IA, int *JA,
+void pdlamve(char *UPLO, int *M, int *N, double *A, int *IA, int *JA,
              int *DESCA, double *B, int *IB, int *JB, int *DESCB,
              double *DWORK);
 void PDLAMVE(char *UPLO, int *M, int *N, double *A, int *IA, int *JA,
@@ -1989,7 +1993,7 @@ void PDLAMVE(char *UPLO, int *M, int *N, double *A, int *IA, int *JA,
 void PDLAMVE_(char *UPLO, int *M, int *N, double *A, int *IA, int *JA,
               int *DESCA, double *B, int *IB, int *JB, int *DESCB,
               double *DWORK);
-void mangle_pdlapiv(char *DIREC, char *ROWCOL, char *PIVROC, int *M, int *N, double *A,
+void pdlapiv(char *DIREC, char *ROWCOL, char *PIVROC, int *M, int *N, double *A,
              int *IA, int *JA, int *DESCA, int *IPIV, int *IP, int *JP,
              int *DESCIP, int *IWORK);
 void PDLAPIV(char *DIREC, char *ROWCOL, char *PIVROC, int *M, int *N, double *A,
@@ -1998,13 +2002,13 @@ void PDLAPIV(char *DIREC, char *ROWCOL, char *PIVROC, int *M, int *N, double *A,
 void PDLAPIV_(char *DIREC, char *ROWCOL, char *PIVROC, int *M, int *N,
               double *A, int *IA, int *JA, int *DESCA, int *IPIV, int *IP,
               int *JP, int *DESCIP, int *IWORK);
-void mangle_pdlapv2(char *DIREC, char *ROWCOL, int *M, int *N, double *A, int *IA,
+void pdlapv2(char *DIREC, char *ROWCOL, int *M, int *N, double *A, int *IA,
              int *JA, int *DESCA, int *IPIV, int *IP, int *JP, int *DESCIP);
 void PDLAPV2(char *DIREC, char *ROWCOL, int *M, int *N, double *A, int *IA,
              int *JA, int *DESCA, int *IPIV, int *IP, int *JP, int *DESCIP);
 void PDLAPV2_(char *DIREC, char *ROWCOL, int *M, int *N, double *A, int *IA,
               int *JA, int *DESCA, int *IPIV, int *IP, int *JP, int *DESCIP);
-void mangle_pdlaqge(int *M, int *N, double *A, int *IA, int *JA, int *DESCA, double *R,
+void pdlaqge(int *M, int *N, double *A, int *IA, int *JA, int *DESCA, double *R,
              double *C, double *ROWCND, double *COLCND, double *AMAX,
              char *EQUED);
 void PDLAQGE(int *M, int *N, double *A, int *IA, int *JA, int *DESCA, double *R,
@@ -2013,7 +2017,7 @@ void PDLAQGE(int *M, int *N, double *A, int *IA, int *JA, int *DESCA, double *R,
 void PDLAQGE_(int *M, int *N, double *A, int *IA, int *JA, int *DESCA,
               double *R, double *C, double *ROWCND, double *COLCND,
               double *AMAX, char *EQUED);
-void mangle_pdlaqr2(int *WANTT, int *WANTZ, int *N, int *KTOP, int *KBOT, int *NW,
+void pdlaqr2(int *WANTT, int *WANTZ, int *N, int *KTOP, int *KBOT, int *NW,
              double *A, int *DESCA, int *ILOZ, int *IHIZ, double *Z, int *DESCZ,
              int *NS, int *ND, double *SR, double *SI, double *T, int *LDT,
              double *V, int *LDV, double *WR, double *WI, double *WORK,
@@ -2028,7 +2032,7 @@ void PDLAQR2_(int *WANTT, int *WANTZ, int *N, int *KTOP, int *KBOT, int *NW,
               int *DESCZ, int *NS, int *ND, double *SR, double *SI, double *T,
               int *LDT, double *V, int *LDV, double *WR, double *WI,
               double *WORK, int *LWORK);
-void mangle_pdlaqr4(int *WANTT, int *WANTZ, int *N, int *ILO, int *IHI, double *A,
+void pdlaqr4(int *WANTT, int *WANTZ, int *N, int *ILO, int *IHI, double *A,
              int *DESCA, double *WR, double *WI, int *ILOZ, int *IHIZ,
              double *Z, int *DESCZ, double *T, int *LDT, double *V, int *LDV,
              double *WORK, int *LWORK, int *INFO);
@@ -2040,7 +2044,7 @@ void PDLAQR4_(int *WANTT, int *WANTZ, int *N, int *ILO, int *IHI, double *A,
               int *DESCA, double *WR, double *WI, int *ILOZ, int *IHIZ,
               double *Z, int *DESCZ, double *T, int *LDT, double *V, int *LDV,
               double *WORK, int *LWORK, int *INFO);
-void mangle_pdlaqr5(int *WANTT, int *WANTZ, int *KACC22, int *N, int *KTOP, int *KBOT,
+void pdlaqr5(int *WANTT, int *WANTZ, int *KACC22, int *N, int *KTOP, int *KBOT,
              int *NSHFTS, double *SR, double *SI, double *H, int *DESCH,
              int *ILOZ, int *IHIZ, double *Z, int *DESCZ, double *WORK,
              int *LWORK, int *IWORK, int *LIWORK);
@@ -2052,25 +2056,25 @@ void PDLAQR5_(int *WANTT, int *WANTZ, int *KACC22, int *N, int *KTOP, int *KBOT,
               int *NSHFTS, double *SR, double *SI, double *H, int *DESCH,
               int *ILOZ, int *IHIZ, double *Z, int *DESCZ, double *WORK,
               int *LWORK, int *IWORK, int *LIWORK);
-void mangle_pdlaqsy(char *UPLO, int *N, double *A, int *IA, int *JA, int *DESCA,
+void pdlaqsy(char *UPLO, int *N, double *A, int *IA, int *JA, int *DESCA,
              double *SR, double *SC, double *SCOND, double *AMAX, char *EQUED);
 void PDLAQSY(char *UPLO, int *N, double *A, int *IA, int *JA, int *DESCA,
              double *SR, double *SC, double *SCOND, double *AMAX, char *EQUED);
 void PDLAQSY_(char *UPLO, int *N, double *A, int *IA, int *JA, int *DESCA,
               double *SR, double *SC, double *SCOND, double *AMAX, char *EQUED);
-void mangle_pdlared1d(int *N, int *IA, int *JA, int *DESC, double *BYCOL,
+void pdlared1d(int *N, int *IA, int *JA, int *DESC, double *BYCOL,
                double *BYALL, double *WORK, int *LWORK);
 void PDLARED1D(int *N, int *IA, int *JA, int *DESC, double *BYCOL,
                double *BYALL, double *WORK, int *LWORK);
 void PDLARED1D_(int *N, int *IA, int *JA, int *DESC, double *BYCOL,
                 double *BYALL, double *WORK, int *LWORK);
-void mangle_pdlared2d(int *N, int *IA, int *JA, int *DESC, double *BYROW,
+void pdlared2d(int *N, int *IA, int *JA, int *DESC, double *BYROW,
                double *BYALL, double *WORK, int *LWORK);
 void PDLARED2D(int *N, int *IA, int *JA, int *DESC, double *BYROW,
                double *BYALL, double *WORK, int *LWORK);
 void PDLARED2D_(int *N, int *IA, int *JA, int *DESC, double *BYROW,
                 double *BYALL, double *WORK, int *LWORK);
-void mangle_pdlarf(char *SIDE, int *M, int *N, double *V, int *IV, int *JV, int *DESCV,
+void pdlarf(char *SIDE, int *M, int *N, double *V, int *IV, int *JV, int *DESCV,
             int *INCV, double *TAU, double *C, int *IC, int *JC, int *DESCC,
             double *WORK);
 void PDLARF(char *SIDE, int *M, int *N, double *V, int *IV, int *JV, int *DESCV,
@@ -2079,7 +2083,7 @@ void PDLARF(char *SIDE, int *M, int *N, double *V, int *IV, int *JV, int *DESCV,
 void PDLARF_(char *SIDE, int *M, int *N, double *V, int *IV, int *JV,
              int *DESCV, int *INCV, double *TAU, double *C, int *IC, int *JC,
              int *DESCC, double *WORK);
-void mangle_pdlarfb(char *SIDE, char *TRANS, char *DIRECT, char *STOREV, int *M,
+void pdlarfb(char *SIDE, char *TRANS, char *DIRECT, char *STOREV, int *M,
              int *N, int *K, double *V, int *IV, int *JV, int *DESCV, double *T,
              double *C, int *IC, int *JC, int *DESCC, double *WORK);
 void PDLARFB(char *SIDE, char *TRANS, char *DIRECT, char *STOREV, int *M,
@@ -2088,19 +2092,19 @@ void PDLARFB(char *SIDE, char *TRANS, char *DIRECT, char *STOREV, int *M,
 void PDLARFB_(char *SIDE, char *TRANS, char *DIRECT, char *STOREV, int *M,
               int *N, int *K, double *V, int *IV, int *JV, int *DESCV,
               double *T, double *C, int *IC, int *JC, int *DESCC, double *WORK);
-void mangle_pdlarfg(int *N, double *ALPHA, int *IAX, int *JAX, double *X, int *IX,
+void pdlarfg(int *N, double *ALPHA, int *IAX, int *JAX, double *X, int *IX,
              int *JX, int *DESCX, int *INCX, double *TAU);
 void PDLARFG(int *N, double *ALPHA, int *IAX, int *JAX, double *X, int *IX,
              int *JX, int *DESCX, int *INCX, double *TAU);
 void PDLARFG_(int *N, double *ALPHA, int *IAX, int *JAX, double *X, int *IX,
               int *JX, int *DESCX, int *INCX, double *TAU);
-void mangle_pdlarft(char *DIRECT, char *STOREV, int *N, int *K, double *V, int *IV,
+void pdlarft(char *DIRECT, char *STOREV, int *N, int *K, double *V, int *IV,
              int *JV, int *DESCV, double *TAU, double *T, double *WORK);
 void PDLARFT(char *DIRECT, char *STOREV, int *N, int *K, double *V, int *IV,
              int *JV, int *DESCV, double *TAU, double *T, double *WORK);
 void PDLARFT_(char *DIRECT, char *STOREV, int *N, int *K, double *V, int *IV,
               int *JV, int *DESCV, double *TAU, double *T, double *WORK);
-void mangle_pdlarz(char *SIDE, int *M, int *N, int *L, double *V, int *IV, int *JV,
+void pdlarz(char *SIDE, int *M, int *N, int *L, double *V, int *IV, int *JV,
             int *DESCV, int *INCV, double *TAU, double *C, int *IC, int *JC,
             int *DESCC, double *WORK);
 void PDLARZ(char *SIDE, int *M, int *N, int *L, double *V, int *IV, int *JV,
@@ -2109,7 +2113,7 @@ void PDLARZ(char *SIDE, int *M, int *N, int *L, double *V, int *IV, int *JV,
 void PDLARZ_(char *SIDE, int *M, int *N, int *L, double *V, int *IV, int *JV,
              int *DESCV, int *INCV, double *TAU, double *C, int *IC, int *JC,
              int *DESCC, double *WORK);
-void mangle_pdlarzb(char *SIDE, char *TRANS, char *DIRECT, char *STOREV, int *M,
+void pdlarzb(char *SIDE, char *TRANS, char *DIRECT, char *STOREV, int *M,
              int *N, int *K, int *L, double *V, int *IV, int *JV, int *DESCV,
              double *T, double *C, int *IC, int *JC, int *DESCC, double *WORK);
 void PDLARZB(char *SIDE, char *TRANS, char *DIRECT, char *STOREV, int *M,
@@ -2118,37 +2122,37 @@ void PDLARZB(char *SIDE, char *TRANS, char *DIRECT, char *STOREV, int *M,
 void PDLARZB_(char *SIDE, char *TRANS, char *DIRECT, char *STOREV, int *M,
               int *N, int *K, int *L, double *V, int *IV, int *JV, int *DESCV,
               double *T, double *C, int *IC, int *JC, int *DESCC, double *WORK);
-void mangle_pdlarzt(char *DIRECT, char *STOREV, int *N, int *K, double *V, int *IV,
+void pdlarzt(char *DIRECT, char *STOREV, int *N, int *K, double *V, int *IV,
              int *JV, int *DESCV, double *TAU, double *T, double *WORK);
 void PDLARZT(char *DIRECT, char *STOREV, int *N, int *K, double *V, int *IV,
              int *JV, int *DESCV, double *TAU, double *T, double *WORK);
 void PDLARZT_(char *DIRECT, char *STOREV, int *N, int *K, double *V, int *IV,
               int *JV, int *DESCV, double *TAU, double *T, double *WORK);
-void mangle_pdlascl(char *TYPE, double *CFROM, double *CTO, int *M, int *N, double *A,
+void pdlascl(char *TYPE, double *CFROM, double *CTO, int *M, int *N, double *A,
              int *IA, int *JA, int *DESCA, int *INFO);
 void PDLASCL(char *TYPE, double *CFROM, double *CTO, int *M, int *N, double *A,
              int *IA, int *JA, int *DESCA, int *INFO);
 void PDLASCL_(char *TYPE, double *CFROM, double *CTO, int *M, int *N, double *A,
               int *IA, int *JA, int *DESCA, int *INFO);
-void mangle_pdlase2(char *UPLO, int *M, int *N, double *ALPHA, double *BETA, double *A,
+void pdlase2(char *UPLO, int *M, int *N, double *ALPHA, double *BETA, double *A,
              int *IA, int *JA, int *DESCA);
 void PDLASE2(char *UPLO, int *M, int *N, double *ALPHA, double *BETA, double *A,
              int *IA, int *JA, int *DESCA);
 void PDLASE2_(char *UPLO, int *M, int *N, double *ALPHA, double *BETA,
               double *A, int *IA, int *JA, int *DESCA);
-void mangle_pdlaset(char *UPLO, int *M, int *N, double *ALPHA, double *BETA, double *A,
+void pdlaset(char *UPLO, int *M, int *N, double *ALPHA, double *BETA, double *A,
              int *IA, int *JA, int *DESCA);
 void PDLASET(char *UPLO, int *M, int *N, double *ALPHA, double *BETA, double *A,
              int *IA, int *JA, int *DESCA);
 void PDLASET_(char *UPLO, int *M, int *N, double *ALPHA, double *BETA,
               double *A, int *IA, int *JA, int *DESCA);
-void mangle_pdlasmsub(double *A, int *DESCA, int *I, int *L, int *K, double *SMLNUM,
+void pdlasmsub(double *A, int *DESCA, int *I, int *L, int *K, double *SMLNUM,
                double *BUF, int *LWORK);
 void PDLASMSUB(double *A, int *DESCA, int *I, int *L, int *K, double *SMLNUM,
                double *BUF, int *LWORK);
 void PDLASMSUB_(double *A, int *DESCA, int *I, int *L, int *K, double *SMLNUM,
                 double *BUF, int *LWORK);
-void mangle_pdlasrt(char *ID, int *N, double *D, double *Q, int *IQ, int *JQ,
+void pdlasrt(char *ID, int *N, double *D, double *Q, int *IQ, int *JQ,
              int *DESCQ, double *WORK, int *LWORK, int *IWORK, int *LIWORK,
              int *INFO);
 void PDLASRT(char *ID, int *N, double *D, double *Q, int *IQ, int *JQ,
@@ -2157,19 +2161,19 @@ void PDLASRT(char *ID, int *N, double *D, double *Q, int *IQ, int *JQ,
 void PDLASRT_(char *ID, int *N, double *D, double *Q, int *IQ, int *JQ,
               int *DESCQ, double *WORK, int *LWORK, int *IWORK, int *LIWORK,
               int *INFO);
-void mangle_pdlassq(int *N, double *X, int *IX, int *JX, int *DESCX, int *INCX,
+void pdlassq(int *N, double *X, int *IX, int *JX, int *DESCX, int *INCX,
              double *SCALE, double *SUMSQ);
 void PDLASSQ(int *N, double *X, int *IX, int *JX, int *DESCX, int *INCX,
              double *SCALE, double *SUMSQ);
 void PDLASSQ_(int *N, double *X, int *IX, int *JX, int *DESCX, int *INCX,
               double *SCALE, double *SUMSQ);
-void mangle_pdlaswp(char *DIREC, char *ROWCOL, int *N, double *A, int *IA, int *JA,
+void pdlaswp(char *DIREC, char *ROWCOL, int *N, double *A, int *IA, int *JA,
              int *DESCA, int *K1, int *K2, int *IPIV);
 void PDLASWP(char *DIREC, char *ROWCOL, int *N, double *A, int *IA, int *JA,
              int *DESCA, int *K1, int *K2, int *IPIV);
 void PDLASWP_(char *DIREC, char *ROWCOL, int *N, double *A, int *IA, int *JA,
               int *DESCA, int *K1, int *K2, int *IPIV);
-void mangle_pdlatrd(char *UPLO, int *N, int *NB, double *A, int *IA, int *JA,
+void pdlatrd(char *UPLO, int *N, int *NB, double *A, int *IA, int *JA,
              int *DESCA, double *D, double *E, double *TAU, double *W, int *IW,
              int *JW, int *DESCW, double *WORK);
 void PDLATRD(char *UPLO, int *N, int *NB, double *A, int *IA, int *JA,
@@ -2178,7 +2182,7 @@ void PDLATRD(char *UPLO, int *N, int *NB, double *A, int *IA, int *JA,
 void PDLATRD_(char *UPLO, int *N, int *NB, double *A, int *IA, int *JA,
               int *DESCA, double *D, double *E, double *TAU, double *W, int *IW,
               int *JW, int *DESCW, double *WORK);
-void mangle_pdlatrs(char *UPLO, char *TRANS, char *DIAG, char *NORMIN, int *N,
+void pdlatrs(char *UPLO, char *TRANS, char *DIAG, char *NORMIN, int *N,
              double *A, int *IA, int *JA, int *DESCA, double *X, int *IX,
              int *JX, int *DESCX, double *SCALE, double *CNORM, double *WORK);
 void PDLATRS(char *UPLO, char *TRANS, char *DIAG, char *NORMIN, int *N,
@@ -2187,73 +2191,73 @@ void PDLATRS(char *UPLO, char *TRANS, char *DIAG, char *NORMIN, int *N,
 void PDLATRS_(char *UPLO, char *TRANS, char *DIAG, char *NORMIN, int *N,
               double *A, int *IA, int *JA, int *DESCA, double *X, int *IX,
               int *JX, int *DESCX, double *SCALE, double *CNORM, double *WORK);
-void mangle_pdlatrz(int *M, int *N, int *L, double *A, int *IA, int *JA, int *DESCA,
+void pdlatrz(int *M, int *N, int *L, double *A, int *IA, int *JA, int *DESCA,
              double *TAU, double *WORK);
 void PDLATRZ(int *M, int *N, int *L, double *A, int *IA, int *JA, int *DESCA,
              double *TAU, double *WORK);
 void PDLATRZ_(int *M, int *N, int *L, double *A, int *IA, int *JA, int *DESCA,
               double *TAU, double *WORK);
-void mangle_pdlauu2(char *UPLO, int *N, double *A, int *IA, int *JA, int *DESCA);
+void pdlauu2(char *UPLO, int *N, double *A, int *IA, int *JA, int *DESCA);
 void PDLAUU2(char *UPLO, int *N, double *A, int *IA, int *JA, int *DESCA);
 void PDLAUU2_(char *UPLO, int *N, double *A, int *IA, int *JA, int *DESCA);
-void mangle_pdlauum(char *UPLO, int *N, double *A, int *IA, int *JA, int *DESCA);
+void pdlauum(char *UPLO, int *N, double *A, int *IA, int *JA, int *DESCA);
 void PDLAUUM(char *UPLO, int *N, double *A, int *IA, int *JA, int *DESCA);
 void PDLAUUM_(char *UPLO, int *N, double *A, int *IA, int *JA, int *DESCA);
-void mangle_pdlawil(int *II, int *JJ, int *M, double *A, int *DESCA, double *H44,
+void pdlawil(int *II, int *JJ, int *M, double *A, int *DESCA, double *H44,
              double *H33, double *H43H34, double *V);
 void PDLAWIL(int *II, int *JJ, int *M, double *A, int *DESCA, double *H44,
              double *H33, double *H43H34, double *V);
 void PDLAWIL_(int *II, int *JJ, int *M, double *A, int *DESCA, double *H44,
               double *H33, double *H43H34, double *V);
-void mangle_pdorg2l(int *M, int *N, int *K, double *A, int *IA, int *JA, int *DESCA,
+void pdorg2l(int *M, int *N, int *K, double *A, int *IA, int *JA, int *DESCA,
              double *TAU, double *WORK, int *LWORK, int *INFO);
 void PDORG2L(int *M, int *N, int *K, double *A, int *IA, int *JA, int *DESCA,
              double *TAU, double *WORK, int *LWORK, int *INFO);
 void PDORG2L_(int *M, int *N, int *K, double *A, int *IA, int *JA, int *DESCA,
               double *TAU, double *WORK, int *LWORK, int *INFO);
-void mangle_pdorg2r(int *M, int *N, int *K, double *A, int *IA, int *JA, int *DESCA,
+void pdorg2r(int *M, int *N, int *K, double *A, int *IA, int *JA, int *DESCA,
              double *TAU, double *WORK, int *LWORK, int *INFO);
 void PDORG2R(int *M, int *N, int *K, double *A, int *IA, int *JA, int *DESCA,
              double *TAU, double *WORK, int *LWORK, int *INFO);
 void PDORG2R_(int *M, int *N, int *K, double *A, int *IA, int *JA, int *DESCA,
               double *TAU, double *WORK, int *LWORK, int *INFO);
-void mangle_pdorgl2(int *M, int *N, int *K, double *A, int *IA, int *JA, int *DESCA,
+void pdorgl2(int *M, int *N, int *K, double *A, int *IA, int *JA, int *DESCA,
              double *TAU, double *WORK, int *LWORK, int *INFO);
 void PDORGL2(int *M, int *N, int *K, double *A, int *IA, int *JA, int *DESCA,
              double *TAU, double *WORK, int *LWORK, int *INFO);
 void PDORGL2_(int *M, int *N, int *K, double *A, int *IA, int *JA, int *DESCA,
               double *TAU, double *WORK, int *LWORK, int *INFO);
-void mangle_pdorglq(int *M, int *N, int *K, double *A, int *IA, int *JA, int *DESCA,
+void pdorglq(int *M, int *N, int *K, double *A, int *IA, int *JA, int *DESCA,
              double *TAU, double *WORK, int *LWORK, int *INFO);
 void PDORGLQ(int *M, int *N, int *K, double *A, int *IA, int *JA, int *DESCA,
              double *TAU, double *WORK, int *LWORK, int *INFO);
 void PDORGLQ_(int *M, int *N, int *K, double *A, int *IA, int *JA, int *DESCA,
               double *TAU, double *WORK, int *LWORK, int *INFO);
-void mangle_pdorgql(int *M, int *N, int *K, double *A, int *IA, int *JA, int *DESCA,
+void pdorgql(int *M, int *N, int *K, double *A, int *IA, int *JA, int *DESCA,
              double *TAU, double *WORK, int *LWORK, int *INFO);
 void PDORGQL(int *M, int *N, int *K, double *A, int *IA, int *JA, int *DESCA,
              double *TAU, double *WORK, int *LWORK, int *INFO);
 void PDORGQL_(int *M, int *N, int *K, double *A, int *IA, int *JA, int *DESCA,
               double *TAU, double *WORK, int *LWORK, int *INFO);
-void mangle_pdorgqr(int *M, int *N, int *K, double *A, int *IA, int *JA, int *DESCA,
+void pdorgqr(int *M, int *N, int *K, double *A, int *IA, int *JA, int *DESCA,
              double *TAU, double *WORK, int *LWORK, int *INFO);
 void PDORGQR(int *M, int *N, int *K, double *A, int *IA, int *JA, int *DESCA,
              double *TAU, double *WORK, int *LWORK, int *INFO);
 void PDORGQR_(int *M, int *N, int *K, double *A, int *IA, int *JA, int *DESCA,
               double *TAU, double *WORK, int *LWORK, int *INFO);
-void mangle_pdorgr2(int *M, int *N, int *K, double *A, int *IA, int *JA, int *DESCA,
+void pdorgr2(int *M, int *N, int *K, double *A, int *IA, int *JA, int *DESCA,
              double *TAU, double *WORK, int *LWORK, int *INFO);
 void PDORGR2(int *M, int *N, int *K, double *A, int *IA, int *JA, int *DESCA,
              double *TAU, double *WORK, int *LWORK, int *INFO);
 void PDORGR2_(int *M, int *N, int *K, double *A, int *IA, int *JA, int *DESCA,
               double *TAU, double *WORK, int *LWORK, int *INFO);
-void mangle_pdorgrq(int *M, int *N, int *K, double *A, int *IA, int *JA, int *DESCA,
+void pdorgrq(int *M, int *N, int *K, double *A, int *IA, int *JA, int *DESCA,
              double *TAU, double *WORK, int *LWORK, int *INFO);
 void PDORGRQ(int *M, int *N, int *K, double *A, int *IA, int *JA, int *DESCA,
              double *TAU, double *WORK, int *LWORK, int *INFO);
 void PDORGRQ_(int *M, int *N, int *K, double *A, int *IA, int *JA, int *DESCA,
               double *TAU, double *WORK, int *LWORK, int *INFO);
-void mangle_pdorm2l(char *SIDE, char *TRANS, int *M, int *N, int *K, double *A,
+void pdorm2l(char *SIDE, char *TRANS, int *M, int *N, int *K, double *A,
              int *IA, int *JA, int *DESCA, double *TAU, double *C, int *IC,
              int *JC, int *DESCC, double *WORK, int *LWORK, int *INFO);
 void PDORM2L(char *SIDE, char *TRANS, int *M, int *N, int *K, double *A,
@@ -2262,7 +2266,7 @@ void PDORM2L(char *SIDE, char *TRANS, int *M, int *N, int *K, double *A,
 void PDORM2L_(char *SIDE, char *TRANS, int *M, int *N, int *K, double *A,
               int *IA, int *JA, int *DESCA, double *TAU, double *C, int *IC,
               int *JC, int *DESCC, double *WORK, int *LWORK, int *INFO);
-void mangle_pdorm2r(char *SIDE, char *TRANS, int *M, int *N, int *K, double *A,
+void pdorm2r(char *SIDE, char *TRANS, int *M, int *N, int *K, double *A,
              int *IA, int *JA, int *DESCA, double *TAU, double *C, int *IC,
              int *JC, int *DESCC, double *WORK, int *LWORK, int *INFO);
 void PDORM2R(char *SIDE, char *TRANS, int *M, int *N, int *K, double *A,
@@ -2271,7 +2275,7 @@ void PDORM2R(char *SIDE, char *TRANS, int *M, int *N, int *K, double *A,
 void PDORM2R_(char *SIDE, char *TRANS, int *M, int *N, int *K, double *A,
               int *IA, int *JA, int *DESCA, double *TAU, double *C, int *IC,
               int *JC, int *DESCC, double *WORK, int *LWORK, int *INFO);
-void mangle_pdormbr(char *VECT, char *SIDE, char *TRANS, int *M, int *N, int *K,
+void pdormbr(char *VECT, char *SIDE, char *TRANS, int *M, int *N, int *K,
              double *A, int *IA, int *JA, int *DESCA, double *TAU, double *C,
              int *IC, int *JC, int *DESCC, double *WORK, int *LWORK, int *INFO);
 void PDORMBR(char *VECT, char *SIDE, char *TRANS, int *M, int *N, int *K,
@@ -2281,7 +2285,7 @@ void PDORMBR_(char *VECT, char *SIDE, char *TRANS, int *M, int *N, int *K,
               double *A, int *IA, int *JA, int *DESCA, double *TAU, double *C,
               int *IC, int *JC, int *DESCC, double *WORK, int *LWORK,
               int *INFO);
-void mangle_pdormhr(char *SIDE, char *TRANS, int *M, int *N, int *ILO, int *IHI,
+void pdormhr(char *SIDE, char *TRANS, int *M, int *N, int *ILO, int *IHI,
              double *A, int *IA, int *JA, int *DESCA, double *TAU, double *C,
              int *IC, int *JC, int *DESCC, double *WORK, int *LWORK, int *INFO);
 void PDORMHR(char *SIDE, char *TRANS, int *M, int *N, int *ILO, int *IHI,
@@ -2291,7 +2295,7 @@ void PDORMHR_(char *SIDE, char *TRANS, int *M, int *N, int *ILO, int *IHI,
               double *A, int *IA, int *JA, int *DESCA, double *TAU, double *C,
               int *IC, int *JC, int *DESCC, double *WORK, int *LWORK,
               int *INFO);
-void mangle_pdorml2(char *SIDE, char *TRANS, int *M, int *N, int *K, double *A,
+void pdorml2(char *SIDE, char *TRANS, int *M, int *N, int *K, double *A,
              int *IA, int *JA, int *DESCA, double *TAU, double *C, int *IC,
              int *JC, int *DESCC, double *WORK, int *LWORK, int *INFO);
 void PDORML2(char *SIDE, char *TRANS, int *M, int *N, int *K, double *A,
@@ -2300,7 +2304,7 @@ void PDORML2(char *SIDE, char *TRANS, int *M, int *N, int *K, double *A,
 void PDORML2_(char *SIDE, char *TRANS, int *M, int *N, int *K, double *A,
               int *IA, int *JA, int *DESCA, double *TAU, double *C, int *IC,
               int *JC, int *DESCC, double *WORK, int *LWORK, int *INFO);
-void mangle_pdormlq(char *SIDE, char *TRANS, int *M, int *N, int *K, double *A,
+void pdormlq(char *SIDE, char *TRANS, int *M, int *N, int *K, double *A,
              int *IA, int *JA, int *DESCA, double *TAU, double *C, int *IC,
              int *JC, int *DESCC, double *WORK, int *LWORK, int *INFO);
 void PDORMLQ(char *SIDE, char *TRANS, int *M, int *N, int *K, double *A,
@@ -2309,7 +2313,7 @@ void PDORMLQ(char *SIDE, char *TRANS, int *M, int *N, int *K, double *A,
 void PDORMLQ_(char *SIDE, char *TRANS, int *M, int *N, int *K, double *A,
               int *IA, int *JA, int *DESCA, double *TAU, double *C, int *IC,
               int *JC, int *DESCC, double *WORK, int *LWORK, int *INFO);
-void mangle_pdormql(char *SIDE, char *TRANS, int *M, int *N, int *K, double *A,
+void pdormql(char *SIDE, char *TRANS, int *M, int *N, int *K, double *A,
              int *IA, int *JA, int *DESCA, double *TAU, double *C, int *IC,
              int *JC, int *DESCC, double *WORK, int *LWORK, int *INFO);
 void PDORMQL(char *SIDE, char *TRANS, int *M, int *N, int *K, double *A,
@@ -2318,7 +2322,7 @@ void PDORMQL(char *SIDE, char *TRANS, int *M, int *N, int *K, double *A,
 void PDORMQL_(char *SIDE, char *TRANS, int *M, int *N, int *K, double *A,
               int *IA, int *JA, int *DESCA, double *TAU, double *C, int *IC,
               int *JC, int *DESCC, double *WORK, int *LWORK, int *INFO);
-void mangle_pdormqr(char *SIDE, char *TRANS, int *M, int *N, int *K, double *A,
+void pdormqr(char *SIDE, char *TRANS, int *M, int *N, int *K, double *A,
              int *IA, int *JA, int *DESCA, double *TAU, double *C, int *IC,
              int *JC, int *DESCC, double *WORK, int *LWORK, int *INFO);
 void PDORMQR(char *SIDE, char *TRANS, int *M, int *N, int *K, double *A,
@@ -2327,7 +2331,7 @@ void PDORMQR(char *SIDE, char *TRANS, int *M, int *N, int *K, double *A,
 void PDORMQR_(char *SIDE, char *TRANS, int *M, int *N, int *K, double *A,
               int *IA, int *JA, int *DESCA, double *TAU, double *C, int *IC,
               int *JC, int *DESCC, double *WORK, int *LWORK, int *INFO);
-void mangle_pdormr2(char *SIDE, char *TRANS, int *M, int *N, int *K, double *A,
+void pdormr2(char *SIDE, char *TRANS, int *M, int *N, int *K, double *A,
              int *IA, int *JA, int *DESCA, double *TAU, double *C, int *IC,
              int *JC, int *DESCC, double *WORK, int *LWORK, int *INFO);
 void PDORMR2(char *SIDE, char *TRANS, int *M, int *N, int *K, double *A,
@@ -2336,7 +2340,7 @@ void PDORMR2(char *SIDE, char *TRANS, int *M, int *N, int *K, double *A,
 void PDORMR2_(char *SIDE, char *TRANS, int *M, int *N, int *K, double *A,
               int *IA, int *JA, int *DESCA, double *TAU, double *C, int *IC,
               int *JC, int *DESCC, double *WORK, int *LWORK, int *INFO);
-void mangle_pdormr3(char *SIDE, char *TRANS, int *M, int *N, int *K, int *L, double *A,
+void pdormr3(char *SIDE, char *TRANS, int *M, int *N, int *K, int *L, double *A,
              int *IA, int *JA, int *DESCA, double *TAU, double *C, int *IC,
              int *JC, int *DESCC, double *WORK, int *LWORK, int *INFO);
 void PDORMR3(char *SIDE, char *TRANS, int *M, int *N, int *K, int *L, double *A,
@@ -2346,7 +2350,7 @@ void PDORMR3_(char *SIDE, char *TRANS, int *M, int *N, int *K, int *L,
               double *A, int *IA, int *JA, int *DESCA, double *TAU, double *C,
               int *IC, int *JC, int *DESCC, double *WORK, int *LWORK,
               int *INFO);
-void mangle_pdormrq(char *SIDE, char *TRANS, int *M, int *N, int *K, double *A,
+void pdormrq(char *SIDE, char *TRANS, int *M, int *N, int *K, double *A,
              int *IA, int *JA, int *DESCA, double *TAU, double *C, int *IC,
              int *JC, int *DESCC, double *WORK, int *LWORK, int *INFO);
 void PDORMRQ(char *SIDE, char *TRANS, int *M, int *N, int *K, double *A,
@@ -2355,7 +2359,7 @@ void PDORMRQ(char *SIDE, char *TRANS, int *M, int *N, int *K, double *A,
 void PDORMRQ_(char *SIDE, char *TRANS, int *M, int *N, int *K, double *A,
               int *IA, int *JA, int *DESCA, double *TAU, double *C, int *IC,
               int *JC, int *DESCC, double *WORK, int *LWORK, int *INFO);
-void mangle_pdormrz(char *SIDE, char *TRANS, int *M, int *N, int *K, int *L, double *A,
+void pdormrz(char *SIDE, char *TRANS, int *M, int *N, int *K, int *L, double *A,
              int *IA, int *JA, int *DESCA, double *TAU, double *C, int *IC,
              int *JC, int *DESCC, double *WORK, int *LWORK, int *INFO);
 void PDORMRZ(char *SIDE, char *TRANS, int *M, int *N, int *K, int *L, double *A,
@@ -2365,7 +2369,7 @@ void PDORMRZ_(char *SIDE, char *TRANS, int *M, int *N, int *K, int *L,
               double *A, int *IA, int *JA, int *DESCA, double *TAU, double *C,
               int *IC, int *JC, int *DESCC, double *WORK, int *LWORK,
               int *INFO);
-void mangle_pdormtr(char *SIDE, char *UPLO, char *TRANS, int *M, int *N, double *A,
+void pdormtr(char *SIDE, char *UPLO, char *TRANS, int *M, int *N, double *A,
              int *IA, int *JA, int *DESCA, double *TAU, double *C, int *IC,
              int *JC, int *DESCC, double *WORK, int *LWORK, int *INFO);
 void PDORMTR(char *SIDE, char *UPLO, char *TRANS, int *M, int *N, double *A,
@@ -2374,7 +2378,7 @@ void PDORMTR(char *SIDE, char *UPLO, char *TRANS, int *M, int *N, double *A,
 void PDORMTR_(char *SIDE, char *UPLO, char *TRANS, int *M, int *N, double *A,
               int *IA, int *JA, int *DESCA, double *TAU, double *C, int *IC,
               int *JC, int *DESCC, double *WORK, int *LWORK, int *INFO);
-void mangle_pdpbsv(char *UPLO, int *N, int *BW, int *NRHS, double *A, int *JA,
+void pdpbsv(char *UPLO, int *N, int *BW, int *NRHS, double *A, int *JA,
             int *DESCA, double *B, int *IB, int *DESCB, double *WORK,
             int *LWORK, int *INFO);
 void PDPBSV(char *UPLO, int *N, int *BW, int *NRHS, double *A, int *JA,
@@ -2383,13 +2387,13 @@ void PDPBSV(char *UPLO, int *N, int *BW, int *NRHS, double *A, int *JA,
 void PDPBSV_(char *UPLO, int *N, int *BW, int *NRHS, double *A, int *JA,
              int *DESCA, double *B, int *IB, int *DESCB, double *WORK,
              int *LWORK, int *INFO);
-void mangle_pdpbtrf(char *UPLO, int *N, int *BW, double *A, int *JA, int *DESCA,
+void pdpbtrf(char *UPLO, int *N, int *BW, double *A, int *JA, int *DESCA,
              double *AF, int *LAF, double *WORK, int *LWORK, int *INFO);
 void PDPBTRF(char *UPLO, int *N, int *BW, double *A, int *JA, int *DESCA,
              double *AF, int *LAF, double *WORK, int *LWORK, int *INFO);
 void PDPBTRF_(char *UPLO, int *N, int *BW, double *A, int *JA, int *DESCA,
               double *AF, int *LAF, double *WORK, int *LWORK, int *INFO);
-void mangle_pdpbtrs(char *UPLO, int *N, int *BW, int *NRHS, double *A, int *JA,
+void pdpbtrs(char *UPLO, int *N, int *BW, int *NRHS, double *A, int *JA,
              int *DESCA, double *B, int *IB, int *DESCB, double *AF, int *LAF,
              double *WORK, int *LWORK, int *INFO);
 void PDPBTRS(char *UPLO, int *N, int *BW, int *NRHS, double *A, int *JA,
@@ -2398,7 +2402,7 @@ void PDPBTRS(char *UPLO, int *N, int *BW, int *NRHS, double *A, int *JA,
 void PDPBTRS_(char *UPLO, int *N, int *BW, int *NRHS, double *A, int *JA,
               int *DESCA, double *B, int *IB, int *DESCB, double *AF, int *LAF,
               double *WORK, int *LWORK, int *INFO);
-void mangle_pdpbtrsv(char *UPLO, char *TRANS, int *N, int *BW, int *NRHS, double *A,
+void pdpbtrsv(char *UPLO, char *TRANS, int *N, int *BW, int *NRHS, double *A,
               int *JA, int *DESCA, double *B, int *IB, int *DESCB, double *AF,
               int *LAF, double *WORK, int *LWORK, int *INFO);
 void PDPBTRSV(char *UPLO, char *TRANS, int *N, int *BW, int *NRHS, double *A,
@@ -2407,7 +2411,7 @@ void PDPBTRSV(char *UPLO, char *TRANS, int *N, int *BW, int *NRHS, double *A,
 void PDPBTRSV_(char *UPLO, char *TRANS, int *N, int *BW, int *NRHS, double *A,
                int *JA, int *DESCA, double *B, int *IB, int *DESCB, double *AF,
                int *LAF, double *WORK, int *LWORK, int *INFO);
-void mangle_pdpocon(char *UPLO, int *N, double *A, int *IA, int *JA, int *DESCA,
+void pdpocon(char *UPLO, int *N, double *A, int *IA, int *JA, int *DESCA,
              double *ANORM, double *RCOND, double *WORK, int *LWORK, int *IWORK,
              int *LIWORK, int *INFO);
 void PDPOCON(char *UPLO, int *N, double *A, int *IA, int *JA, int *DESCA,
@@ -2416,13 +2420,13 @@ void PDPOCON(char *UPLO, int *N, double *A, int *IA, int *JA, int *DESCA,
 void PDPOCON_(char *UPLO, int *N, double *A, int *IA, int *JA, int *DESCA,
               double *ANORM, double *RCOND, double *WORK, int *LWORK,
               int *IWORK, int *LIWORK, int *INFO);
-void mangle_pdpoequ(int *N, double *A, int *IA, int *JA, int *DESCA, double *SR,
+void pdpoequ(int *N, double *A, int *IA, int *JA, int *DESCA, double *SR,
              double *SC, double *SCOND, double *AMAX, int *INFO);
 void PDPOEQU(int *N, double *A, int *IA, int *JA, int *DESCA, double *SR,
              double *SC, double *SCOND, double *AMAX, int *INFO);
 void PDPOEQU_(int *N, double *A, int *IA, int *JA, int *DESCA, double *SR,
               double *SC, double *SCOND, double *AMAX, int *INFO);
-void mangle_pdporfs(char *UPLO, int *N, int *NRHS, double *A, int *IA, int *JA,
+void pdporfs(char *UPLO, int *N, int *NRHS, double *A, int *IA, int *JA,
              int *DESCA, double *AF, int *IAF, int *JAF, int *DESCAF, double *B,
              int *IB, int *JB, int *DESCB, double *X, int *IX, int *JX,
              int *DESCX, double *FERR, double *BERR, double *WORK, int *LWORK,
@@ -2437,13 +2441,13 @@ void PDPORFS_(char *UPLO, int *N, int *NRHS, double *A, int *IA, int *JA,
               double *B, int *IB, int *JB, int *DESCB, double *X, int *IX,
               int *JX, int *DESCX, double *FERR, double *BERR, double *WORK,
               int *LWORK, int *IWORK, int *LIWORK, int *INFO);
-void mangle_pdposv(char *UPLO, int *N, int *NRHS, double *A, int *IA, int *JA,
+void pdposv(char *UPLO, int *N, int *NRHS, double *A, int *IA, int *JA,
             int *DESCA, double *B, int *IB, int *JB, int *DESCB, int *INFO);
 void PDPOSV(char *UPLO, int *N, int *NRHS, double *A, int *IA, int *JA,
             int *DESCA, double *B, int *IB, int *JB, int *DESCB, int *INFO);
 void PDPOSV_(char *UPLO, int *N, int *NRHS, double *A, int *IA, int *JA,
              int *DESCA, double *B, int *IB, int *JB, int *DESCB, int *INFO);
-void mangle_pdposvx(char *FACT, char *UPLO, int *N, int *NRHS, double *A, int *IA,
+void pdposvx(char *FACT, char *UPLO, int *N, int *NRHS, double *A, int *IA,
              int *JA, int *DESCA, double *AF, int *IAF, int *JAF, int *DESCAF,
              char *EQUED, double *SR, double *SC, double *B, int *IB, int *JB,
              int *DESCB, double *X, int *IX, int *JX, int *DESCX, double *RCOND,
@@ -2461,31 +2465,31 @@ void PDPOSVX_(char *FACT, char *UPLO, int *N, int *NRHS, double *A, int *IA,
               int *DESCB, double *X, int *IX, int *JX, int *DESCX,
               double *RCOND, double *FERR, double *BERR, double *WORK,
               int *LWORK, int *IWORK, int *LIWORK, int *INFO);
-void mangle_pdpotf2(char *UPLO, int *N, double *A, int *IA, int *JA, int *DESCA,
+void pdpotf2(char *UPLO, int *N, double *A, int *IA, int *JA, int *DESCA,
              int *INFO);
 void PDPOTF2(char *UPLO, int *N, double *A, int *IA, int *JA, int *DESCA,
              int *INFO);
 void PDPOTF2_(char *UPLO, int *N, double *A, int *IA, int *JA, int *DESCA,
               int *INFO);
-void mangle_pdpotrf(char *UPLO, int *N, double *A, int *IA, int *JA, int *DESCA,
+void pdpotrf(char *UPLO, int *N, double *A, int *IA, int *JA, int *DESCA,
              int *INFO);
 void PDPOTRF(char *UPLO, int *N, double *A, int *IA, int *JA, int *DESCA,
              int *INFO);
 void PDPOTRF_(char *UPLO, int *N, double *A, int *IA, int *JA, int *DESCA,
               int *INFO);
-void mangle_pdpotri(char *UPLO, int *N, double *A, int *IA, int *JA, int *DESCA,
+void pdpotri(char *UPLO, int *N, double *A, int *IA, int *JA, int *DESCA,
              int *INFO);
 void PDPOTRI(char *UPLO, int *N, double *A, int *IA, int *JA, int *DESCA,
              int *INFO);
 void PDPOTRI_(char *UPLO, int *N, double *A, int *IA, int *JA, int *DESCA,
               int *INFO);
-void mangle_pdpotrs(char *UPLO, int *N, int *NRHS, double *A, int *IA, int *JA,
+void pdpotrs(char *UPLO, int *N, int *NRHS, double *A, int *IA, int *JA,
              int *DESCA, double *B, int *IB, int *JB, int *DESCB, int *INFO);
 void PDPOTRS(char *UPLO, int *N, int *NRHS, double *A, int *IA, int *JA,
              int *DESCA, double *B, int *IB, int *JB, int *DESCB, int *INFO);
 void PDPOTRS_(char *UPLO, int *N, int *NRHS, double *A, int *IA, int *JA,
               int *DESCA, double *B, int *IB, int *JB, int *DESCB, int *INFO);
-void mangle_pdptsv(int *N, int *NRHS, double *D, double *E, int *JA, int *DESCA,
+void pdptsv(int *N, int *NRHS, double *D, double *E, int *JA, int *DESCA,
             double *B, int *IB, int *DESCB, double *WORK, int *LWORK,
             int *INFO);
 void PDPTSV(int *N, int *NRHS, double *D, double *E, int *JA, int *DESCA,
@@ -2494,13 +2498,13 @@ void PDPTSV(int *N, int *NRHS, double *D, double *E, int *JA, int *DESCA,
 void PDPTSV_(int *N, int *NRHS, double *D, double *E, int *JA, int *DESCA,
              double *B, int *IB, int *DESCB, double *WORK, int *LWORK,
              int *INFO);
-void mangle_pdpttrf(int *N, double *D, double *E, int *JA, int *DESCA, double *AF,
+void pdpttrf(int *N, double *D, double *E, int *JA, int *DESCA, double *AF,
              int *LAF, double *WORK, int *LWORK, int *INFO);
 void PDPTTRF(int *N, double *D, double *E, int *JA, int *DESCA, double *AF,
              int *LAF, double *WORK, int *LWORK, int *INFO);
 void PDPTTRF_(int *N, double *D, double *E, int *JA, int *DESCA, double *AF,
               int *LAF, double *WORK, int *LWORK, int *INFO);
-void mangle_pdpttrs(int *N, int *NRHS, double *D, double *E, int *JA, int *DESCA,
+void pdpttrs(int *N, int *NRHS, double *D, double *E, int *JA, int *DESCA,
              double *B, int *IB, int *DESCB, double *AF, int *LAF, double *WORK,
              int *LWORK, int *INFO);
 void PDPTTRS(int *N, int *NRHS, double *D, double *E, int *JA, int *DESCA,
@@ -2509,7 +2513,7 @@ void PDPTTRS(int *N, int *NRHS, double *D, double *E, int *JA, int *DESCA,
 void PDPTTRS_(int *N, int *NRHS, double *D, double *E, int *JA, int *DESCA,
               double *B, int *IB, int *DESCB, double *AF, int *LAF,
               double *WORK, int *LWORK, int *INFO);
-void mangle_pdpttrsv(char *UPLO, int *N, int *NRHS, double *D, double *E, int *JA,
+void pdpttrsv(char *UPLO, int *N, int *NRHS, double *D, double *E, int *JA,
               int *DESCA, double *B, int *IB, int *DESCB, double *AF, int *LAF,
               double *WORK, int *LWORK, int *INFO);
 void PDPTTRSV(char *UPLO, int *N, int *NRHS, double *D, double *E, int *JA,
@@ -2518,7 +2522,7 @@ void PDPTTRSV(char *UPLO, int *N, int *NRHS, double *D, double *E, int *JA,
 void PDPTTRSV_(char *UPLO, int *N, int *NRHS, double *D, double *E, int *JA,
                int *DESCA, double *B, int *IB, int *DESCB, double *AF, int *LAF,
                double *WORK, int *LWORK, int *INFO);
-void mangle_pdrot(int *N, double *X, int *IX, int *JX, int *DESCX, int *INCX,
+void pdrot(int *N, double *X, int *IX, int *JX, int *DESCX, int *INCX,
            double *Y, int *IY, int *JY, int *DESCY, int *INCY, double *CS,
            double *SN, double *WORK, int *LWORK, int *INFO);
 void PDROT(int *N, double *X, int *IX, int *JX, int *DESCX, int *INCX,
@@ -2527,13 +2531,13 @@ void PDROT(int *N, double *X, int *IX, int *JX, int *DESCX, int *INCX,
 void PDROT_(int *N, double *X, int *IX, int *JX, int *DESCX, int *INCX,
             double *Y, int *IY, int *JY, int *DESCY, int *INCY, double *CS,
             double *SN, double *WORK, int *LWORK, int *INFO);
-void mangle_pdrscl(int *N, double *SA, double *SX, int *IX, int *JX, int *DESCX,
+void pdrscl(int *N, double *SA, double *SX, int *IX, int *JX, int *DESCX,
             int *INCX);
 void PDRSCL(int *N, double *SA, double *SX, int *IX, int *JX, int *DESCX,
             int *INCX);
 void PDRSCL_(int *N, double *SA, double *SX, int *IX, int *JX, int *DESCX,
              int *INCX);
-void mangle_pdstebz(int *ICTXT, char *RANGE, char *ORDER, int *N, double *VL,
+void pdstebz(int *ICTXT, char *RANGE, char *ORDER, int *N, double *VL,
              double *VU, int *IL, int *IU, double *ABSTOL, double *D, double *E,
              int *M, int *NSPLIT, double *W, int *IBLOCK, int *ISPLIT,
              double *WORK, int *LWORK, int *IWORK, int *LIWORK, int *INFO);
@@ -2546,7 +2550,28 @@ void PDSTEBZ_(int *ICTXT, char *RANGE, char *ORDER, int *N, double *VL,
               double *E, int *M, int *NSPLIT, double *W, int *IBLOCK,
               int *ISPLIT, double *WORK, int *LWORK, int *IWORK, int *LIWORK,
               int *INFO);
-void mangle_pdstedc(char *COMPZ, int *N, double *D, double *E, double *Q, int *IQ,
+void pdlaebz(int *IJOB, int *N, int *MMAX, int *MINP, double *ABSTOL,
+             double *RELTOL, double *PIVMIN, double *D, int *NVAL,
+             double *INTVL, int *INTVLCT, int *MOUT, double *LSAVE, int *IEFLAG,
+             int *INFO);
+void PDLAEBZ(int *IJOB, int *N, int *MMAX, int *MINP, double *ABSTOL,
+             double *RELTOL, double *PIVMIN, double *D, int *NVAL,
+             double *INTVL, int *INTVLCT, int *MOUT, double *LSAVE, int *IEFLAG,
+             int *INFO);
+void PDLAEBZ_(int *IJOB, int *N, int *MMAX, int *MINP, double *ABSTOL,
+              double *RELTOL, double *PIVMIN, double *D, int *NVAL,
+              double *INTVL, int *INTVLCT, int *MOUT, double *LSAVE,
+              int *IEFLAG, int *INFO);
+void pdlaecv(int *IJOB, int *KF, int *KL, double *INTVL, int *INTVLCT,
+             int *NVAL, double *ABSTOL, double *RELTOL);
+void PDLAECV(int *IJOB, int *KF, int *KL, double *INTVL, int *INTVLCT,
+             int *NVAL, double *ABSTOL, double *RELTOL);
+void PDLAECV_(int *IJOB, int *KF, int *KL, double *INTVL, int *INTVLCT,
+              int *NVAL, double *ABSTOL, double *RELTOL);
+void pdlapdct(double *SIGMA, int *N, double *D, double *PIVMIN, int *COUNT);
+void PDLAPDCT(double *SIGMA, int *N, double *D, double *PIVMIN, int *COUNT);
+void PDLAPDCT_(double *SIGMA, int *N, double *D, double *PIVMIN, int *COUNT);
+void pdstedc(char *COMPZ, int *N, double *D, double *E, double *Q, int *IQ,
              int *JQ, int *DESCQ, double *WORK, int *LWORK, int *IWORK,
              int *LIWORK, int *INFO);
 void PDSTEDC(char *COMPZ, int *N, double *D, double *E, double *Q, int *IQ,
@@ -2555,7 +2580,7 @@ void PDSTEDC(char *COMPZ, int *N, double *D, double *E, double *Q, int *IQ,
 void PDSTEDC_(char *COMPZ, int *N, double *D, double *E, double *Q, int *IQ,
               int *JQ, int *DESCQ, double *WORK, int *LWORK, int *IWORK,
               int *LIWORK, int *INFO);
-void mangle_pdstein(int *N, double *D, double *E, int *M, double *W, int *IBLOCK,
+void pdstein(int *N, double *D, double *E, int *M, double *W, int *IBLOCK,
              int *ISPLIT, double *ORFAC, double *Z, int *IZ, int *JZ,
              int *DESCZ, double *WORK, int *LWORK, int *IWORK, int *LIWORK,
              int *IFAIL, int *ICLUSTR, double *GAP, int *INFO);
@@ -2567,7 +2592,7 @@ void PDSTEIN_(int *N, double *D, double *E, int *M, double *W, int *IBLOCK,
               int *ISPLIT, double *ORFAC, double *Z, int *IZ, int *JZ,
               int *DESCZ, double *WORK, int *LWORK, int *IWORK, int *LIWORK,
               int *IFAIL, int *ICLUSTR, double *GAP, int *INFO);
-void mangle_pdsyev(char *JOBZ, char *UPLO, int *N, double *A, int *IA, int *JA,
+void pdsyev(char *JOBZ, char *UPLO, int *N, double *A, int *IA, int *JA,
             int *DESCA, double *W, double *Z, int *IZ, int *JZ, int *DESCZ,
             double *WORK, int *LWORK, int *INFO);
 void PDSYEV(char *JOBZ, char *UPLO, int *N, double *A, int *IA, int *JA,
@@ -2576,7 +2601,7 @@ void PDSYEV(char *JOBZ, char *UPLO, int *N, double *A, int *IA, int *JA,
 void PDSYEV_(char *JOBZ, char *UPLO, int *N, double *A, int *IA, int *JA,
              int *DESCA, double *W, double *Z, int *IZ, int *JZ, int *DESCZ,
              double *WORK, int *LWORK, int *INFO);
-void mangle_pdsyevd(char *JOBZ, char *UPLO, int *N, double *A, int *IA, int *JA,
+void pdsyevd(char *JOBZ, char *UPLO, int *N, double *A, int *IA, int *JA,
              int *DESCA, double *W, double *Z, int *IZ, int *JZ, int *DESCZ,
              double *WORK, int *LWORK, int *IWORK, int *LIWORK, int *INFO);
 void PDSYEVD(char *JOBZ, char *UPLO, int *N, double *A, int *IA, int *JA,
@@ -2585,7 +2610,7 @@ void PDSYEVD(char *JOBZ, char *UPLO, int *N, double *A, int *IA, int *JA,
 void PDSYEVD_(char *JOBZ, char *UPLO, int *N, double *A, int *IA, int *JA,
               int *DESCA, double *W, double *Z, int *IZ, int *JZ, int *DESCZ,
               double *WORK, int *LWORK, int *IWORK, int *LIWORK, int *INFO);
-void mangle_pdsyevr(char *JOBZ, char *RANGE, char *UPLO, int *N, double *A, int *IA,
+void pdsyevr(char *JOBZ, char *RANGE, char *UPLO, int *N, double *A, int *IA,
              int *JA, int *DESCA, double *VL, double *VU, int *IL, int *IU,
              int *M, int *NZ, double *W, double *Z, int *IZ, int *JZ,
              int *DESCZ, double *WORK, int *LWORK, int *IWORK, int *LIWORK,
@@ -2600,7 +2625,7 @@ void PDSYEVR_(char *JOBZ, char *RANGE, char *UPLO, int *N, double *A, int *IA,
               int *M, int *NZ, double *W, double *Z, int *IZ, int *JZ,
               int *DESCZ, double *WORK, int *LWORK, int *IWORK, int *LIWORK,
               int *INFO);
-void mangle_pdsyevx(char *JOBZ, char *RANGE, char *UPLO, int *N, double *A, int *IA,
+void pdsyevx(char *JOBZ, char *RANGE, char *UPLO, int *N, double *A, int *IA,
              int *JA, int *DESCA, double *VL, double *VU, int *IL, int *IU,
              double *ABSTOL, int *M, int *NZ, double *W, double *ORFAC,
              double *Z, int *IZ, int *JZ, int *DESCZ, double *WORK, int *LWORK,
@@ -2618,13 +2643,13 @@ void PDSYEVX_(char *JOBZ, char *RANGE, char *UPLO, int *N, double *A, int *IA,
               double *Z, int *IZ, int *JZ, int *DESCZ, double *WORK, int *LWORK,
               int *IWORK, int *LIWORK, int *IFAIL, int *ICLUSTR, double *GAP,
               int *INFO);
-void mangle_pdsygs2(int *IBTYPE, char *UPLO, int *N, double *A, int *IA, int *JA,
+void pdsygs2(int *IBTYPE, char *UPLO, int *N, double *A, int *IA, int *JA,
              int *DESCA, double *B, int *IB, int *JB, int *DESCB, int *INFO);
 void PDSYGS2(int *IBTYPE, char *UPLO, int *N, double *A, int *IA, int *JA,
              int *DESCA, double *B, int *IB, int *JB, int *DESCB, int *INFO);
 void PDSYGS2_(int *IBTYPE, char *UPLO, int *N, double *A, int *IA, int *JA,
               int *DESCA, double *B, int *IB, int *JB, int *DESCB, int *INFO);
-void mangle_pdsygst(int *IBTYPE, char *UPLO, int *N, double *A, int *IA, int *JA,
+void pdsygst(int *IBTYPE, char *UPLO, int *N, double *A, int *IA, int *JA,
              int *DESCA, double *B, int *IB, int *JB, int *DESCB, double *SCALE,
              int *INFO);
 void PDSYGST(int *IBTYPE, char *UPLO, int *N, double *A, int *IA, int *JA,
@@ -2633,7 +2658,7 @@ void PDSYGST(int *IBTYPE, char *UPLO, int *N, double *A, int *IA, int *JA,
 void PDSYGST_(int *IBTYPE, char *UPLO, int *N, double *A, int *IA, int *JA,
               int *DESCA, double *B, int *IB, int *JB, int *DESCB,
               double *SCALE, int *INFO);
-void mangle_pdsygvx(int *IBTYPE, char *JOBZ, char *RANGE, char *UPLO, int *N,
+void pdsygvx(int *IBTYPE, char *JOBZ, char *RANGE, char *UPLO, int *N,
              double *A, int *IA, int *JA, int *DESCA, double *B, int *IB,
              int *JB, int *DESCB, double *VL, double *VU, int *IL, int *IU,
              double *ABSTOL, int *M, int *NZ, double *W, double *ORFAC,
@@ -2654,7 +2679,7 @@ void PDSYGVX_(int *IBTYPE, char *JOBZ, char *RANGE, char *UPLO, int *N,
               double *Z, int *IZ, int *JZ, int *DESCZ, double *WORK, int *LWORK,
               int *IWORK, int *LIWORK, int *IFAIL, int *ICLUSTR, double *GAP,
               int *INFO);
-void mangle_pdsyngst(int *IBTYPE, char *UPLO, int *N, double *A, int *IA, int *JA,
+void pdsyngst(int *IBTYPE, char *UPLO, int *N, double *A, int *IA, int *JA,
               int *DESCA, double *B, int *IB, int *JB, int *DESCB,
               double *SCALE, double *WORK, int *LWORK, int *INFO);
 void PDSYNGST(int *IBTYPE, char *UPLO, int *N, double *A, int *IA, int *JA,
@@ -2663,7 +2688,7 @@ void PDSYNGST(int *IBTYPE, char *UPLO, int *N, double *A, int *IA, int *JA,
 void PDSYNGST_(int *IBTYPE, char *UPLO, int *N, double *A, int *IA, int *JA,
                int *DESCA, double *B, int *IB, int *JB, int *DESCB,
                double *SCALE, double *WORK, int *LWORK, int *INFO);
-void mangle_pdsyntrd(char *UPLO, int *N, double *A, int *IA, int *JA, int *DESCA,
+void pdsyntrd(char *UPLO, int *N, double *A, int *IA, int *JA, int *DESCA,
               double *D, double *E, double *TAU, double *WORK, int *LWORK,
               int *INFO);
 void PDSYNTRD(char *UPLO, int *N, double *A, int *IA, int *JA, int *DESCA,
@@ -2672,7 +2697,7 @@ void PDSYNTRD(char *UPLO, int *N, double *A, int *IA, int *JA, int *DESCA,
 void PDSYNTRD_(char *UPLO, int *N, double *A, int *IA, int *JA, int *DESCA,
                double *D, double *E, double *TAU, double *WORK, int *LWORK,
                int *INFO);
-void mangle_pdsytd2(char *UPLO, int *N, double *A, int *IA, int *JA, int *DESCA,
+void pdsytd2(char *UPLO, int *N, double *A, int *IA, int *JA, int *DESCA,
              double *D, double *E, double *TAU, double *WORK, int *LWORK,
              int *INFO);
 void PDSYTD2(char *UPLO, int *N, double *A, int *IA, int *JA, int *DESCA,
@@ -2681,7 +2706,7 @@ void PDSYTD2(char *UPLO, int *N, double *A, int *IA, int *JA, int *DESCA,
 void PDSYTD2_(char *UPLO, int *N, double *A, int *IA, int *JA, int *DESCA,
               double *D, double *E, double *TAU, double *WORK, int *LWORK,
               int *INFO);
-void mangle_pdsytrd(char *UPLO, int *N, double *A, int *IA, int *JA, int *DESCA,
+void pdsytrd(char *UPLO, int *N, double *A, int *IA, int *JA, int *DESCA,
              double *D, double *E, double *TAU, double *WORK, int *LWORK,
              int *INFO);
 void PDSYTRD(char *UPLO, int *N, double *A, int *IA, int *JA, int *DESCA,
@@ -2690,7 +2715,7 @@ void PDSYTRD(char *UPLO, int *N, double *A, int *IA, int *JA, int *DESCA,
 void PDSYTRD_(char *UPLO, int *N, double *A, int *IA, int *JA, int *DESCA,
               double *D, double *E, double *TAU, double *WORK, int *LWORK,
               int *INFO);
-void mangle_pdsyttrd(char *UPLO, int *N, double *A, int *IA, int *JA, int *DESCA,
+void pdsyttrd(char *UPLO, int *N, double *A, int *IA, int *JA, int *DESCA,
               double *D, double *E, double *TAU, double *WORK, int *LWORK,
               int *INFO);
 void PDSYTTRD(char *UPLO, int *N, double *A, int *IA, int *JA, int *DESCA,
@@ -2699,7 +2724,7 @@ void PDSYTTRD(char *UPLO, int *N, double *A, int *IA, int *JA, int *DESCA,
 void PDSYTTRD_(char *UPLO, int *N, double *A, int *IA, int *JA, int *DESCA,
                double *D, double *E, double *TAU, double *WORK, int *LWORK,
                int *INFO);
-void mangle_pdtrcon(char *NORM, char *UPLO, char *DIAG, int *N, double *A, int *IA,
+void pdtrcon(char *NORM, char *UPLO, char *DIAG, int *N, double *A, int *IA,
              int *JA, int *DESCA, double *RCOND, double *WORK, int *LWORK,
              int *IWORK, int *LIWORK, int *INFO);
 void PDTRCON(char *NORM, char *UPLO, char *DIAG, int *N, double *A, int *IA,
@@ -2708,7 +2733,7 @@ void PDTRCON(char *NORM, char *UPLO, char *DIAG, int *N, double *A, int *IA,
 void PDTRCON_(char *NORM, char *UPLO, char *DIAG, int *N, double *A, int *IA,
               int *JA, int *DESCA, double *RCOND, double *WORK, int *LWORK,
               int *IWORK, int *LIWORK, int *INFO);
-void mangle_pdtrord(char *COMPQ, int *SELECT, int *PARA, int *N, double *T, int *IT,
+void pdtrord(char *COMPQ, int *SELECT, int *PARA, int *N, double *T, int *IT,
              int *JT, int *DESCT, double *Q, int *IQ, int *JQ, int *DESCQ,
              double *WR, double *WI, int *M, double *WORK, int *LWORK,
              int *IWORK, int *LIWORK, int *INFO);
@@ -2720,7 +2745,7 @@ void PDTRORD_(char *COMPQ, int *SELECT, int *PARA, int *N, double *T, int *IT,
               int *JT, int *DESCT, double *Q, int *IQ, int *JQ, int *DESCQ,
               double *WR, double *WI, int *M, double *WORK, int *LWORK,
               int *IWORK, int *LIWORK, int *INFO);
-void mangle_pdtrrfs(char *UPLO, char *TRANS, char *DIAG, int *N, int *NRHS, double *A,
+void pdtrrfs(char *UPLO, char *TRANS, char *DIAG, int *N, int *NRHS, double *A,
              int *IA, int *JA, int *DESCA, double *B, int *IB, int *JB,
              int *DESCB, double *X, int *IX, int *JX, int *DESCX, double *FERR,
              double *BERR, double *WORK, int *LWORK, int *IWORK, int *LIWORK,
@@ -2735,7 +2760,7 @@ void PDTRRFS_(char *UPLO, char *TRANS, char *DIAG, int *N, int *NRHS, double *A,
               int *DESCB, double *X, int *IX, int *JX, int *DESCX, double *FERR,
               double *BERR, double *WORK, int *LWORK, int *IWORK, int *LIWORK,
               int *INFO);
-void mangle_pdtrsen(char *JOB, char *COMPQ, int *SELECT, int *PARA, int *N, double *T,
+void pdtrsen(char *JOB, char *COMPQ, int *SELECT, int *PARA, int *N, double *T,
              int *IT, int *JT, int *DESCT, double *Q, int *IQ, int *JQ,
              int *DESCQ, double *WR, double *WI, int *M, double *S, double *SEP,
              double *WORK, int *LWORK, int *IWORK, int *LIWORK, int *INFO);
@@ -2748,19 +2773,19 @@ void PDTRSEN_(char *JOB, char *COMPQ, int *SELECT, int *PARA, int *N, double *T,
               int *DESCQ, double *WR, double *WI, int *M, double *S,
               double *SEP, double *WORK, int *LWORK, int *IWORK, int *LIWORK,
               int *INFO);
-void mangle_pdtrti2(char *UPLO, char *DIAG, int *N, double *A, int *IA, int *JA,
+void pdtrti2(char *UPLO, char *DIAG, int *N, double *A, int *IA, int *JA,
              int *DESCA, int *INFO);
 void PDTRTI2(char *UPLO, char *DIAG, int *N, double *A, int *IA, int *JA,
              int *DESCA, int *INFO);
 void PDTRTI2_(char *UPLO, char *DIAG, int *N, double *A, int *IA, int *JA,
               int *DESCA, int *INFO);
-void mangle_pdtrtri(char *UPLO, char *DIAG, int *N, double *A, int *IA, int *JA,
+void pdtrtri(char *UPLO, char *DIAG, int *N, double *A, int *IA, int *JA,
              int *DESCA, int *INFO);
 void PDTRTRI(char *UPLO, char *DIAG, int *N, double *A, int *IA, int *JA,
              int *DESCA, int *INFO);
 void PDTRTRI_(char *UPLO, char *DIAG, int *N, double *A, int *IA, int *JA,
               int *DESCA, int *INFO);
-void mangle_pdtrtrs(char *UPLO, char *TRANS, char *DIAG, int *N, int *NRHS, double *A,
+void pdtrtrs(char *UPLO, char *TRANS, char *DIAG, int *N, int *NRHS, double *A,
              int *IA, int *JA, int *DESCA, double *B, int *IB, int *JB,
              int *DESCB, int *INFO);
 void PDTRTRS(char *UPLO, char *TRANS, char *DIAG, int *N, int *NRHS, double *A,
@@ -2769,13 +2794,13 @@ void PDTRTRS(char *UPLO, char *TRANS, char *DIAG, int *N, int *NRHS, double *A,
 void PDTRTRS_(char *UPLO, char *TRANS, char *DIAG, int *N, int *NRHS, double *A,
               int *IA, int *JA, int *DESCA, double *B, int *IB, int *JB,
               int *DESCB, int *INFO);
-void mangle_pdtzrzf(int *M, int *N, double *A, int *IA, int *JA, int *DESCA,
+void pdtzrzf(int *M, int *N, double *A, int *IA, int *JA, int *DESCA,
              double *TAU, double *WORK, int *LWORK, int *INFO);
 void PDTZRZF(int *M, int *N, double *A, int *IA, int *JA, int *DESCA,
              double *TAU, double *WORK, int *LWORK, int *INFO);
 void PDTZRZF_(int *M, int *N, double *A, int *IA, int *JA, int *DESCA,
               double *TAU, double *WORK, int *LWORK, int *INFO);
-void mangle_pdupdate(int *M, int *N, int *I, int *J, int *JO, int *JB, int *JN,
+void pdupdate(int *M, int *N, int *I, int *J, int *JO, int *JB, int *JN,
               int *IA, int *JA, double *A, int *DESCA, int *TPIV, int *IPIV,
               int *PANEL, int *BPANEL, int *DS, int *BCAST, int *INFO);
 void PDUPDATE(int *M, int *N, int *I, int *J, int *JO, int *JB, int *JN,
@@ -2784,31 +2809,31 @@ void PDUPDATE(int *M, int *N, int *I, int *J, int *JO, int *JB, int *JN,
 void PDUPDATE_(int *M, int *N, int *I, int *J, int *JO, int *JB, int *JN,
                int *IA, int *JA, double *A, int *DESCA, int *TPIV, int *IPIV,
                int *PANEL, int *BPANEL, int *DS, int *BCAST, int *INFO);
-void mangle_pdzsum1(int *N, double *ASUM, dcomplex *X, int *IX, int *JX, int *DESCX,
+void pdzsum1(int *N, double *ASUM, dcomplex *X, int *IX, int *JX, int *DESCX,
              int *INCX);
 void PDZSUM1(int *N, double *ASUM, dcomplex *X, int *IX, int *JX, int *DESCX,
              int *INCX);
 void PDZSUM1_(int *N, double *ASUM, dcomplex *X, int *IX, int *JX, int *DESCX,
               int *INCX);
-void mangle_pilaver(int *VERS_MAJOR, int *VERS_MINOR, int *VERS_PATCH);
+void pilaver(int *VERS_MAJOR, int *VERS_MINOR, int *VERS_PATCH);
 void PILAVER(int *VERS_MAJOR, int *VERS_MINOR, int *VERS_PATCH);
 void PILAVER_(int *VERS_MAJOR, int *VERS_MINOR, int *VERS_PATCH);
-void mangle_pmpcol(int *MYPROC, int *NPROCS, int *IIL, int *NEEDIL, int *NEEDIU,
+void pmpcol(int *MYPROC, int *NPROCS, int *IIL, int *NEEDIL, int *NEEDIU,
             int *PMYILS, int *PMYIUS, int *COLBRT, int *FRSTCL, int *LASTCL);
 void PMPCOL(int *MYPROC, int *NPROCS, int *IIL, int *NEEDIL, int *NEEDIU,
             int *PMYILS, int *PMYIUS, int *COLBRT, int *FRSTCL, int *LASTCL);
 void PMPCOL_(int *MYPROC, int *NPROCS, int *IIL, int *NEEDIL, int *NEEDIU,
              int *PMYILS, int *PMYIUS, int *COLBRT, int *FRSTCL, int *LASTCL);
-void mangle_pmpim2(int *IL, int *IU, int *NPROCS, int *PMYILS, int *PMYIUS);
+void pmpim2(int *IL, int *IU, int *NPROCS, int *PMYILS, int *PMYIUS);
 void PMPIM2(int *IL, int *IU, int *NPROCS, int *PMYILS, int *PMYIUS);
 void PMPIM2_(int *IL, int *IU, int *NPROCS, int *PMYILS, int *PMYIUS);
-void mangle_pscsum1(int *N, float *ASUM, scomplex *X, int *IX, int *JX, int *DESCX,
+void pscsum1(int *N, float *ASUM, scomplex *X, int *IX, int *JX, int *DESCX,
              int *INCX);
 void PSCSUM1(int *N, float *ASUM, scomplex *X, int *IX, int *JX, int *DESCX,
              int *INCX);
 void PSCSUM1_(int *N, float *ASUM, scomplex *X, int *IX, int *JX, int *DESCX,
               int *INCX);
-void mangle_psdbsv(int *N, int *BWL, int *BWU, int *NRHS, float *A, int *JA,
+void psdbsv(int *N, int *BWL, int *BWU, int *NRHS, float *A, int *JA,
             int *DESCA, float *B, int *IB, int *DESCB, float *WORK, int *LWORK,
             int *INFO);
 void PSDBSV(int *N, int *BWL, int *BWU, int *NRHS, float *A, int *JA,
@@ -2817,13 +2842,13 @@ void PSDBSV(int *N, int *BWL, int *BWU, int *NRHS, float *A, int *JA,
 void PSDBSV_(int *N, int *BWL, int *BWU, int *NRHS, float *A, int *JA,
              int *DESCA, float *B, int *IB, int *DESCB, float *WORK, int *LWORK,
              int *INFO);
-void mangle_psdbtrf(int *N, int *BWL, int *BWU, float *A, int *JA, int *DESCA,
+void psdbtrf(int *N, int *BWL, int *BWU, float *A, int *JA, int *DESCA,
              float *AF, int *LAF, float *WORK, int *LWORK, int *INFO);
 void PSDBTRF(int *N, int *BWL, int *BWU, float *A, int *JA, int *DESCA,
              float *AF, int *LAF, float *WORK, int *LWORK, int *INFO);
 void PSDBTRF_(int *N, int *BWL, int *BWU, float *A, int *JA, int *DESCA,
               float *AF, int *LAF, float *WORK, int *LWORK, int *INFO);
-void mangle_psdbtrs(char *TRANS, int *N, int *BWL, int *BWU, int *NRHS, float *A,
+void psdbtrs(char *TRANS, int *N, int *BWL, int *BWU, int *NRHS, float *A,
              int *JA, int *DESCA, float *B, int *IB, int *DESCB, float *AF,
              int *LAF, float *WORK, int *LWORK, int *INFO);
 void PSDBTRS(char *TRANS, int *N, int *BWL, int *BWU, int *NRHS, float *A,
@@ -2832,7 +2857,7 @@ void PSDBTRS(char *TRANS, int *N, int *BWL, int *BWU, int *NRHS, float *A,
 void PSDBTRS_(char *TRANS, int *N, int *BWL, int *BWU, int *NRHS, float *A,
               int *JA, int *DESCA, float *B, int *IB, int *DESCB, float *AF,
               int *LAF, float *WORK, int *LWORK, int *INFO);
-void mangle_psdbtrsv(char *UPLO, char *TRANS, int *N, int *BWL, int *BWU, int *NRHS,
+void psdbtrsv(char *UPLO, char *TRANS, int *N, int *BWL, int *BWU, int *NRHS,
               float *A, int *JA, int *DESCA, float *B, int *IB, int *DESCB,
               float *AF, int *LAF, float *WORK, int *LWORK, int *INFO);
 void PSDBTRSV(char *UPLO, char *TRANS, int *N, int *BWL, int *BWU, int *NRHS,
@@ -2841,7 +2866,7 @@ void PSDBTRSV(char *UPLO, char *TRANS, int *N, int *BWL, int *BWU, int *NRHS,
 void PSDBTRSV_(char *UPLO, char *TRANS, int *N, int *BWL, int *BWU, int *NRHS,
                float *A, int *JA, int *DESCA, float *B, int *IB, int *DESCB,
                float *AF, int *LAF, float *WORK, int *LWORK, int *INFO);
-void mangle_psdtsv(int *N, int *NRHS, float *DL, float *D, float *DU, int *JA,
+void psdtsv(int *N, int *NRHS, float *DL, float *D, float *DU, int *JA,
             int *DESCA, float *B, int *IB, int *DESCB, float *WORK, int *LWORK,
             int *INFO);
 void PSDTSV(int *N, int *NRHS, float *DL, float *D, float *DU, int *JA,
@@ -2850,13 +2875,13 @@ void PSDTSV(int *N, int *NRHS, float *DL, float *D, float *DU, int *JA,
 void PSDTSV_(int *N, int *NRHS, float *DL, float *D, float *DU, int *JA,
              int *DESCA, float *B, int *IB, int *DESCB, float *WORK, int *LWORK,
              int *INFO);
-void mangle_psdttrf(int *N, float *DL, float *D, float *DU, int *JA, int *DESCA,
+void psdttrf(int *N, float *DL, float *D, float *DU, int *JA, int *DESCA,
              float *AF, int *LAF, float *WORK, int *LWORK, int *INFO);
 void PSDTTRF(int *N, float *DL, float *D, float *DU, int *JA, int *DESCA,
              float *AF, int *LAF, float *WORK, int *LWORK, int *INFO);
 void PSDTTRF_(int *N, float *DL, float *D, float *DU, int *JA, int *DESCA,
               float *AF, int *LAF, float *WORK, int *LWORK, int *INFO);
-void mangle_psdttrs(char *TRANS, int *N, int *NRHS, float *DL, float *D, float *DU,
+void psdttrs(char *TRANS, int *N, int *NRHS, float *DL, float *D, float *DU,
              int *JA, int *DESCA, float *B, int *IB, int *DESCB, float *AF,
              int *LAF, float *WORK, int *LWORK, int *INFO);
 void PSDTTRS(char *TRANS, int *N, int *NRHS, float *DL, float *D, float *DU,
@@ -2865,7 +2890,7 @@ void PSDTTRS(char *TRANS, int *N, int *NRHS, float *DL, float *D, float *DU,
 void PSDTTRS_(char *TRANS, int *N, int *NRHS, float *DL, float *D, float *DU,
               int *JA, int *DESCA, float *B, int *IB, int *DESCB, float *AF,
               int *LAF, float *WORK, int *LWORK, int *INFO);
-void mangle_psdttrsv(char *UPLO, char *TRANS, int *N, int *NRHS, float *DL, float *D,
+void psdttrsv(char *UPLO, char *TRANS, int *N, int *NRHS, float *DL, float *D,
               float *DU, int *JA, int *DESCA, float *B, int *IB, int *DESCB,
               float *AF, int *LAF, float *WORK, int *LWORK, int *INFO);
 void PSDTTRSV(char *UPLO, char *TRANS, int *N, int *NRHS, float *DL, float *D,
@@ -2874,7 +2899,7 @@ void PSDTTRSV(char *UPLO, char *TRANS, int *N, int *NRHS, float *DL, float *D,
 void PSDTTRSV_(char *UPLO, char *TRANS, int *N, int *NRHS, float *DL, float *D,
                float *DU, int *JA, int *DESCA, float *B, int *IB, int *DESCB,
                float *AF, int *LAF, float *WORK, int *LWORK, int *INFO);
-void mangle_psgbsv(int *N, int *BWL, int *BWU, int *NRHS, float *A, int *JA,
+void psgbsv(int *N, int *BWL, int *BWU, int *NRHS, float *A, int *JA,
             int *DESCA, int *IPIV, float *B, int *IB, int *DESCB, float *WORK,
             int *LWORK, int *INFO);
 void PSGBSV(int *N, int *BWL, int *BWU, int *NRHS, float *A, int *JA,
@@ -2883,7 +2908,7 @@ void PSGBSV(int *N, int *BWL, int *BWU, int *NRHS, float *A, int *JA,
 void PSGBSV_(int *N, int *BWL, int *BWU, int *NRHS, float *A, int *JA,
              int *DESCA, int *IPIV, float *B, int *IB, int *DESCB, float *WORK,
              int *LWORK, int *INFO);
-void mangle_psgbtrf(int *N, int *BWL, int *BWU, float *A, int *JA, int *DESCA,
+void psgbtrf(int *N, int *BWL, int *BWU, float *A, int *JA, int *DESCA,
              int *IPIV, float *AF, int *LAF, float *WORK, int *LWORK,
              int *INFO);
 void PSGBTRF(int *N, int *BWL, int *BWU, float *A, int *JA, int *DESCA,
@@ -2892,7 +2917,7 @@ void PSGBTRF(int *N, int *BWL, int *BWU, float *A, int *JA, int *DESCA,
 void PSGBTRF_(int *N, int *BWL, int *BWU, float *A, int *JA, int *DESCA,
               int *IPIV, float *AF, int *LAF, float *WORK, int *LWORK,
               int *INFO);
-void mangle_psgbtrs(char *TRANS, int *N, int *BWL, int *BWU, int *NRHS, float *A,
+void psgbtrs(char *TRANS, int *N, int *BWL, int *BWU, int *NRHS, float *A,
              int *JA, int *DESCA, int *IPIV, float *B, int *IB, int *DESCB,
              float *AF, int *LAF, float *WORK, int *LWORK, int *INFO);
 void PSGBTRS(char *TRANS, int *N, int *BWL, int *BWU, int *NRHS, float *A,
@@ -2901,13 +2926,13 @@ void PSGBTRS(char *TRANS, int *N, int *BWL, int *BWU, int *NRHS, float *A,
 void PSGBTRS_(char *TRANS, int *N, int *BWL, int *BWU, int *NRHS, float *A,
               int *JA, int *DESCA, int *IPIV, float *B, int *IB, int *DESCB,
               float *AF, int *LAF, float *WORK, int *LWORK, int *INFO);
-void mangle_psgebal(char *JOB, int *N, float *A, int *DESCA, int *ILO, int *IHI,
+void psgebal(char *JOB, int *N, float *A, int *DESCA, int *ILO, int *IHI,
              float *SCALE, int *INFO);
 void PSGEBAL(char *JOB, int *N, float *A, int *DESCA, int *ILO, int *IHI,
              float *SCALE, int *INFO);
 void PSGEBAL_(char *JOB, int *N, float *A, int *DESCA, int *ILO, int *IHI,
               float *SCALE, int *INFO);
-void mangle_psgebd2(int *M, int *N, float *A, int *IA, int *JA, int *DESCA, float *D,
+void psgebd2(int *M, int *N, float *A, int *IA, int *JA, int *DESCA, float *D,
              float *E, float *TAUQ, float *TAUP, float *WORK, int *LWORK,
              int *INFO);
 void PSGEBD2(int *M, int *N, float *A, int *IA, int *JA, int *DESCA, float *D,
@@ -2916,7 +2941,7 @@ void PSGEBD2(int *M, int *N, float *A, int *IA, int *JA, int *DESCA, float *D,
 void PSGEBD2_(int *M, int *N, float *A, int *IA, int *JA, int *DESCA, float *D,
               float *E, float *TAUQ, float *TAUP, float *WORK, int *LWORK,
               int *INFO);
-void mangle_psgebrd(int *M, int *N, float *A, int *IA, int *JA, int *DESCA, float *D,
+void psgebrd(int *M, int *N, float *A, int *IA, int *JA, int *DESCA, float *D,
              float *E, float *TAUQ, float *TAUP, float *WORK, int *LWORK,
              int *INFO);
 void PSGEBRD(int *M, int *N, float *A, int *IA, int *JA, int *DESCA, float *D,
@@ -2925,7 +2950,7 @@ void PSGEBRD(int *M, int *N, float *A, int *IA, int *JA, int *DESCA, float *D,
 void PSGEBRD_(int *M, int *N, float *A, int *IA, int *JA, int *DESCA, float *D,
               float *E, float *TAUQ, float *TAUP, float *WORK, int *LWORK,
               int *INFO);
-void mangle_psgecon(char *NORM, int *N, float *A, int *IA, int *JA, int *DESCA,
+void psgecon(char *NORM, int *N, float *A, int *IA, int *JA, int *DESCA,
              float *ANORM, float *RCOND, float *WORK, int *LWORK, int *IWORK,
              int *LIWORK, int *INFO);
 void PSGECON(char *NORM, int *N, float *A, int *IA, int *JA, int *DESCA,
@@ -2934,37 +2959,37 @@ void PSGECON(char *NORM, int *N, float *A, int *IA, int *JA, int *DESCA,
 void PSGECON_(char *NORM, int *N, float *A, int *IA, int *JA, int *DESCA,
               float *ANORM, float *RCOND, float *WORK, int *LWORK, int *IWORK,
               int *LIWORK, int *INFO);
-void mangle_psgeequ(int *M, int *N, float *A, int *IA, int *JA, int *DESCA, float *R,
+void psgeequ(int *M, int *N, float *A, int *IA, int *JA, int *DESCA, float *R,
              float *C, float *ROWCND, float *COLCND, float *AMAX, int *INFO);
 void PSGEEQU(int *M, int *N, float *A, int *IA, int *JA, int *DESCA, float *R,
              float *C, float *ROWCND, float *COLCND, float *AMAX, int *INFO);
 void PSGEEQU_(int *M, int *N, float *A, int *IA, int *JA, int *DESCA, float *R,
               float *C, float *ROWCND, float *COLCND, float *AMAX, int *INFO);
-void mangle_psgehd2(int *N, int *ILO, int *IHI, float *A, int *IA, int *JA, int *DESCA,
+void psgehd2(int *N, int *ILO, int *IHI, float *A, int *IA, int *JA, int *DESCA,
              float *TAU, float *WORK, int *LWORK, int *INFO);
 void PSGEHD2(int *N, int *ILO, int *IHI, float *A, int *IA, int *JA, int *DESCA,
              float *TAU, float *WORK, int *LWORK, int *INFO);
 void PSGEHD2_(int *N, int *ILO, int *IHI, float *A, int *IA, int *JA,
               int *DESCA, float *TAU, float *WORK, int *LWORK, int *INFO);
-void mangle_psgehrd(int *N, int *ILO, int *IHI, float *A, int *IA, int *JA, int *DESCA,
+void psgehrd(int *N, int *ILO, int *IHI, float *A, int *IA, int *JA, int *DESCA,
              float *TAU, float *WORK, int *LWORK, int *INFO);
 void PSGEHRD(int *N, int *ILO, int *IHI, float *A, int *IA, int *JA, int *DESCA,
              float *TAU, float *WORK, int *LWORK, int *INFO);
 void PSGEHRD_(int *N, int *ILO, int *IHI, float *A, int *IA, int *JA,
               int *DESCA, float *TAU, float *WORK, int *LWORK, int *INFO);
-void mangle_psgelq2(int *M, int *N, float *A, int *IA, int *JA, int *DESCA, float *TAU,
+void psgelq2(int *M, int *N, float *A, int *IA, int *JA, int *DESCA, float *TAU,
              float *WORK, int *LWORK, int *INFO);
 void PSGELQ2(int *M, int *N, float *A, int *IA, int *JA, int *DESCA, float *TAU,
              float *WORK, int *LWORK, int *INFO);
 void PSGELQ2_(int *M, int *N, float *A, int *IA, int *JA, int *DESCA,
               float *TAU, float *WORK, int *LWORK, int *INFO);
-void mangle_psgelqf(int *M, int *N, float *A, int *IA, int *JA, int *DESCA, float *TAU,
+void psgelqf(int *M, int *N, float *A, int *IA, int *JA, int *DESCA, float *TAU,
              float *WORK, int *LWORK, int *INFO);
 void PSGELQF(int *M, int *N, float *A, int *IA, int *JA, int *DESCA, float *TAU,
              float *WORK, int *LWORK, int *INFO);
 void PSGELQF_(int *M, int *N, float *A, int *IA, int *JA, int *DESCA,
               float *TAU, float *WORK, int *LWORK, int *INFO);
-void mangle_psgels(char *TRANS, int *M, int *N, int *NRHS, float *A, int *IA, int *JA,
+void psgels(char *TRANS, int *M, int *N, int *NRHS, float *A, int *IA, int *JA,
             int *DESCA, float *B, int *IB, int *JB, int *DESCB, float *WORK,
             int *LWORK, int *INFO);
 void PSGELS(char *TRANS, int *M, int *N, int *NRHS, float *A, int *IA, int *JA,
@@ -2973,37 +2998,37 @@ void PSGELS(char *TRANS, int *M, int *N, int *NRHS, float *A, int *IA, int *JA,
 void PSGELS_(char *TRANS, int *M, int *N, int *NRHS, float *A, int *IA, int *JA,
              int *DESCA, float *B, int *IB, int *JB, int *DESCB, float *WORK,
              int *LWORK, int *INFO);
-void mangle_psgeql2(int *M, int *N, float *A, int *IA, int *JA, int *DESCA, float *TAU,
+void psgeql2(int *M, int *N, float *A, int *IA, int *JA, int *DESCA, float *TAU,
              float *WORK, int *LWORK, int *INFO);
 void PSGEQL2(int *M, int *N, float *A, int *IA, int *JA, int *DESCA, float *TAU,
              float *WORK, int *LWORK, int *INFO);
 void PSGEQL2_(int *M, int *N, float *A, int *IA, int *JA, int *DESCA,
               float *TAU, float *WORK, int *LWORK, int *INFO);
-void mangle_psgeqlf(int *M, int *N, float *A, int *IA, int *JA, int *DESCA, float *TAU,
+void psgeqlf(int *M, int *N, float *A, int *IA, int *JA, int *DESCA, float *TAU,
              float *WORK, int *LWORK, int *INFO);
 void PSGEQLF(int *M, int *N, float *A, int *IA, int *JA, int *DESCA, float *TAU,
              float *WORK, int *LWORK, int *INFO);
 void PSGEQLF_(int *M, int *N, float *A, int *IA, int *JA, int *DESCA,
               float *TAU, float *WORK, int *LWORK, int *INFO);
-void mangle_psgeqpf(int *M, int *N, float *A, int *IA, int *JA, int *DESCA, int *IPIV,
+void psgeqpf(int *M, int *N, float *A, int *IA, int *JA, int *DESCA, int *IPIV,
              float *TAU, float *WORK, int *LWORK, int *INFO);
 void PSGEQPF(int *M, int *N, float *A, int *IA, int *JA, int *DESCA, int *IPIV,
              float *TAU, float *WORK, int *LWORK, int *INFO);
 void PSGEQPF_(int *M, int *N, float *A, int *IA, int *JA, int *DESCA, int *IPIV,
               float *TAU, float *WORK, int *LWORK, int *INFO);
-void mangle_psgeqr2(int *M, int *N, float *A, int *IA, int *JA, int *DESCA, float *TAU,
+void psgeqr2(int *M, int *N, float *A, int *IA, int *JA, int *DESCA, float *TAU,
              float *WORK, int *LWORK, int *INFO);
 void PSGEQR2(int *M, int *N, float *A, int *IA, int *JA, int *DESCA, float *TAU,
              float *WORK, int *LWORK, int *INFO);
 void PSGEQR2_(int *M, int *N, float *A, int *IA, int *JA, int *DESCA,
               float *TAU, float *WORK, int *LWORK, int *INFO);
-void mangle_psgeqrf(int *M, int *N, float *A, int *IA, int *JA, int *DESCA, float *TAU,
+void psgeqrf(int *M, int *N, float *A, int *IA, int *JA, int *DESCA, float *TAU,
              float *WORK, int *LWORK, int *INFO);
 void PSGEQRF(int *M, int *N, float *A, int *IA, int *JA, int *DESCA, float *TAU,
              float *WORK, int *LWORK, int *INFO);
 void PSGEQRF_(int *M, int *N, float *A, int *IA, int *JA, int *DESCA,
               float *TAU, float *WORK, int *LWORK, int *INFO);
-void mangle_psgerfs(char *TRANS, int *N, int *NRHS, float *A, int *IA, int *JA,
+void psgerfs(char *TRANS, int *N, int *NRHS, float *A, int *IA, int *JA,
              int *DESCA, float *AF, int *IAF, int *JAF, int *DESCAF, int *IPIV,
              float *B, int *IB, int *JB, int *DESCB, float *X, int *IX, int *JX,
              int *DESCX, float *FERR, float *BERR, float *WORK, int *LWORK,
@@ -3018,25 +3043,25 @@ void PSGERFS_(char *TRANS, int *N, int *NRHS, float *A, int *IA, int *JA,
               float *B, int *IB, int *JB, int *DESCB, float *X, int *IX,
               int *JX, int *DESCX, float *FERR, float *BERR, float *WORK,
               int *LWORK, int *IWORK, int *LIWORK, int *INFO);
-void mangle_psgerq2(int *M, int *N, float *A, int *IA, int *JA, int *DESCA, float *TAU,
+void psgerq2(int *M, int *N, float *A, int *IA, int *JA, int *DESCA, float *TAU,
              float *WORK, int *LWORK, int *INFO);
 void PSGERQ2(int *M, int *N, float *A, int *IA, int *JA, int *DESCA, float *TAU,
              float *WORK, int *LWORK, int *INFO);
 void PSGERQ2_(int *M, int *N, float *A, int *IA, int *JA, int *DESCA,
               float *TAU, float *WORK, int *LWORK, int *INFO);
-void mangle_psgerqf(int *M, int *N, float *A, int *IA, int *JA, int *DESCA, float *TAU,
+void psgerqf(int *M, int *N, float *A, int *IA, int *JA, int *DESCA, float *TAU,
              float *WORK, int *LWORK, int *INFO);
 void PSGERQF(int *M, int *N, float *A, int *IA, int *JA, int *DESCA, float *TAU,
              float *WORK, int *LWORK, int *INFO);
 void PSGERQF_(int *M, int *N, float *A, int *IA, int *JA, int *DESCA,
               float *TAU, float *WORK, int *LWORK, int *INFO);
-void mangle_psgesv(int *N, int *NRHS, float *A, int *IA, int *JA, int *DESCA,
+void psgesv(int *N, int *NRHS, float *A, int *IA, int *JA, int *DESCA,
             int *IPIV, float *B, int *IB, int *JB, int *DESCB, int *INFO);
 void PSGESV(int *N, int *NRHS, float *A, int *IA, int *JA, int *DESCA,
             int *IPIV, float *B, int *IB, int *JB, int *DESCB, int *INFO);
 void PSGESV_(int *N, int *NRHS, float *A, int *IA, int *JA, int *DESCA,
              int *IPIV, float *B, int *IB, int *JB, int *DESCB, int *INFO);
-void mangle_psgesvd(char *JOBU, char *JOBVT, int *M, int *N, float *A, int *IA,
+void psgesvd(char *JOBU, char *JOBVT, int *M, int *N, float *A, int *IA,
              int *JA, int *DESCA, float *S, float *U, int *IU, int *JU,
              int *DESCU, float *VT, int *IVT, int *JVT, int *DESCVT,
              float *WORK, int *LWORK, int *INFO);
@@ -3048,7 +3073,7 @@ void PSGESVD_(char *JOBU, char *JOBVT, int *M, int *N, float *A, int *IA,
               int *JA, int *DESCA, float *S, float *U, int *IU, int *JU,
               int *DESCU, float *VT, int *IVT, int *JVT, int *DESCVT,
               float *WORK, int *LWORK, int *INFO);
-void mangle_psgesvx(char *FACT, char *TRANS, int *N, int *NRHS, float *A, int *IA,
+void psgesvx(char *FACT, char *TRANS, int *N, int *NRHS, float *A, int *IA,
              int *JA, int *DESCA, float *AF, int *IAF, int *JAF, int *DESCAF,
              int *IPIV, char *EQUED, float *R, float *C, float *B, int *IB,
              int *JB, int *DESCB, float *X, int *IX, int *JX, int *DESCX,
@@ -3066,25 +3091,25 @@ void PSGESVX_(char *FACT, char *TRANS, int *N, int *NRHS, float *A, int *IA,
               int *JB, int *DESCB, float *X, int *IX, int *JX, int *DESCX,
               float *RCOND, float *FERR, float *BERR, float *WORK, int *LWORK,
               int *IWORK, int *LIWORK, int *INFO);
-void mangle_psgetf2(int *M, int *N, float *A, int *IA, int *JA, int *DESCA, int *IPIV,
+void psgetf2(int *M, int *N, float *A, int *IA, int *JA, int *DESCA, int *IPIV,
              int *INFO);
 void PSGETF2(int *M, int *N, float *A, int *IA, int *JA, int *DESCA, int *IPIV,
              int *INFO);
 void PSGETF2_(int *M, int *N, float *A, int *IA, int *JA, int *DESCA, int *IPIV,
               int *INFO);
-void mangle_psgetrf(int *M, int *N, float *A, int *IA, int *JA, int *DESCA, int *IPIV,
+void psgetrf(int *M, int *N, float *A, int *IA, int *JA, int *DESCA, int *IPIV,
              int *INFO);
 void PSGETRF(int *M, int *N, float *A, int *IA, int *JA, int *DESCA, int *IPIV,
              int *INFO);
 void PSGETRF_(int *M, int *N, float *A, int *IA, int *JA, int *DESCA, int *IPIV,
               int *INFO);
-void mangle_psgetri(int *N, float *A, int *IA, int *JA, int *DESCA, int *IPIV,
+void psgetri(int *N, float *A, int *IA, int *JA, int *DESCA, int *IPIV,
              float *WORK, int *LWORK, int *IWORK, int *LIWORK, int *INFO);
 void PSGETRI(int *N, float *A, int *IA, int *JA, int *DESCA, int *IPIV,
              float *WORK, int *LWORK, int *IWORK, int *LIWORK, int *INFO);
 void PSGETRI_(int *N, float *A, int *IA, int *JA, int *DESCA, int *IPIV,
               float *WORK, int *LWORK, int *IWORK, int *LIWORK, int *INFO);
-void mangle_psgetrs(char *TRANS, int *N, int *NRHS, float *A, int *IA, int *JA,
+void psgetrs(char *TRANS, int *N, int *NRHS, float *A, int *IA, int *JA,
              int *DESCA, int *IPIV, float *B, int *IB, int *JB, int *DESCB,
              int *INFO);
 void PSGETRS(char *TRANS, int *N, int *NRHS, float *A, int *IA, int *JA,
@@ -3093,7 +3118,7 @@ void PSGETRS(char *TRANS, int *N, int *NRHS, float *A, int *IA, int *JA,
 void PSGETRS_(char *TRANS, int *N, int *NRHS, float *A, int *IA, int *JA,
               int *DESCA, int *IPIV, float *B, int *IB, int *JB, int *DESCB,
               int *INFO);
-void mangle_psggqrf(int *N, int *M, int *P, float *A, int *IA, int *JA, int *DESCA,
+void psggqrf(int *N, int *M, int *P, float *A, int *IA, int *JA, int *DESCA,
              float *TAUA, float *B, int *IB, int *JB, int *DESCB, float *TAUB,
              float *WORK, int *LWORK, int *INFO);
 void PSGGQRF(int *N, int *M, int *P, float *A, int *IA, int *JA, int *DESCA,
@@ -3102,7 +3127,7 @@ void PSGGQRF(int *N, int *M, int *P, float *A, int *IA, int *JA, int *DESCA,
 void PSGGQRF_(int *N, int *M, int *P, float *A, int *IA, int *JA, int *DESCA,
               float *TAUA, float *B, int *IB, int *JB, int *DESCB, float *TAUB,
               float *WORK, int *LWORK, int *INFO);
-void mangle_psggrqf(int *M, int *P, int *N, float *A, int *IA, int *JA, int *DESCA,
+void psggrqf(int *M, int *P, int *N, float *A, int *IA, int *JA, int *DESCA,
              float *TAUA, float *B, int *IB, int *JB, int *DESCB, float *TAUB,
              float *WORK, int *LWORK, int *INFO);
 void PSGGRQF(int *M, int *P, int *N, float *A, int *IA, int *JA, int *DESCA,
@@ -3111,7 +3136,7 @@ void PSGGRQF(int *M, int *P, int *N, float *A, int *IA, int *JA, int *DESCA,
 void PSGGRQF_(int *M, int *P, int *N, float *A, int *IA, int *JA, int *DESCA,
               float *TAUA, float *B, int *IB, int *JB, int *DESCB, float *TAUB,
               float *WORK, int *LWORK, int *INFO);
-void mangle_pshseqr(char *JOB, char *COMPZ, int *N, int *ILO, int *IHI, float *H,
+void pshseqr(char *JOB, char *COMPZ, int *N, int *ILO, int *IHI, float *H,
              int *DESCH, float *WR, float *WI, float *Z, int *DESCZ,
              float *WORK, int *LWORK, int *IWORK, int *LIWORK, int *INFO);
 void PSHSEQR(char *JOB, char *COMPZ, int *N, int *ILO, int *IHI, float *H,
@@ -3120,10 +3145,10 @@ void PSHSEQR(char *JOB, char *COMPZ, int *N, int *ILO, int *IHI, float *H,
 void PSHSEQR_(char *JOB, char *COMPZ, int *N, int *ILO, int *IHI, float *H,
               int *DESCH, float *WR, float *WI, float *Z, int *DESCZ,
               float *WORK, int *LWORK, int *IWORK, int *LIWORK, int *INFO);
-void mangle_pslabad(int *ICTXT, float *SMALL, float *LARGE);
+void pslabad(int *ICTXT, float *SMALL, float *LARGE);
 void PSLABAD(int *ICTXT, float *SMALL, float *LARGE);
 void PSLABAD_(int *ICTXT, float *SMALL, float *LARGE);
-void mangle_pslabrd(int *M, int *N, int *NB, float *A, int *IA, int *JA, int *DESCA,
+void pslabrd(int *M, int *N, int *NB, float *A, int *IA, int *JA, int *DESCA,
              float *D, float *E, float *TAUQ, float *TAUP, float *X, int *IX,
              int *JX, int *DESCX, float *Y, int *IY, int *JY, int *DESCY,
              float *WORK);
@@ -3135,49 +3160,49 @@ void PSLABRD_(int *M, int *N, int *NB, float *A, int *IA, int *JA, int *DESCA,
               float *D, float *E, float *TAUQ, float *TAUP, float *X, int *IX,
               int *JX, int *DESCX, float *Y, int *IY, int *JY, int *DESCY,
               float *WORK);
-void mangle_pslacon(int *N, float *V, int *IV, int *JV, int *DESCV, float *X, int *IX,
+void pslacon(int *N, float *V, int *IV, int *JV, int *DESCV, float *X, int *IX,
              int *JX, int *DESCX, int *ISGN, float *EST, int *KASE);
 void PSLACON(int *N, float *V, int *IV, int *JV, int *DESCV, float *X, int *IX,
              int *JX, int *DESCX, int *ISGN, float *EST, int *KASE);
 void PSLACON_(int *N, float *V, int *IV, int *JV, int *DESCV, float *X, int *IX,
               int *JX, int *DESCX, int *ISGN, float *EST, int *KASE);
-void mangle_pslaconsb(float *A, int *DESCA, int *I, int *L, int *M, float *H44,
+void pslaconsb(float *A, int *DESCA, int *I, int *L, int *M, float *H44,
                float *H33, float *H43H34, float *BUF, int *LWORK);
 void PSLACONSB(float *A, int *DESCA, int *I, int *L, int *M, float *H44,
                float *H33, float *H43H34, float *BUF, int *LWORK);
 void PSLACONSB_(float *A, int *DESCA, int *I, int *L, int *M, float *H44,
                 float *H33, float *H43H34, float *BUF, int *LWORK);
-void mangle_pslacp2(char *UPLO, int *M, int *N, float *A, int *IA, int *JA, int *DESCA,
+void pslacp2(char *UPLO, int *M, int *N, float *A, int *IA, int *JA, int *DESCA,
              float *B, int *IB, int *JB, int *DESCB);
 void PSLACP2(char *UPLO, int *M, int *N, float *A, int *IA, int *JA, int *DESCA,
              float *B, int *IB, int *JB, int *DESCB);
 void PSLACP2_(char *UPLO, int *M, int *N, float *A, int *IA, int *JA,
               int *DESCA, float *B, int *IB, int *JB, int *DESCB);
-void mangle_pslacp3(int *M, int *I, float *A, int *DESCA, float *B, int *LDB, int *II,
+void pslacp3(int *M, int *I, float *A, int *DESCA, float *B, int *LDB, int *II,
              int *JJ, int *REV);
 void PSLACP3(int *M, int *I, float *A, int *DESCA, float *B, int *LDB, int *II,
              int *JJ, int *REV);
 void PSLACP3_(int *M, int *I, float *A, int *DESCA, float *B, int *LDB, int *II,
               int *JJ, int *REV);
-void mangle_pslacpy(char *UPLO, int *M, int *N, float *A, int *IA, int *JA, int *DESCA,
+void pslacpy(char *UPLO, int *M, int *N, float *A, int *IA, int *JA, int *DESCA,
              float *B, int *IB, int *JB, int *DESCB);
 void PSLACPY(char *UPLO, int *M, int *N, float *A, int *IA, int *JA, int *DESCA,
              float *B, int *IB, int *JB, int *DESCB);
 void PSLACPY_(char *UPLO, int *M, int *N, float *A, int *IA, int *JA,
               int *DESCA, float *B, int *IB, int *JB, int *DESCB);
-void mangle_pslaed0(int *N, float *D, float *E, float *Q, int *IQ, int *JQ, int *DESCQ,
+void pslaed0(int *N, float *D, float *E, float *Q, int *IQ, int *JQ, int *DESCQ,
              float *WORK, int *IWORK, int *INFO);
 void PSLAED0(int *N, float *D, float *E, float *Q, int *IQ, int *JQ, int *DESCQ,
              float *WORK, int *IWORK, int *INFO);
 void PSLAED0_(int *N, float *D, float *E, float *Q, int *IQ, int *JQ,
               int *DESCQ, float *WORK, int *IWORK, int *INFO);
-void mangle_pslaed1(int *N, int *N1, float *D, int *ID, float *Q, int *IQ, int *JQ,
+void pslaed1(int *N, int *N1, float *D, int *ID, float *Q, int *IQ, int *JQ,
              int *DESCQ, float *RHO, float *WORK, int *IWORK, int *INFO);
 void PSLAED1(int *N, int *N1, float *D, int *ID, float *Q, int *IQ, int *JQ,
              int *DESCQ, float *RHO, float *WORK, int *IWORK, int *INFO);
 void PSLAED1_(int *N, int *N1, float *D, int *ID, float *Q, int *IQ, int *JQ,
               int *DESCQ, float *RHO, float *WORK, int *IWORK, int *INFO);
-void mangle_pslaed2(int *ICTXT, int *K, int *N, int *N1, int *NB, float *D, int *DROW,
+void pslaed2(int *ICTXT, int *K, int *N, int *N1, int *NB, float *D, int *DROW,
              int *DCOL, float *Q, int *LDQ, float *RHO, float *Z, float *W,
              float *DLAMDA, float *Q2, int *LDQ2, float *QBUF, int *CTOT,
              int *PSM, int *NPCOL, int *INDX, int *INDXC, int *INDXP,
@@ -3195,7 +3220,7 @@ void PSLAED2_(int *ICTXT, int *K, int *N, int *N1, int *NB, float *D, int *DROW,
               int *PSM, int *NPCOL, int *INDX, int *INDXC, int *INDXP,
               int *INDCOL, int *COLTYP, int *NN, int *NN1, int *NN2, int *IB1,
               int *IB2);
-void mangle_pslaed3(int *ICTXT, int *K, int *N, int *NB, float *D, int *DROW,
+void pslaed3(int *ICTXT, int *K, int *N, int *NB, float *D, int *DROW,
              int *DCOL, float *RHO, float *DLAMDA, float *W, float *Z, float *U,
              int *LDU, float *BUF, int *INDX, int *INDCOL, int *INDROW,
              int *INDXR, int *INDXC, int *CTOT, int *NPCOL, int *INFO);
@@ -3208,19 +3233,19 @@ void PSLAED3_(int *ICTXT, int *K, int *N, int *NB, float *D, int *DROW,
               float *U, int *LDU, float *BUF, int *INDX, int *INDCOL,
               int *INDROW, int *INDXR, int *INDXC, int *CTOT, int *NPCOL,
               int *INFO);
-void mangle_pslaedz(int *N, int *N1, int *ID, float *Q, int *IQ, int *JQ, int *LDQ,
+void pslaedz(int *N, int *N1, int *ID, float *Q, int *IQ, int *JQ, int *LDQ,
              int *DESCQ, float *Z, float *WORK);
 void PSLAEDZ(int *N, int *N1, int *ID, float *Q, int *IQ, int *JQ, int *LDQ,
              int *DESCQ, float *Z, float *WORK);
 void PSLAEDZ_(int *N, int *N1, int *ID, float *Q, int *IQ, int *JQ, int *LDQ,
               int *DESCQ, float *Z, float *WORK);
-void mangle_pslaevswp(int *N, float *ZIN, int *LDZI, float *Z, int *IZ, int *JZ,
+void pslaevswp(int *N, float *ZIN, int *LDZI, float *Z, int *IZ, int *JZ,
                int *DESCZ, int *NVS, int *KEY, float *WORK, int *LWORK);
 void PSLAEVSWP(int *N, float *ZIN, int *LDZI, float *Z, int *IZ, int *JZ,
                int *DESCZ, int *NVS, int *KEY, float *WORK, int *LWORK);
 void PSLAEVSWP_(int *N, float *ZIN, int *LDZI, float *Z, int *IZ, int *JZ,
                 int *DESCZ, int *NVS, int *KEY, float *WORK, int *LWORK);
-void mangle_pslahqr(int *WANTT, int *WANTZ, int *N, int *ILO, int *IHI, float *A,
+void pslahqr(int *WANTT, int *WANTZ, int *N, int *ILO, int *IHI, float *A,
              int *DESCA, float *WR, float *WI, int *ILOZ, int *IHIZ, float *Z,
              int *DESCZ, float *WORK, int *LWORK, int *IWORK, int *ILWORK,
              int *INFO);
@@ -3232,7 +3257,7 @@ void PSLAHQR_(int *WANTT, int *WANTZ, int *N, int *ILO, int *IHI, float *A,
               int *DESCA, float *WR, float *WI, int *ILOZ, int *IHIZ, float *Z,
               int *DESCZ, float *WORK, int *LWORK, int *IWORK, int *ILWORK,
               int *INFO);
-void mangle_pslahrd(int *N, int *K, int *NB, float *A, int *IA, int *JA, int *DESCA,
+void pslahrd(int *N, int *K, int *NB, float *A, int *IA, int *JA, int *DESCA,
              float *TAU, float *T, float *Y, int *IY, int *JY, int *DESCY,
              float *WORK);
 void PSLAHRD(int *N, int *K, int *NB, float *A, int *IA, int *JA, int *DESCA,
@@ -3241,19 +3266,19 @@ void PSLAHRD(int *N, int *K, int *NB, float *A, int *IA, int *JA, int *DESCA,
 void PSLAHRD_(int *N, int *K, int *NB, float *A, int *IA, int *JA, int *DESCA,
               float *TAU, float *T, float *Y, int *IY, int *JY, int *DESCY,
               float *WORK);
-void mangle_pslamr1d(int *N, dcomplex *A, int *IA, int *JA, int *DESCA, dcomplex *B,
+void pslamr1d(int *N, dcomplex *A, int *IA, int *JA, int *DESCA, dcomplex *B,
               int *IB, int *JB, int *DESCB);
 void PSLAMR1D(int *N, dcomplex *A, int *IA, int *JA, int *DESCA, dcomplex *B,
               int *IB, int *JB, int *DESCB);
 void PSLAMR1D_(int *N, dcomplex *A, int *IA, int *JA, int *DESCA, dcomplex *B,
                int *IB, int *JB, int *DESCB);
-void mangle_pslamve(char *UPLO, int *M, int *N, float *A, int *IA, int *JA, int *DESCA,
+void pslamve(char *UPLO, int *M, int *N, float *A, int *IA, int *JA, int *DESCA,
              float *B, int *IB, int *JB, int *DESCB, float *DWORK);
 void PSLAMVE(char *UPLO, int *M, int *N, float *A, int *IA, int *JA, int *DESCA,
              float *B, int *IB, int *JB, int *DESCB, float *DWORK);
 void PSLAMVE_(char *UPLO, int *M, int *N, float *A, int *IA, int *JA,
               int *DESCA, float *B, int *IB, int *JB, int *DESCB, float *DWORK);
-void mangle_pslapiv(char *DIREC, char *ROWCOL, char *PIVROC, int *M, int *N, float *A,
+void pslapiv(char *DIREC, char *ROWCOL, char *PIVROC, int *M, int *N, float *A,
              int *IA, int *JA, int *DESCA, int *IPIV, int *IP, int *JP,
              int *DESCIP, int *IWORK);
 void PSLAPIV(char *DIREC, char *ROWCOL, char *PIVROC, int *M, int *N, float *A,
@@ -3262,19 +3287,19 @@ void PSLAPIV(char *DIREC, char *ROWCOL, char *PIVROC, int *M, int *N, float *A,
 void PSLAPIV_(char *DIREC, char *ROWCOL, char *PIVROC, int *M, int *N, float *A,
               int *IA, int *JA, int *DESCA, int *IPIV, int *IP, int *JP,
               int *DESCIP, int *IWORK);
-void mangle_pslapv2(char *DIREC, char *ROWCOL, int *M, int *N, float *A, int *IA,
+void pslapv2(char *DIREC, char *ROWCOL, int *M, int *N, float *A, int *IA,
              int *JA, int *DESCA, int *IPIV, int *IP, int *JP, int *DESCIP);
 void PSLAPV2(char *DIREC, char *ROWCOL, int *M, int *N, float *A, int *IA,
              int *JA, int *DESCA, int *IPIV, int *IP, int *JP, int *DESCIP);
 void PSLAPV2_(char *DIREC, char *ROWCOL, int *M, int *N, float *A, int *IA,
               int *JA, int *DESCA, int *IPIV, int *IP, int *JP, int *DESCIP);
-void mangle_pslaqge(int *M, int *N, float *A, int *IA, int *JA, int *DESCA, float *R,
+void pslaqge(int *M, int *N, float *A, int *IA, int *JA, int *DESCA, float *R,
              float *C, float *ROWCND, float *COLCND, float *AMAX, char *EQUED);
 void PSLAQGE(int *M, int *N, float *A, int *IA, int *JA, int *DESCA, float *R,
              float *C, float *ROWCND, float *COLCND, float *AMAX, char *EQUED);
 void PSLAQGE_(int *M, int *N, float *A, int *IA, int *JA, int *DESCA, float *R,
               float *C, float *ROWCND, float *COLCND, float *AMAX, char *EQUED);
-void mangle_pslaqr2(int *WANTT, int *WANTZ, int *N, int *KTOP, int *KBOT, int *NW,
+void pslaqr2(int *WANTT, int *WANTZ, int *N, int *KTOP, int *KBOT, int *NW,
              float *A, int *DESCA, int *ILOZ, int *IHIZ, float *Z, int *DESCZ,
              int *NS, int *ND, float *SR, float *SI, float *T, int *LDT,
              float *V, int *LDV, float *WR, float *WI, float *WORK, int *LWORK);
@@ -3287,7 +3312,7 @@ void PSLAQR2_(int *WANTT, int *WANTZ, int *N, int *KTOP, int *KBOT, int *NW,
               int *NS, int *ND, float *SR, float *SI, float *T, int *LDT,
               float *V, int *LDV, float *WR, float *WI, float *WORK,
               int *LWORK);
-void mangle_pslaqr4(int *WANTT, int *WANTZ, int *N, int *ILO, int *IHI, float *A,
+void pslaqr4(int *WANTT, int *WANTZ, int *N, int *ILO, int *IHI, float *A,
              int *DESCA, float *WR, float *WI, int *ILOZ, int *IHIZ, float *Z,
              int *DESCZ, float *T, int *LDT, float *V, int *LDV, float *WORK,
              int *LWORK, int *INFO);
@@ -3299,7 +3324,7 @@ void PSLAQR4_(int *WANTT, int *WANTZ, int *N, int *ILO, int *IHI, float *A,
               int *DESCA, float *WR, float *WI, int *ILOZ, int *IHIZ, float *Z,
               int *DESCZ, float *T, int *LDT, float *V, int *LDV, float *WORK,
               int *LWORK, int *INFO);
-void mangle_pslaqr5(int *WANTT, int *WANTZ, int *KACC22, int *N, int *KTOP, int *KBOT,
+void pslaqr5(int *WANTT, int *WANTZ, int *KACC22, int *N, int *KTOP, int *KBOT,
              int *NSHFTS, float *SR, float *SI, float *H, int *DESCH, int *ILOZ,
              int *IHIZ, float *Z, int *DESCZ, float *WORK, int *LWORK,
              int *IWORK, int *LIWORK);
@@ -3311,25 +3336,25 @@ void PSLAQR5_(int *WANTT, int *WANTZ, int *KACC22, int *N, int *KTOP, int *KBOT,
               int *NSHFTS, float *SR, float *SI, float *H, int *DESCH,
               int *ILOZ, int *IHIZ, float *Z, int *DESCZ, float *WORK,
               int *LWORK, int *IWORK, int *LIWORK);
-void mangle_pslaqsy(char *UPLO, int *N, float *A, int *IA, int *JA, int *DESCA,
+void pslaqsy(char *UPLO, int *N, float *A, int *IA, int *JA, int *DESCA,
              float *SR, float *SC, float *SCOND, float *AMAX, char *EQUED);
 void PSLAQSY(char *UPLO, int *N, float *A, int *IA, int *JA, int *DESCA,
              float *SR, float *SC, float *SCOND, float *AMAX, char *EQUED);
 void PSLAQSY_(char *UPLO, int *N, float *A, int *IA, int *JA, int *DESCA,
               float *SR, float *SC, float *SCOND, float *AMAX, char *EQUED);
-void mangle_pslared1d(int *N, int *IA, int *JA, int *DESC, float *BYCOL, float *BYALL,
+void pslared1d(int *N, int *IA, int *JA, int *DESC, float *BYCOL, float *BYALL,
                float *WORK, int *LWORK);
 void PSLARED1D(int *N, int *IA, int *JA, int *DESC, float *BYCOL, float *BYALL,
                float *WORK, int *LWORK);
 void PSLARED1D_(int *N, int *IA, int *JA, int *DESC, float *BYCOL, float *BYALL,
                 float *WORK, int *LWORK);
-void mangle_pslared2d(int *N, int *IA, int *JA, int *DESC, float *BYROW, float *BYALL,
+void pslared2d(int *N, int *IA, int *JA, int *DESC, float *BYROW, float *BYALL,
                float *WORK, int *LWORK);
 void PSLARED2D(int *N, int *IA, int *JA, int *DESC, float *BYROW, float *BYALL,
                float *WORK, int *LWORK);
 void PSLARED2D_(int *N, int *IA, int *JA, int *DESC, float *BYROW, float *BYALL,
                 float *WORK, int *LWORK);
-void mangle_pslarf(char *SIDE, int *M, int *N, float *V, int *IV, int *JV, int *DESCV,
+void pslarf(char *SIDE, int *M, int *N, float *V, int *IV, int *JV, int *DESCV,
             int *INCV, float *TAU, float *C, int *IC, int *JC, int *DESCC,
             float *WORK);
 void PSLARF(char *SIDE, int *M, int *N, float *V, int *IV, int *JV, int *DESCV,
@@ -3338,7 +3363,7 @@ void PSLARF(char *SIDE, int *M, int *N, float *V, int *IV, int *JV, int *DESCV,
 void PSLARF_(char *SIDE, int *M, int *N, float *V, int *IV, int *JV, int *DESCV,
              int *INCV, float *TAU, float *C, int *IC, int *JC, int *DESCC,
              float *WORK);
-void mangle_pslarfb(char *SIDE, char *TRANS, char *DIRECT, char *STOREV, int *M,
+void pslarfb(char *SIDE, char *TRANS, char *DIRECT, char *STOREV, int *M,
              int *N, int *K, float *V, int *IV, int *JV, int *DESCV, float *T,
              float *C, int *IC, int *JC, int *DESCC, float *WORK);
 void PSLARFB(char *SIDE, char *TRANS, char *DIRECT, char *STOREV, int *M,
@@ -3347,19 +3372,19 @@ void PSLARFB(char *SIDE, char *TRANS, char *DIRECT, char *STOREV, int *M,
 void PSLARFB_(char *SIDE, char *TRANS, char *DIRECT, char *STOREV, int *M,
               int *N, int *K, float *V, int *IV, int *JV, int *DESCV, float *T,
               float *C, int *IC, int *JC, int *DESCC, float *WORK);
-void mangle_pslarfg(int *N, float *ALPHA, int *IAX, int *JAX, float *X, int *IX,
+void pslarfg(int *N, float *ALPHA, int *IAX, int *JAX, float *X, int *IX,
              int *JX, int *DESCX, int *INCX, float *TAU);
 void PSLARFG(int *N, float *ALPHA, int *IAX, int *JAX, float *X, int *IX,
              int *JX, int *DESCX, int *INCX, float *TAU);
 void PSLARFG_(int *N, float *ALPHA, int *IAX, int *JAX, float *X, int *IX,
               int *JX, int *DESCX, int *INCX, float *TAU);
-void mangle_pslarft(char *DIRECT, char *STOREV, int *N, int *K, float *V, int *IV,
+void pslarft(char *DIRECT, char *STOREV, int *N, int *K, float *V, int *IV,
              int *JV, int *DESCV, float *TAU, float *T, float *WORK);
 void PSLARFT(char *DIRECT, char *STOREV, int *N, int *K, float *V, int *IV,
              int *JV, int *DESCV, float *TAU, float *T, float *WORK);
 void PSLARFT_(char *DIRECT, char *STOREV, int *N, int *K, float *V, int *IV,
               int *JV, int *DESCV, float *TAU, float *T, float *WORK);
-void mangle_pslarz(char *SIDE, int *M, int *N, int *L, float *V, int *IV, int *JV,
+void pslarz(char *SIDE, int *M, int *N, int *L, float *V, int *IV, int *JV,
             int *DESCV, int *INCV, float *TAU, float *C, int *IC, int *JC,
             int *DESCC, float *WORK);
 void PSLARZ(char *SIDE, int *M, int *N, int *L, float *V, int *IV, int *JV,
@@ -3368,7 +3393,7 @@ void PSLARZ(char *SIDE, int *M, int *N, int *L, float *V, int *IV, int *JV,
 void PSLARZ_(char *SIDE, int *M, int *N, int *L, float *V, int *IV, int *JV,
              int *DESCV, int *INCV, float *TAU, float *C, int *IC, int *JC,
              int *DESCC, float *WORK);
-void mangle_pslarzb(char *SIDE, char *TRANS, char *DIRECT, char *STOREV, int *M,
+void pslarzb(char *SIDE, char *TRANS, char *DIRECT, char *STOREV, int *M,
              int *N, int *K, int *L, float *V, int *IV, int *JV, int *DESCV,
              float *T, float *C, int *IC, int *JC, int *DESCC, float *WORK);
 void PSLARZB(char *SIDE, char *TRANS, char *DIRECT, char *STOREV, int *M,
@@ -3377,56 +3402,56 @@ void PSLARZB(char *SIDE, char *TRANS, char *DIRECT, char *STOREV, int *M,
 void PSLARZB_(char *SIDE, char *TRANS, char *DIRECT, char *STOREV, int *M,
               int *N, int *K, int *L, float *V, int *IV, int *JV, int *DESCV,
               float *T, float *C, int *IC, int *JC, int *DESCC, float *WORK);
-void mangle_pslarzt(char *DIRECT, char *STOREV, int *N, int *K, float *V, int *IV,
+void pslarzt(char *DIRECT, char *STOREV, int *N, int *K, float *V, int *IV,
              int *JV, int *DESCV, float *TAU, float *T, float *WORK);
 void PSLARZT(char *DIRECT, char *STOREV, int *N, int *K, float *V, int *IV,
              int *JV, int *DESCV, float *TAU, float *T, float *WORK);
 void PSLARZT_(char *DIRECT, char *STOREV, int *N, int *K, float *V, int *IV,
               int *JV, int *DESCV, float *TAU, float *T, float *WORK);
-void mangle_pslascl(char *TYPE, float *CFROM, float *CTO, int *M, int *N, float *A,
+void pslascl(char *TYPE, float *CFROM, float *CTO, int *M, int *N, float *A,
              int *IA, int *JA, int *DESCA, int *INFO);
 void PSLASCL(char *TYPE, float *CFROM, float *CTO, int *M, int *N, float *A,
              int *IA, int *JA, int *DESCA, int *INFO);
 void PSLASCL_(char *TYPE, float *CFROM, float *CTO, int *M, int *N, float *A,
               int *IA, int *JA, int *DESCA, int *INFO);
-void mangle_pslase2(char *UPLO, int *M, int *N, float *ALPHA, float *BETA, float *A,
+void pslase2(char *UPLO, int *M, int *N, float *ALPHA, float *BETA, float *A,
              int *IA, int *JA, int *DESCA);
 void PSLASE2(char *UPLO, int *M, int *N, float *ALPHA, float *BETA, float *A,
              int *IA, int *JA, int *DESCA);
 void PSLASE2_(char *UPLO, int *M, int *N, float *ALPHA, float *BETA, float *A,
               int *IA, int *JA, int *DESCA);
-void mangle_pslaset(char *UPLO, int *M, int *N, float *ALPHA, float *BETA, float *A,
+void pslaset(char *UPLO, int *M, int *N, float *ALPHA, float *BETA, float *A,
              int *IA, int *JA, int *DESCA);
 void PSLASET(char *UPLO, int *M, int *N, float *ALPHA, float *BETA, float *A,
              int *IA, int *JA, int *DESCA);
 void PSLASET_(char *UPLO, int *M, int *N, float *ALPHA, float *BETA, float *A,
               int *IA, int *JA, int *DESCA);
-void mangle_pslasmsub(float *A, int *DESCA, int *I, int *L, int *K, float *SMLNUM,
+void pslasmsub(float *A, int *DESCA, int *I, int *L, int *K, float *SMLNUM,
                float *BUF, int *LWORK);
 void PSLASMSUB(float *A, int *DESCA, int *I, int *L, int *K, float *SMLNUM,
                float *BUF, int *LWORK);
 void PSLASMSUB_(float *A, int *DESCA, int *I, int *L, int *K, float *SMLNUM,
                 float *BUF, int *LWORK);
-void mangle_pslasrt(char *ID, int *N, float *D, float *Q, int *IQ, int *JQ, int *DESCQ,
+void pslasrt(char *ID, int *N, float *D, float *Q, int *IQ, int *JQ, int *DESCQ,
              float *WORK, int *LWORK, int *IWORK, int *LIWORK, int *INFO);
 void PSLASRT(char *ID, int *N, float *D, float *Q, int *IQ, int *JQ, int *DESCQ,
              float *WORK, int *LWORK, int *IWORK, int *LIWORK, int *INFO);
 void PSLASRT_(char *ID, int *N, float *D, float *Q, int *IQ, int *JQ,
               int *DESCQ, float *WORK, int *LWORK, int *IWORK, int *LIWORK,
               int *INFO);
-void mangle_pslassq(int *N, float *X, int *IX, int *JX, int *DESCX, int *INCX,
+void pslassq(int *N, float *X, int *IX, int *JX, int *DESCX, int *INCX,
              float *SCALE, float *SUMSQ);
 void PSLASSQ(int *N, float *X, int *IX, int *JX, int *DESCX, int *INCX,
              float *SCALE, float *SUMSQ);
 void PSLASSQ_(int *N, float *X, int *IX, int *JX, int *DESCX, int *INCX,
               float *SCALE, float *SUMSQ);
-void mangle_pslaswp(char *DIREC, char *ROWCOL, int *N, float *A, int *IA, int *JA,
+void pslaswp(char *DIREC, char *ROWCOL, int *N, float *A, int *IA, int *JA,
              int *DESCA, int *K1, int *K2, int *IPIV);
 void PSLASWP(char *DIREC, char *ROWCOL, int *N, float *A, int *IA, int *JA,
              int *DESCA, int *K1, int *K2, int *IPIV);
 void PSLASWP_(char *DIREC, char *ROWCOL, int *N, float *A, int *IA, int *JA,
               int *DESCA, int *K1, int *K2, int *IPIV);
-void mangle_pslatrd(char *UPLO, int *N, int *NB, float *A, int *IA, int *JA,
+void pslatrd(char *UPLO, int *N, int *NB, float *A, int *IA, int *JA,
              int *DESCA, float *D, float *E, float *TAU, float *W, int *IW,
              int *JW, int *DESCW, float *WORK);
 void PSLATRD(char *UPLO, int *N, int *NB, float *A, int *IA, int *JA,
@@ -3435,7 +3460,7 @@ void PSLATRD(char *UPLO, int *N, int *NB, float *A, int *IA, int *JA,
 void PSLATRD_(char *UPLO, int *N, int *NB, float *A, int *IA, int *JA,
               int *DESCA, float *D, float *E, float *TAU, float *W, int *IW,
               int *JW, int *DESCW, float *WORK);
-void mangle_pslatrs(char *UPLO, char *TRANS, char *DIAG, char *NORMIN, int *N,
+void pslatrs(char *UPLO, char *TRANS, char *DIAG, char *NORMIN, int *N,
              float *A, int *IA, int *JA, int *DESCA, float *X, int *IX, int *JX,
              int *DESCX, float *SCALE, float *CNORM, float *WORK);
 void PSLATRS(char *UPLO, char *TRANS, char *DIAG, char *NORMIN, int *N,
@@ -3444,73 +3469,73 @@ void PSLATRS(char *UPLO, char *TRANS, char *DIAG, char *NORMIN, int *N,
 void PSLATRS_(char *UPLO, char *TRANS, char *DIAG, char *NORMIN, int *N,
               float *A, int *IA, int *JA, int *DESCA, float *X, int *IX,
               int *JX, int *DESCX, float *SCALE, float *CNORM, float *WORK);
-void mangle_pslatrz(int *M, int *N, int *L, float *A, int *IA, int *JA, int *DESCA,
+void pslatrz(int *M, int *N, int *L, float *A, int *IA, int *JA, int *DESCA,
              float *TAU, float *WORK);
 void PSLATRZ(int *M, int *N, int *L, float *A, int *IA, int *JA, int *DESCA,
              float *TAU, float *WORK);
 void PSLATRZ_(int *M, int *N, int *L, float *A, int *IA, int *JA, int *DESCA,
               float *TAU, float *WORK);
-void mangle_pslauu2(char *UPLO, int *N, float *A, int *IA, int *JA, int *DESCA);
+void pslauu2(char *UPLO, int *N, float *A, int *IA, int *JA, int *DESCA);
 void PSLAUU2(char *UPLO, int *N, float *A, int *IA, int *JA, int *DESCA);
 void PSLAUU2_(char *UPLO, int *N, float *A, int *IA, int *JA, int *DESCA);
-void mangle_pslauum(char *UPLO, int *N, float *A, int *IA, int *JA, int *DESCA);
+void pslauum(char *UPLO, int *N, float *A, int *IA, int *JA, int *DESCA);
 void PSLAUUM(char *UPLO, int *N, float *A, int *IA, int *JA, int *DESCA);
 void PSLAUUM_(char *UPLO, int *N, float *A, int *IA, int *JA, int *DESCA);
-void mangle_pslawil(int *II, int *JJ, int *M, float *A, int *DESCA, float *H44,
+void pslawil(int *II, int *JJ, int *M, float *A, int *DESCA, float *H44,
              float *H33, float *H43H34, float *V);
 void PSLAWIL(int *II, int *JJ, int *M, float *A, int *DESCA, float *H44,
              float *H33, float *H43H34, float *V);
 void PSLAWIL_(int *II, int *JJ, int *M, float *A, int *DESCA, float *H44,
               float *H33, float *H43H34, float *V);
-void mangle_psorg2l(int *M, int *N, int *K, float *A, int *IA, int *JA, int *DESCA,
+void psorg2l(int *M, int *N, int *K, float *A, int *IA, int *JA, int *DESCA,
              float *TAU, float *WORK, int *LWORK, int *INFO);
 void PSORG2L(int *M, int *N, int *K, float *A, int *IA, int *JA, int *DESCA,
              float *TAU, float *WORK, int *LWORK, int *INFO);
 void PSORG2L_(int *M, int *N, int *K, float *A, int *IA, int *JA, int *DESCA,
               float *TAU, float *WORK, int *LWORK, int *INFO);
-void mangle_psorg2r(int *M, int *N, int *K, float *A, int *IA, int *JA, int *DESCA,
+void psorg2r(int *M, int *N, int *K, float *A, int *IA, int *JA, int *DESCA,
              float *TAU, float *WORK, int *LWORK, int *INFO);
 void PSORG2R(int *M, int *N, int *K, float *A, int *IA, int *JA, int *DESCA,
              float *TAU, float *WORK, int *LWORK, int *INFO);
 void PSORG2R_(int *M, int *N, int *K, float *A, int *IA, int *JA, int *DESCA,
               float *TAU, float *WORK, int *LWORK, int *INFO);
-void mangle_psorgl2(int *M, int *N, int *K, float *A, int *IA, int *JA, int *DESCA,
+void psorgl2(int *M, int *N, int *K, float *A, int *IA, int *JA, int *DESCA,
              float *TAU, float *WORK, int *LWORK, int *INFO);
 void PSORGL2(int *M, int *N, int *K, float *A, int *IA, int *JA, int *DESCA,
              float *TAU, float *WORK, int *LWORK, int *INFO);
 void PSORGL2_(int *M, int *N, int *K, float *A, int *IA, int *JA, int *DESCA,
               float *TAU, float *WORK, int *LWORK, int *INFO);
-void mangle_psorglq(int *M, int *N, int *K, float *A, int *IA, int *JA, int *DESCA,
+void psorglq(int *M, int *N, int *K, float *A, int *IA, int *JA, int *DESCA,
              float *TAU, float *WORK, int *LWORK, int *INFO);
 void PSORGLQ(int *M, int *N, int *K, float *A, int *IA, int *JA, int *DESCA,
              float *TAU, float *WORK, int *LWORK, int *INFO);
 void PSORGLQ_(int *M, int *N, int *K, float *A, int *IA, int *JA, int *DESCA,
               float *TAU, float *WORK, int *LWORK, int *INFO);
-void mangle_psorgql(int *M, int *N, int *K, float *A, int *IA, int *JA, int *DESCA,
+void psorgql(int *M, int *N, int *K, float *A, int *IA, int *JA, int *DESCA,
              float *TAU, float *WORK, int *LWORK, int *INFO);
 void PSORGQL(int *M, int *N, int *K, float *A, int *IA, int *JA, int *DESCA,
              float *TAU, float *WORK, int *LWORK, int *INFO);
 void PSORGQL_(int *M, int *N, int *K, float *A, int *IA, int *JA, int *DESCA,
               float *TAU, float *WORK, int *LWORK, int *INFO);
-void mangle_psorgqr(int *M, int *N, int *K, float *A, int *IA, int *JA, int *DESCA,
+void psorgqr(int *M, int *N, int *K, float *A, int *IA, int *JA, int *DESCA,
              float *TAU, float *WORK, int *LWORK, int *INFO);
 void PSORGQR(int *M, int *N, int *K, float *A, int *IA, int *JA, int *DESCA,
              float *TAU, float *WORK, int *LWORK, int *INFO);
 void PSORGQR_(int *M, int *N, int *K, float *A, int *IA, int *JA, int *DESCA,
               float *TAU, float *WORK, int *LWORK, int *INFO);
-void mangle_psorgr2(int *M, int *N, int *K, float *A, int *IA, int *JA, int *DESCA,
+void psorgr2(int *M, int *N, int *K, float *A, int *IA, int *JA, int *DESCA,
              float *TAU, float *WORK, int *LWORK, int *INFO);
 void PSORGR2(int *M, int *N, int *K, float *A, int *IA, int *JA, int *DESCA,
              float *TAU, float *WORK, int *LWORK, int *INFO);
 void PSORGR2_(int *M, int *N, int *K, float *A, int *IA, int *JA, int *DESCA,
               float *TAU, float *WORK, int *LWORK, int *INFO);
-void mangle_psorgrq(int *M, int *N, int *K, float *A, int *IA, int *JA, int *DESCA,
+void psorgrq(int *M, int *N, int *K, float *A, int *IA, int *JA, int *DESCA,
              float *TAU, float *WORK, int *LWORK, int *INFO);
 void PSORGRQ(int *M, int *N, int *K, float *A, int *IA, int *JA, int *DESCA,
              float *TAU, float *WORK, int *LWORK, int *INFO);
 void PSORGRQ_(int *M, int *N, int *K, float *A, int *IA, int *JA, int *DESCA,
               float *TAU, float *WORK, int *LWORK, int *INFO);
-void mangle_psorm2l(char *SIDE, char *TRANS, int *M, int *N, int *K, float *A, int *IA,
+void psorm2l(char *SIDE, char *TRANS, int *M, int *N, int *K, float *A, int *IA,
              int *JA, int *DESCA, float *TAU, float *C, int *IC, int *JC,
              int *DESCC, float *WORK, int *LWORK, int *INFO);
 void PSORM2L(char *SIDE, char *TRANS, int *M, int *N, int *K, float *A, int *IA,
@@ -3519,7 +3544,7 @@ void PSORM2L(char *SIDE, char *TRANS, int *M, int *N, int *K, float *A, int *IA,
 void PSORM2L_(char *SIDE, char *TRANS, int *M, int *N, int *K, float *A,
               int *IA, int *JA, int *DESCA, float *TAU, float *C, int *IC,
               int *JC, int *DESCC, float *WORK, int *LWORK, int *INFO);
-void mangle_psorm2r(char *SIDE, char *TRANS, int *M, int *N, int *K, float *A, int *IA,
+void psorm2r(char *SIDE, char *TRANS, int *M, int *N, int *K, float *A, int *IA,
              int *JA, int *DESCA, float *TAU, float *C, int *IC, int *JC,
              int *DESCC, float *WORK, int *LWORK, int *INFO);
 void PSORM2R(char *SIDE, char *TRANS, int *M, int *N, int *K, float *A, int *IA,
@@ -3528,7 +3553,7 @@ void PSORM2R(char *SIDE, char *TRANS, int *M, int *N, int *K, float *A, int *IA,
 void PSORM2R_(char *SIDE, char *TRANS, int *M, int *N, int *K, float *A,
               int *IA, int *JA, int *DESCA, float *TAU, float *C, int *IC,
               int *JC, int *DESCC, float *WORK, int *LWORK, int *INFO);
-void mangle_psormbr(char *VECT, char *SIDE, char *TRANS, int *M, int *N, int *K,
+void psormbr(char *VECT, char *SIDE, char *TRANS, int *M, int *N, int *K,
              float *A, int *IA, int *JA, int *DESCA, float *TAU, float *C,
              int *IC, int *JC, int *DESCC, float *WORK, int *LWORK, int *INFO);
 void PSORMBR(char *VECT, char *SIDE, char *TRANS, int *M, int *N, int *K,
@@ -3537,7 +3562,7 @@ void PSORMBR(char *VECT, char *SIDE, char *TRANS, int *M, int *N, int *K,
 void PSORMBR_(char *VECT, char *SIDE, char *TRANS, int *M, int *N, int *K,
               float *A, int *IA, int *JA, int *DESCA, float *TAU, float *C,
               int *IC, int *JC, int *DESCC, float *WORK, int *LWORK, int *INFO);
-void mangle_psormhr(char *SIDE, char *TRANS, int *M, int *N, int *ILO, int *IHI,
+void psormhr(char *SIDE, char *TRANS, int *M, int *N, int *ILO, int *IHI,
              float *A, int *IA, int *JA, int *DESCA, float *TAU, float *C,
              int *IC, int *JC, int *DESCC, float *WORK, int *LWORK, int *INFO);
 void PSORMHR(char *SIDE, char *TRANS, int *M, int *N, int *ILO, int *IHI,
@@ -3546,7 +3571,7 @@ void PSORMHR(char *SIDE, char *TRANS, int *M, int *N, int *ILO, int *IHI,
 void PSORMHR_(char *SIDE, char *TRANS, int *M, int *N, int *ILO, int *IHI,
               float *A, int *IA, int *JA, int *DESCA, float *TAU, float *C,
               int *IC, int *JC, int *DESCC, float *WORK, int *LWORK, int *INFO);
-void mangle_psorml2(char *SIDE, char *TRANS, int *M, int *N, int *K, float *A, int *IA,
+void psorml2(char *SIDE, char *TRANS, int *M, int *N, int *K, float *A, int *IA,
              int *JA, int *DESCA, float *TAU, float *C, int *IC, int *JC,
              int *DESCC, float *WORK, int *LWORK, int *INFO);
 void PSORML2(char *SIDE, char *TRANS, int *M, int *N, int *K, float *A, int *IA,
@@ -3555,7 +3580,7 @@ void PSORML2(char *SIDE, char *TRANS, int *M, int *N, int *K, float *A, int *IA,
 void PSORML2_(char *SIDE, char *TRANS, int *M, int *N, int *K, float *A,
               int *IA, int *JA, int *DESCA, float *TAU, float *C, int *IC,
               int *JC, int *DESCC, float *WORK, int *LWORK, int *INFO);
-void mangle_psormlq(char *SIDE, char *TRANS, int *M, int *N, int *K, float *A, int *IA,
+void psormlq(char *SIDE, char *TRANS, int *M, int *N, int *K, float *A, int *IA,
              int *JA, int *DESCA, float *TAU, float *C, int *IC, int *JC,
              int *DESCC, float *WORK, int *LWORK, int *INFO);
 void PSORMLQ(char *SIDE, char *TRANS, int *M, int *N, int *K, float *A, int *IA,
@@ -3564,7 +3589,7 @@ void PSORMLQ(char *SIDE, char *TRANS, int *M, int *N, int *K, float *A, int *IA,
 void PSORMLQ_(char *SIDE, char *TRANS, int *M, int *N, int *K, float *A,
               int *IA, int *JA, int *DESCA, float *TAU, float *C, int *IC,
               int *JC, int *DESCC, float *WORK, int *LWORK, int *INFO);
-void mangle_psormql(char *SIDE, char *TRANS, int *M, int *N, int *K, float *A, int *IA,
+void psormql(char *SIDE, char *TRANS, int *M, int *N, int *K, float *A, int *IA,
              int *JA, int *DESCA, float *TAU, float *C, int *IC, int *JC,
              int *DESCC, float *WORK, int *LWORK, int *INFO);
 void PSORMQL(char *SIDE, char *TRANS, int *M, int *N, int *K, float *A, int *IA,
@@ -3573,7 +3598,7 @@ void PSORMQL(char *SIDE, char *TRANS, int *M, int *N, int *K, float *A, int *IA,
 void PSORMQL_(char *SIDE, char *TRANS, int *M, int *N, int *K, float *A,
               int *IA, int *JA, int *DESCA, float *TAU, float *C, int *IC,
               int *JC, int *DESCC, float *WORK, int *LWORK, int *INFO);
-void mangle_psormqr(char *SIDE, char *TRANS, int *M, int *N, int *K, float *A, int *IA,
+void psormqr(char *SIDE, char *TRANS, int *M, int *N, int *K, float *A, int *IA,
              int *JA, int *DESCA, float *TAU, float *C, int *IC, int *JC,
              int *DESCC, float *WORK, int *LWORK, int *INFO);
 void PSORMQR(char *SIDE, char *TRANS, int *M, int *N, int *K, float *A, int *IA,
@@ -3582,7 +3607,7 @@ void PSORMQR(char *SIDE, char *TRANS, int *M, int *N, int *K, float *A, int *IA,
 void PSORMQR_(char *SIDE, char *TRANS, int *M, int *N, int *K, float *A,
               int *IA, int *JA, int *DESCA, float *TAU, float *C, int *IC,
               int *JC, int *DESCC, float *WORK, int *LWORK, int *INFO);
-void mangle_psormr2(char *SIDE, char *TRANS, int *M, int *N, int *K, float *A, int *IA,
+void psormr2(char *SIDE, char *TRANS, int *M, int *N, int *K, float *A, int *IA,
              int *JA, int *DESCA, float *TAU, float *C, int *IC, int *JC,
              int *DESCC, float *WORK, int *LWORK, int *INFO);
 void PSORMR2(char *SIDE, char *TRANS, int *M, int *N, int *K, float *A, int *IA,
@@ -3591,7 +3616,7 @@ void PSORMR2(char *SIDE, char *TRANS, int *M, int *N, int *K, float *A, int *IA,
 void PSORMR2_(char *SIDE, char *TRANS, int *M, int *N, int *K, float *A,
               int *IA, int *JA, int *DESCA, float *TAU, float *C, int *IC,
               int *JC, int *DESCC, float *WORK, int *LWORK, int *INFO);
-void mangle_psormr3(char *SIDE, char *TRANS, int *M, int *N, int *K, int *L, float *A,
+void psormr3(char *SIDE, char *TRANS, int *M, int *N, int *K, int *L, float *A,
              int *IA, int *JA, int *DESCA, float *TAU, float *C, int *IC,
              int *JC, int *DESCC, float *WORK, int *LWORK, int *INFO);
 void PSORMR3(char *SIDE, char *TRANS, int *M, int *N, int *K, int *L, float *A,
@@ -3600,7 +3625,7 @@ void PSORMR3(char *SIDE, char *TRANS, int *M, int *N, int *K, int *L, float *A,
 void PSORMR3_(char *SIDE, char *TRANS, int *M, int *N, int *K, int *L, float *A,
               int *IA, int *JA, int *DESCA, float *TAU, float *C, int *IC,
               int *JC, int *DESCC, float *WORK, int *LWORK, int *INFO);
-void mangle_psormrq(char *SIDE, char *TRANS, int *M, int *N, int *K, float *A, int *IA,
+void psormrq(char *SIDE, char *TRANS, int *M, int *N, int *K, float *A, int *IA,
              int *JA, int *DESCA, float *TAU, float *C, int *IC, int *JC,
              int *DESCC, float *WORK, int *LWORK, int *INFO);
 void PSORMRQ(char *SIDE, char *TRANS, int *M, int *N, int *K, float *A, int *IA,
@@ -3609,7 +3634,7 @@ void PSORMRQ(char *SIDE, char *TRANS, int *M, int *N, int *K, float *A, int *IA,
 void PSORMRQ_(char *SIDE, char *TRANS, int *M, int *N, int *K, float *A,
               int *IA, int *JA, int *DESCA, float *TAU, float *C, int *IC,
               int *JC, int *DESCC, float *WORK, int *LWORK, int *INFO);
-void mangle_psormrz(char *SIDE, char *TRANS, int *M, int *N, int *K, int *L, float *A,
+void psormrz(char *SIDE, char *TRANS, int *M, int *N, int *K, int *L, float *A,
              int *IA, int *JA, int *DESCA, float *TAU, float *C, int *IC,
              int *JC, int *DESCC, float *WORK, int *LWORK, int *INFO);
 void PSORMRZ(char *SIDE, char *TRANS, int *M, int *N, int *K, int *L, float *A,
@@ -3618,7 +3643,7 @@ void PSORMRZ(char *SIDE, char *TRANS, int *M, int *N, int *K, int *L, float *A,
 void PSORMRZ_(char *SIDE, char *TRANS, int *M, int *N, int *K, int *L, float *A,
               int *IA, int *JA, int *DESCA, float *TAU, float *C, int *IC,
               int *JC, int *DESCC, float *WORK, int *LWORK, int *INFO);
-void mangle_psormtr(char *SIDE, char *UPLO, char *TRANS, int *M, int *N, float *A,
+void psormtr(char *SIDE, char *UPLO, char *TRANS, int *M, int *N, float *A,
              int *IA, int *JA, int *DESCA, float *TAU, float *C, int *IC,
              int *JC, int *DESCC, float *WORK, int *LWORK, int *INFO);
 void PSORMTR(char *SIDE, char *UPLO, char *TRANS, int *M, int *N, float *A,
@@ -3627,7 +3652,7 @@ void PSORMTR(char *SIDE, char *UPLO, char *TRANS, int *M, int *N, float *A,
 void PSORMTR_(char *SIDE, char *UPLO, char *TRANS, int *M, int *N, float *A,
               int *IA, int *JA, int *DESCA, float *TAU, float *C, int *IC,
               int *JC, int *DESCC, float *WORK, int *LWORK, int *INFO);
-void mangle_pspbsv(char *UPLO, int *N, int *BW, int *NRHS, float *A, int *JA,
+void pspbsv(char *UPLO, int *N, int *BW, int *NRHS, float *A, int *JA,
             int *DESCA, float *B, int *IB, int *DESCB, float *WORK, int *LWORK,
             int *INFO);
 void PSPBSV(char *UPLO, int *N, int *BW, int *NRHS, float *A, int *JA,
@@ -3636,13 +3661,13 @@ void PSPBSV(char *UPLO, int *N, int *BW, int *NRHS, float *A, int *JA,
 void PSPBSV_(char *UPLO, int *N, int *BW, int *NRHS, float *A, int *JA,
              int *DESCA, float *B, int *IB, int *DESCB, float *WORK, int *LWORK,
              int *INFO);
-void mangle_pspbtrf(char *UPLO, int *N, int *BW, float *A, int *JA, int *DESCA,
+void pspbtrf(char *UPLO, int *N, int *BW, float *A, int *JA, int *DESCA,
              float *AF, int *LAF, float *WORK, int *LWORK, int *INFO);
 void PSPBTRF(char *UPLO, int *N, int *BW, float *A, int *JA, int *DESCA,
              float *AF, int *LAF, float *WORK, int *LWORK, int *INFO);
 void PSPBTRF_(char *UPLO, int *N, int *BW, float *A, int *JA, int *DESCA,
               float *AF, int *LAF, float *WORK, int *LWORK, int *INFO);
-void mangle_pspbtrs(char *UPLO, int *N, int *BW, int *NRHS, float *A, int *JA,
+void pspbtrs(char *UPLO, int *N, int *BW, int *NRHS, float *A, int *JA,
              int *DESCA, float *B, int *IB, int *DESCB, float *AF, int *LAF,
              float *WORK, int *LWORK, int *INFO);
 void PSPBTRS(char *UPLO, int *N, int *BW, int *NRHS, float *A, int *JA,
@@ -3651,7 +3676,7 @@ void PSPBTRS(char *UPLO, int *N, int *BW, int *NRHS, float *A, int *JA,
 void PSPBTRS_(char *UPLO, int *N, int *BW, int *NRHS, float *A, int *JA,
               int *DESCA, float *B, int *IB, int *DESCB, float *AF, int *LAF,
               float *WORK, int *LWORK, int *INFO);
-void mangle_pspbtrsv(char *UPLO, char *TRANS, int *N, int *BW, int *NRHS, float *A,
+void pspbtrsv(char *UPLO, char *TRANS, int *N, int *BW, int *NRHS, float *A,
               int *JA, int *DESCA, float *B, int *IB, int *DESCB, float *AF,
               int *LAF, float *WORK, int *LWORK, int *INFO);
 void PSPBTRSV(char *UPLO, char *TRANS, int *N, int *BW, int *NRHS, float *A,
@@ -3660,7 +3685,7 @@ void PSPBTRSV(char *UPLO, char *TRANS, int *N, int *BW, int *NRHS, float *A,
 void PSPBTRSV_(char *UPLO, char *TRANS, int *N, int *BW, int *NRHS, float *A,
                int *JA, int *DESCA, float *B, int *IB, int *DESCB, float *AF,
                int *LAF, float *WORK, int *LWORK, int *INFO);
-void mangle_pspocon(char *UPLO, int *N, float *A, int *IA, int *JA, int *DESCA,
+void pspocon(char *UPLO, int *N, float *A, int *IA, int *JA, int *DESCA,
              float *ANORM, float *RCOND, float *WORK, int *LWORK, int *IWORK,
              int *LIWORK, int *INFO);
 void PSPOCON(char *UPLO, int *N, float *A, int *IA, int *JA, int *DESCA,
@@ -3669,13 +3694,13 @@ void PSPOCON(char *UPLO, int *N, float *A, int *IA, int *JA, int *DESCA,
 void PSPOCON_(char *UPLO, int *N, float *A, int *IA, int *JA, int *DESCA,
               float *ANORM, float *RCOND, float *WORK, int *LWORK, int *IWORK,
               int *LIWORK, int *INFO);
-void mangle_pspoequ(int *N, float *A, int *IA, int *JA, int *DESCA, float *SR,
+void pspoequ(int *N, float *A, int *IA, int *JA, int *DESCA, float *SR,
              float *SC, float *SCOND, float *AMAX, int *INFO);
 void PSPOEQU(int *N, float *A, int *IA, int *JA, int *DESCA, float *SR,
              float *SC, float *SCOND, float *AMAX, int *INFO);
 void PSPOEQU_(int *N, float *A, int *IA, int *JA, int *DESCA, float *SR,
               float *SC, float *SCOND, float *AMAX, int *INFO);
-void mangle_psporfs(char *UPLO, int *N, int *NRHS, float *A, int *IA, int *JA,
+void psporfs(char *UPLO, int *N, int *NRHS, float *A, int *IA, int *JA,
              int *DESCA, float *AF, int *IAF, int *JAF, int *DESCAF, float *B,
              int *IB, int *JB, int *DESCB, float *X, int *IX, int *JX,
              int *DESCX, float *FERR, float *BERR, float *WORK, int *LWORK,
@@ -3690,13 +3715,13 @@ void PSPORFS_(char *UPLO, int *N, int *NRHS, float *A, int *IA, int *JA,
               int *IB, int *JB, int *DESCB, float *X, int *IX, int *JX,
               int *DESCX, float *FERR, float *BERR, float *WORK, int *LWORK,
               int *IWORK, int *LIWORK, int *INFO);
-void mangle_psposv(char *UPLO, int *N, int *NRHS, float *A, int *IA, int *JA,
+void psposv(char *UPLO, int *N, int *NRHS, float *A, int *IA, int *JA,
             int *DESCA, float *B, int *IB, int *JB, int *DESCB, int *INFO);
 void PSPOSV(char *UPLO, int *N, int *NRHS, float *A, int *IA, int *JA,
             int *DESCA, float *B, int *IB, int *JB, int *DESCB, int *INFO);
 void PSPOSV_(char *UPLO, int *N, int *NRHS, float *A, int *IA, int *JA,
              int *DESCA, float *B, int *IB, int *JB, int *DESCB, int *INFO);
-void mangle_psposvx(char *FACT, char *UPLO, int *N, int *NRHS, float *A, int *IA,
+void psposvx(char *FACT, char *UPLO, int *N, int *NRHS, float *A, int *IA,
              int *JA, int *DESCA, float *AF, int *IAF, int *JAF, int *DESCAF,
              char *EQUED, float *SR, float *SC, float *B, int *IB, int *JB,
              int *DESCB, float *X, int *IX, int *JX, int *DESCX, float *RCOND,
@@ -3714,43 +3739,43 @@ void PSPOSVX_(char *FACT, char *UPLO, int *N, int *NRHS, float *A, int *IA,
               int *DESCB, float *X, int *IX, int *JX, int *DESCX, float *RCOND,
               float *FERR, float *BERR, float *WORK, int *LWORK, int *IWORK,
               int *LIWORK, int *INFO);
-void mangle_pspotf2(char *UPLO, int *N, float *A, int *IA, int *JA, int *DESCA,
+void pspotf2(char *UPLO, int *N, float *A, int *IA, int *JA, int *DESCA,
              int *INFO);
 void PSPOTF2(char *UPLO, int *N, float *A, int *IA, int *JA, int *DESCA,
              int *INFO);
 void PSPOTF2_(char *UPLO, int *N, float *A, int *IA, int *JA, int *DESCA,
               int *INFO);
-void mangle_pspotrf(char *UPLO, int *N, float *A, int *IA, int *JA, int *DESCA,
+void pspotrf(char *UPLO, int *N, float *A, int *IA, int *JA, int *DESCA,
              int *INFO);
 void PSPOTRF(char *UPLO, int *N, float *A, int *IA, int *JA, int *DESCA,
              int *INFO);
 void PSPOTRF_(char *UPLO, int *N, float *A, int *IA, int *JA, int *DESCA,
               int *INFO);
-void mangle_pspotri(char *UPLO, int *N, float *A, int *IA, int *JA, int *DESCA,
+void pspotri(char *UPLO, int *N, float *A, int *IA, int *JA, int *DESCA,
              int *INFO);
 void PSPOTRI(char *UPLO, int *N, float *A, int *IA, int *JA, int *DESCA,
              int *INFO);
 void PSPOTRI_(char *UPLO, int *N, float *A, int *IA, int *JA, int *DESCA,
               int *INFO);
-void mangle_pspotrs(char *UPLO, int *N, int *NRHS, float *A, int *IA, int *JA,
+void pspotrs(char *UPLO, int *N, int *NRHS, float *A, int *IA, int *JA,
              int *DESCA, float *B, int *IB, int *JB, int *DESCB, int *INFO);
 void PSPOTRS(char *UPLO, int *N, int *NRHS, float *A, int *IA, int *JA,
              int *DESCA, float *B, int *IB, int *JB, int *DESCB, int *INFO);
 void PSPOTRS_(char *UPLO, int *N, int *NRHS, float *A, int *IA, int *JA,
               int *DESCA, float *B, int *IB, int *JB, int *DESCB, int *INFO);
-void mangle_psptsv(int *N, int *NRHS, float *D, float *E, int *JA, int *DESCA,
+void psptsv(int *N, int *NRHS, float *D, float *E, int *JA, int *DESCA,
             float *B, int *IB, int *DESCB, float *WORK, int *LWORK, int *INFO);
 void PSPTSV(int *N, int *NRHS, float *D, float *E, int *JA, int *DESCA,
             float *B, int *IB, int *DESCB, float *WORK, int *LWORK, int *INFO);
 void PSPTSV_(int *N, int *NRHS, float *D, float *E, int *JA, int *DESCA,
              float *B, int *IB, int *DESCB, float *WORK, int *LWORK, int *INFO);
-void mangle_pspttrf(int *N, float *D, float *E, int *JA, int *DESCA, float *AF,
+void pspttrf(int *N, float *D, float *E, int *JA, int *DESCA, float *AF,
              int *LAF, float *WORK, int *LWORK, int *INFO);
 void PSPTTRF(int *N, float *D, float *E, int *JA, int *DESCA, float *AF,
              int *LAF, float *WORK, int *LWORK, int *INFO);
 void PSPTTRF_(int *N, float *D, float *E, int *JA, int *DESCA, float *AF,
               int *LAF, float *WORK, int *LWORK, int *INFO);
-void mangle_pspttrs(int *N, int *NRHS, float *D, float *E, int *JA, int *DESCA,
+void pspttrs(int *N, int *NRHS, float *D, float *E, int *JA, int *DESCA,
              float *B, int *IB, int *DESCB, float *AF, int *LAF, float *WORK,
              int *LWORK, int *INFO);
 void PSPTTRS(int *N, int *NRHS, float *D, float *E, int *JA, int *DESCA,
@@ -3759,7 +3784,7 @@ void PSPTTRS(int *N, int *NRHS, float *D, float *E, int *JA, int *DESCA,
 void PSPTTRS_(int *N, int *NRHS, float *D, float *E, int *JA, int *DESCA,
               float *B, int *IB, int *DESCB, float *AF, int *LAF, float *WORK,
               int *LWORK, int *INFO);
-void mangle_pspttrsv(char *UPLO, int *N, int *NRHS, float *D, float *E, int *JA,
+void pspttrsv(char *UPLO, int *N, int *NRHS, float *D, float *E, int *JA,
               int *DESCA, float *B, int *IB, int *DESCB, float *AF, int *LAF,
               float *WORK, int *LWORK, int *INFO);
 void PSPTTRSV(char *UPLO, int *N, int *NRHS, float *D, float *E, int *JA,
@@ -3768,7 +3793,7 @@ void PSPTTRSV(char *UPLO, int *N, int *NRHS, float *D, float *E, int *JA,
 void PSPTTRSV_(char *UPLO, int *N, int *NRHS, float *D, float *E, int *JA,
                int *DESCA, float *B, int *IB, int *DESCB, float *AF, int *LAF,
                float *WORK, int *LWORK, int *INFO);
-void mangle_psrot(int *N, double *X, int *IX, int *JX, int *DESCX, int *INCX,
+void psrot(int *N, double *X, int *IX, int *JX, int *DESCX, int *INCX,
            double *Y, int *IY, int *JY, int *DESCY, int *INCY, float *CS,
            float *SN, float *WORK, int *LWORK, int *INFO);
 void PSROT(int *N, double *X, int *IX, int *JX, int *DESCX, int *INCX,
@@ -3777,13 +3802,13 @@ void PSROT(int *N, double *X, int *IX, int *JX, int *DESCX, int *INCX,
 void PSROT_(int *N, double *X, int *IX, int *JX, int *DESCX, int *INCX,
             double *Y, int *IY, int *JY, int *DESCY, int *INCY, float *CS,
             float *SN, float *WORK, int *LWORK, int *INFO);
-void mangle_psrscl(int *N, float *SA, float *SX, int *IX, int *JX, int *DESCX,
+void psrscl(int *N, float *SA, float *SX, int *IX, int *JX, int *DESCX,
             int *INCX);
 void PSRSCL(int *N, float *SA, float *SX, int *IX, int *JX, int *DESCX,
             int *INCX);
 void PSRSCL_(int *N, float *SA, float *SX, int *IX, int *JX, int *DESCX,
              int *INCX);
-void mangle_psstebz(int *ICTXT, char *RANGE, char *ORDER, int *N, float *VL, float *VU,
+void psstebz(int *ICTXT, char *RANGE, char *ORDER, int *N, float *VL, float *VU,
              int *IL, int *IU, float *ABSTOL, float *D, float *E, int *M,
              int *NSPLIT, float *W, int *IBLOCK, int *ISPLIT, float *WORK,
              int *LWORK, int *IWORK, int *LIWORK, int *INFO);
@@ -3795,7 +3820,25 @@ void PSSTEBZ_(int *ICTXT, char *RANGE, char *ORDER, int *N, float *VL,
               float *VU, int *IL, int *IU, float *ABSTOL, float *D, float *E,
               int *M, int *NSPLIT, float *W, int *IBLOCK, int *ISPLIT,
               float *WORK, int *LWORK, int *IWORK, int *LIWORK, int *INFO);
-void mangle_psstedc(char *COMPZ, int *N, float *D, float *E, float *Q, int *IQ,
+void pslaebz(int *IJOB, int *N, int *MMAX, int *MINP, float *ABSTOL,
+             float *RELTOL, float *PIVMIN, float *D, int *NVAL, float *INTVL,
+             int *INTVLCT, int *MOUT, float *LSAVE, int *IEFLAG, int *INFO);
+void PSLAEBZ(int *IJOB, int *N, int *MMAX, int *MINP, float *ABSTOL,
+             float *RELTOL, float *PIVMIN, float *D, int *NVAL, float *INTVL,
+             int *INTVLCT, int *MOUT, float *LSAVE, int *IEFLAG, int *INFO);
+void PSLAEBZ_(int *IJOB, int *N, int *MMAX, int *MINP, float *ABSTOL,
+              float *RELTOL, float *PIVMIN, float *D, int *NVAL, float *INTVL,
+              int *INTVLCT, int *MOUT, float *LSAVE, int *IEFLAG, int *INFO);
+void pslaecv(int *IJOB, int *KF, int *KL, float *INTVL, int *INTVLCT, int *NVAL,
+             float *ABSTOL, float *RELTOL);
+void PSLAECV(int *IJOB, int *KF, int *KL, float *INTVL, int *INTVLCT, int *NVAL,
+             float *ABSTOL, float *RELTOL);
+void PSLAECV_(int *IJOB, int *KF, int *KL, float *INTVL, int *INTVLCT,
+              int *NVAL, float *ABSTOL, float *RELTOL);
+void pslapdct(float *SIGMA, int *N, float *D, float *PIVMIN, int *COUNT);
+void PSLAPDCT(float *SIGMA, int *N, float *D, float *PIVMIN, int *COUNT);
+void PSLAPDCT_(float *SIGMA, int *N, float *D, float *PIVMIN, int *COUNT);
+void psstedc(char *COMPZ, int *N, float *D, float *E, float *Q, int *IQ,
              int *JQ, int *DESCQ, float *WORK, int *LWORK, int *IWORK,
              int *LIWORK, int *INFO);
 void PSSTEDC(char *COMPZ, int *N, float *D, float *E, float *Q, int *IQ,
@@ -3804,7 +3847,7 @@ void PSSTEDC(char *COMPZ, int *N, float *D, float *E, float *Q, int *IQ,
 void PSSTEDC_(char *COMPZ, int *N, float *D, float *E, float *Q, int *IQ,
               int *JQ, int *DESCQ, float *WORK, int *LWORK, int *IWORK,
               int *LIWORK, int *INFO);
-void mangle_psstein(int *N, float *D, float *E, int *M, float *W, int *IBLOCK,
+void psstein(int *N, float *D, float *E, int *M, float *W, int *IBLOCK,
              int *ISPLIT, float *ORFAC, float *Z, int *IZ, int *JZ, int *DESCZ,
              float *WORK, int *LWORK, int *IWORK, int *LIWORK, int *IFAIL,
              int *ICLUSTR, float *GAP, int *INFO);
@@ -3816,7 +3859,7 @@ void PSSTEIN_(int *N, float *D, float *E, int *M, float *W, int *IBLOCK,
               int *ISPLIT, float *ORFAC, float *Z, int *IZ, int *JZ, int *DESCZ,
               float *WORK, int *LWORK, int *IWORK, int *LIWORK, int *IFAIL,
               int *ICLUSTR, float *GAP, int *INFO);
-void mangle_pssyev(char *JOBZ, char *UPLO, int *N, float *A, int *IA, int *JA,
+void pssyev(char *JOBZ, char *UPLO, int *N, float *A, int *IA, int *JA,
             int *DESCA, float *W, float *Z, int *IZ, int *JZ, int *DESCZ,
             float *WORK, int *LWORK, int *INFO);
 void PSSYEV(char *JOBZ, char *UPLO, int *N, float *A, int *IA, int *JA,
@@ -3825,7 +3868,7 @@ void PSSYEV(char *JOBZ, char *UPLO, int *N, float *A, int *IA, int *JA,
 void PSSYEV_(char *JOBZ, char *UPLO, int *N, float *A, int *IA, int *JA,
              int *DESCA, float *W, float *Z, int *IZ, int *JZ, int *DESCZ,
              float *WORK, int *LWORK, int *INFO);
-void mangle_pssyevd(char *JOBZ, char *UPLO, int *N, float *A, int *IA, int *JA,
+void pssyevd(char *JOBZ, char *UPLO, int *N, float *A, int *IA, int *JA,
              int *DESCA, float *W, float *Z, int *IZ, int *JZ, int *DESCZ,
              float *WORK, int *LWORK, int *IWORK, int *LIWORK, int *INFO);
 void PSSYEVD(char *JOBZ, char *UPLO, int *N, float *A, int *IA, int *JA,
@@ -3834,7 +3877,7 @@ void PSSYEVD(char *JOBZ, char *UPLO, int *N, float *A, int *IA, int *JA,
 void PSSYEVD_(char *JOBZ, char *UPLO, int *N, float *A, int *IA, int *JA,
               int *DESCA, float *W, float *Z, int *IZ, int *JZ, int *DESCZ,
               float *WORK, int *LWORK, int *IWORK, int *LIWORK, int *INFO);
-void mangle_pssyevr(char *JOBZ, char *RANGE, char *UPLO, int *N, float *A, int *IA,
+void pssyevr(char *JOBZ, char *RANGE, char *UPLO, int *N, float *A, int *IA,
              int *JA, int *DESCA, float *VL, float *VU, int *IL, int *IU,
              int *M, int *NZ, float *W, float *Z, int *IZ, int *JZ, int *DESCZ,
              float *WORK, int *LWORK, int *IWORK, int *LIWORK, int *INFO);
@@ -3846,7 +3889,7 @@ void PSSYEVR_(char *JOBZ, char *RANGE, char *UPLO, int *N, float *A, int *IA,
               int *JA, int *DESCA, float *VL, float *VU, int *IL, int *IU,
               int *M, int *NZ, float *W, float *Z, int *IZ, int *JZ, int *DESCZ,
               float *WORK, int *LWORK, int *IWORK, int *LIWORK, int *INFO);
-void mangle_pssyevx(char *JOBZ, char *RANGE, char *UPLO, int *N, float *A, int *IA,
+void pssyevx(char *JOBZ, char *RANGE, char *UPLO, int *N, float *A, int *IA,
              int *JA, int *DESCA, float *VL, float *VU, int *IL, int *IU,
              float *ABSTOL, int *M, int *NZ, float *W, float *ORFAC, float *Z,
              int *IZ, int *JZ, int *DESCZ, float *WORK, int *LWORK, int *IWORK,
@@ -3861,13 +3904,13 @@ void PSSYEVX_(char *JOBZ, char *RANGE, char *UPLO, int *N, float *A, int *IA,
               float *ABSTOL, int *M, int *NZ, float *W, float *ORFAC, float *Z,
               int *IZ, int *JZ, int *DESCZ, float *WORK, int *LWORK, int *IWORK,
               int *LIWORK, int *IFAIL, int *ICLUSTR, float *GAP, int *INFO);
-void mangle_pssygs2(int *IBTYPE, char *UPLO, int *N, float *A, int *IA, int *JA,
+void pssygs2(int *IBTYPE, char *UPLO, int *N, float *A, int *IA, int *JA,
              int *DESCA, float *B, int *IB, int *JB, int *DESCB, int *INFO);
 void PSSYGS2(int *IBTYPE, char *UPLO, int *N, float *A, int *IA, int *JA,
              int *DESCA, float *B, int *IB, int *JB, int *DESCB, int *INFO);
 void PSSYGS2_(int *IBTYPE, char *UPLO, int *N, float *A, int *IA, int *JA,
               int *DESCA, float *B, int *IB, int *JB, int *DESCB, int *INFO);
-void mangle_pssygst(int *IBTYPE, char *UPLO, int *N, float *A, int *IA, int *JA,
+void pssygst(int *IBTYPE, char *UPLO, int *N, float *A, int *IA, int *JA,
              int *DESCA, float *B, int *IB, int *JB, int *DESCB, float *SCALE,
              int *INFO);
 void PSSYGST(int *IBTYPE, char *UPLO, int *N, float *A, int *IA, int *JA,
@@ -3876,7 +3919,7 @@ void PSSYGST(int *IBTYPE, char *UPLO, int *N, float *A, int *IA, int *JA,
 void PSSYGST_(int *IBTYPE, char *UPLO, int *N, float *A, int *IA, int *JA,
               int *DESCA, float *B, int *IB, int *JB, int *DESCB, float *SCALE,
               int *INFO);
-void mangle_pssygvx(int *IBTYPE, char *JOBZ, char *RANGE, char *UPLO, int *N, float *A,
+void pssygvx(int *IBTYPE, char *JOBZ, char *RANGE, char *UPLO, int *N, float *A,
              int *IA, int *JA, int *DESCA, float *B, int *IB, int *JB,
              int *DESCB, float *VL, float *VU, int *IL, int *IU, float *ABSTOL,
              int *M, int *NZ, float *W, float *ORFAC, float *Z, int *IZ,
@@ -3894,7 +3937,7 @@ void PSSYGVX_(int *IBTYPE, char *JOBZ, char *RANGE, char *UPLO, int *N,
               float *ABSTOL, int *M, int *NZ, float *W, float *ORFAC, float *Z,
               int *IZ, int *JZ, int *DESCZ, float *WORK, int *LWORK, int *IWORK,
               int *LIWORK, int *IFAIL, int *ICLUSTR, float *GAP, int *INFO);
-void mangle_pssyngst(int *IBTYPE, char *UPLO, int *N, float *A, int *IA, int *JA,
+void pssyngst(int *IBTYPE, char *UPLO, int *N, float *A, int *IA, int *JA,
               int *DESCA, float *B, int *IB, int *JB, int *DESCB, float *SCALE,
               float *WORK, int *LWORK, int *INFO);
 void PSSYNGST(int *IBTYPE, char *UPLO, int *N, float *A, int *IA, int *JA,
@@ -3903,7 +3946,7 @@ void PSSYNGST(int *IBTYPE, char *UPLO, int *N, float *A, int *IA, int *JA,
 void PSSYNGST_(int *IBTYPE, char *UPLO, int *N, float *A, int *IA, int *JA,
                int *DESCA, float *B, int *IB, int *JB, int *DESCB, float *SCALE,
                float *WORK, int *LWORK, int *INFO);
-void mangle_pssyntrd(char *UPLO, int *N, float *A, int *IA, int *JA, int *DESCA,
+void pssyntrd(char *UPLO, int *N, float *A, int *IA, int *JA, int *DESCA,
               float *D, float *E, float *TAU, float *WORK, int *LWORK,
               int *INFO);
 void PSSYNTRD(char *UPLO, int *N, float *A, int *IA, int *JA, int *DESCA,
@@ -3912,7 +3955,7 @@ void PSSYNTRD(char *UPLO, int *N, float *A, int *IA, int *JA, int *DESCA,
 void PSSYNTRD_(char *UPLO, int *N, float *A, int *IA, int *JA, int *DESCA,
                float *D, float *E, float *TAU, float *WORK, int *LWORK,
                int *INFO);
-void mangle_pssytd2(char *UPLO, int *N, float *A, int *IA, int *JA, int *DESCA,
+void pssytd2(char *UPLO, int *N, float *A, int *IA, int *JA, int *DESCA,
              float *D, float *E, float *TAU, float *WORK, int *LWORK,
              int *INFO);
 void PSSYTD2(char *UPLO, int *N, float *A, int *IA, int *JA, int *DESCA,
@@ -3921,7 +3964,7 @@ void PSSYTD2(char *UPLO, int *N, float *A, int *IA, int *JA, int *DESCA,
 void PSSYTD2_(char *UPLO, int *N, float *A, int *IA, int *JA, int *DESCA,
               float *D, float *E, float *TAU, float *WORK, int *LWORK,
               int *INFO);
-void mangle_pssytrd(char *UPLO, int *N, float *A, int *IA, int *JA, int *DESCA,
+void pssytrd(char *UPLO, int *N, float *A, int *IA, int *JA, int *DESCA,
              float *D, float *E, float *TAU, float *WORK, int *LWORK,
              int *INFO);
 void PSSYTRD(char *UPLO, int *N, float *A, int *IA, int *JA, int *DESCA,
@@ -3930,7 +3973,7 @@ void PSSYTRD(char *UPLO, int *N, float *A, int *IA, int *JA, int *DESCA,
 void PSSYTRD_(char *UPLO, int *N, float *A, int *IA, int *JA, int *DESCA,
               float *D, float *E, float *TAU, float *WORK, int *LWORK,
               int *INFO);
-void mangle_pssyttrd(char *UPLO, int *N, float *A, int *IA, int *JA, int *DESCA,
+void pssyttrd(char *UPLO, int *N, float *A, int *IA, int *JA, int *DESCA,
               float *D, float *E, float *TAU, float *WORK, int *LWORK,
               int *INFO);
 void PSSYTTRD(char *UPLO, int *N, float *A, int *IA, int *JA, int *DESCA,
@@ -3939,7 +3982,7 @@ void PSSYTTRD(char *UPLO, int *N, float *A, int *IA, int *JA, int *DESCA,
 void PSSYTTRD_(char *UPLO, int *N, float *A, int *IA, int *JA, int *DESCA,
                float *D, float *E, float *TAU, float *WORK, int *LWORK,
                int *INFO);
-void mangle_pstrcon(char *NORM, char *UPLO, char *DIAG, int *N, float *A, int *IA,
+void pstrcon(char *NORM, char *UPLO, char *DIAG, int *N, float *A, int *IA,
              int *JA, int *DESCA, float *RCOND, float *WORK, int *LWORK,
              int *IWORK, int *LIWORK, int *INFO);
 void PSTRCON(char *NORM, char *UPLO, char *DIAG, int *N, float *A, int *IA,
@@ -3948,7 +3991,7 @@ void PSTRCON(char *NORM, char *UPLO, char *DIAG, int *N, float *A, int *IA,
 void PSTRCON_(char *NORM, char *UPLO, char *DIAG, int *N, float *A, int *IA,
               int *JA, int *DESCA, float *RCOND, float *WORK, int *LWORK,
               int *IWORK, int *LIWORK, int *INFO);
-void mangle_pstrord(char *COMPQ, int *SELECT, int *PARA, int *N, float *T, int *IT,
+void pstrord(char *COMPQ, int *SELECT, int *PARA, int *N, float *T, int *IT,
              int *JT, int *DESCT, float *Q, int *IQ, int *JQ, int *DESCQ,
              float *WR, float *WI, int *M, float *WORK, int *LWORK, int *IWORK,
              int *LIWORK, int *INFO);
@@ -3960,7 +4003,7 @@ void PSTRORD_(char *COMPQ, int *SELECT, int *PARA, int *N, float *T, int *IT,
               int *JT, int *DESCT, float *Q, int *IQ, int *JQ, int *DESCQ,
               float *WR, float *WI, int *M, float *WORK, int *LWORK, int *IWORK,
               int *LIWORK, int *INFO);
-void mangle_pstrrfs(char *UPLO, char *TRANS, char *DIAG, int *N, int *NRHS, float *A,
+void pstrrfs(char *UPLO, char *TRANS, char *DIAG, int *N, int *NRHS, float *A,
              int *IA, int *JA, int *DESCA, float *B, int *IB, int *JB,
              int *DESCB, float *X, int *IX, int *JX, int *DESCX, float *FERR,
              float *BERR, float *WORK, int *LWORK, int *IWORK, int *LIWORK,
@@ -3975,7 +4018,7 @@ void PSTRRFS_(char *UPLO, char *TRANS, char *DIAG, int *N, int *NRHS, float *A,
               int *DESCB, float *X, int *IX, int *JX, int *DESCX, float *FERR,
               float *BERR, float *WORK, int *LWORK, int *IWORK, int *LIWORK,
               int *INFO);
-void mangle_pstrsen(char *JOB, char *COMPQ, int *SELECT, int *PARA, int *N, float *T,
+void pstrsen(char *JOB, char *COMPQ, int *SELECT, int *PARA, int *N, float *T,
              int *IT, int *JT, int *DESCT, float *Q, int *IQ, int *JQ,
              int *DESCQ, float *WR, float *WI, int *M, float *S, float *SEP,
              float *WORK, int *LWORK, int *IWORK, int *LIWORK, int *INFO);
@@ -3987,19 +4030,19 @@ void PSTRSEN_(char *JOB, char *COMPQ, int *SELECT, int *PARA, int *N, float *T,
               int *IT, int *JT, int *DESCT, float *Q, int *IQ, int *JQ,
               int *DESCQ, float *WR, float *WI, int *M, float *S, float *SEP,
               float *WORK, int *LWORK, int *IWORK, int *LIWORK, int *INFO);
-void mangle_pstrti2(char *UPLO, char *DIAG, int *N, float *A, int *IA, int *JA,
+void pstrti2(char *UPLO, char *DIAG, int *N, float *A, int *IA, int *JA,
              int *DESCA, int *INFO);
 void PSTRTI2(char *UPLO, char *DIAG, int *N, float *A, int *IA, int *JA,
              int *DESCA, int *INFO);
 void PSTRTI2_(char *UPLO, char *DIAG, int *N, float *A, int *IA, int *JA,
               int *DESCA, int *INFO);
-void mangle_pstrtri(char *UPLO, char *DIAG, int *N, float *A, int *IA, int *JA,
+void pstrtri(char *UPLO, char *DIAG, int *N, float *A, int *IA, int *JA,
              int *DESCA, int *INFO);
 void PSTRTRI(char *UPLO, char *DIAG, int *N, float *A, int *IA, int *JA,
              int *DESCA, int *INFO);
 void PSTRTRI_(char *UPLO, char *DIAG, int *N, float *A, int *IA, int *JA,
               int *DESCA, int *INFO);
-void mangle_pstrtrs(char *UPLO, char *TRANS, char *DIAG, int *N, int *NRHS, float *A,
+void pstrtrs(char *UPLO, char *TRANS, char *DIAG, int *N, int *NRHS, float *A,
              int *IA, int *JA, int *DESCA, float *B, int *IB, int *JB,
              int *DESCB, int *INFO);
 void PSTRTRS(char *UPLO, char *TRANS, char *DIAG, int *N, int *NRHS, float *A,
@@ -4008,13 +4051,13 @@ void PSTRTRS(char *UPLO, char *TRANS, char *DIAG, int *N, int *NRHS, float *A,
 void PSTRTRS_(char *UPLO, char *TRANS, char *DIAG, int *N, int *NRHS, float *A,
               int *IA, int *JA, int *DESCA, float *B, int *IB, int *JB,
               int *DESCB, int *INFO);
-void mangle_pstzrzf(int *M, int *N, float *A, int *IA, int *JA, int *DESCA, float *TAU,
+void pstzrzf(int *M, int *N, float *A, int *IA, int *JA, int *DESCA, float *TAU,
              float *WORK, int *LWORK, int *INFO);
 void PSTZRZF(int *M, int *N, float *A, int *IA, int *JA, int *DESCA, float *TAU,
              float *WORK, int *LWORK, int *INFO);
 void PSTZRZF_(int *M, int *N, float *A, int *IA, int *JA, int *DESCA,
               float *TAU, float *WORK, int *LWORK, int *INFO);
-void mangle_pzdbsv(int *N, int *BWL, int *BWU, int *NRHS, dcomplex *A, int *JA,
+void pzdbsv(int *N, int *BWL, int *BWU, int *NRHS, dcomplex *A, int *JA,
             int *DESCA, dcomplex *B, int *IB, int *DESCB, dcomplex *WORK,
             int *LWORK, int *INFO);
 void PZDBSV(int *N, int *BWL, int *BWU, int *NRHS, dcomplex *A, int *JA,
@@ -4023,13 +4066,13 @@ void PZDBSV(int *N, int *BWL, int *BWU, int *NRHS, dcomplex *A, int *JA,
 void PZDBSV_(int *N, int *BWL, int *BWU, int *NRHS, dcomplex *A, int *JA,
              int *DESCA, dcomplex *B, int *IB, int *DESCB, dcomplex *WORK,
              int *LWORK, int *INFO);
-void mangle_pzdbtrf(int *N, int *BWL, int *BWU, dcomplex *A, int *JA, int *DESCA,
+void pzdbtrf(int *N, int *BWL, int *BWU, dcomplex *A, int *JA, int *DESCA,
              dcomplex *AF, int *LAF, dcomplex *WORK, int *LWORK, int *INFO);
 void PZDBTRF(int *N, int *BWL, int *BWU, dcomplex *A, int *JA, int *DESCA,
              dcomplex *AF, int *LAF, dcomplex *WORK, int *LWORK, int *INFO);
 void PZDBTRF_(int *N, int *BWL, int *BWU, dcomplex *A, int *JA, int *DESCA,
               dcomplex *AF, int *LAF, dcomplex *WORK, int *LWORK, int *INFO);
-void mangle_pzdbtrs(char *TRANS, int *N, int *BWL, int *BWU, int *NRHS, dcomplex *A,
+void pzdbtrs(char *TRANS, int *N, int *BWL, int *BWU, int *NRHS, dcomplex *A,
              int *JA, int *DESCA, dcomplex *B, int *IB, int *DESCB,
              dcomplex *AF, int *LAF, dcomplex *WORK, int *LWORK, int *INFO);
 void PZDBTRS(char *TRANS, int *N, int *BWL, int *BWU, int *NRHS, dcomplex *A,
@@ -4038,7 +4081,7 @@ void PZDBTRS(char *TRANS, int *N, int *BWL, int *BWU, int *NRHS, dcomplex *A,
 void PZDBTRS_(char *TRANS, int *N, int *BWL, int *BWU, int *NRHS, dcomplex *A,
               int *JA, int *DESCA, dcomplex *B, int *IB, int *DESCB,
               dcomplex *AF, int *LAF, dcomplex *WORK, int *LWORK, int *INFO);
-void mangle_pzdbtrsv(char *UPLO, char *TRANS, int *N, int *BWL, int *BWU, int *NRHS,
+void pzdbtrsv(char *UPLO, char *TRANS, int *N, int *BWL, int *BWU, int *NRHS,
               dcomplex *A, int *JA, int *DESCA, dcomplex *B, int *IB,
               int *DESCB, dcomplex *AF, int *LAF, dcomplex *WORK, int *LWORK,
               int *INFO);
@@ -4050,13 +4093,13 @@ void PZDBTRSV_(char *UPLO, char *TRANS, int *N, int *BWL, int *BWU, int *NRHS,
                dcomplex *A, int *JA, int *DESCA, dcomplex *B, int *IB,
                int *DESCB, dcomplex *AF, int *LAF, dcomplex *WORK, int *LWORK,
                int *INFO);
-void mangle_pzdrscl(int *N, double *SA, dcomplex *SX, int *IX, int *JX, int *DESCX,
+void pzdrscl(int *N, double *SA, dcomplex *SX, int *IX, int *JX, int *DESCX,
              int *INCX);
 void PZDRSCL(int *N, double *SA, dcomplex *SX, int *IX, int *JX, int *DESCX,
              int *INCX);
 void PZDRSCL_(int *N, double *SA, dcomplex *SX, int *IX, int *JX, int *DESCX,
               int *INCX);
-void mangle_pzdtsv(int *N, int *NRHS, dcomplex *DL, dcomplex *D, dcomplex *DU, int *JA,
+void pzdtsv(int *N, int *NRHS, dcomplex *DL, dcomplex *D, dcomplex *DU, int *JA,
             int *DESCA, dcomplex *B, int *IB, int *DESCB, dcomplex *WORK,
             int *LWORK, int *INFO);
 void PZDTSV(int *N, int *NRHS, dcomplex *DL, dcomplex *D, dcomplex *DU, int *JA,
@@ -4065,7 +4108,7 @@ void PZDTSV(int *N, int *NRHS, dcomplex *DL, dcomplex *D, dcomplex *DU, int *JA,
 void PZDTSV_(int *N, int *NRHS, dcomplex *DL, dcomplex *D, dcomplex *DU,
              int *JA, int *DESCA, dcomplex *B, int *IB, int *DESCB,
              dcomplex *WORK, int *LWORK, int *INFO);
-void mangle_pzdttrf(int *N, dcomplex *DL, dcomplex *D, dcomplex *DU, int *JA,
+void pzdttrf(int *N, dcomplex *DL, dcomplex *D, dcomplex *DU, int *JA,
              int *DESCA, dcomplex *AF, int *LAF, dcomplex *WORK, int *LWORK,
              int *INFO);
 void PZDTTRF(int *N, dcomplex *DL, dcomplex *D, dcomplex *DU, int *JA,
@@ -4074,7 +4117,7 @@ void PZDTTRF(int *N, dcomplex *DL, dcomplex *D, dcomplex *DU, int *JA,
 void PZDTTRF_(int *N, dcomplex *DL, dcomplex *D, dcomplex *DU, int *JA,
               int *DESCA, dcomplex *AF, int *LAF, dcomplex *WORK, int *LWORK,
               int *INFO);
-void mangle_pzdttrs(char *TRANS, int *N, int *NRHS, dcomplex *DL, dcomplex *D,
+void pzdttrs(char *TRANS, int *N, int *NRHS, dcomplex *DL, dcomplex *D,
              dcomplex *DU, int *JA, int *DESCA, dcomplex *B, int *IB,
              int *DESCB, dcomplex *AF, int *LAF, dcomplex *WORK, int *LWORK,
              int *INFO);
@@ -4086,7 +4129,7 @@ void PZDTTRS_(char *TRANS, int *N, int *NRHS, dcomplex *DL, dcomplex *D,
               dcomplex *DU, int *JA, int *DESCA, dcomplex *B, int *IB,
               int *DESCB, dcomplex *AF, int *LAF, dcomplex *WORK, int *LWORK,
               int *INFO);
-void mangle_pzdttrsv(char *UPLO, char *TRANS, int *N, int *NRHS, dcomplex *DL,
+void pzdttrsv(char *UPLO, char *TRANS, int *N, int *NRHS, dcomplex *DL,
               dcomplex *D, dcomplex *DU, int *JA, int *DESCA, dcomplex *B,
               int *IB, int *DESCB, dcomplex *AF, int *LAF, dcomplex *WORK,
               int *LWORK, int *INFO);
@@ -4098,7 +4141,7 @@ void PZDTTRSV_(char *UPLO, char *TRANS, int *N, int *NRHS, dcomplex *DL,
                dcomplex *D, dcomplex *DU, int *JA, int *DESCA, dcomplex *B,
                int *IB, int *DESCB, dcomplex *AF, int *LAF, dcomplex *WORK,
                int *LWORK, int *INFO);
-void mangle_pzgbsv(int *N, int *BWL, int *BWU, int *NRHS, dcomplex *A, int *JA,
+void pzgbsv(int *N, int *BWL, int *BWU, int *NRHS, dcomplex *A, int *JA,
             int *DESCA, int *IPIV, dcomplex *B, int *IB, int *DESCB,
             dcomplex *WORK, int *LWORK, int *INFO);
 void PZGBSV(int *N, int *BWL, int *BWU, int *NRHS, dcomplex *A, int *JA,
@@ -4107,7 +4150,7 @@ void PZGBSV(int *N, int *BWL, int *BWU, int *NRHS, dcomplex *A, int *JA,
 void PZGBSV_(int *N, int *BWL, int *BWU, int *NRHS, dcomplex *A, int *JA,
              int *DESCA, int *IPIV, dcomplex *B, int *IB, int *DESCB,
              dcomplex *WORK, int *LWORK, int *INFO);
-void mangle_pzgbtrf(int *N, int *BWL, int *BWU, dcomplex *A, int *JA, int *DESCA,
+void pzgbtrf(int *N, int *BWL, int *BWU, dcomplex *A, int *JA, int *DESCA,
              int *IPIV, dcomplex *AF, int *LAF, dcomplex *WORK, int *LWORK,
              int *INFO);
 void PZGBTRF(int *N, int *BWL, int *BWU, dcomplex *A, int *JA, int *DESCA,
@@ -4116,7 +4159,7 @@ void PZGBTRF(int *N, int *BWL, int *BWU, dcomplex *A, int *JA, int *DESCA,
 void PZGBTRF_(int *N, int *BWL, int *BWU, dcomplex *A, int *JA, int *DESCA,
               int *IPIV, dcomplex *AF, int *LAF, dcomplex *WORK, int *LWORK,
               int *INFO);
-void mangle_pzgbtrs(char *TRANS, int *N, int *BWL, int *BWU, int *NRHS, dcomplex *A,
+void pzgbtrs(char *TRANS, int *N, int *BWL, int *BWU, int *NRHS, dcomplex *A,
              int *JA, int *DESCA, int *IPIV, dcomplex *B, int *IB, int *DESCB,
              dcomplex *AF, int *LAF, dcomplex *WORK, int *LWORK, int *INFO);
 void PZGBTRS(char *TRANS, int *N, int *BWL, int *BWU, int *NRHS, dcomplex *A,
@@ -4125,7 +4168,7 @@ void PZGBTRS(char *TRANS, int *N, int *BWL, int *BWU, int *NRHS, dcomplex *A,
 void PZGBTRS_(char *TRANS, int *N, int *BWL, int *BWU, int *NRHS, dcomplex *A,
               int *JA, int *DESCA, int *IPIV, dcomplex *B, int *IB, int *DESCB,
               dcomplex *AF, int *LAF, dcomplex *WORK, int *LWORK, int *INFO);
-void mangle_pzgebd2(int *M, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
+void pzgebd2(int *M, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
              double *D, double *E, dcomplex *TAUQ, dcomplex *TAUP,
              dcomplex *WORK, int *LWORK, int *INFO);
 void PZGEBD2(int *M, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
@@ -4134,7 +4177,7 @@ void PZGEBD2(int *M, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
 void PZGEBD2_(int *M, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
               double *D, double *E, dcomplex *TAUQ, dcomplex *TAUP,
               dcomplex *WORK, int *LWORK, int *INFO);
-void mangle_pzgebrd(int *M, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
+void pzgebrd(int *M, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
              double *D, double *E, dcomplex *TAUQ, dcomplex *TAUP,
              dcomplex *WORK, int *LWORK, int *INFO);
 void PZGEBRD(int *M, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
@@ -4143,7 +4186,7 @@ void PZGEBRD(int *M, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
 void PZGEBRD_(int *M, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
               double *D, double *E, dcomplex *TAUQ, dcomplex *TAUP,
               dcomplex *WORK, int *LWORK, int *INFO);
-void mangle_pzgecon(char *NORM, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
+void pzgecon(char *NORM, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
              double *ANORM, double *RCOND, dcomplex *WORK, int *LWORK,
              double *RWORK, int *LRWORK, int *INFO);
 void PZGECON(char *NORM, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
@@ -4152,7 +4195,7 @@ void PZGECON(char *NORM, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
 void PZGECON_(char *NORM, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
               double *ANORM, double *RCOND, dcomplex *WORK, int *LWORK,
               double *RWORK, int *LRWORK, int *INFO);
-void mangle_pzgeequ(int *M, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
+void pzgeequ(int *M, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
              double *R, double *C, double *ROWCND, double *COLCND, double *AMAX,
              int *INFO);
 void PZGEEQU(int *M, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
@@ -4161,31 +4204,31 @@ void PZGEEQU(int *M, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
 void PZGEEQU_(int *M, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
               double *R, double *C, double *ROWCND, double *COLCND,
               double *AMAX, int *INFO);
-void mangle_pzgehd2(int *N, int *ILO, int *IHI, dcomplex *A, int *IA, int *JA,
+void pzgehd2(int *N, int *ILO, int *IHI, dcomplex *A, int *IA, int *JA,
              int *DESCA, dcomplex *TAU, dcomplex *WORK, int *LWORK, int *INFO);
 void PZGEHD2(int *N, int *ILO, int *IHI, dcomplex *A, int *IA, int *JA,
              int *DESCA, dcomplex *TAU, dcomplex *WORK, int *LWORK, int *INFO);
 void PZGEHD2_(int *N, int *ILO, int *IHI, dcomplex *A, int *IA, int *JA,
               int *DESCA, dcomplex *TAU, dcomplex *WORK, int *LWORK, int *INFO);
-void mangle_pzgehrd(int *N, int *ILO, int *IHI, dcomplex *A, int *IA, int *JA,
+void pzgehrd(int *N, int *ILO, int *IHI, dcomplex *A, int *IA, int *JA,
              int *DESCA, dcomplex *TAU, dcomplex *WORK, int *LWORK, int *INFO);
 void PZGEHRD(int *N, int *ILO, int *IHI, dcomplex *A, int *IA, int *JA,
              int *DESCA, dcomplex *TAU, dcomplex *WORK, int *LWORK, int *INFO);
 void PZGEHRD_(int *N, int *ILO, int *IHI, dcomplex *A, int *IA, int *JA,
               int *DESCA, dcomplex *TAU, dcomplex *WORK, int *LWORK, int *INFO);
-void mangle_pzgelq2(int *M, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
+void pzgelq2(int *M, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
              dcomplex *TAU, dcomplex *WORK, int *LWORK, int *INFO);
 void PZGELQ2(int *M, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
              dcomplex *TAU, dcomplex *WORK, int *LWORK, int *INFO);
 void PZGELQ2_(int *M, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
               dcomplex *TAU, dcomplex *WORK, int *LWORK, int *INFO);
-void mangle_pzgelqf(int *M, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
+void pzgelqf(int *M, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
              dcomplex *TAU, dcomplex *WORK, int *LWORK, int *INFO);
 void PZGELQF(int *M, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
              dcomplex *TAU, dcomplex *WORK, int *LWORK, int *INFO);
 void PZGELQF_(int *M, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
               dcomplex *TAU, dcomplex *WORK, int *LWORK, int *INFO);
-void mangle_pzgels(char *TRANS, int *M, int *N, int *NRHS, dcomplex *A, int *IA,
+void pzgels(char *TRANS, int *M, int *N, int *NRHS, dcomplex *A, int *IA,
             int *JA, int *DESCA, dcomplex *B, int *IB, int *JB, int *DESCB,
             dcomplex *WORK, int *LWORK, int *INFO);
 void PZGELS(char *TRANS, int *M, int *N, int *NRHS, dcomplex *A, int *IA,
@@ -4194,19 +4237,19 @@ void PZGELS(char *TRANS, int *M, int *N, int *NRHS, dcomplex *A, int *IA,
 void PZGELS_(char *TRANS, int *M, int *N, int *NRHS, dcomplex *A, int *IA,
              int *JA, int *DESCA, dcomplex *B, int *IB, int *JB, int *DESCB,
              dcomplex *WORK, int *LWORK, int *INFO);
-void mangle_pzgeql2(int *M, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
+void pzgeql2(int *M, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
              dcomplex *TAU, dcomplex *WORK, int *LWORK, int *INFO);
 void PZGEQL2(int *M, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
              dcomplex *TAU, dcomplex *WORK, int *LWORK, int *INFO);
 void PZGEQL2_(int *M, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
               dcomplex *TAU, dcomplex *WORK, int *LWORK, int *INFO);
-void mangle_pzgeqlf(int *M, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
+void pzgeqlf(int *M, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
              dcomplex *TAU, dcomplex *WORK, int *LWORK, int *INFO);
 void PZGEQLF(int *M, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
              dcomplex *TAU, dcomplex *WORK, int *LWORK, int *INFO);
 void PZGEQLF_(int *M, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
               dcomplex *TAU, dcomplex *WORK, int *LWORK, int *INFO);
-void mangle_pzgeqpf(int *M, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
+void pzgeqpf(int *M, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
              int *IPIV, dcomplex *TAU, dcomplex *WORK, int *LWORK,
              double *RWORK, int *LRWORK, int *INFO);
 void PZGEQPF(int *M, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
@@ -4215,19 +4258,19 @@ void PZGEQPF(int *M, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
 void PZGEQPF_(int *M, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
               int *IPIV, dcomplex *TAU, dcomplex *WORK, int *LWORK,
               double *RWORK, int *LRWORK, int *INFO);
-void mangle_pzgeqr2(int *M, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
+void pzgeqr2(int *M, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
              dcomplex *TAU, dcomplex *WORK, int *LWORK, int *INFO);
 void PZGEQR2(int *M, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
              dcomplex *TAU, dcomplex *WORK, int *LWORK, int *INFO);
 void PZGEQR2_(int *M, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
               dcomplex *TAU, dcomplex *WORK, int *LWORK, int *INFO);
-void mangle_pzgeqrf(int *M, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
+void pzgeqrf(int *M, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
              dcomplex *TAU, dcomplex *WORK, int *LWORK, int *INFO);
 void PZGEQRF(int *M, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
              dcomplex *TAU, dcomplex *WORK, int *LWORK, int *INFO);
 void PZGEQRF_(int *M, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
               dcomplex *TAU, dcomplex *WORK, int *LWORK, int *INFO);
-void mangle_pzgerfs(char *TRANS, int *N, int *NRHS, dcomplex *A, int *IA, int *JA,
+void pzgerfs(char *TRANS, int *N, int *NRHS, dcomplex *A, int *IA, int *JA,
              int *DESCA, dcomplex *AF, int *IAF, int *JAF, int *DESCAF,
              int *IPIV, dcomplex *B, int *IB, int *JB, int *DESCB, dcomplex *X,
              int *IX, int *JX, int *DESCX, double *FERR, double *BERR,
@@ -4243,25 +4286,25 @@ void PZGERFS_(char *TRANS, int *N, int *NRHS, dcomplex *A, int *IA, int *JA,
               int *IX, int *JX, int *DESCX, double *FERR, double *BERR,
               dcomplex *WORK, int *LWORK, double *RWORK, int *LRWORK,
               int *INFO);
-void mangle_pzgerq2(int *M, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
+void pzgerq2(int *M, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
              dcomplex *TAU, dcomplex *WORK, int *LWORK, int *INFO);
 void PZGERQ2(int *M, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
              dcomplex *TAU, dcomplex *WORK, int *LWORK, int *INFO);
 void PZGERQ2_(int *M, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
               dcomplex *TAU, dcomplex *WORK, int *LWORK, int *INFO);
-void mangle_pzgerqf(int *M, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
+void pzgerqf(int *M, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
              dcomplex *TAU, dcomplex *WORK, int *LWORK, int *INFO);
 void PZGERQF(int *M, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
              dcomplex *TAU, dcomplex *WORK, int *LWORK, int *INFO);
 void PZGERQF_(int *M, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
               dcomplex *TAU, dcomplex *WORK, int *LWORK, int *INFO);
-void mangle_pzgesv(int *N, int *NRHS, dcomplex *A, int *IA, int *JA, int *DESCA,
+void pzgesv(int *N, int *NRHS, dcomplex *A, int *IA, int *JA, int *DESCA,
             int *IPIV, dcomplex *B, int *IB, int *JB, int *DESCB, int *INFO);
 void PZGESV(int *N, int *NRHS, dcomplex *A, int *IA, int *JA, int *DESCA,
             int *IPIV, dcomplex *B, int *IB, int *JB, int *DESCB, int *INFO);
 void PZGESV_(int *N, int *NRHS, dcomplex *A, int *IA, int *JA, int *DESCA,
              int *IPIV, dcomplex *B, int *IB, int *JB, int *DESCB, int *INFO);
-void mangle_pzgesvd(char *JOBU, char *JOBVT, int *M, int *N, dcomplex *A, int *IA,
+void pzgesvd(char *JOBU, char *JOBVT, int *M, int *N, dcomplex *A, int *IA,
              int *JA, int *DESCA, double *S, dcomplex *U, int *IU, int *JU,
              int *DESCU, dcomplex *VT, int *IVT, int *JVT, int *DESCVT,
              dcomplex *WORK, int *LWORK, float *RWORK, int *INFO);
@@ -4273,7 +4316,7 @@ void PZGESVD_(char *JOBU, char *JOBVT, int *M, int *N, dcomplex *A, int *IA,
               int *JA, int *DESCA, double *S, dcomplex *U, int *IU, int *JU,
               int *DESCU, dcomplex *VT, int *IVT, int *JVT, int *DESCVT,
               dcomplex *WORK, int *LWORK, float *RWORK, int *INFO);
-void mangle_pzgesvx(char *FACT, char *TRANS, int *N, int *NRHS, dcomplex *A, int *IA,
+void pzgesvx(char *FACT, char *TRANS, int *N, int *NRHS, dcomplex *A, int *IA,
              int *JA, int *DESCA, dcomplex *AF, int *IAF, int *JAF, int *DESCAF,
              int *IPIV, char *EQUED, double *R, double *C, dcomplex *B, int *IB,
              int *JB, int *DESCB, dcomplex *X, int *IX, int *JX, int *DESCX,
@@ -4292,25 +4335,25 @@ void PZGESVX_(char *FACT, char *TRANS, int *N, int *NRHS, dcomplex *A, int *IA,
               int *JX, int *DESCX, double *RCOND, double *FERR, double *BERR,
               dcomplex *WORK, int *LWORK, double *RWORK, int *LRWORK,
               int *INFO);
-void mangle_pzgetf2(int *M, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
+void pzgetf2(int *M, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
              int *IPIV, int *INFO);
 void PZGETF2(int *M, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
              int *IPIV, int *INFO);
 void PZGETF2_(int *M, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
               int *IPIV, int *INFO);
-void mangle_pzgetrf(int *M, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
+void pzgetrf(int *M, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
              int *IPIV, int *INFO);
 void PZGETRF(int *M, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
              int *IPIV, int *INFO);
 void PZGETRF_(int *M, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
               int *IPIV, int *INFO);
-void mangle_pzgetri(int *N, dcomplex *A, int *IA, int *JA, int *DESCA, int *IPIV,
+void pzgetri(int *N, dcomplex *A, int *IA, int *JA, int *DESCA, int *IPIV,
              dcomplex *WORK, int *LWORK, int *IWORK, int *LIWORK, int *INFO);
 void PZGETRI(int *N, dcomplex *A, int *IA, int *JA, int *DESCA, int *IPIV,
              dcomplex *WORK, int *LWORK, int *IWORK, int *LIWORK, int *INFO);
 void PZGETRI_(int *N, dcomplex *A, int *IA, int *JA, int *DESCA, int *IPIV,
               dcomplex *WORK, int *LWORK, int *IWORK, int *LIWORK, int *INFO);
-void mangle_pzgetrs(char *TRANS, int *N, int *NRHS, dcomplex *A, int *IA, int *JA,
+void pzgetrs(char *TRANS, int *N, int *NRHS, dcomplex *A, int *IA, int *JA,
              int *DESCA, int *IPIV, dcomplex *B, int *IB, int *JB, int *DESCB,
              int *INFO);
 void PZGETRS(char *TRANS, int *N, int *NRHS, dcomplex *A, int *IA, int *JA,
@@ -4319,7 +4362,7 @@ void PZGETRS(char *TRANS, int *N, int *NRHS, dcomplex *A, int *IA, int *JA,
 void PZGETRS_(char *TRANS, int *N, int *NRHS, dcomplex *A, int *IA, int *JA,
               int *DESCA, int *IPIV, dcomplex *B, int *IB, int *JB, int *DESCB,
               int *INFO);
-void mangle_pzggqrf(int *N, int *M, int *P, dcomplex *A, int *IA, int *JA, int *DESCA,
+void pzggqrf(int *N, int *M, int *P, dcomplex *A, int *IA, int *JA, int *DESCA,
              dcomplex *TAUA, dcomplex *B, int *IB, int *JB, int *DESCB,
              dcomplex *TAUB, dcomplex *WORK, int *LWORK, int *INFO);
 void PZGGQRF(int *N, int *M, int *P, dcomplex *A, int *IA, int *JA, int *DESCA,
@@ -4328,7 +4371,7 @@ void PZGGQRF(int *N, int *M, int *P, dcomplex *A, int *IA, int *JA, int *DESCA,
 void PZGGQRF_(int *N, int *M, int *P, dcomplex *A, int *IA, int *JA, int *DESCA,
               dcomplex *TAUA, dcomplex *B, int *IB, int *JB, int *DESCB,
               dcomplex *TAUB, dcomplex *WORK, int *LWORK, int *INFO);
-void mangle_pzggrqf(int *M, int *P, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
+void pzggrqf(int *M, int *P, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
              dcomplex *TAUA, dcomplex *B, int *IB, int *JB, int *DESCB,
              dcomplex *TAUB, dcomplex *WORK, int *LWORK, int *INFO);
 void PZGGRQF(int *M, int *P, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
@@ -4337,7 +4380,7 @@ void PZGGRQF(int *M, int *P, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
 void PZGGRQF_(int *M, int *P, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
               dcomplex *TAUA, dcomplex *B, int *IB, int *JB, int *DESCB,
               dcomplex *TAUB, dcomplex *WORK, int *LWORK, int *INFO);
-void mangle_pzheev(char *JOBZ, char *UPLO, int *N, dcomplex *A, int *IA, int *JA,
+void pzheev(char *JOBZ, char *UPLO, int *N, dcomplex *A, int *IA, int *JA,
             int *DESCA, double *W, dcomplex *Z, int *IZ, int *JZ, int *DESCZ,
             dcomplex *WORK, int *LWORK, dcomplex *RWORK, int *LRWORK,
             int *INFO);
@@ -4349,7 +4392,7 @@ void PZHEEV_(char *JOBZ, char *UPLO, int *N, dcomplex *A, int *IA, int *JA,
              int *DESCA, double *W, dcomplex *Z, int *IZ, int *JZ, int *DESCZ,
              dcomplex *WORK, int *LWORK, dcomplex *RWORK, int *LRWORK,
              int *INFO);
-void mangle_pzheevd(char *JOBZ, char *UPLO, int *N, dcomplex *A, int *IA, int *JA,
+void pzheevd(char *JOBZ, char *UPLO, int *N, dcomplex *A, int *IA, int *JA,
              int *DESCA, double *W, dcomplex *Z, int *IZ, int *JZ, int *DESCZ,
              dcomplex *WORK, int *LWORK, double *RWORK, int *LRWORK, int *IWORK,
              int *LIWORK, int *INFO);
@@ -4361,7 +4404,7 @@ void PZHEEVD_(char *JOBZ, char *UPLO, int *N, dcomplex *A, int *IA, int *JA,
               int *DESCA, double *W, dcomplex *Z, int *IZ, int *JZ, int *DESCZ,
               dcomplex *WORK, int *LWORK, double *RWORK, int *LRWORK,
               int *IWORK, int *LIWORK, int *INFO);
-void mangle_pzheevr(char *JOBZ, char *RANGE, char *UPLO, int *N, dcomplex *A, int *IA,
+void pzheevr(char *JOBZ, char *RANGE, char *UPLO, int *N, dcomplex *A, int *IA,
              int *JA, int *DESCA, double *VL, double *VU, int *IL, int *IU,
              int *M, int *NZ, double *W, dcomplex *Z, int *IZ, int *JZ,
              int *DESCZ, dcomplex *WORK, int *LWORK, double *RWORK, int *LRWORK,
@@ -4376,7 +4419,7 @@ void PZHEEVR_(char *JOBZ, char *RANGE, char *UPLO, int *N, dcomplex *A, int *IA,
               int *M, int *NZ, double *W, dcomplex *Z, int *IZ, int *JZ,
               int *DESCZ, dcomplex *WORK, int *LWORK, double *RWORK,
               int *LRWORK, int *IWORK, int *LIWORK, int *INFO);
-void mangle_pzheevx(char *JOBZ, char *RANGE, char *UPLO, int *N, dcomplex *A, int *IA,
+void pzheevx(char *JOBZ, char *RANGE, char *UPLO, int *N, dcomplex *A, int *IA,
              int *JA, int *DESCA, double *VL, double *VU, int *IL, int *IU,
              double *ABSTOL, int *M, int *NZ, double *W, double *ORFAC,
              dcomplex *Z, int *IZ, int *JZ, int *DESCZ, dcomplex *WORK,
@@ -4394,13 +4437,13 @@ void PZHEEVX_(char *JOBZ, char *RANGE, char *UPLO, int *N, dcomplex *A, int *IA,
               dcomplex *Z, int *IZ, int *JZ, int *DESCZ, dcomplex *WORK,
               int *LWORK, double *RWORK, int *LRWORK, int *IWORK, int *LIWORK,
               int *IFAIL, int *ICLUSTR, double *GAP, int *INFO);
-void mangle_pzhegs2(int *IBTYPE, char *UPLO, int *N, dcomplex *A, int *IA, int *JA,
+void pzhegs2(int *IBTYPE, char *UPLO, int *N, dcomplex *A, int *IA, int *JA,
              int *DESCA, dcomplex *B, int *IB, int *JB, int *DESCB, int *INFO);
 void PZHEGS2(int *IBTYPE, char *UPLO, int *N, dcomplex *A, int *IA, int *JA,
              int *DESCA, dcomplex *B, int *IB, int *JB, int *DESCB, int *INFO);
 void PZHEGS2_(int *IBTYPE, char *UPLO, int *N, dcomplex *A, int *IA, int *JA,
               int *DESCA, dcomplex *B, int *IB, int *JB, int *DESCB, int *INFO);
-void mangle_pzhegst(int *IBTYPE, char *UPLO, int *N, dcomplex *A, int *IA, int *JA,
+void pzhegst(int *IBTYPE, char *UPLO, int *N, dcomplex *A, int *IA, int *JA,
              int *DESCA, dcomplex *B, int *IB, int *JB, int *DESCB,
              double *SCALE, int *INFO);
 void PZHEGST(int *IBTYPE, char *UPLO, int *N, dcomplex *A, int *IA, int *JA,
@@ -4409,7 +4452,7 @@ void PZHEGST(int *IBTYPE, char *UPLO, int *N, dcomplex *A, int *IA, int *JA,
 void PZHEGST_(int *IBTYPE, char *UPLO, int *N, dcomplex *A, int *IA, int *JA,
               int *DESCA, dcomplex *B, int *IB, int *JB, int *DESCB,
               double *SCALE, int *INFO);
-void mangle_pzhegvx(int *IBTYPE, char *JOBZ, char *RANGE, char *UPLO, int *N,
+void pzhegvx(int *IBTYPE, char *JOBZ, char *RANGE, char *UPLO, int *N,
              dcomplex *A, int *IA, int *JA, int *DESCA, dcomplex *B, int *IB,
              int *JB, int *DESCB, double *VL, double *VU, int *IL, int *IU,
              double *ABSTOL, int *M, int *NZ, double *W, double *ORFAC,
@@ -4430,7 +4473,7 @@ void PZHEGVX_(int *IBTYPE, char *JOBZ, char *RANGE, char *UPLO, int *N,
               dcomplex *Z, int *IZ, int *JZ, int *DESCZ, dcomplex *WORK,
               int *LWORK, double *RWORK, int *LRWORK, int *IWORK, int *LIWORK,
               int *IFAIL, int *ICLUSTR, double *GAP, int *INFO);
-void mangle_pzhengst(int *IBTYPE, char *UPLO, int *N, dcomplex *A, int *IA, int *JA,
+void pzhengst(int *IBTYPE, char *UPLO, int *N, dcomplex *A, int *IA, int *JA,
               int *DESCA, dcomplex *B, int *IB, int *JB, int *DESCB,
               double *SCALE, dcomplex *WORK, int *LWORK, int *INFO);
 void PZHENGST(int *IBTYPE, char *UPLO, int *N, dcomplex *A, int *IA, int *JA,
@@ -4439,7 +4482,7 @@ void PZHENGST(int *IBTYPE, char *UPLO, int *N, dcomplex *A, int *IA, int *JA,
 void PZHENGST_(int *IBTYPE, char *UPLO, int *N, dcomplex *A, int *IA, int *JA,
                int *DESCA, dcomplex *B, int *IB, int *JB, int *DESCB,
                double *SCALE, dcomplex *WORK, int *LWORK, int *INFO);
-void mangle_pzhentrd(char *UPLO, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
+void pzhentrd(char *UPLO, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
               double *D, double *E, dcomplex *TAU, dcomplex *WORK, int *LWORK,
               dcomplex *RWORK, int *LRWORK, int *INFO);
 void PZHENTRD(char *UPLO, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
@@ -4448,7 +4491,7 @@ void PZHENTRD(char *UPLO, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
 void PZHENTRD_(char *UPLO, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
                double *D, double *E, dcomplex *TAU, dcomplex *WORK, int *LWORK,
                dcomplex *RWORK, int *LRWORK, int *INFO);
-void mangle_pzhetd2(char *UPLO, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
+void pzhetd2(char *UPLO, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
              double *D, double *E, dcomplex *TAU, dcomplex *WORK, int *LWORK,
              int *INFO);
 void PZHETD2(char *UPLO, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
@@ -4457,7 +4500,7 @@ void PZHETD2(char *UPLO, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
 void PZHETD2_(char *UPLO, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
               double *D, double *E, dcomplex *TAU, dcomplex *WORK, int *LWORK,
               int *INFO);
-void mangle_pzhetrd(char *UPLO, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
+void pzhetrd(char *UPLO, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
              double *D, double *E, dcomplex *TAU, dcomplex *WORK, int *LWORK,
              int *INFO);
 void PZHETRD(char *UPLO, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
@@ -4466,7 +4509,7 @@ void PZHETRD(char *UPLO, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
 void PZHETRD_(char *UPLO, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
               double *D, double *E, dcomplex *TAU, dcomplex *WORK, int *LWORK,
               int *INFO);
-void mangle_pzhettrd(char *UPLO, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
+void pzhettrd(char *UPLO, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
               double *D, double *E, dcomplex *TAU, dcomplex *WORK, int *LWORK,
               int *INFO);
 void PZHETTRD(char *UPLO, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
@@ -4475,7 +4518,7 @@ void PZHETTRD(char *UPLO, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
 void PZHETTRD_(char *UPLO, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
                double *D, double *E, dcomplex *TAU, dcomplex *WORK, int *LWORK,
                int *INFO);
-void mangle_pzlabrd(int *M, int *N, int *NB, dcomplex *A, int *IA, int *JA, int *DESCA,
+void pzlabrd(int *M, int *N, int *NB, dcomplex *A, int *IA, int *JA, int *DESCA,
              double *D, double *E, dcomplex *TAUQ, dcomplex *TAUP, dcomplex *X,
              int *IX, int *JX, int *DESCX, dcomplex *Y, int *IY, int *JY,
              int *DESCY, dcomplex *WORK);
@@ -4487,46 +4530,46 @@ void PZLABRD_(int *M, int *N, int *NB, dcomplex *A, int *IA, int *JA,
               int *DESCA, double *D, double *E, dcomplex *TAUQ, dcomplex *TAUP,
               dcomplex *X, int *IX, int *JX, int *DESCX, dcomplex *Y, int *IY,
               int *JY, int *DESCY, dcomplex *WORK);
-void mangle_pzlacgv(int *N, dcomplex *X, int *IX, int *JX, int *DESCX, int *INCX);
+void pzlacgv(int *N, dcomplex *X, int *IX, int *JX, int *DESCX, int *INCX);
 void PZLACGV(int *N, dcomplex *X, int *IX, int *JX, int *DESCX, int *INCX);
 void PZLACGV_(int *N, dcomplex *X, int *IX, int *JX, int *DESCX, int *INCX);
-void mangle_pzlacon(int *N, dcomplex *V, int *IV, int *JV, int *DESCV, dcomplex *X,
+void pzlacon(int *N, dcomplex *V, int *IV, int *JV, int *DESCV, dcomplex *X,
              int *IX, int *JX, int *DESCX, double *EST, int *KASE);
 void PZLACON(int *N, dcomplex *V, int *IV, int *JV, int *DESCV, dcomplex *X,
              int *IX, int *JX, int *DESCX, double *EST, int *KASE);
 void PZLACON_(int *N, dcomplex *V, int *IV, int *JV, int *DESCV, dcomplex *X,
               int *IX, int *JX, int *DESCX, double *EST, int *KASE);
-void mangle_pzlaconsb(dcomplex *A, int *DESCA, int *I, int *L, int *M, dcomplex *H44,
+void pzlaconsb(dcomplex *A, int *DESCA, int *I, int *L, int *M, dcomplex *H44,
                dcomplex *H33, dcomplex *H43H34, dcomplex *BUF, int *LWORK);
 void PZLACONSB(dcomplex *A, int *DESCA, int *I, int *L, int *M, dcomplex *H44,
                dcomplex *H33, dcomplex *H43H34, dcomplex *BUF, int *LWORK);
 void PZLACONSB_(dcomplex *A, int *DESCA, int *I, int *L, int *M, dcomplex *H44,
                 dcomplex *H33, dcomplex *H43H34, dcomplex *BUF, int *LWORK);
-void mangle_pzlacp2(char *UPLO, int *M, int *N, dcomplex *A, int *IA, int *JA,
+void pzlacp2(char *UPLO, int *M, int *N, dcomplex *A, int *IA, int *JA,
              int *DESCA, dcomplex *B, int *IB, int *JB, int *DESCB);
 void PZLACP2(char *UPLO, int *M, int *N, dcomplex *A, int *IA, int *JA,
              int *DESCA, dcomplex *B, int *IB, int *JB, int *DESCB);
 void PZLACP2_(char *UPLO, int *M, int *N, dcomplex *A, int *IA, int *JA,
               int *DESCA, dcomplex *B, int *IB, int *JB, int *DESCB);
-void mangle_pzlacp3(int *M, int *I, dcomplex *A, int *DESCA, dcomplex *B, int *LDB,
+void pzlacp3(int *M, int *I, dcomplex *A, int *DESCA, dcomplex *B, int *LDB,
              int *II, int *JJ, int *REV);
 void PZLACP3(int *M, int *I, dcomplex *A, int *DESCA, dcomplex *B, int *LDB,
              int *II, int *JJ, int *REV);
 void PZLACP3_(int *M, int *I, dcomplex *A, int *DESCA, dcomplex *B, int *LDB,
               int *II, int *JJ, int *REV);
-void mangle_pzlacpy(char *UPLO, int *M, int *N, dcomplex *A, int *IA, int *JA,
+void pzlacpy(char *UPLO, int *M, int *N, dcomplex *A, int *IA, int *JA,
              int *DESCA, dcomplex *B, int *IB, int *JB, int *DESCB);
 void PZLACPY(char *UPLO, int *M, int *N, dcomplex *A, int *IA, int *JA,
              int *DESCA, dcomplex *B, int *IB, int *JB, int *DESCB);
 void PZLACPY_(char *UPLO, int *M, int *N, dcomplex *A, int *IA, int *JA,
               int *DESCA, dcomplex *B, int *IB, int *JB, int *DESCB);
-void mangle_pzlaevswp(int *N, double *ZIN, int *LDZI, dcomplex *Z, int *IZ, int *JZ,
+void pzlaevswp(int *N, double *ZIN, int *LDZI, dcomplex *Z, int *IZ, int *JZ,
                int *DESCZ, int *NVS, int *KEY, double *RWORK, int *LRWORK);
 void PZLAEVSWP(int *N, double *ZIN, int *LDZI, dcomplex *Z, int *IZ, int *JZ,
                int *DESCZ, int *NVS, int *KEY, double *RWORK, int *LRWORK);
 void PZLAEVSWP_(int *N, double *ZIN, int *LDZI, dcomplex *Z, int *IZ, int *JZ,
                 int *DESCZ, int *NVS, int *KEY, double *RWORK, int *LRWORK);
-void mangle_pzlahqr(int *WANTT, int *WANTZ, int *N, int *ILO, int *IHI, dcomplex *A,
+void pzlahqr(int *WANTT, int *WANTZ, int *N, int *ILO, int *IHI, dcomplex *A,
              int *DESCA, dcomplex *W, int *ILOZ, int *IHIZ, dcomplex *Z,
              int *DESCZ, dcomplex *WORK, int *LWORK, int *IWORK, int *ILWORK,
              int *INFO);
@@ -4538,7 +4581,7 @@ void PZLAHQR_(int *WANTT, int *WANTZ, int *N, int *ILO, int *IHI, dcomplex *A,
               int *DESCA, dcomplex *W, int *ILOZ, int *IHIZ, dcomplex *Z,
               int *DESCZ, dcomplex *WORK, int *LWORK, int *IWORK, int *ILWORK,
               int *INFO);
-void mangle_pzlahrd(int *N, int *K, int *NB, dcomplex *A, int *IA, int *JA, int *DESCA,
+void pzlahrd(int *N, int *K, int *NB, dcomplex *A, int *IA, int *JA, int *DESCA,
              dcomplex *TAU, dcomplex *T, dcomplex *Y, int *IY, int *JY,
              int *DESCY, dcomplex *WORK);
 void PZLAHRD(int *N, int *K, int *NB, dcomplex *A, int *IA, int *JA, int *DESCA,
@@ -4547,13 +4590,13 @@ void PZLAHRD(int *N, int *K, int *NB, dcomplex *A, int *IA, int *JA, int *DESCA,
 void PZLAHRD_(int *N, int *K, int *NB, dcomplex *A, int *IA, int *JA,
               int *DESCA, dcomplex *TAU, dcomplex *T, dcomplex *Y, int *IY,
               int *JY, int *DESCY, dcomplex *WORK);
-void mangle_pzlamr1d(int *N, dcomplex *A, int *IA, int *JA, int *DESCA, dcomplex *B,
+void pzlamr1d(int *N, dcomplex *A, int *IA, int *JA, int *DESCA, dcomplex *B,
               int *IB, int *JB, int *DESCB);
 void PZLAMR1D(int *N, dcomplex *A, int *IA, int *JA, int *DESCA, dcomplex *B,
               int *IB, int *JB, int *DESCB);
 void PZLAMR1D_(int *N, dcomplex *A, int *IA, int *JA, int *DESCA, dcomplex *B,
                int *IB, int *JB, int *DESCB);
-void mangle_pzlapiv(char *DIREC, char *ROWCOL, char *PIVROC, int *M, int *N,
+void pzlapiv(char *DIREC, char *ROWCOL, char *PIVROC, int *M, int *N,
              dcomplex *A, int *IA, int *JA, int *DESCA, int *IPIV, int *IP,
              int *JP, int *DESCIP, int *IWORK);
 void PZLAPIV(char *DIREC, char *ROWCOL, char *PIVROC, int *M, int *N,
@@ -4562,13 +4605,13 @@ void PZLAPIV(char *DIREC, char *ROWCOL, char *PIVROC, int *M, int *N,
 void PZLAPIV_(char *DIREC, char *ROWCOL, char *PIVROC, int *M, int *N,
               dcomplex *A, int *IA, int *JA, int *DESCA, int *IPIV, int *IP,
               int *JP, int *DESCIP, int *IWORK);
-void mangle_pzlapv2(char *DIREC, char *ROWCOL, int *M, int *N, dcomplex *A, int *IA,
+void pzlapv2(char *DIREC, char *ROWCOL, int *M, int *N, dcomplex *A, int *IA,
              int *JA, int *DESCA, int *IPIV, int *IP, int *JP, int *DESCIP);
 void PZLAPV2(char *DIREC, char *ROWCOL, int *M, int *N, dcomplex *A, int *IA,
              int *JA, int *DESCA, int *IPIV, int *IP, int *JP, int *DESCIP);
 void PZLAPV2_(char *DIREC, char *ROWCOL, int *M, int *N, dcomplex *A, int *IA,
               int *JA, int *DESCA, int *IPIV, int *IP, int *JP, int *DESCIP);
-void mangle_pzlaqge(int *M, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
+void pzlaqge(int *M, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
              double *R, double *C, double *ROWCND, double *COLCND, double *AMAX,
              char *EQUED);
 void PZLAQGE(int *M, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
@@ -4577,13 +4620,13 @@ void PZLAQGE(int *M, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
 void PZLAQGE_(int *M, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
               double *R, double *C, double *ROWCND, double *COLCND,
               double *AMAX, char *EQUED);
-void mangle_pzlaqsy(char *UPLO, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
+void pzlaqsy(char *UPLO, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
              double *SR, double *SC, double *SCOND, double *AMAX, char *EQUED);
 void PZLAQSY(char *UPLO, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
              double *SR, double *SC, double *SCOND, double *AMAX, char *EQUED);
 void PZLAQSY_(char *UPLO, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
               double *SR, double *SC, double *SCOND, double *AMAX, char *EQUED);
-void mangle_pzlarf(char *SIDE, int *M, int *N, dcomplex *V, int *IV, int *JV,
+void pzlarf(char *SIDE, int *M, int *N, dcomplex *V, int *IV, int *JV,
             int *DESCV, int *INCV, dcomplex *TAU, dcomplex *C, int *IC, int *JC,
             int *DESCC, dcomplex *WORK);
 void PZLARF(char *SIDE, int *M, int *N, dcomplex *V, int *IV, int *JV,
@@ -4592,7 +4635,7 @@ void PZLARF(char *SIDE, int *M, int *N, dcomplex *V, int *IV, int *JV,
 void PZLARF_(char *SIDE, int *M, int *N, dcomplex *V, int *IV, int *JV,
              int *DESCV, int *INCV, dcomplex *TAU, dcomplex *C, int *IC,
              int *JC, int *DESCC, dcomplex *WORK);
-void mangle_pzlarfb(char *SIDE, char *TRANS, char *DIRECT, char *STOREV, int *M,
+void pzlarfb(char *SIDE, char *TRANS, char *DIRECT, char *STOREV, int *M,
              int *N, int *K, dcomplex *V, int *IV, int *JV, int *DESCV,
              dcomplex *T, dcomplex *C, int *IC, int *JC, int *DESCC,
              dcomplex *WORK);
@@ -4604,7 +4647,7 @@ void PZLARFB_(char *SIDE, char *TRANS, char *DIRECT, char *STOREV, int *M,
               int *N, int *K, dcomplex *V, int *IV, int *JV, int *DESCV,
               dcomplex *T, dcomplex *C, int *IC, int *JC, int *DESCC,
               dcomplex *WORK);
-void mangle_pzlarfc(char *SIDE, int *M, int *N, dcomplex *V, int *IV, int *JV,
+void pzlarfc(char *SIDE, int *M, int *N, dcomplex *V, int *IV, int *JV,
              int *DESCV, int *INCV, dcomplex *TAU, dcomplex *C, int *IC,
              int *JC, int *DESCC, dcomplex *WORK);
 void PZLARFC(char *SIDE, int *M, int *N, dcomplex *V, int *IV, int *JV,
@@ -4613,19 +4656,19 @@ void PZLARFC(char *SIDE, int *M, int *N, dcomplex *V, int *IV, int *JV,
 void PZLARFC_(char *SIDE, int *M, int *N, dcomplex *V, int *IV, int *JV,
               int *DESCV, int *INCV, dcomplex *TAU, dcomplex *C, int *IC,
               int *JC, int *DESCC, dcomplex *WORK);
-void mangle_pzlarfg(int *N, dcomplex *ALPHA, int *IAX, int *JAX, dcomplex *X, int *IX,
+void pzlarfg(int *N, dcomplex *ALPHA, int *IAX, int *JAX, dcomplex *X, int *IX,
              int *JX, int *DESCX, int *INCX, dcomplex *TAU);
 void PZLARFG(int *N, dcomplex *ALPHA, int *IAX, int *JAX, dcomplex *X, int *IX,
              int *JX, int *DESCX, int *INCX, dcomplex *TAU);
 void PZLARFG_(int *N, dcomplex *ALPHA, int *IAX, int *JAX, dcomplex *X, int *IX,
               int *JX, int *DESCX, int *INCX, dcomplex *TAU);
-void mangle_pzlarft(char *DIRECT, char *STOREV, int *N, int *K, dcomplex *V, int *IV,
+void pzlarft(char *DIRECT, char *STOREV, int *N, int *K, dcomplex *V, int *IV,
              int *JV, int *DESCV, dcomplex *TAU, dcomplex *T, dcomplex *WORK);
 void PZLARFT(char *DIRECT, char *STOREV, int *N, int *K, dcomplex *V, int *IV,
              int *JV, int *DESCV, dcomplex *TAU, dcomplex *T, dcomplex *WORK);
 void PZLARFT_(char *DIRECT, char *STOREV, int *N, int *K, dcomplex *V, int *IV,
               int *JV, int *DESCV, dcomplex *TAU, dcomplex *T, dcomplex *WORK);
-void mangle_pzlarz(char *SIDE, int *M, int *N, int *L, dcomplex *V, int *IV, int *JV,
+void pzlarz(char *SIDE, int *M, int *N, int *L, dcomplex *V, int *IV, int *JV,
             int *DESCV, int *INCV, dcomplex *TAU, dcomplex *C, int *IC, int *JC,
             int *DESCC, dcomplex *WORK);
 void PZLARZ(char *SIDE, int *M, int *N, int *L, dcomplex *V, int *IV, int *JV,
@@ -4634,7 +4677,7 @@ void PZLARZ(char *SIDE, int *M, int *N, int *L, dcomplex *V, int *IV, int *JV,
 void PZLARZ_(char *SIDE, int *M, int *N, int *L, dcomplex *V, int *IV, int *JV,
              int *DESCV, int *INCV, dcomplex *TAU, dcomplex *C, int *IC,
              int *JC, int *DESCC, dcomplex *WORK);
-void mangle_pzlarzb(char *SIDE, char *TRANS, char *DIRECT, char *STOREV, int *M,
+void pzlarzb(char *SIDE, char *TRANS, char *DIRECT, char *STOREV, int *M,
              int *N, int *K, int *L, dcomplex *V, int *IV, int *JV, int *DESCV,
              dcomplex *T, dcomplex *C, int *IC, int *JC, int *DESCC,
              dcomplex *WORK);
@@ -4646,7 +4689,7 @@ void PZLARZB_(char *SIDE, char *TRANS, char *DIRECT, char *STOREV, int *M,
               int *N, int *K, int *L, dcomplex *V, int *IV, int *JV, int *DESCV,
               dcomplex *T, dcomplex *C, int *IC, int *JC, int *DESCC,
               dcomplex *WORK);
-void mangle_pzlarzc(char *SIDE, int *M, int *N, int *L, dcomplex *V, int *IV, int *JV,
+void pzlarzc(char *SIDE, int *M, int *N, int *L, dcomplex *V, int *IV, int *JV,
              int *DESCV, int *INCV, dcomplex *TAU, dcomplex *C, int *IC,
              int *JC, int *DESCC, dcomplex *WORK);
 void PZLARZC(char *SIDE, int *M, int *N, int *L, dcomplex *V, int *IV, int *JV,
@@ -4655,49 +4698,49 @@ void PZLARZC(char *SIDE, int *M, int *N, int *L, dcomplex *V, int *IV, int *JV,
 void PZLARZC_(char *SIDE, int *M, int *N, int *L, dcomplex *V, int *IV, int *JV,
               int *DESCV, int *INCV, dcomplex *TAU, dcomplex *C, int *IC,
               int *JC, int *DESCC, dcomplex *WORK);
-void mangle_pzlarzt(char *DIRECT, char *STOREV, int *N, int *K, dcomplex *V, int *IV,
+void pzlarzt(char *DIRECT, char *STOREV, int *N, int *K, dcomplex *V, int *IV,
              int *JV, int *DESCV, dcomplex *TAU, dcomplex *T, dcomplex *WORK);
 void PZLARZT(char *DIRECT, char *STOREV, int *N, int *K, dcomplex *V, int *IV,
              int *JV, int *DESCV, dcomplex *TAU, dcomplex *T, dcomplex *WORK);
 void PZLARZT_(char *DIRECT, char *STOREV, int *N, int *K, dcomplex *V, int *IV,
               int *JV, int *DESCV, dcomplex *TAU, dcomplex *T, dcomplex *WORK);
-void mangle_pzlascl(char *TYPE, double *CFROM, double *CTO, int *M, int *N,
+void pzlascl(char *TYPE, double *CFROM, double *CTO, int *M, int *N,
              dcomplex *A, int *IA, int *JA, int *DESCA, int *INFO);
 void PZLASCL(char *TYPE, double *CFROM, double *CTO, int *M, int *N,
              dcomplex *A, int *IA, int *JA, int *DESCA, int *INFO);
 void PZLASCL_(char *TYPE, double *CFROM, double *CTO, int *M, int *N,
               dcomplex *A, int *IA, int *JA, int *DESCA, int *INFO);
-void mangle_pzlase2(char *UPLO, int *M, int *N, dcomplex *ALPHA, dcomplex *BETA,
+void pzlase2(char *UPLO, int *M, int *N, dcomplex *ALPHA, dcomplex *BETA,
              dcomplex *A, int *IA, int *JA, int *DESCA);
 void PZLASE2(char *UPLO, int *M, int *N, dcomplex *ALPHA, dcomplex *BETA,
              dcomplex *A, int *IA, int *JA, int *DESCA);
 void PZLASE2_(char *UPLO, int *M, int *N, dcomplex *ALPHA, dcomplex *BETA,
               dcomplex *A, int *IA, int *JA, int *DESCA);
-void mangle_pzlaset(char *UPLO, int *M, int *N, dcomplex *ALPHA, dcomplex *BETA,
+void pzlaset(char *UPLO, int *M, int *N, dcomplex *ALPHA, dcomplex *BETA,
              dcomplex *A, int *IA, int *JA, int *DESCA);
 void PZLASET(char *UPLO, int *M, int *N, dcomplex *ALPHA, dcomplex *BETA,
              dcomplex *A, int *IA, int *JA, int *DESCA);
 void PZLASET_(char *UPLO, int *M, int *N, dcomplex *ALPHA, dcomplex *BETA,
               dcomplex *A, int *IA, int *JA, int *DESCA);
-void mangle_pzlasmsub(dcomplex *A, int *DESCA, int *I, int *L, int *K, double *SMLNUM,
+void pzlasmsub(dcomplex *A, int *DESCA, int *I, int *L, int *K, double *SMLNUM,
                dcomplex *BUF, int *LWORK);
 void PZLASMSUB(dcomplex *A, int *DESCA, int *I, int *L, int *K, double *SMLNUM,
                dcomplex *BUF, int *LWORK);
 void PZLASMSUB_(dcomplex *A, int *DESCA, int *I, int *L, int *K, double *SMLNUM,
                 dcomplex *BUF, int *LWORK);
-void mangle_pzlassq(int *N, dcomplex *X, int *IX, int *JX, int *DESCX, int *INCX,
+void pzlassq(int *N, dcomplex *X, int *IX, int *JX, int *DESCX, int *INCX,
              double *SCALE, double *SUMSQ);
 void PZLASSQ(int *N, dcomplex *X, int *IX, int *JX, int *DESCX, int *INCX,
              double *SCALE, double *SUMSQ);
 void PZLASSQ_(int *N, dcomplex *X, int *IX, int *JX, int *DESCX, int *INCX,
               double *SCALE, double *SUMSQ);
-void mangle_pzlaswp(char *DIREC, char *ROWCOL, int *N, dcomplex *A, int *IA, int *JA,
+void pzlaswp(char *DIREC, char *ROWCOL, int *N, dcomplex *A, int *IA, int *JA,
              int *DESCA, int *K1, int *K2, int *IPIV);
 void PZLASWP(char *DIREC, char *ROWCOL, int *N, dcomplex *A, int *IA, int *JA,
              int *DESCA, int *K1, int *K2, int *IPIV);
 void PZLASWP_(char *DIREC, char *ROWCOL, int *N, dcomplex *A, int *IA, int *JA,
               int *DESCA, int *K1, int *K2, int *IPIV);
-void mangle_pzlatrd(char *UPLO, int *N, int *NB, dcomplex *A, int *IA, int *JA,
+void pzlatrd(char *UPLO, int *N, int *NB, dcomplex *A, int *IA, int *JA,
              int *DESCA, double *D, double *E, dcomplex *TAU, dcomplex *W,
              int *IW, int *JW, int *DESCW, dcomplex *WORK);
 void PZLATRD(char *UPLO, int *N, int *NB, dcomplex *A, int *IA, int *JA,
@@ -4706,7 +4749,7 @@ void PZLATRD(char *UPLO, int *N, int *NB, dcomplex *A, int *IA, int *JA,
 void PZLATRD_(char *UPLO, int *N, int *NB, dcomplex *A, int *IA, int *JA,
               int *DESCA, double *D, double *E, dcomplex *TAU, dcomplex *W,
               int *IW, int *JW, int *DESCW, dcomplex *WORK);
-void mangle_pzlatrs(char *UPLO, char *TRANS, char *DIAG, char *NORMIN, int *N,
+void pzlatrs(char *UPLO, char *TRANS, char *DIAG, char *NORMIN, int *N,
              dcomplex *A, int *IA, int *JA, int *DESCA, dcomplex *X, int *IX,
              int *JX, int *DESCX, double *SCALE, double *CNORM, int *WORK);
 void PZLATRS(char *UPLO, char *TRANS, char *DIAG, char *NORMIN, int *N,
@@ -4715,13 +4758,13 @@ void PZLATRS(char *UPLO, char *TRANS, char *DIAG, char *NORMIN, int *N,
 void PZLATRS_(char *UPLO, char *TRANS, char *DIAG, char *NORMIN, int *N,
               dcomplex *A, int *IA, int *JA, int *DESCA, dcomplex *X, int *IX,
               int *JX, int *DESCX, double *SCALE, double *CNORM, int *WORK);
-void mangle_pzlatrz(int *M, int *N, int *L, dcomplex *A, int *IA, int *JA, int *DESCA,
+void pzlatrz(int *M, int *N, int *L, dcomplex *A, int *IA, int *JA, int *DESCA,
              dcomplex *TAU, dcomplex *WORK);
 void PZLATRZ(int *M, int *N, int *L, dcomplex *A, int *IA, int *JA, int *DESCA,
              dcomplex *TAU, dcomplex *WORK);
 void PZLATRZ_(int *M, int *N, int *L, dcomplex *A, int *IA, int *JA, int *DESCA,
               dcomplex *TAU, dcomplex *WORK);
-void mangle_pzlattrs(char *UPLO, char *TRANS, char *DIAG, char *NORMIN, int *N,
+void pzlattrs(char *UPLO, char *TRANS, char *DIAG, char *NORMIN, int *N,
               dcomplex *A, int *IA, int *JA, int *DESCA, dcomplex *X, int *IX,
               int *JX, int *DESCX, double *SCALE, double *CNORM, int *INFO);
 void PZLATTRS(char *UPLO, char *TRANS, char *DIAG, char *NORMIN, int *N,
@@ -4730,25 +4773,28 @@ void PZLATTRS(char *UPLO, char *TRANS, char *DIAG, char *NORMIN, int *N,
 void PZLATTRS_(char *UPLO, char *TRANS, char *DIAG, char *NORMIN, int *N,
                dcomplex *A, int *IA, int *JA, int *DESCA, dcomplex *X, int *IX,
                int *JX, int *DESCX, double *SCALE, double *CNORM, int *INFO);
-void mangle_pzlauu2(char *UPLO, int *N, dcomplex *A, int *IA, int *JA, int *DESCA);
+void pzlauu2(char *UPLO, int *N, dcomplex *A, int *IA, int *JA, int *DESCA);
 void PZLAUU2(char *UPLO, int *N, dcomplex *A, int *IA, int *JA, int *DESCA);
 void PZLAUU2_(char *UPLO, int *N, dcomplex *A, int *IA, int *JA, int *DESCA);
-void mangle_pzlauum(char *UPLO, int *N, dcomplex *A, int *IA, int *JA, int *DESCA);
+void pzlauum(char *UPLO, int *N, dcomplex *A, int *IA, int *JA, int *DESCA);
 void PZLAUUM(char *UPLO, int *N, dcomplex *A, int *IA, int *JA, int *DESCA);
 void PZLAUUM_(char *UPLO, int *N, dcomplex *A, int *IA, int *JA, int *DESCA);
-void mangle_pzlawil(int *II, int *JJ, int *M, dcomplex *A, int *DESCA, dcomplex *H44,
+void pzlawil(int *II, int *JJ, int *M, dcomplex *A, int *DESCA, dcomplex *H44,
              dcomplex *H33, dcomplex *H43H34, dcomplex *V);
 void PZLAWIL(int *II, int *JJ, int *M, dcomplex *A, int *DESCA, dcomplex *H44,
              dcomplex *H33, dcomplex *H43H34, dcomplex *V);
 void PZLAWIL_(int *II, int *JJ, int *M, dcomplex *A, int *DESCA, dcomplex *H44,
               dcomplex *H33, dcomplex *H43H34, dcomplex *V);
-void mangle_pzmax1(int *N, double *AMAX, int *INDX, dcomplex *X, int *IX, int *JX,
+void pzmax1(int *N, double *AMAX, int *INDX, dcomplex *X, int *IX, int *JX,
             int *DESCX, int *INCX);
 void PZMAX1(int *N, double *AMAX, int *INDX, dcomplex *X, int *IX, int *JX,
             int *DESCX, int *INCX);
 void PZMAX1_(int *N, double *AMAX, int *INDX, dcomplex *X, int *IX, int *JX,
              int *DESCX, int *INCX);
-void mangle_pzpbsv(char *UPLO, int *N, int *BW, int *NRHS, dcomplex *A, int *JA,
+void zcombamax1(dcomplex *V1, dcomplex *V2);
+void ZCOMBAMAX1(dcomplex *V1, dcomplex *V2);
+void ZCOMBAMAX1_(dcomplex *V1, dcomplex *V2);
+void pzpbsv(char *UPLO, int *N, int *BW, int *NRHS, dcomplex *A, int *JA,
             int *DESCA, dcomplex *B, int *IB, int *DESCB, dcomplex *WORK,
             int *LWORK, int *INFO);
 void PZPBSV(char *UPLO, int *N, int *BW, int *NRHS, dcomplex *A, int *JA,
@@ -4757,13 +4803,13 @@ void PZPBSV(char *UPLO, int *N, int *BW, int *NRHS, dcomplex *A, int *JA,
 void PZPBSV_(char *UPLO, int *N, int *BW, int *NRHS, dcomplex *A, int *JA,
              int *DESCA, dcomplex *B, int *IB, int *DESCB, dcomplex *WORK,
              int *LWORK, int *INFO);
-void mangle_pzpbtrf(char *UPLO, int *N, int *BW, dcomplex *A, int *JA, int *DESCA,
+void pzpbtrf(char *UPLO, int *N, int *BW, dcomplex *A, int *JA, int *DESCA,
              dcomplex *AF, int *LAF, dcomplex *WORK, int *LWORK, int *INFO);
 void PZPBTRF(char *UPLO, int *N, int *BW, dcomplex *A, int *JA, int *DESCA,
              dcomplex *AF, int *LAF, dcomplex *WORK, int *LWORK, int *INFO);
 void PZPBTRF_(char *UPLO, int *N, int *BW, dcomplex *A, int *JA, int *DESCA,
               dcomplex *AF, int *LAF, dcomplex *WORK, int *LWORK, int *INFO);
-void mangle_pzpbtrs(char *UPLO, int *N, int *BW, int *NRHS, dcomplex *A, int *JA,
+void pzpbtrs(char *UPLO, int *N, int *BW, int *NRHS, dcomplex *A, int *JA,
              int *DESCA, dcomplex *B, int *IB, int *DESCB, dcomplex *AF,
              int *LAF, dcomplex *WORK, int *LWORK, int *INFO);
 void PZPBTRS(char *UPLO, int *N, int *BW, int *NRHS, dcomplex *A, int *JA,
@@ -4772,7 +4818,7 @@ void PZPBTRS(char *UPLO, int *N, int *BW, int *NRHS, dcomplex *A, int *JA,
 void PZPBTRS_(char *UPLO, int *N, int *BW, int *NRHS, dcomplex *A, int *JA,
               int *DESCA, dcomplex *B, int *IB, int *DESCB, dcomplex *AF,
               int *LAF, dcomplex *WORK, int *LWORK, int *INFO);
-void mangle_pzpbtrsv(char *UPLO, char *TRANS, int *N, int *BW, int *NRHS, dcomplex *A,
+void pzpbtrsv(char *UPLO, char *TRANS, int *N, int *BW, int *NRHS, dcomplex *A,
               int *JA, int *DESCA, dcomplex *B, int *IB, int *DESCB,
               dcomplex *AF, int *LAF, dcomplex *WORK, int *LWORK, int *INFO);
 void PZPBTRSV(char *UPLO, char *TRANS, int *N, int *BW, int *NRHS, dcomplex *A,
@@ -4781,7 +4827,7 @@ void PZPBTRSV(char *UPLO, char *TRANS, int *N, int *BW, int *NRHS, dcomplex *A,
 void PZPBTRSV_(char *UPLO, char *TRANS, int *N, int *BW, int *NRHS, dcomplex *A,
                int *JA, int *DESCA, dcomplex *B, int *IB, int *DESCB,
                dcomplex *AF, int *LAF, dcomplex *WORK, int *LWORK, int *INFO);
-void mangle_pzpocon(char *UPLO, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
+void pzpocon(char *UPLO, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
              double *ANORM, double *RCOND, dcomplex *WORK, int *LWORK,
              double *RWORK, int *LRWORK, int *INFO);
 void PZPOCON(char *UPLO, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
@@ -4790,13 +4836,13 @@ void PZPOCON(char *UPLO, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
 void PZPOCON_(char *UPLO, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
               double *ANORM, double *RCOND, dcomplex *WORK, int *LWORK,
               double *RWORK, int *LRWORK, int *INFO);
-void mangle_pzpoequ(int *N, dcomplex *A, int *IA, int *JA, int *DESCA, double *SR,
+void pzpoequ(int *N, dcomplex *A, int *IA, int *JA, int *DESCA, double *SR,
              double *SC, double *SCOND, double *AMAX, int *INFO);
 void PZPOEQU(int *N, dcomplex *A, int *IA, int *JA, int *DESCA, double *SR,
              double *SC, double *SCOND, double *AMAX, int *INFO);
 void PZPOEQU_(int *N, dcomplex *A, int *IA, int *JA, int *DESCA, double *SR,
               double *SC, double *SCOND, double *AMAX, int *INFO);
-void mangle_pzporfs(char *UPLO, int *N, int *NRHS, dcomplex *A, int *IA, int *JA,
+void pzporfs(char *UPLO, int *N, int *NRHS, dcomplex *A, int *IA, int *JA,
              int *DESCA, dcomplex *AF, int *IAF, int *JAF, int *DESCAF,
              dcomplex *B, int *IB, int *JB, int *DESCB, dcomplex *X, int *IX,
              int *JX, int *DESCX, double *FERR, double *BERR, dcomplex *WORK,
@@ -4811,13 +4857,13 @@ void PZPORFS_(char *UPLO, int *N, int *NRHS, dcomplex *A, int *IA, int *JA,
               dcomplex *B, int *IB, int *JB, int *DESCB, dcomplex *X, int *IX,
               int *JX, int *DESCX, double *FERR, double *BERR, dcomplex *WORK,
               int *LWORK, double *RWORK, int *LRWORK, int *INFO);
-void mangle_pzposv(char *UPLO, int *N, int *NRHS, dcomplex *A, int *IA, int *JA,
+void pzposv(char *UPLO, int *N, int *NRHS, dcomplex *A, int *IA, int *JA,
             int *DESCA, dcomplex *B, int *IB, int *JB, int *DESCB, int *INFO);
 void PZPOSV(char *UPLO, int *N, int *NRHS, dcomplex *A, int *IA, int *JA,
             int *DESCA, dcomplex *B, int *IB, int *JB, int *DESCB, int *INFO);
 void PZPOSV_(char *UPLO, int *N, int *NRHS, dcomplex *A, int *IA, int *JA,
              int *DESCA, dcomplex *B, int *IB, int *JB, int *DESCB, int *INFO);
-void mangle_pzposvx(char *FACT, char *UPLO, int *N, int *NRHS, dcomplex *A, int *IA,
+void pzposvx(char *FACT, char *UPLO, int *N, int *NRHS, dcomplex *A, int *IA,
              int *JA, int *DESCA, dcomplex *AF, int *IAF, int *JAF, int *DESCAF,
              char *EQUED, dcomplex *SR, dcomplex *SC, dcomplex *B, int *IB,
              int *JB, int *DESCB, dcomplex *X, int *IX, int *JX, int *DESCX,
@@ -4836,31 +4882,31 @@ void PZPOSVX_(char *FACT, char *UPLO, int *N, int *NRHS, dcomplex *A, int *IA,
               int *DESCX, double *RCOND, double *FERR, double *BERR,
               dcomplex *WORK, int *LWORK, double *RWORK, int *LRWORK,
               int *INFO);
-void mangle_pzpotf2(char *UPLO, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
+void pzpotf2(char *UPLO, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
              int *INFO);
 void PZPOTF2(char *UPLO, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
              int *INFO);
 void PZPOTF2_(char *UPLO, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
               int *INFO);
-void mangle_pzpotrf(char *UPLO, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
+void pzpotrf(char *UPLO, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
              int *INFO);
 void PZPOTRF(char *UPLO, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
              int *INFO);
 void PZPOTRF_(char *UPLO, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
               int *INFO);
-void mangle_pzpotri(char *UPLO, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
+void pzpotri(char *UPLO, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
              int *INFO);
 void PZPOTRI(char *UPLO, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
              int *INFO);
 void PZPOTRI_(char *UPLO, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
               int *INFO);
-void mangle_pzpotrs(char *UPLO, int *N, int *NRHS, dcomplex *A, int *IA, int *JA,
+void pzpotrs(char *UPLO, int *N, int *NRHS, dcomplex *A, int *IA, int *JA,
              int *DESCA, dcomplex *B, int *IB, int *JB, int *DESCB, int *INFO);
 void PZPOTRS(char *UPLO, int *N, int *NRHS, dcomplex *A, int *IA, int *JA,
              int *DESCA, dcomplex *B, int *IB, int *JB, int *DESCB, int *INFO);
 void PZPOTRS_(char *UPLO, int *N, int *NRHS, dcomplex *A, int *IA, int *JA,
               int *DESCA, dcomplex *B, int *IB, int *JB, int *DESCB, int *INFO);
-void mangle_pzptsv(char *UPLO, int *N, int *NRHS, dcomplex *D, dcomplex *E, int *JA,
+void pzptsv(char *UPLO, int *N, int *NRHS, dcomplex *D, dcomplex *E, int *JA,
             int *DESCA, dcomplex *B, int *IB, int *DESCB, dcomplex *WORK,
             int *LWORK, int *INFO);
 void PZPTSV(char *UPLO, int *N, int *NRHS, dcomplex *D, dcomplex *E, int *JA,
@@ -4869,13 +4915,13 @@ void PZPTSV(char *UPLO, int *N, int *NRHS, dcomplex *D, dcomplex *E, int *JA,
 void PZPTSV_(char *UPLO, int *N, int *NRHS, dcomplex *D, dcomplex *E, int *JA,
              int *DESCA, dcomplex *B, int *IB, int *DESCB, dcomplex *WORK,
              int *LWORK, int *INFO);
-void mangle_pzpttrf(int *N, dcomplex *D, dcomplex *E, int *JA, int *DESCA,
+void pzpttrf(int *N, dcomplex *D, dcomplex *E, int *JA, int *DESCA,
              dcomplex *AF, int *LAF, dcomplex *WORK, int *LWORK, int *INFO);
 void PZPTTRF(int *N, dcomplex *D, dcomplex *E, int *JA, int *DESCA,
              dcomplex *AF, int *LAF, dcomplex *WORK, int *LWORK, int *INFO);
 void PZPTTRF_(int *N, dcomplex *D, dcomplex *E, int *JA, int *DESCA,
               dcomplex *AF, int *LAF, dcomplex *WORK, int *LWORK, int *INFO);
-void mangle_pzpttrs(char *UPLO, int *N, int *NRHS, dcomplex *D, dcomplex *E, int *JA,
+void pzpttrs(char *UPLO, int *N, int *NRHS, dcomplex *D, dcomplex *E, int *JA,
              int *DESCA, dcomplex *B, int *IB, int *DESCB, dcomplex *AF,
              int *LAF, dcomplex *WORK, int *LWORK, int *INFO);
 void PZPTTRS(char *UPLO, int *N, int *NRHS, dcomplex *D, dcomplex *E, int *JA,
@@ -4884,7 +4930,7 @@ void PZPTTRS(char *UPLO, int *N, int *NRHS, dcomplex *D, dcomplex *E, int *JA,
 void PZPTTRS_(char *UPLO, int *N, int *NRHS, dcomplex *D, dcomplex *E, int *JA,
               int *DESCA, dcomplex *B, int *IB, int *DESCB, dcomplex *AF,
               int *LAF, dcomplex *WORK, int *LWORK, int *INFO);
-void mangle_pzpttrsv(char *UPLO, char *TRANS, int *N, int *NRHS, dcomplex *D,
+void pzpttrsv(char *UPLO, char *TRANS, int *N, int *NRHS, dcomplex *D,
               dcomplex *E, int *JA, int *DESCA, dcomplex *B, int *IB,
               int *DESCB, dcomplex *AF, int *LAF, dcomplex *WORK, int *LWORK,
               int *INFO);
@@ -4896,7 +4942,7 @@ void PZPTTRSV_(char *UPLO, char *TRANS, int *N, int *NRHS, dcomplex *D,
                dcomplex *E, int *JA, int *DESCA, dcomplex *B, int *IB,
                int *DESCB, dcomplex *AF, int *LAF, dcomplex *WORK, int *LWORK,
                int *INFO);
-void mangle_pzstein(int *N, double *D, double *E, int *M, double *W, int *IBLOCK,
+void pzstein(int *N, double *D, double *E, int *M, double *W, int *IBLOCK,
              int *ISPLIT, double *ORFAC, dcomplex *Z, int *IZ, int *JZ,
              int *DESCZ, double *WORK, int *LWORK, int *IWORK, int *LIWORK,
              int *IFAIL, int *ICLUSTR, double *GAP, int *INFO);
@@ -4908,7 +4954,7 @@ void PZSTEIN_(int *N, double *D, double *E, int *M, double *W, int *IBLOCK,
               int *ISPLIT, double *ORFAC, dcomplex *Z, int *IZ, int *JZ,
               int *DESCZ, double *WORK, int *LWORK, int *IWORK, int *LIWORK,
               int *IFAIL, int *ICLUSTR, double *GAP, int *INFO);
-void mangle_pztrcon(char *NORM, char *UPLO, char *DIAG, int *N, dcomplex *A, int *IA,
+void pztrcon(char *NORM, char *UPLO, char *DIAG, int *N, dcomplex *A, int *IA,
              int *JA, int *DESCA, double *RCOND, dcomplex *WORK, int *LWORK,
              double *RWORK, int *LRWORK, int *INFO);
 void PZTRCON(char *NORM, char *UPLO, char *DIAG, int *N, dcomplex *A, int *IA,
@@ -4917,7 +4963,7 @@ void PZTRCON(char *NORM, char *UPLO, char *DIAG, int *N, dcomplex *A, int *IA,
 void PZTRCON_(char *NORM, char *UPLO, char *DIAG, int *N, dcomplex *A, int *IA,
               int *JA, int *DESCA, double *RCOND, dcomplex *WORK, int *LWORK,
               double *RWORK, int *LRWORK, int *INFO);
-void mangle_pztrevc(char *SIDE, char *HOWMNY, int *SELECT, int *N, dcomplex *T,
+void pztrevc(char *SIDE, char *HOWMNY, int *SELECT, int *N, dcomplex *T,
              int *DESCT, dcomplex *VL, int *DESCVL, dcomplex *VR, int *DESCVR,
              int *MM, int *M, dcomplex *WORK, double *RWORK, int *INFO);
 void PZTREVC(char *SIDE, char *HOWMNY, int *SELECT, int *N, dcomplex *T,
@@ -4926,7 +4972,7 @@ void PZTREVC(char *SIDE, char *HOWMNY, int *SELECT, int *N, dcomplex *T,
 void PZTREVC_(char *SIDE, char *HOWMNY, int *SELECT, int *N, dcomplex *T,
               int *DESCT, dcomplex *VL, int *DESCVL, dcomplex *VR, int *DESCVR,
               int *MM, int *M, dcomplex *WORK, double *RWORK, int *INFO);
-void mangle_pztrrfs(char *UPLO, char *TRANS, char *DIAG, int *N, int *NRHS,
+void pztrrfs(char *UPLO, char *TRANS, char *DIAG, int *N, int *NRHS,
              dcomplex *A, int *IA, int *JA, int *DESCA, dcomplex *B, int *IB,
              int *JB, int *DESCB, dcomplex *X, int *IX, int *JX, int *DESCX,
              double *FERR, double *BERR, dcomplex *WORK, int *LWORK,
@@ -4941,19 +4987,19 @@ void PZTRRFS_(char *UPLO, char *TRANS, char *DIAG, int *N, int *NRHS,
               int *JB, int *DESCB, dcomplex *X, int *IX, int *JX, int *DESCX,
               double *FERR, double *BERR, dcomplex *WORK, int *LWORK,
               double *RWORK, int *LRWORK, int *INFO);
-void mangle_pztrti2(char *UPLO, char *DIAG, int *N, dcomplex *A, int *IA, int *JA,
+void pztrti2(char *UPLO, char *DIAG, int *N, dcomplex *A, int *IA, int *JA,
              int *DESCA, int *INFO);
 void PZTRTI2(char *UPLO, char *DIAG, int *N, dcomplex *A, int *IA, int *JA,
              int *DESCA, int *INFO);
 void PZTRTI2_(char *UPLO, char *DIAG, int *N, dcomplex *A, int *IA, int *JA,
               int *DESCA, int *INFO);
-void mangle_pztrtri(char *UPLO, char *DIAG, int *N, dcomplex *A, int *IA, int *JA,
+void pztrtri(char *UPLO, char *DIAG, int *N, dcomplex *A, int *IA, int *JA,
              int *DESCA, int *INFO);
 void PZTRTRI(char *UPLO, char *DIAG, int *N, dcomplex *A, int *IA, int *JA,
              int *DESCA, int *INFO);
 void PZTRTRI_(char *UPLO, char *DIAG, int *N, dcomplex *A, int *IA, int *JA,
               int *DESCA, int *INFO);
-void mangle_pztrtrs(char *UPLO, char *TRANS, char *DIAG, int *N, int *NRHS,
+void pztrtrs(char *UPLO, char *TRANS, char *DIAG, int *N, int *NRHS,
              dcomplex *A, int *IA, int *JA, int *DESCA, dcomplex *B, int *IB,
              int *JB, int *DESCB, int *INFO);
 void PZTRTRS(char *UPLO, char *TRANS, char *DIAG, int *N, int *NRHS,
@@ -4962,61 +5008,61 @@ void PZTRTRS(char *UPLO, char *TRANS, char *DIAG, int *N, int *NRHS,
 void PZTRTRS_(char *UPLO, char *TRANS, char *DIAG, int *N, int *NRHS,
               dcomplex *A, int *IA, int *JA, int *DESCA, dcomplex *B, int *IB,
               int *JB, int *DESCB, int *INFO);
-void mangle_pztzrzf(int *M, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
+void pztzrzf(int *M, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
              dcomplex *TAU, dcomplex *WORK, int *LWORK, int *INFO);
 void PZTZRZF(int *M, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
              dcomplex *TAU, dcomplex *WORK, int *LWORK, int *INFO);
 void PZTZRZF_(int *M, int *N, dcomplex *A, int *IA, int *JA, int *DESCA,
               dcomplex *TAU, dcomplex *WORK, int *LWORK, int *INFO);
-void mangle_pzung2l(int *M, int *N, int *K, dcomplex *A, int *IA, int *JA, int *DESCA,
+void pzung2l(int *M, int *N, int *K, dcomplex *A, int *IA, int *JA, int *DESCA,
              dcomplex *TAU, dcomplex *WORK, int *LWORK, int *INFO);
 void PZUNG2L(int *M, int *N, int *K, dcomplex *A, int *IA, int *JA, int *DESCA,
              dcomplex *TAU, dcomplex *WORK, int *LWORK, int *INFO);
 void PZUNG2L_(int *M, int *N, int *K, dcomplex *A, int *IA, int *JA, int *DESCA,
               dcomplex *TAU, dcomplex *WORK, int *LWORK, int *INFO);
-void mangle_pzung2r(int *M, int *N, int *K, dcomplex *A, int *IA, int *JA, int *DESCA,
+void pzung2r(int *M, int *N, int *K, dcomplex *A, int *IA, int *JA, int *DESCA,
              dcomplex *TAU, dcomplex *WORK, int *LWORK, int *INFO);
 void PZUNG2R(int *M, int *N, int *K, dcomplex *A, int *IA, int *JA, int *DESCA,
              dcomplex *TAU, dcomplex *WORK, int *LWORK, int *INFO);
 void PZUNG2R_(int *M, int *N, int *K, dcomplex *A, int *IA, int *JA, int *DESCA,
               dcomplex *TAU, dcomplex *WORK, int *LWORK, int *INFO);
-void mangle_pzungl2(int *M, int *N, int *K, dcomplex *A, int *IA, int *JA, int *DESCA,
+void pzungl2(int *M, int *N, int *K, dcomplex *A, int *IA, int *JA, int *DESCA,
              dcomplex *TAU, dcomplex *WORK, int *LWORK, int *INFO);
 void PZUNGL2(int *M, int *N, int *K, dcomplex *A, int *IA, int *JA, int *DESCA,
              dcomplex *TAU, dcomplex *WORK, int *LWORK, int *INFO);
 void PZUNGL2_(int *M, int *N, int *K, dcomplex *A, int *IA, int *JA, int *DESCA,
               dcomplex *TAU, dcomplex *WORK, int *LWORK, int *INFO);
-void mangle_pzunglq(int *M, int *N, int *K, dcomplex *A, int *IA, int *JA, int *DESCA,
+void pzunglq(int *M, int *N, int *K, dcomplex *A, int *IA, int *JA, int *DESCA,
              dcomplex *TAU, dcomplex *WORK, int *LWORK, int *INFO);
 void PZUNGLQ(int *M, int *N, int *K, dcomplex *A, int *IA, int *JA, int *DESCA,
              dcomplex *TAU, dcomplex *WORK, int *LWORK, int *INFO);
 void PZUNGLQ_(int *M, int *N, int *K, dcomplex *A, int *IA, int *JA, int *DESCA,
               dcomplex *TAU, dcomplex *WORK, int *LWORK, int *INFO);
-void mangle_pzungql(int *M, int *N, int *K, dcomplex *A, int *IA, int *JA, int *DESCA,
+void pzungql(int *M, int *N, int *K, dcomplex *A, int *IA, int *JA, int *DESCA,
              dcomplex *TAU, dcomplex *WORK, int *LWORK, int *INFO);
 void PZUNGQL(int *M, int *N, int *K, dcomplex *A, int *IA, int *JA, int *DESCA,
              dcomplex *TAU, dcomplex *WORK, int *LWORK, int *INFO);
 void PZUNGQL_(int *M, int *N, int *K, dcomplex *A, int *IA, int *JA, int *DESCA,
               dcomplex *TAU, dcomplex *WORK, int *LWORK, int *INFO);
-void mangle_pzungqr(int *M, int *N, int *K, dcomplex *A, int *IA, int *JA, int *DESCA,
+void pzungqr(int *M, int *N, int *K, dcomplex *A, int *IA, int *JA, int *DESCA,
              dcomplex *TAU, dcomplex *WORK, int *LWORK, int *INFO);
 void PZUNGQR(int *M, int *N, int *K, dcomplex *A, int *IA, int *JA, int *DESCA,
              dcomplex *TAU, dcomplex *WORK, int *LWORK, int *INFO);
 void PZUNGQR_(int *M, int *N, int *K, dcomplex *A, int *IA, int *JA, int *DESCA,
               dcomplex *TAU, dcomplex *WORK, int *LWORK, int *INFO);
-void mangle_pzungr2(int *M, int *N, int *K, dcomplex *A, int *IA, int *JA, int *DESCA,
+void pzungr2(int *M, int *N, int *K, dcomplex *A, int *IA, int *JA, int *DESCA,
              dcomplex *TAU, dcomplex *WORK, int *LWORK, int *INFO);
 void PZUNGR2(int *M, int *N, int *K, dcomplex *A, int *IA, int *JA, int *DESCA,
              dcomplex *TAU, dcomplex *WORK, int *LWORK, int *INFO);
 void PZUNGR2_(int *M, int *N, int *K, dcomplex *A, int *IA, int *JA, int *DESCA,
               dcomplex *TAU, dcomplex *WORK, int *LWORK, int *INFO);
-void mangle_pzungrq(int *M, int *N, int *K, dcomplex *A, int *IA, int *JA, int *DESCA,
+void pzungrq(int *M, int *N, int *K, dcomplex *A, int *IA, int *JA, int *DESCA,
              dcomplex *TAU, dcomplex *WORK, int *LWORK, int *INFO);
 void PZUNGRQ(int *M, int *N, int *K, dcomplex *A, int *IA, int *JA, int *DESCA,
              dcomplex *TAU, dcomplex *WORK, int *LWORK, int *INFO);
 void PZUNGRQ_(int *M, int *N, int *K, dcomplex *A, int *IA, int *JA, int *DESCA,
               dcomplex *TAU, dcomplex *WORK, int *LWORK, int *INFO);
-void mangle_pzunm2l(char *SIDE, char *TRANS, int *M, int *N, int *K, dcomplex *A,
+void pzunm2l(char *SIDE, char *TRANS, int *M, int *N, int *K, dcomplex *A,
              int *IA, int *JA, int *DESCA, dcomplex *TAU, dcomplex *C, int *IC,
              int *JC, int *DESCC, dcomplex *WORK, int *LWORK, int *INFO);
 void PZUNM2L(char *SIDE, char *TRANS, int *M, int *N, int *K, dcomplex *A,
@@ -5025,7 +5071,7 @@ void PZUNM2L(char *SIDE, char *TRANS, int *M, int *N, int *K, dcomplex *A,
 void PZUNM2L_(char *SIDE, char *TRANS, int *M, int *N, int *K, dcomplex *A,
               int *IA, int *JA, int *DESCA, dcomplex *TAU, dcomplex *C, int *IC,
               int *JC, int *DESCC, dcomplex *WORK, int *LWORK, int *INFO);
-void mangle_pzunm2r(char *SIDE, char *TRANS, int *M, int *N, int *K, dcomplex *A,
+void pzunm2r(char *SIDE, char *TRANS, int *M, int *N, int *K, dcomplex *A,
              int *IA, int *JA, int *DESCA, dcomplex *TAU, dcomplex *C, int *IC,
              int *JC, int *DESCC, dcomplex *WORK, int *LWORK, int *INFO);
 void PZUNM2R(char *SIDE, char *TRANS, int *M, int *N, int *K, dcomplex *A,
@@ -5034,7 +5080,7 @@ void PZUNM2R(char *SIDE, char *TRANS, int *M, int *N, int *K, dcomplex *A,
 void PZUNM2R_(char *SIDE, char *TRANS, int *M, int *N, int *K, dcomplex *A,
               int *IA, int *JA, int *DESCA, dcomplex *TAU, dcomplex *C, int *IC,
               int *JC, int *DESCC, dcomplex *WORK, int *LWORK, int *INFO);
-void mangle_pzunmbr(char *VECT, char *SIDE, char *TRANS, int *M, int *N, int *K,
+void pzunmbr(char *VECT, char *SIDE, char *TRANS, int *M, int *N, int *K,
              dcomplex *A, int *IA, int *JA, int *DESCA, dcomplex *TAU,
              dcomplex *C, int *IC, int *JC, int *DESCC, dcomplex *WORK,
              int *LWORK, int *INFO);
@@ -5046,7 +5092,7 @@ void PZUNMBR_(char *VECT, char *SIDE, char *TRANS, int *M, int *N, int *K,
               dcomplex *A, int *IA, int *JA, int *DESCA, dcomplex *TAU,
               dcomplex *C, int *IC, int *JC, int *DESCC, dcomplex *WORK,
               int *LWORK, int *INFO);
-void mangle_pzunmhr(char *SIDE, char *TRANS, int *M, int *N, int *ILO, int *IHI,
+void pzunmhr(char *SIDE, char *TRANS, int *M, int *N, int *ILO, int *IHI,
              dcomplex *A, int *IA, int *JA, int *DESCA, dcomplex *TAU,
              dcomplex *C, int *IC, int *JC, int *DESCC, dcomplex *WORK,
              int *LWORK, int *INFO);
@@ -5058,7 +5104,7 @@ void PZUNMHR_(char *SIDE, char *TRANS, int *M, int *N, int *ILO, int *IHI,
               dcomplex *A, int *IA, int *JA, int *DESCA, dcomplex *TAU,
               dcomplex *C, int *IC, int *JC, int *DESCC, dcomplex *WORK,
               int *LWORK, int *INFO);
-void mangle_pzunml2(char *SIDE, char *TRANS, int *M, int *N, int *K, dcomplex *A,
+void pzunml2(char *SIDE, char *TRANS, int *M, int *N, int *K, dcomplex *A,
              int *IA, int *JA, int *DESCA, dcomplex *TAU, dcomplex *C, int *IC,
              int *JC, int *DESCC, dcomplex *WORK, int *LWORK, int *INFO);
 void PZUNML2(char *SIDE, char *TRANS, int *M, int *N, int *K, dcomplex *A,
@@ -5067,7 +5113,7 @@ void PZUNML2(char *SIDE, char *TRANS, int *M, int *N, int *K, dcomplex *A,
 void PZUNML2_(char *SIDE, char *TRANS, int *M, int *N, int *K, dcomplex *A,
               int *IA, int *JA, int *DESCA, dcomplex *TAU, dcomplex *C, int *IC,
               int *JC, int *DESCC, dcomplex *WORK, int *LWORK, int *INFO);
-void mangle_pzunmlq(char *SIDE, char *TRANS, int *M, int *N, int *K, dcomplex *A,
+void pzunmlq(char *SIDE, char *TRANS, int *M, int *N, int *K, dcomplex *A,
              int *IA, int *JA, int *DESCA, dcomplex *TAU, dcomplex *C, int *IC,
              int *JC, int *DESCC, dcomplex *WORK, int *LWORK, int *INFO);
 void PZUNMLQ(char *SIDE, char *TRANS, int *M, int *N, int *K, dcomplex *A,
@@ -5076,7 +5122,7 @@ void PZUNMLQ(char *SIDE, char *TRANS, int *M, int *N, int *K, dcomplex *A,
 void PZUNMLQ_(char *SIDE, char *TRANS, int *M, int *N, int *K, dcomplex *A,
               int *IA, int *JA, int *DESCA, dcomplex *TAU, dcomplex *C, int *IC,
               int *JC, int *DESCC, dcomplex *WORK, int *LWORK, int *INFO);
-void mangle_pzunmql(char *SIDE, char *TRANS, int *M, int *N, int *K, dcomplex *A,
+void pzunmql(char *SIDE, char *TRANS, int *M, int *N, int *K, dcomplex *A,
              int *IA, int *JA, int *DESCA, dcomplex *TAU, dcomplex *C, int *IC,
              int *JC, int *DESCC, dcomplex *WORK, int *LWORK, int *INFO);
 void PZUNMQL(char *SIDE, char *TRANS, int *M, int *N, int *K, dcomplex *A,
@@ -5085,7 +5131,7 @@ void PZUNMQL(char *SIDE, char *TRANS, int *M, int *N, int *K, dcomplex *A,
 void PZUNMQL_(char *SIDE, char *TRANS, int *M, int *N, int *K, dcomplex *A,
               int *IA, int *JA, int *DESCA, dcomplex *TAU, dcomplex *C, int *IC,
               int *JC, int *DESCC, dcomplex *WORK, int *LWORK, int *INFO);
-void mangle_pzunmqr(char *SIDE, char *TRANS, int *M, int *N, int *K, dcomplex *A,
+void pzunmqr(char *SIDE, char *TRANS, int *M, int *N, int *K, dcomplex *A,
              int *IA, int *JA, int *DESCA, dcomplex *TAU, dcomplex *C, int *IC,
              int *JC, int *DESCC, dcomplex *WORK, int *LWORK, int *INFO);
 void PZUNMQR(char *SIDE, char *TRANS, int *M, int *N, int *K, dcomplex *A,
@@ -5094,7 +5140,7 @@ void PZUNMQR(char *SIDE, char *TRANS, int *M, int *N, int *K, dcomplex *A,
 void PZUNMQR_(char *SIDE, char *TRANS, int *M, int *N, int *K, dcomplex *A,
               int *IA, int *JA, int *DESCA, dcomplex *TAU, dcomplex *C, int *IC,
               int *JC, int *DESCC, dcomplex *WORK, int *LWORK, int *INFO);
-void mangle_pzunmr2(char *SIDE, char *TRANS, int *M, int *N, int *K, dcomplex *A,
+void pzunmr2(char *SIDE, char *TRANS, int *M, int *N, int *K, dcomplex *A,
              int *IA, int *JA, int *DESCA, dcomplex *TAU, dcomplex *C, int *IC,
              int *JC, int *DESCC, dcomplex *WORK, int *LWORK, int *INFO);
 void PZUNMR2(char *SIDE, char *TRANS, int *M, int *N, int *K, dcomplex *A,
@@ -5103,7 +5149,7 @@ void PZUNMR2(char *SIDE, char *TRANS, int *M, int *N, int *K, dcomplex *A,
 void PZUNMR2_(char *SIDE, char *TRANS, int *M, int *N, int *K, dcomplex *A,
               int *IA, int *JA, int *DESCA, dcomplex *TAU, dcomplex *C, int *IC,
               int *JC, int *DESCC, dcomplex *WORK, int *LWORK, int *INFO);
-void mangle_pzunmr3(char *SIDE, char *TRANS, int *M, int *N, int *K, int *L,
+void pzunmr3(char *SIDE, char *TRANS, int *M, int *N, int *K, int *L,
              dcomplex *A, int *IA, int *JA, int *DESCA, dcomplex *TAU,
              dcomplex *C, int *IC, int *JC, int *DESCC, dcomplex *WORK,
              int *LWORK, int *INFO);
@@ -5115,7 +5161,7 @@ void PZUNMR3_(char *SIDE, char *TRANS, int *M, int *N, int *K, int *L,
               dcomplex *A, int *IA, int *JA, int *DESCA, dcomplex *TAU,
               dcomplex *C, int *IC, int *JC, int *DESCC, dcomplex *WORK,
               int *LWORK, int *INFO);
-void mangle_pzunmrq(char *SIDE, char *TRANS, int *M, int *N, int *K, dcomplex *A,
+void pzunmrq(char *SIDE, char *TRANS, int *M, int *N, int *K, dcomplex *A,
              int *IA, int *JA, int *DESCA, dcomplex *TAU, dcomplex *C, int *IC,
              int *JC, int *DESCC, dcomplex *WORK, int *LWORK, int *INFO);
 void PZUNMRQ(char *SIDE, char *TRANS, int *M, int *N, int *K, dcomplex *A,
@@ -5124,7 +5170,7 @@ void PZUNMRQ(char *SIDE, char *TRANS, int *M, int *N, int *K, dcomplex *A,
 void PZUNMRQ_(char *SIDE, char *TRANS, int *M, int *N, int *K, dcomplex *A,
               int *IA, int *JA, int *DESCA, dcomplex *TAU, dcomplex *C, int *IC,
               int *JC, int *DESCC, dcomplex *WORK, int *LWORK, int *INFO);
-void mangle_pzunmrz(char *SIDE, char *TRANS, int *M, int *N, int *K, int *L,
+void pzunmrz(char *SIDE, char *TRANS, int *M, int *N, int *K, int *L,
              dcomplex *A, int *IA, int *JA, int *DESCA, dcomplex *TAU,
              dcomplex *C, int *IC, int *JC, int *DESCC, dcomplex *WORK,
              int *LWORK, int *INFO);
@@ -5136,7 +5182,7 @@ void PZUNMRZ_(char *SIDE, char *TRANS, int *M, int *N, int *K, int *L,
               dcomplex *A, int *IA, int *JA, int *DESCA, dcomplex *TAU,
               dcomplex *C, int *IC, int *JC, int *DESCC, dcomplex *WORK,
               int *LWORK, int *INFO);
-void mangle_pzunmtr(char *SIDE, char *UPLO, char *TRANS, int *M, int *N, dcomplex *A,
+void pzunmtr(char *SIDE, char *UPLO, char *TRANS, int *M, int *N, dcomplex *A,
              int *IA, int *JA, int *DESCA, dcomplex *TAU, dcomplex *C, int *IC,
              int *JC, int *DESCC, dcomplex *WORK, int *LWORK, int *INFO);
 void PZUNMTR(char *SIDE, char *UPLO, char *TRANS, int *M, int *N, dcomplex *A,
@@ -5145,31 +5191,31 @@ void PZUNMTR(char *SIDE, char *UPLO, char *TRANS, int *M, int *N, dcomplex *A,
 void PZUNMTR_(char *SIDE, char *UPLO, char *TRANS, int *M, int *N, dcomplex *A,
               int *IA, int *JA, int *DESCA, dcomplex *TAU, dcomplex *C, int *IC,
               int *JC, int *DESCC, dcomplex *WORK, int *LWORK, int *INFO);
-void mangle_sdbtf2(int *M, int *N, int *KL, int *KU, float *AB, int *LDAB, int *INFO);
+void sdbtf2(int *M, int *N, int *KL, int *KU, float *AB, int *LDAB, int *INFO);
 void SDBTF2(int *M, int *N, int *KL, int *KU, float *AB, int *LDAB, int *INFO);
 void SDBTF2_(int *M, int *N, int *KL, int *KU, float *AB, int *LDAB, int *INFO);
-void mangle_sdbtrf(int *M, int *N, int *KL, int *KU, float *AB, int *LDAB, int *INFO);
+void sdbtrf(int *M, int *N, int *KL, int *KU, float *AB, int *LDAB, int *INFO);
 void SDBTRF(int *M, int *N, int *KL, int *KU, float *AB, int *LDAB, int *INFO);
 void SDBTRF_(int *M, int *N, int *KL, int *KU, float *AB, int *LDAB, int *INFO);
-void mangle_sdttrf(int *N, scomplex *DL, scomplex *D, scomplex *DU, int *INFO);
+void sdttrf(int *N, scomplex *DL, scomplex *D, scomplex *DU, int *INFO);
 void SDTTRF(int *N, scomplex *DL, scomplex *D, scomplex *DU, int *INFO);
 void SDTTRF_(int *N, scomplex *DL, scomplex *D, scomplex *DU, int *INFO);
-void mangle_sdttrsv(char *UPLO, char *TRANS, int *N, int *NRHS, scomplex *DL,
+void sdttrsv(char *UPLO, char *TRANS, int *N, int *NRHS, scomplex *DL,
              scomplex *D, scomplex *DU, scomplex *B, int *LDB, int *INFO);
 void SDTTRSV(char *UPLO, char *TRANS, int *N, int *NRHS, scomplex *DL,
              scomplex *D, scomplex *DU, scomplex *B, int *LDB, int *INFO);
 void SDTTRSV_(char *UPLO, char *TRANS, int *N, int *NRHS, scomplex *DL,
               scomplex *D, scomplex *DU, scomplex *B, int *LDB, int *INFO);
-void mangle_slamsh(float *S, int *LDS, int *NBULGE, int *JBLK, float *H, int *LDH,
+void slamsh(float *S, int *LDS, int *NBULGE, int *JBLK, float *H, int *LDH,
             int *N, float *ULP);
 void SLAMSH(float *S, int *LDS, int *NBULGE, int *JBLK, float *H, int *LDH,
             int *N, float *ULP);
 void SLAMSH_(float *S, int *LDS, int *NBULGE, int *JBLK, float *H, int *LDH,
              int *N, float *ULP);
-void mangle_slapst(char *ID, int *N, float *D, int *INDX, int *INFO);
+void slapst(char *ID, int *N, float *D, int *INDX, int *INFO);
 void SLAPST(char *ID, int *N, float *D, int *INDX, int *INFO);
 void SLAPST_(char *ID, int *N, float *D, int *INDX, int *INFO);
-void mangle_slaqr6(char *JOB, int *WANTT, int *WANTZ, int *KACC22, int *N, int *KTOP,
+void slaqr6(char *JOB, int *WANTT, int *WANTZ, int *KACC22, int *N, int *KTOP,
             int *KBOT, int *NSHFTS, float *SR, float *SI, float *H, int *LDH,
             int *ILOZ, int *IHIZ, float *Z, int *LDZ, float *V, int *LDV,
             float *U, int *LDU, int *NV, float *WV, int *LDWV, int *NH,
@@ -5184,7 +5230,7 @@ void SLAQR6_(char *JOB, int *WANTT, int *WANTZ, int *KACC22, int *N, int *KTOP,
              int *ILOZ, int *IHIZ, float *Z, int *LDZ, float *V, int *LDV,
              float *U, int *LDU, int *NV, float *WV, int *LDWV, int *NH,
              float *WH, int *LDWH);
-void mangle_slar1va(int *N, int *B1, int *BN, float *LAMBDA, float *D, float *L,
+void slar1va(int *N, int *B1, int *BN, float *LAMBDA, float *D, float *L,
              float *LD, float *LLD, float *PIVMIN, float *GAPTOL, float *Z,
              int *WANTNC, int *NEGCNT, float *ZTZ, float *MINGMA, int *R,
              int *ISUPPZ, float *NRMINV, float *RESID, float *RQCORR,
@@ -5199,7 +5245,7 @@ void SLAR1VA_(int *N, int *B1, int *BN, float *LAMBDA, float *D, float *L,
               int *WANTNC, int *NEGCNT, float *ZTZ, float *MINGMA, int *R,
               int *ISUPPZ, float *NRMINV, float *RESID, float *RQCORR,
               float *WORK);
-void mangle_slaref(char *TYPE, float *A, int *LDA, int *WANTZ, float *Z, int *LDZ,
+void slaref(char *TYPE, float *A, int *LDA, int *WANTZ, float *Z, int *LDZ,
             int *BLOCK, int *IROW1, int *ICOL1, int *ISTART, int *ISTOP,
             int *ITMP1, int *ITMP2, int *LILOZ, int *LIHIZ, float *VECS,
             float *V2, float *V3, float *T1, float *T2, float *T3);
@@ -5211,7 +5257,7 @@ void SLAREF_(char *TYPE, float *A, int *LDA, int *WANTZ, float *Z, int *LDZ,
              int *BLOCK, int *IROW1, int *ICOL1, int *ISTART, int *ISTOP,
              int *ITMP1, int *ITMP2, int *LILOZ, int *LIHIZ, float *VECS,
              float *V2, float *V3, float *T1, float *T2, float *T3);
-void mangle_slarrb2(int *N, float *D, float *LLD, int *IFIRST, int *ILAST,
+void slarrb2(int *N, float *D, float *LLD, int *IFIRST, int *ILAST,
              float *RTOL1, float *RTOL2, int *OFFSET, float *W, float *WGAP,
              float *WERR, float *WORK, int *IWORK, float *PIVMIN, float *LGPVMN,
              float *LGSPDM, int *TWIST, int *INFO);
@@ -5223,7 +5269,14 @@ void SLARRB2_(int *N, float *D, float *LLD, int *IFIRST, int *ILAST,
               float *RTOL1, float *RTOL2, int *OFFSET, float *W, float *WGAP,
               float *WERR, float *WORK, int *IWORK, float *PIVMIN,
               float *LGPVMN, float *LGSPDM, int *TWIST, int *INFO);
-void mangle_slarrd2(char *RANGE, char *ORDER, int *N, float *VL, float *VU, int *IL,
+void slaneg2(int *N, float *D, float *LLD, float *SIGMA, float *PIVMIN, int *R);
+void SLANEG2(int *N, float *D, float *LLD, float *SIGMA, float *PIVMIN, int *R);
+void SLANEG2_(int *N, float *D, float *LLD, float *SIGMA, float *PIVMIN,
+              int *R);
+void slaneg2a(int *N, float *DLLD, float *SIGMA, float *PIVMIN, int *R);
+void SLANEG2A(int *N, float *DLLD, float *SIGMA, float *PIVMIN, int *R);
+void SLANEG2A_(int *N, float *DLLD, float *SIGMA, float *PIVMIN, int *R);
+void slarrd2(char *RANGE, char *ORDER, int *N, float *VL, float *VU, int *IL,
              int *IU, float *GERS, float *RELTOL, float *D, float *E, float *E2,
              float *PIVMIN, int *NSPLIT, int *ISPLIT, int *M, float *W,
              float *WERR, float *WL, float *WU, int *IBLOCK, int *INDEXW,
@@ -5239,7 +5292,7 @@ void SLARRD2_(char *RANGE, char *ORDER, int *N, float *VL, float *VU, int *IL,
               float *W, float *WERR, float *WL, float *WU, int *IBLOCK,
               int *INDEXW, float *WORK, int *IWORK, int *DOL, int *DOU,
               int *INFO);
-void mangle_slarre2(char *RANGE, int *N, float *VL, float *VU, int *IL, int *IU,
+void slarre2(char *RANGE, int *N, float *VL, float *VU, int *IL, int *IU,
              float *D, float *E, float *E2, float *RTOL1, float *RTOL2,
              float *SPLTOL, int *NSPLIT, int *ISPLIT, int *M, int *DOL,
              int *DOU, float *W, float *WERR, float *WGAP, int *IBLOCK,
@@ -5257,7 +5310,7 @@ void SLARRE2_(char *RANGE, int *N, float *VL, float *VU, int *IL, int *IU,
               int *DOU, float *W, float *WERR, float *WGAP, int *IBLOCK,
               int *INDEXW, float *GERS, double *PIVMIN, float *WORK, int *IWORK,
               int *INFO);
-void mangle_slarre2a(char *RANGE, int *N, float *VL, float *VU, int *IL, int *IU,
+void slarre2a(char *RANGE, int *N, float *VL, float *VU, int *IL, int *IU,
               float *D, float *E, float *E2, float *RTOL1, float *RTOL2,
               float *SPLTOL, int *NSPLIT, int *ISPLIT, int *M, int *DOL,
               int *DOU, int *NEEDIL, int *NEEDIU, float *W, float *WERR,
@@ -5278,7 +5331,7 @@ void SLARRE2A_(char *RANGE, int *N, float *VL, float *VU, int *IL, int *IU,
                float *WGAP, int *IBLOCK, int *INDEXW, float *GERS, float *SDIAM,
                double *PIVMIN, float *WORK, int *IWORK, float *MINRGP,
                int *INFO);
-void mangle_slarrf2(int *N, float *D, float *L, float *LD, int *CLSTRT, int *CLEND,
+void slarrf2(int *N, float *D, float *L, float *LD, int *CLSTRT, int *CLEND,
              int *CLMID1, int *CLMID2, float *W, float *WGAP, float *WERR,
              int *TRYMID, float *SPDIAM, float *CLGAPL, float *CLGAPR,
              double *PIVMIN, float *SIGMA, float *DPLUS, float *LPLUS,
@@ -5293,7 +5346,7 @@ void SLARRF2_(int *N, float *D, float *L, float *LD, int *CLSTRT, int *CLEND,
               int *TRYMID, float *SPDIAM, float *CLGAPL, float *CLGAPR,
               double *PIVMIN, float *SIGMA, float *DPLUS, float *LPLUS,
               float *WORK, int *INFO);
-void mangle_slarrv2(int *N, float *VL, float *VU, float *D, float *L, double *PIVMIN,
+void slarrv2(int *N, float *VL, float *VU, float *D, float *L, double *PIVMIN,
              int *ISPLIT, int *M, int *DOL, int *DOU, int *NEEDIL, int *NEEDIU,
              float *MINRGP, float *RTOL1, float *RTOL2, float *W, float *WERR,
              float *WGAP, int *IBLOCK, int *INDEXW, float *GERS, float *SDIAM,
@@ -5314,19 +5367,19 @@ void SLARRV2_(int *N, float *VL, float *VU, float *D, float *L, double *PIVMIN,
               float *Z, int *LDZ, int *ISUPPZ, float *WORK, int *IWORK,
               int *VSTART, int *FINISH, int *MAXCLS, int *NDEPTH, int *PARITY,
               int *ZOFFSET, int *INFO);
-void mangle_slasorte(float *S, int *LDS, int *J, float *OUT, int *INFO);
+void slasorte(float *S, int *LDS, int *J, float *OUT, int *INFO);
 void SLASORTE(float *S, int *LDS, int *J, float *OUT, int *INFO);
 void SLASORTE_(float *S, int *LDS, int *J, float *OUT, int *INFO);
-void mangle_slasrt2(char *ID, int *N, float *D, int *KEY, int *INFO);
+void slasrt2(char *ID, int *N, float *D, int *KEY, int *INFO);
 void SLASRT2(char *ID, int *N, float *D, int *KEY, int *INFO);
 void SLASRT2_(char *ID, int *N, float *D, int *KEY, int *INFO);
-void mangle_spttrsv(char *TRANS, int *N, int *NRHS, float *D, scomplex *E, scomplex *B,
+void spttrsv(char *TRANS, int *N, int *NRHS, float *D, scomplex *E, scomplex *B,
              int *LDB, int *INFO);
 void SPTTRSV(char *TRANS, int *N, int *NRHS, float *D, scomplex *E, scomplex *B,
              int *LDB, int *INFO);
 void SPTTRSV_(char *TRANS, int *N, int *NRHS, float *D, scomplex *E,
               scomplex *B, int *LDB, int *INFO);
-void mangle_sstegr2(char *JOBZ, char *RANGE, int *N, float *D, float *E, float *VL,
+void sstegr2(char *JOBZ, char *RANGE, int *N, float *D, float *E, float *VL,
              float *VU, int *IL, int *IU, int *M, float *W, float *Z, int *LDZ,
              int *NZC, int *ISUPPZ, float *WORK, int *LWORK, int *IWORK,
              int *LIWORK, int *DOL, int *DOU, int *ZOFFSET, int *INFO);
@@ -5338,7 +5391,7 @@ void SSTEGR2_(char *JOBZ, char *RANGE, int *N, float *D, float *E, float *VL,
               float *VU, int *IL, int *IU, int *M, float *W, float *Z, int *LDZ,
               int *NZC, int *ISUPPZ, float *WORK, int *LWORK, int *IWORK,
               int *LIWORK, int *DOL, int *DOU, int *ZOFFSET, int *INFO);
-void mangle_sstegr2a(char *JOBZ, char *RANGE, int *N, float *D, float *E, float *VL,
+void sstegr2a(char *JOBZ, char *RANGE, int *N, float *D, float *E, float *VL,
               float *VU, int *IL, int *IU, int *M, float *W, float *Z, int *LDZ,
               int *NZC, float *WORK, int *LWORK, int *IWORK, int *LIWORK,
               int *DOL, int *DOU, int *NEEDIL, int *NEEDIU, int *INDERR,
@@ -5356,7 +5409,7 @@ void SSTEGR2A_(char *JOBZ, char *RANGE, int *N, float *D, float *E, float *VL,
                int *LIWORK, int *DOL, int *DOU, int *NEEDIL, int *NEEDIU,
                int *INDERR, int *NSPLIT, float *PIVMIN, float *SCALE, float *WL,
                float *WU, int *INFO);
-void mangle_sstegr2b(char *JOBZ, int *N, float *D, float *E, int *M, float *W,
+void sstegr2b(char *JOBZ, int *N, float *D, float *E, int *M, float *W,
               float *Z, int *LDZ, int *NZC, int *ISUPPZ, float *WORK,
               int *LWORK, int *IWORK, int *LIWORK, int *DOL, int *DOU,
               int *NEEDIL, int *NEEDIU, float *INDWLC, float *PIVMIN,
@@ -5374,7 +5427,7 @@ void SSTEGR2B_(char *JOBZ, int *N, float *D, float *E, int *M, float *W,
                int *NEEDIL, int *NEEDIU, float *INDWLC, float *PIVMIN,
                float *SCALE, float *WL, float *WU, int *VSTART, int *FINISH,
                int *MAXCLS, int *NDEPTH, int *PARITY, int *ZOFFSET, int *INFO);
-void mangle_sstein2(int *N, float *D, float *E, int *M, float *W, int *IBLOCK,
+void sstein2(int *N, float *D, float *E, int *M, float *W, int *IBLOCK,
              int *ISPLIT, float *ORFAC, float *Z, int *LDZ, float *WORK,
              int *IWORK, int *IFAIL, int *INFO);
 void SSTEIN2(int *N, float *D, float *E, int *M, float *W, int *IBLOCK,
@@ -5383,37 +5436,37 @@ void SSTEIN2(int *N, float *D, float *E, int *M, float *W, int *IBLOCK,
 void SSTEIN2_(int *N, float *D, float *E, int *M, float *W, int *IBLOCK,
               int *ISPLIT, float *ORFAC, float *Z, int *LDZ, float *WORK,
               int *IWORK, int *IFAIL, int *INFO);
-void mangle_ssteqr2(char *COMPZ, int *N, float *D, float *E, float *Z, int *LDZ,
+void ssteqr2(char *COMPZ, int *N, float *D, float *E, float *Z, int *LDZ,
              int *NR, float *WORK, int *INFO);
 void SSTEQR2(char *COMPZ, int *N, float *D, float *E, float *Z, int *LDZ,
              int *NR, float *WORK, int *INFO);
 void SSTEQR2_(char *COMPZ, int *N, float *D, float *E, float *Z, int *LDZ,
               int *NR, float *WORK, int *INFO);
-void mangle_strmvt(char *UPLO, int *N, float *T, int *LDT, float *X, int *INCX,
+void strmvt(char *UPLO, int *N, float *T, int *LDT, float *X, int *INCX,
             float *Y, int *INCY, float *W, int *INCW, float *Z, int *INCZ);
 void STRMVT(char *UPLO, int *N, float *T, int *LDT, float *X, int *INCX,
             float *Y, int *INCY, float *W, int *INCW, float *Z, int *INCZ);
 void STRMVT_(char *UPLO, int *N, float *T, int *LDT, float *X, int *INCX,
              float *Y, int *INCY, float *W, int *INCW, float *Z, int *INCZ);
-void mangle_zdbtf2(int *M, int *N, int *KL, int *KU, dcomplex *AB, int *LDAB,
+void zdbtf2(int *M, int *N, int *KL, int *KU, dcomplex *AB, int *LDAB,
             int *INFO);
 void ZDBTF2(int *M, int *N, int *KL, int *KU, dcomplex *AB, int *LDAB,
             int *INFO);
 void ZDBTF2_(int *M, int *N, int *KL, int *KU, dcomplex *AB, int *LDAB,
              int *INFO);
-void mangle_zdbtrf(int *M, int *N, int *KL, int *KU, float *AB, int *LDAB, int *INFO);
+void zdbtrf(int *M, int *N, int *KL, int *KU, float *AB, int *LDAB, int *INFO);
 void ZDBTRF(int *M, int *N, int *KL, int *KU, float *AB, int *LDAB, int *INFO);
 void ZDBTRF_(int *M, int *N, int *KL, int *KU, float *AB, int *LDAB, int *INFO);
-void mangle_zdttrf(int *N, scomplex *DL, scomplex *D, scomplex *DU, int *INFO);
+void zdttrf(int *N, scomplex *DL, scomplex *D, scomplex *DU, int *INFO);
 void ZDTTRF(int *N, scomplex *DL, scomplex *D, scomplex *DU, int *INFO);
 void ZDTTRF_(int *N, scomplex *DL, scomplex *D, scomplex *DU, int *INFO);
-void mangle_zdttrsv(char *UPLO, char *TRANS, int *N, int *NRHS, scomplex *DL,
+void zdttrsv(char *UPLO, char *TRANS, int *N, int *NRHS, scomplex *DL,
              scomplex *D, scomplex *DU, scomplex *B, int *LDB, int *INFO);
 void ZDTTRSV(char *UPLO, char *TRANS, int *N, int *NRHS, scomplex *DL,
              scomplex *D, scomplex *DU, scomplex *B, int *LDB, int *INFO);
 void ZDTTRSV_(char *UPLO, char *TRANS, int *N, int *NRHS, scomplex *DL,
               scomplex *D, scomplex *DU, scomplex *B, int *LDB, int *INFO);
-void mangle_zlahqr2(int *WANTT, int *WANTZ, int *N, int *ILO, int *IHI, dcomplex *H,
+void zlahqr2(int *WANTT, int *WANTZ, int *N, int *ILO, int *IHI, dcomplex *H,
              int *LDH, dcomplex *W, int *ILOZ, int *IHIZ, dcomplex *Z, int *LDZ,
              int *INFO);
 void ZLAHQR2(int *WANTT, int *WANTZ, int *N, int *ILO, int *IHI, dcomplex *H,
@@ -5422,19 +5475,19 @@ void ZLAHQR2(int *WANTT, int *WANTZ, int *N, int *ILO, int *IHI, dcomplex *H,
 void ZLAHQR2_(int *WANTT, int *WANTZ, int *N, int *ILO, int *IHI, dcomplex *H,
               int *LDH, dcomplex *W, int *ILOZ, int *IHIZ, dcomplex *Z,
               int *LDZ, int *INFO);
-void mangle_zlamsh(dcomplex *S, int *LDS, int *NBULGE, int *JBLK, dcomplex *H,
+void zlamsh(dcomplex *S, int *LDS, int *NBULGE, int *JBLK, dcomplex *H,
             int *LDH, int *N, double *ULP);
 void ZLAMSH(dcomplex *S, int *LDS, int *NBULGE, int *JBLK, dcomplex *H,
             int *LDH, int *N, double *ULP);
 void ZLAMSH_(dcomplex *S, int *LDS, int *NBULGE, int *JBLK, dcomplex *H,
              int *LDH, int *N, double *ULP);
-void mangle_zlanv2(dcomplex *A, dcomplex *B, dcomplex *C, dcomplex *D, dcomplex *RT1,
+void zlanv2(dcomplex *A, dcomplex *B, dcomplex *C, dcomplex *D, dcomplex *RT1,
             dcomplex *RT2, double *CS, dcomplex *SN);
 void ZLANV2(dcomplex *A, dcomplex *B, dcomplex *C, dcomplex *D, dcomplex *RT1,
             dcomplex *RT2, double *CS, dcomplex *SN);
 void ZLANV2_(dcomplex *A, dcomplex *B, dcomplex *C, dcomplex *D, dcomplex *RT1,
              dcomplex *RT2, double *CS, dcomplex *SN);
-void mangle_zlaref(char *TYPE, dcomplex *A, int *LDA, int *WANTZ, dcomplex *Z,
+void zlaref(char *TYPE, dcomplex *A, int *LDA, int *WANTZ, dcomplex *Z,
             int *LDZ, int *BLOCK, int *IROW1, int *ICOL1, int *ISTART,
             int *ISTOP, int *ITMP1, int *ITMP2, int *LILOZ, int *LIHIZ,
             dcomplex *VECS, dcomplex *V2, dcomplex *V3, dcomplex *T1,
@@ -5449,19 +5502,19 @@ void ZLAREF_(char *TYPE, dcomplex *A, int *LDA, int *WANTZ, dcomplex *Z,
              int *ISTOP, int *ITMP1, int *ITMP2, int *LILOZ, int *LIHIZ,
              dcomplex *VECS, dcomplex *V2, dcomplex *V3, dcomplex *T1,
              dcomplex *T2, dcomplex *T3);
-void mangle_zpttrsv(char *UPLO, char *TRANS, int *N, int *NRHS, float *D, scomplex *E,
+void zpttrsv(char *UPLO, char *TRANS, int *N, int *NRHS, float *D, scomplex *E,
              scomplex *B, int *LDB, int *INFO);
 void ZPTTRSV(char *UPLO, char *TRANS, int *N, int *NRHS, float *D, scomplex *E,
              scomplex *B, int *LDB, int *INFO);
 void ZPTTRSV_(char *UPLO, char *TRANS, int *N, int *NRHS, float *D, scomplex *E,
               scomplex *B, int *LDB, int *INFO);
-void mangle_zsteqr2(char *COMPZ, int *N, double *D, double *E, dcomplex *Z, int *LDZ,
+void zsteqr2(char *COMPZ, int *N, double *D, double *E, dcomplex *Z, int *LDZ,
              int *NR, double *WORK, int *INFO);
 void ZSTEQR2(char *COMPZ, int *N, double *D, double *E, dcomplex *Z, int *LDZ,
              int *NR, double *WORK, int *INFO);
 void ZSTEQR2_(char *COMPZ, int *N, double *D, double *E, dcomplex *Z, int *LDZ,
               int *NR, double *WORK, int *INFO);
-void mangle_ztrmvt(char *UPLO, int *N, scomplex *T, int *LDT, scomplex *X, int *INCX,
+void ztrmvt(char *UPLO, int *N, scomplex *T, int *LDT, scomplex *X, int *INCX,
             scomplex *Y, int *INCY, scomplex *W, int *INCW, scomplex *Z,
             int *INCZ);
 void ZTRMVT(char *UPLO, int *N, scomplex *T, int *LDT, scomplex *X, int *INCX,
@@ -5471,1807 +5524,1820 @@ void ZTRMVT_(char *UPLO, int *N, scomplex *T, int *LDT, scomplex *X, int *INCX,
              scomplex *Y, int *INCY, scomplex *W, int *INCW, scomplex *Z,
              int *INCZ);
 
-/* mangle_pclange */
-float mangle_pclange(float *NORM, float *M, float *N, float *A, float *IA, float *JA,
+/* pclange */
+float pclange(float *NORM, float *M, float *N, float *A, float *IA, float *JA,
               float *DESCA, float *WORK);
 float PCLANGE(float *NORM, float *M, float *N, float *A, float *IA, float *JA,
               float *DESCA, float *WORK);
 float PCLANGE_(float *NORM, float *M, float *N, float *A, float *IA, float *JA,
                float *DESCA, float *WORK);
-/* mangle_pclanhe */
-float mangle_pclanhe(float *NORM, float *UPLO, float *N, float *A, float *IA,
+/* pclanhe */
+float pclanhe(float *NORM, float *UPLO, float *N, float *A, float *IA,
               float *JA, float *DESCA, float *WORK);
 float PCLANHE(float *NORM, float *UPLO, float *N, float *A, float *IA,
               float *JA, float *DESCA, float *WORK);
 float PCLANHE_(float *NORM, float *UPLO, float *N, float *A, float *IA,
                float *JA, float *DESCA, float *WORK);
-/* mangle_pclanhs */
-float mangle_pclanhs(float *NORM, float *N, float *A, float *IA, float *JA,
+/* pclanhs */
+float pclanhs(float *NORM, float *N, float *A, float *IA, float *JA,
               float *DESCA, float *WORK);
 float PCLANHS(float *NORM, float *N, float *A, float *IA, float *JA,
               float *DESCA, float *WORK);
 float PCLANHS_(float *NORM, float *N, float *A, float *IA, float *JA,
                float *DESCA, float *WORK);
-/* mangle_pclansy */
-float mangle_pclansy(float *NORM, float *UPLO, float *N, float *A, float *IA,
+/* pclansy */
+float pclansy(float *NORM, float *UPLO, float *N, float *A, float *IA,
               float *JA, float *DESCA, float *WORK);
 float PCLANSY(float *NORM, float *UPLO, float *N, float *A, float *IA,
               float *JA, float *DESCA, float *WORK);
 float PCLANSY_(float *NORM, float *UPLO, float *N, float *A, float *IA,
                float *JA, float *DESCA, float *WORK);
-/* mangle_pclantr */
-float mangle_pclantr(float *NORM, float *UPLO, float *DIAG, float *M, float *N,
+/* pclantr */
+float pclantr(float *NORM, float *UPLO, float *DIAG, float *M, float *N,
               float *A, float *IA, float *JA, float *DESCA, float *WORK);
 float PCLANTR(float *NORM, float *UPLO, float *DIAG, float *M, float *N,
               float *A, float *IA, float *JA, float *DESCA, float *WORK);
 float PCLANTR_(float *NORM, float *UPLO, float *DIAG, float *M, float *N,
                float *A, float *IA, float *JA, float *DESCA, float *WORK);
-/* mangle_pclatra */
-scomplex mangle_pclatra(float *N, float *A, float *IA, float *JA, float *DESCA);
+/* pclatra */
+scomplex pclatra(float *N, float *A, float *IA, float *JA, float *DESCA);
 scomplex PCLATRA(float *N, float *A, float *IA, float *JA, float *DESCA);
 scomplex PCLATRA_(float *N, float *A, float *IA, float *JA, float *DESCA);
-/* mangle_pdlamch */
-double mangle_pdlamch(int *ICTXT, char *CMACH);
+/* pdlamch */
+double pdlamch(int *ICTXT, char *CMACH);
 double PDLAMCH(int *ICTXT, char *CMACH);
 double PDLAMCH_(int *ICTXT, char *CMACH);
-/* mangle_pdlange */
-void mangle_pdlange(float *NORM, float *M, float *N, float *A, float *IA, float *JA,
+/* pdlange */
+void pdlange(float *NORM, float *M, float *N, float *A, float *IA, float *JA,
              float *DESCA, float *WORK);
 void PDLANGE(float *NORM, float *M, float *N, float *A, float *IA, float *JA,
              float *DESCA, float *WORK);
 void PDLANGE_(float *NORM, float *M, float *N, float *A, float *IA, float *JA,
               float *DESCA, float *WORK);
-/* mangle_pdlanhs */
-void mangle_pdlanhs(float *NORM, float *N, float *A, float *IA, float *JA,
+/* pdlanhs */
+void pdlanhs(float *NORM, float *N, float *A, float *IA, float *JA,
              float *DESCA, float *WORK);
 void PDLANHS(float *NORM, float *N, float *A, float *IA, float *JA,
              float *DESCA, float *WORK);
 void PDLANHS_(float *NORM, float *N, float *A, float *IA, float *JA,
               float *DESCA, float *WORK);
-/* mangle_pdlansy */
-void mangle_pdlansy(float *NORM, float *UPLO, float *N, float *A, float *IA, float *JA,
+/* pdlansy */
+void pdlansy(float *NORM, float *UPLO, float *N, float *A, float *IA, float *JA,
              float *DESCA, float *WORK);
 void PDLANSY(float *NORM, float *UPLO, float *N, float *A, float *IA, float *JA,
              float *DESCA, float *WORK);
 void PDLANSY_(float *NORM, float *UPLO, float *N, float *A, float *IA,
               float *JA, float *DESCA, float *WORK);
-/* mangle_pdlantr */
-void mangle_pdlantr(float *NORM, float *UPLO, float *DIAG, float *M, float *N,
+/* pdlantr */
+void pdlantr(float *NORM, float *UPLO, float *DIAG, float *M, float *N,
              float *A, float *IA, float *JA, float *DESCA, float *WORK);
 void PDLANTR(float *NORM, float *UPLO, float *DIAG, float *M, float *N,
              float *A, float *IA, float *JA, float *DESCA, float *WORK);
 void PDLANTR_(float *NORM, float *UPLO, float *DIAG, float *M, float *N,
               float *A, float *IA, float *JA, float *DESCA, float *WORK);
-/* mangle_pdlatra */
-void mangle_pdlatra(float *N, float *A, float *IA, float *JA, float *DESCA);
+/* pdlatra */
+void pdlatra(float *N, float *A, float *IA, float *JA, float *DESCA);
 void PDLATRA(float *N, float *A, float *IA, float *JA, float *DESCA);
 void PDLATRA_(float *N, float *A, float *IA, float *JA, float *DESCA);
-/* mangle_pilaenvx */
-int mangle_pilaenvx(float *ICTXT, float *ISPEC, float *NAME, float *OPTS, float *N1,
+/* pilaenvx */
+int pilaenvx(float *ICTXT, float *ISPEC, float *NAME, float *OPTS, float *N1,
              float *N2, float *N3, float *N4);
 int PILAENVX(float *ICTXT, float *ISPEC, float *NAME, float *OPTS, float *N1,
              float *N2, float *N3, float *N4);
 int PILAENVX_(float *ICTXT, float *ISPEC, float *NAME, float *OPTS, float *N1,
               float *N2, float *N3, float *N4);
-/* mangle_piparmq */
-int mangle_piparmq(float *ICTXT, float *ISPEC, float *NAME, float *OPTS, float *N,
+/* piparmq */
+int piparmq(float *ICTXT, float *ISPEC, float *NAME, float *OPTS, float *N,
             float *ILO, float *IHI, float *LWORKNB);
 int PIPARMQ(float *ICTXT, float *ISPEC, float *NAME, float *OPTS, float *N,
             float *ILO, float *IHI, float *LWORKNB);
 int PIPARMQ_(float *ICTXT, float *ISPEC, float *NAME, float *OPTS, float *N,
              float *ILO, float *IHI, float *LWORKNB);
-/* mangle_pjlaenv */
-int mangle_pjlaenv(float *ICTXT, float *ISPEC, float *NAME, float *OPTS, float *N1,
+/* pjlaenv */
+int pjlaenv(float *ICTXT, float *ISPEC, float *NAME, float *OPTS, float *N1,
             float *N2, float *N3, float *N4);
 int PJLAENV(float *ICTXT, float *ISPEC, float *NAME, float *OPTS, float *N1,
             float *N2, float *N3, float *N4);
 int PJLAENV_(float *ICTXT, float *ISPEC, float *NAME, float *OPTS, float *N1,
              float *N2, float *N3, float *N4);
-/* mangle_pslamch */
-float mangle_pslamch(float *ICTXT, float *CMACH);
+/* pslamch */
+float pslamch(float *ICTXT, float *CMACH);
 float PSLAMCH(float *ICTXT, float *CMACH);
 float PSLAMCH_(float *ICTXT, float *CMACH);
-/* mangle_pslange */
-float mangle_pslange(float *NORM, float *M, float *N, float *A, float *IA, float *JA,
+/* pslange */
+float pslange(float *NORM, float *M, float *N, float *A, float *IA, float *JA,
               float *DESCA, float *WORK);
 float PSLANGE(float *NORM, float *M, float *N, float *A, float *IA, float *JA,
               float *DESCA, float *WORK);
 float PSLANGE_(float *NORM, float *M, float *N, float *A, float *IA, float *JA,
                float *DESCA, float *WORK);
-/* mangle_pslanhs */
-float mangle_pslanhs(float *NORM, float *N, float *A, float *IA, float *JA,
+/* pslanhs */
+float pslanhs(float *NORM, float *N, float *A, float *IA, float *JA,
               float *DESCA, float *WORK);
 float PSLANHS(float *NORM, float *N, float *A, float *IA, float *JA,
               float *DESCA, float *WORK);
 float PSLANHS_(float *NORM, float *N, float *A, float *IA, float *JA,
                float *DESCA, float *WORK);
-/* mangle_pslansy */
-float mangle_pslansy(float *NORM, float *UPLO, float *N, float *A, float *IA,
+/* pslansy */
+float pslansy(float *NORM, float *UPLO, float *N, float *A, float *IA,
               float *JA, float *DESCA, float *WORK);
 float PSLANSY(float *NORM, float *UPLO, float *N, float *A, float *IA,
               float *JA, float *DESCA, float *WORK);
 float PSLANSY_(float *NORM, float *UPLO, float *N, float *A, float *IA,
                float *JA, float *DESCA, float *WORK);
-/* mangle_pslantr */
-float mangle_pslantr(float *NORM, float *UPLO, float *DIAG, float *M, float *N,
+/* pslantr */
+float pslantr(float *NORM, float *UPLO, float *DIAG, float *M, float *N,
               float *A, float *IA, float *JA, float *DESCA, float *WORK);
 float PSLANTR(float *NORM, float *UPLO, float *DIAG, float *M, float *N,
               float *A, float *IA, float *JA, float *DESCA, float *WORK);
 float PSLANTR_(float *NORM, float *UPLO, float *DIAG, float *M, float *N,
                float *A, float *IA, float *JA, float *DESCA, float *WORK);
-/* mangle_pslatra */
-float mangle_pslatra(float *N, float *A, float *IA, float *JA, float *DESCA);
+/* pslatra */
+float pslatra(float *N, float *A, float *IA, float *JA, float *DESCA);
 float PSLATRA(float *N, float *A, float *IA, float *JA, float *DESCA);
 float PSLATRA_(float *N, float *A, float *IA, float *JA, float *DESCA);
-/* mangle_pzlange */
-void mangle_pzlange(float *NORM, float *M, float *N, float *A, float *IA, float *JA,
+/* pzlange */
+void pzlange(float *NORM, float *M, float *N, float *A, float *IA, float *JA,
              float *DESCA, float *WORK);
 void PZLANGE(float *NORM, float *M, float *N, float *A, float *IA, float *JA,
              float *DESCA, float *WORK);
 void PZLANGE_(float *NORM, float *M, float *N, float *A, float *IA, float *JA,
               float *DESCA, float *WORK);
-/* mangle_pzlanhe */
-void mangle_pzlanhe(float *NORM, float *UPLO, float *N, float *A, float *IA, float *JA,
+/* pzlanhe */
+void pzlanhe(float *NORM, float *UPLO, float *N, float *A, float *IA, float *JA,
              float *DESCA, float *WORK);
 void PZLANHE(float *NORM, float *UPLO, float *N, float *A, float *IA, float *JA,
              float *DESCA, float *WORK);
 void PZLANHE_(float *NORM, float *UPLO, float *N, float *A, float *IA,
               float *JA, float *DESCA, float *WORK);
-/* mangle_pzlanhs */
-void mangle_pzlanhs(float *NORM, float *N, float *A, float *IA, float *JA,
+/* pzlanhs */
+void pzlanhs(float *NORM, float *N, float *A, float *IA, float *JA,
              float *DESCA, float *WORK);
 void PZLANHS(float *NORM, float *N, float *A, float *IA, float *JA,
              float *DESCA, float *WORK);
 void PZLANHS_(float *NORM, float *N, float *A, float *IA, float *JA,
               float *DESCA, float *WORK);
-/* mangle_pzlansy */
-void mangle_pzlansy(float *NORM, float *UPLO, float *N, float *A, float *IA, float *JA,
+/* pzlansy */
+void pzlansy(float *NORM, float *UPLO, float *N, float *A, float *IA, float *JA,
              float *DESCA, float *WORK);
 void PZLANSY(float *NORM, float *UPLO, float *N, float *A, float *IA, float *JA,
              float *DESCA, float *WORK);
 void PZLANSY_(float *NORM, float *UPLO, float *N, float *A, float *IA,
               float *JA, float *DESCA, float *WORK);
-/* mangle_pzlantr */
-void mangle_pzlantr(float *NORM, float *UPLO, float *DIAG, float *M, float *N,
+/* pzlantr */
+void pzlantr(float *NORM, float *UPLO, float *DIAG, float *M, float *N,
              float *A, float *IA, float *JA, float *DESCA, float *WORK);
 void PZLANTR(float *NORM, float *UPLO, float *DIAG, float *M, float *N,
              float *A, float *IA, float *JA, float *DESCA, float *WORK);
 void PZLANTR_(float *NORM, float *UPLO, float *DIAG, float *M, float *N,
               float *A, float *IA, float *JA, float *DESCA, float *WORK);
-/* mangle_pzlatra */
-void mangle_pzlatra(float *N, float *A, float *IA, float *JA, float *DESCA);
+/* pzlatra */
+void pzlatra(float *N, float *A, float *IA, float *JA, float *DESCA);
 void PZLATRA(float *N, float *A, float *IA, float *JA, float *DESCA);
 void PZLATRA_(float *N, float *A, float *IA, float *JA, float *DESCA);
 
 // Fortran function declarations for all routines called by the wrappers
-extern float F77_PCLANGE(float *NORM, float *M, float *N, float *A, float *IA,
+extern float pclange_(float *NORM, float *M, float *N, float *A, float *IA,
                       float *JA, float *DESCA, float *WORK);
-extern float F77_PCLANHE(float *NORM, float *UPLO, float *N, float *A, float *IA,
+extern float pclanhe_(float *NORM, float *UPLO, float *N, float *A, float *IA,
                       float *JA, float *DESCA, float *WORK);
-extern float F77_PCLANHS(float *NORM, float *N, float *A, float *IA, float *JA,
+extern float pclanhs_(float *NORM, float *N, float *A, float *IA, float *JA,
                       float *DESCA, float *WORK);
-extern float F77_PCLANSY(float *NORM, float *UPLO, float *N, float *A, float *IA,
+extern float pclansy_(float *NORM, float *UPLO, float *N, float *A, float *IA,
                       float *JA, float *DESCA, float *WORK);
-extern float F77_PCLANTR(float *NORM, float *UPLO, float *DIAG, float *M, float *N,
+extern float pclantr_(float *NORM, float *UPLO, float *DIAG, float *M, float *N,
                       float *A, float *IA, float *JA, float *DESCA,
                       float *WORK);
-extern scomplex F77_PCLATRA(float *N, float *A, float *IA, float *JA,
+extern scomplex pclatra_(float *N, float *A, float *IA, float *JA,
                          float *DESCA);
-extern double F77_PDLAMCH(int *ICTXT, char *CMACH);
-extern void F77_PDLANGE(float *NORM, float *M, float *N, float *A, float *IA,
+extern void pdlamch_(int *ICTXT, char *CMACH);
+extern void pdlange_(float *NORM, float *M, float *N, float *A, float *IA,
                      float *JA, float *DESCA, float *WORK);
-extern void F77_PDLANHS(float *NORM, float *N, float *A, float *IA, float *JA,
+extern void pdlanhs_(float *NORM, float *N, float *A, float *IA, float *JA,
                      float *DESCA, float *WORK);
-extern void F77_PDLANSY(float *NORM, float *UPLO, float *N, float *A, float *IA,
+extern void pdlansy_(float *NORM, float *UPLO, float *N, float *A, float *IA,
                      float *JA, float *DESCA, float *WORK);
-extern void F77_PDLANTR(float *NORM, float *UPLO, float *DIAG, float *M, float *N,
+extern void pdlantr_(float *NORM, float *UPLO, float *DIAG, float *M, float *N,
                      float *A, float *IA, float *JA, float *DESCA, float *WORK);
-extern void F77_PDLATRA(float *N, float *A, float *IA, float *JA, float *DESCA);
-extern int F77_PILAENVX(float *ICTXT, float *ISPEC, float *NAME, float *OPTS,
+extern void pdlatra_(float *N, float *A, float *IA, float *JA, float *DESCA);
+extern int pilaenvx_(float *ICTXT, float *ISPEC, float *NAME, float *OPTS,
                      float *N1, float *N2, float *N3, float *N4);
-extern int F77_PIPARMQ(float *ICTXT, float *ISPEC, float *NAME, float *OPTS,
+extern int piparmq_(float *ICTXT, float *ISPEC, float *NAME, float *OPTS,
                     float *N, float *ILO, float *IHI, float *LWORKNB);
-extern int F77_PJLAENV(float *ICTXT, float *ISPEC, float *NAME, float *OPTS,
+extern int pjlaenv_(float *ICTXT, float *ISPEC, float *NAME, float *OPTS,
                     float *N1, float *N2, float *N3, float *N4);
-extern float F77_PSLAMCH(float *ICTXT, float *CMACH);
-extern float F77_PSLANGE(float *NORM, float *M, float *N, float *A, float *IA,
+extern float pslamch_(float *ICTXT, float *CMACH);
+extern float pslange_(float *NORM, float *M, float *N, float *A, float *IA,
                       float *JA, float *DESCA, float *WORK);
-extern float F77_PSLANHS(float *NORM, float *N, float *A, float *IA, float *JA,
+extern float pslanhs_(float *NORM, float *N, float *A, float *IA, float *JA,
                       float *DESCA, float *WORK);
-extern float F77_PSLANSY(float *NORM, float *UPLO, float *N, float *A, float *IA,
+extern float pslansy_(float *NORM, float *UPLO, float *N, float *A, float *IA,
                       float *JA, float *DESCA, float *WORK);
-extern float F77_PSLANTR(float *NORM, float *UPLO, float *DIAG, float *M, float *N,
+extern float pslantr_(float *NORM, float *UPLO, float *DIAG, float *M, float *N,
                       float *A, float *IA, float *JA, float *DESCA,
                       float *WORK);
-extern float F77_PSLATRA(float *N, float *A, float *IA, float *JA, float *DESCA);
-extern void F77_PZLANGE(float *NORM, float *M, float *N, float *A, float *IA,
+extern float pslatra_(float *N, float *A, float *IA, float *JA, float *DESCA);
+extern void pzlange_(float *NORM, float *M, float *N, float *A, float *IA,
                      float *JA, float *DESCA, float *WORK);
-extern void F77_PZLANHE(float *NORM, float *UPLO, float *N, float *A, float *IA,
+extern void pzlanhe_(float *NORM, float *UPLO, float *N, float *A, float *IA,
                      float *JA, float *DESCA, float *WORK);
-extern void F77_PZLANHS(float *NORM, float *N, float *A, float *IA, float *JA,
+extern void pzlanhs_(float *NORM, float *N, float *A, float *IA, float *JA,
                      float *DESCA, float *WORK);
-extern void F77_PZLANSY(float *NORM, float *UPLO, float *N, float *A, float *IA,
+extern void pzlansy_(float *NORM, float *UPLO, float *N, float *A, float *IA,
                      float *JA, float *DESCA, float *WORK);
-extern void F77_PZLANTR(float *NORM, float *UPLO, float *DIAG, float *M, float *N,
+extern void pzlantr_(float *NORM, float *UPLO, float *DIAG, float *M, float *N,
                      float *A, float *IA, float *JA, float *DESCA, float *WORK);
-extern void F77_PZLATRA(float *N, float *A, float *IA, float *JA, float *DESCA);
+extern void pzlatra_(float *N, float *A, float *IA, float *JA, float *DESCA);
 
-extern void F77_BDLAAPP(int *, int *, int *, int *, double *, int *, int *, int *,
+extern void bdlaapp_(int *, int *, int *, int *, double *, int *, int *, int *,
                      double *, double *);
-extern void F77_BDLAEXC(int *, double *, int *, int *, int *, int *, int *,
+extern void bdlaexc_(int *, double *, int *, int *, int *, int *, int *,
                      double *, double *, int *);
-extern void F77_BDTREXC(int *, double *, int *, int *, int *, int *, int *, int *,
+extern void bdtrexc_(int *, double *, int *, int *, int *, int *, int *, int *,
                      double *, double *, int *);
-extern void F77_BSLAAPP(int *, int *, int *, int *, float *, int *, int *, int *,
+extern void bslaapp_(int *, int *, int *, int *, float *, int *, int *, int *,
                      float *, float *);
-extern void F77_BSLAEXC(int *, float *, int *, int *, int *, int *, int *, float *,
+extern void bslaexc_(int *, float *, int *, int *, int *, int *, int *, float *,
                      float *, int *);
-extern void F77_BSTREXC(int *, float *, int *, int *, int *, int *, int *, int *,
+extern void bstrexc_(int *, float *, int *, int *, int *, int *, int *, int *,
                      float *, float *, int *);
-extern void F77_CDBTF2(int *, int *, int *, int *, scomplex *, int *, int *);
-extern void F77_CDBTRF(int *, int *, int *, int *, float *, int *, int *);
-extern void F77_CDTTRF(int *, scomplex *, scomplex *, scomplex *, int *);
-extern void F77_CDTTRSV(char *, char *, int *, int *, scomplex *, scomplex *,
+extern void cdbtf2_(int *, int *, int *, int *, scomplex *, int *, int *);
+extern void cdbtrf_(int *, int *, int *, int *, float *, int *, int *);
+extern void cdttrf_(int *, scomplex *, scomplex *, scomplex *, int *);
+extern void cdttrsv_(char *, char *, int *, int *, scomplex *, scomplex *,
                      scomplex *, scomplex *, int *, int *);
-extern void F77_CLAHQR2(int *, int *, int *, int *, int *, scomplex *, int *,
+extern void clahqr2_(int *, int *, int *, int *, int *, scomplex *, int *,
                      scomplex *, int *, int *, scomplex *, int *, int *);
-extern void F77_CLAMSH(scomplex *, int *, int *, int *, scomplex *, int *, int *,
+extern void clamsh_(scomplex *, int *, int *, int *, scomplex *, int *, int *,
                     float *);
-extern void F77_CLANV2(scomplex *, scomplex *, scomplex *, scomplex *, scomplex *,
+extern void clanv2_(scomplex *, scomplex *, scomplex *, scomplex *, scomplex *,
                     scomplex *, float *, scomplex *);
-extern void F77_CLAREF(char *, scomplex *, int *, int *, scomplex *, int *, int *,
+extern void claref_(char *, scomplex *, int *, int *, scomplex *, int *, int *,
                     int *, int *, int *, int *, int *, int *, int *, int *,
                     scomplex *, scomplex *, scomplex *, scomplex *, scomplex *,
                     scomplex *);
-extern void F77_CPTTRSV(char *, char *, int *, int *, float *, scomplex *,
+extern void cpttrsv_(char *, char *, int *, int *, float *, scomplex *,
                      scomplex *, int *, int *);
-extern void F77_CSTEQR2(char *, int *, float *, float *, scomplex *, int *, int *,
+extern void csteqr2_(char *, int *, float *, float *, scomplex *, int *, int *,
                      float *, int *);
-extern void F77_CTRMVT(char *, int *, scomplex *, int *, scomplex *, int *,
+extern void ctrmvt_(char *, int *, scomplex *, int *, scomplex *, int *,
                     scomplex *, int *, scomplex *, int *, scomplex *, int *);
-extern void F77_DDBTF2(int *, int *, int *, int *, double *, int *, int *);
-extern void F77_DDBTRF(int *, int *, int *, int *, float *, int *, int *);
-extern void F77_DDTTRF(int *, scomplex *, scomplex *, scomplex *, int *);
-extern void F77_DDTTRSV(char *, char *, int *, int *, scomplex *, scomplex *,
+extern void ddbtf2_(int *, int *, int *, int *, double *, int *, int *);
+extern void ddbtrf_(int *, int *, int *, int *, float *, int *, int *);
+extern void ddttrf_(int *, scomplex *, scomplex *, scomplex *, int *);
+extern void ddttrsv_(char *, char *, int *, int *, scomplex *, scomplex *,
                      scomplex *, scomplex *, int *, int *);
-extern void F77_DLAMSH(double *, int *, int *, int *, double *, int *, int *,
+extern void dlamsh_(double *, int *, int *, int *, double *, int *, int *,
                     double *);
-extern void F77_DLAPST(char *, int *, double *, int *, int *);
-extern void F77_DLAQR6(char *, int *, int *, int *, int *, int *, int *, int *,
+extern void dlapst_(char *, int *, double *, int *, int *);
+extern void dlaqr6_(char *, int *, int *, int *, int *, int *, int *, int *,
                     double *, double *, double *, int *, int *, int *, double *,
                     int *, double *, int *, double *, int *, int *, double *,
                     int *, int *, double *, int *);
-extern void F77_DLAR1VA(int *, int *, int *, double *, double *, double *,
+extern void dlar1va_(int *, int *, int *, double *, double *, double *,
                      double *, double *, double *, double *, double *, int *,
                      int *, double *, double *, int *, int *, double *,
                      double *, double *, double *);
-extern void F77_DLAREF(char *, double *, int *, int *, double *, int *, int *,
+extern void dlaref_(char *, double *, int *, int *, double *, int *, int *,
                     int *, int *, int *, int *, int *, int *, int *, int *,
                     double *, double *, double *, double *, double *, double *);
-extern void F77_DLARRB2(int *, double *, double *, int *, int *, double *,
+extern void dlarrb2_(int *, double *, double *, int *, int *, double *,
                      double *, int *, double *, double *, double *, double *,
                      int *, double *, double *, double *, int *, int *);
-extern void F77_DLARRD2(char *, char *, int *, double *, double *, int *, int *,
+extern void dlaneg2_(int *, double *, double *, double *, double *, int *);
+extern void dlaneg2a_(int *, double *, double *, double *, int *);
+extern void dlarrd2_(char *, char *, int *, double *, double *, int *, int *,
                      double *, double *, double *, double *, double *, double *,
                      int *, int *, int *, double *, double *, double *,
                      double *, int *, int *, double *, int *, int *, int *,
                      int *);
-extern void F77_DLARRE2(char *, int *, double *, double *, int *, int *, double *,
+extern void dlarre2_(char *, int *, double *, double *, int *, int *, double *,
                      double *, double *, double *, double *, double *, int *,
                      int *, int *, int *, int *, double *, double *, double *,
                      int *, int *, double *, double *, double *, int *, int *);
-extern void F77_DLARRE2A(char *, int *, double *, double *, int *, int *, double *,
+extern void dlarre2a_(char *, int *, double *, double *, int *, int *, double *,
                       double *, double *, double *, double *, double *, int *,
                       int *, int *, int *, int *, int *, int *, double *,
                       double *, double *, int *, int *, double *, double *,
                       double *, double *, int *, double *, int *);
-extern void F77_DLARRF2(int *, double *, double *, double *, int *, int *, int *,
+extern void dlarrf2_(int *, double *, double *, double *, int *, int *, int *,
                      int *, double *, double *, double *, int *, double *,
                      double *, double *, double *, double *, double *, double *,
                      double *, int *);
-extern void F77_DLARRV2(int *, double *, double *, double *, double *, double *,
+extern void dlarrv2_(int *, double *, double *, double *, double *, double *,
                      int *, int *, int *, int *, int *, int *, double *,
                      double *, double *, double *, double *, double *, int *,
                      int *, double *, double *, double *, int *, int *,
                      double *, int *, int *, int *, int *, int *, int *, int *,
                      int *);
-extern void F77_DLASORTE(double *, int *, int *, double *, int *);
-extern void F77_DLASRT2(char *, int *, double *, int *, int *);
-extern void F77_DPTTRSV(char *, int *, int *, float *, scomplex *, scomplex *,
+extern void dlasorte_(double *, int *, int *, double *, int *);
+extern void dlasrt2_(char *, int *, double *, int *, int *);
+extern void dpttrsv_(char *, int *, int *, float *, scomplex *, scomplex *,
                      int *, int *);
-extern void F77_DSTEGR2(char *, char *, int *, double *, double *, double *,
+extern void dstegr2_(char *, char *, int *, double *, double *, double *,
                      double *, int *, int *, int *, double *, double *, int *,
                      int *, int *, double *, int *, int *, int *, int *, int *,
                      int *, int *);
-extern void F77_DSTEGR2A(char *, char *, int *, double *, double *, double *,
+extern void dstegr2a_(char *, char *, int *, double *, double *, double *,
                       double *, int *, int *, int *, double *, double *, int *,
                       int *, double *, int *, int *, int *, int *, int *, int *,
                       int *, int *, int *, double *, double *, double *,
                       double *, int *);
-extern void F77_DSTEGR2B(char *, int *, double *, double *, int *, double *,
+extern void dstegr2b_(char *, int *, double *, double *, int *, double *,
                       double *, int *, int *, int *, double *, int *, int *,
                       int *, int *, int *, int *, int *, double *, double *,
                       double *, double *, double *, int *, int *, int *, int *,
                       int *, int *, int *);
-extern void F77_DSTEIN2(int *, double *, double *, int *, double *, int *, int *,
+extern void dstein2_(int *, double *, double *, int *, double *, int *, int *,
                      double *, double *, int *, double *, int *, int *, int *);
-extern void F77_DSTEQR2(char *, int *, double *, double *, double *, int *, int *,
+extern void dsteqr2_(char *, int *, double *, double *, double *, int *, int *,
                      double *, int *);
-extern void F77_DTRMVT(char *, int *, double *, int *, double *, int *, double *,
+extern void dtrmvt_(char *, int *, double *, int *, double *, int *, double *,
                     int *, double *, int *, double *, int *);
-extern void F77_ICOPYPV(int *, int *, double *, int *, int *, int *, int *, int *,
+extern void icopypv_(int *, int *, double *, int *, int *, int *, int *, int *,
                      int *);
-extern void F77_PCDBSV(int *, int *, int *, int *, scomplex *, int *, int *,
+extern void pcdbsv_(int *, int *, int *, int *, scomplex *, int *, int *,
                     scomplex *, int *, int *, scomplex *, int *, int *);
-extern void F77_PCDBTRF(int *, int *, int *, scomplex *, int *, int *, scomplex *,
+extern void pcdbtrf_(int *, int *, int *, scomplex *, int *, int *, scomplex *,
                      int *, scomplex *, int *, int *);
-extern void F77_PCDBTRS(char *, int *, int *, int *, int *, scomplex *, int *,
+extern void pcdbtrs_(char *, int *, int *, int *, int *, scomplex *, int *,
                      int *, scomplex *, int *, int *, scomplex *, int *,
                      scomplex *, int *, int *);
-extern void F77_PCDBTRSV(char *, char *, int *, int *, int *, int *, scomplex *,
+extern void pcdbtrsv_(char *, char *, int *, int *, int *, int *, scomplex *,
                       int *, int *, scomplex *, int *, int *, scomplex *, int *,
                       scomplex *, int *, int *);
-extern void F77_PCDTSV(int *, int *, scomplex *, scomplex *, scomplex *, int *,
+extern void pcdtsv_(int *, int *, scomplex *, scomplex *, scomplex *, int *,
                     int *, scomplex *, int *, int *, scomplex *, int *, int *);
-extern void F77_PCDTTRF(int *, scomplex *, scomplex *, scomplex *, int *, int *,
+extern void pcdttrf_(int *, scomplex *, scomplex *, scomplex *, int *, int *,
                      scomplex *, int *, scomplex *, int *, int *);
-extern void F77_PCDTTRS(char *, int *, int *, scomplex *, scomplex *, scomplex *,
+extern void pcdttrs_(char *, int *, int *, scomplex *, scomplex *, scomplex *,
                      int *, int *, scomplex *, int *, int *, scomplex *, int *,
                      scomplex *, int *, int *);
-extern void F77_PCDTTRSV(char *, char *, int *, int *, scomplex *, scomplex *,
+extern void pcdttrsv_(char *, char *, int *, int *, scomplex *, scomplex *,
                       scomplex *, int *, int *, scomplex *, int *, int *,
                       scomplex *, int *, scomplex *, int *, int *);
-extern void F77_PCGBSV(int *, int *, int *, int *, scomplex *, int *, int *, int *,
+extern void pcgbsv_(int *, int *, int *, int *, scomplex *, int *, int *, int *,
                     scomplex *, int *, int *, scomplex *, int *, int *);
-extern void F77_PCGBTRF(int *, int *, int *, scomplex *, int *, int *, int *,
+extern void pcgbtrf_(int *, int *, int *, scomplex *, int *, int *, int *,
                      scomplex *, int *, scomplex *, int *, int *);
-extern void F77_PCGBTRS(char *, int *, int *, int *, int *, scomplex *, int *,
+extern void pcgbtrs_(char *, int *, int *, int *, int *, scomplex *, int *,
                      int *, int *, scomplex *, int *, int *, scomplex *, int *,
                      scomplex *, int *, int *);
-extern void F77_PCGEBD2(int *, int *, scomplex *, int *, int *, int *, float *,
+extern void pcgebd2_(int *, int *, scomplex *, int *, int *, int *, float *,
                      float *, scomplex *, scomplex *, scomplex *, int *, int *);
-extern void F77_PCGEBRD(int *, int *, scomplex *, int *, int *, int *, float *,
+extern void pcgebrd_(int *, int *, scomplex *, int *, int *, int *, float *,
                      float *, scomplex *, scomplex *, scomplex *, int *, int *);
-extern void F77_PCGECON(char *, int *, scomplex *, int *, int *, int *, float *,
+extern void pcgecon_(char *, int *, scomplex *, int *, int *, int *, float *,
                      float *, scomplex *, int *, float *, int *, int *);
-extern void F77_PCGEEQU(int *, int *, scomplex *, int *, int *, int *, float *,
+extern void pcgeequ_(int *, int *, scomplex *, int *, int *, int *, float *,
                      float *, float *, float *, float *, int *);
-extern void F77_PCGEHD2(int *, int *, int *, scomplex *, int *, int *, int *,
+extern void pcgehd2_(int *, int *, int *, scomplex *, int *, int *, int *,
                      scomplex *, scomplex *, int *, int *);
-extern void F77_PCGEHRD(int *, int *, int *, scomplex *, int *, int *, int *,
+extern void pcgehrd_(int *, int *, int *, scomplex *, int *, int *, int *,
                      scomplex *, scomplex *, int *, int *);
-extern void F77_PCGELQ2(int *, int *, scomplex *, int *, int *, int *, scomplex *,
+extern void pcgelq2_(int *, int *, scomplex *, int *, int *, int *, scomplex *,
                      scomplex *, int *, int *);
-extern void F77_PCGELQF(int *, int *, scomplex *, int *, int *, int *, scomplex *,
+extern void pcgelqf_(int *, int *, scomplex *, int *, int *, int *, scomplex *,
                      scomplex *, int *, int *);
-extern void F77_PCGELS(char *, int *, int *, int *, scomplex *, int *, int *,
+extern void pcgels_(char *, int *, int *, int *, scomplex *, int *, int *,
                     int *, scomplex *, int *, int *, int *, scomplex *, int *,
                     int *);
-extern void F77_PCGEQL2(int *, int *, scomplex *, int *, int *, int *, scomplex *,
+extern void pcgeql2_(int *, int *, scomplex *, int *, int *, int *, scomplex *,
                      scomplex *, int *, int *);
-extern void F77_PCGEQLF(int *, int *, scomplex *, int *, int *, int *, scomplex *,
+extern void pcgeqlf_(int *, int *, scomplex *, int *, int *, int *, scomplex *,
                      scomplex *, int *, int *);
-extern void F77_PCGEQPF(int *, int *, scomplex *, int *, int *, int *, int *,
+extern void pcgeqpf_(int *, int *, scomplex *, int *, int *, int *, int *,
                      scomplex *, scomplex *, int *, float *, int *, int *);
-extern void F77_PCGEQR2(int *, int *, scomplex *, int *, int *, int *, scomplex *,
+extern void pcgeqr2_(int *, int *, scomplex *, int *, int *, int *, scomplex *,
                      scomplex *, int *, int *);
-extern void F77_PCGEQRF(int *, int *, scomplex *, int *, int *, int *, scomplex *,
+extern void pcgeqrf_(int *, int *, scomplex *, int *, int *, int *, scomplex *,
                      scomplex *, int *, int *);
-extern void F77_PCGERFS(char *, int *, int *, scomplex *, int *, int *, int *,
+extern void pcgerfs_(char *, int *, int *, scomplex *, int *, int *, int *,
                      scomplex *, int *, int *, int *, int *, scomplex *, int *,
                      int *, int *, scomplex *, int *, int *, int *, float *,
                      float *, scomplex *, int *, float *, int *, int *);
-extern void F77_PCGERQ2(int *, int *, scomplex *, int *, int *, int *, scomplex *,
+extern void pcgerq2_(int *, int *, scomplex *, int *, int *, int *, scomplex *,
                      scomplex *, int *, int *);
-extern void F77_PCGERQF(int *, int *, scomplex *, int *, int *, int *, scomplex *,
+extern void pcgerqf_(int *, int *, scomplex *, int *, int *, int *, scomplex *,
                      scomplex *, int *, int *);
-extern void F77_PCGESV( int *,  int *, scomplex *,  int *,  int *,  int *, int *,
-                    scomplex *,  int *,  int *,  int *, int *);
-extern void F77_PCGESVD(char *, char *, int *, int *, scomplex *, int *, int *,
+extern void pcgesv_(int *, int *, scomplex *, int *, int *, int *, int *,
+                    scomplex *, int *, int *, int *, int *);
+extern void pcgesvd_(char *, char *, int *, int *, scomplex *, int *, int *,
                      int *, float *, scomplex *, int *, int *, int *,
                      scomplex *, int *, int *, int *, scomplex *, int *,
                      float *, int *);
-extern void F77_PCGESVX(char *, char *, int *, int *, scomplex *, int *, int *,
+extern void pcgesvx_(char *, char *, int *, int *, scomplex *, int *, int *,
                      int *, scomplex *, int *, int *, int *, int *, char *,
                      float *, float *, scomplex *, int *, int *, int *,
                      scomplex *, int *, int *, int *, float *, float *, float *,
                      scomplex *, int *, float *, int *, int *);
-extern void F77_PCGETF2(int *, int *, scomplex *, int *, int *, int *, int *,
+extern void pcgetf2_(int *, int *, scomplex *, int *, int *, int *, int *,
                      int *);
-extern void F77_PCGETRF( int *,  int *, scomplex *,  int *,  int *,  int *, int *,
+extern void pcgetrf_(int *, int *, scomplex *, int *, int *, int *, int *,
                      int *);
-extern void F77_PCGETRI( int *, scomplex *,  int *,  int *,  int *,  int *, scomplex *,
-                      int *, int *,  int *, int *);
-extern void F77_PCGETRS( char *,  int *,  int *,  scomplex *,  int *,  int *,  int *,
-                      int *, scomplex *,  int *,  int *,  int *, int *);
-extern void F77_PCGGQRF(int *, int *, int *, scomplex *, int *, int *, int *,
+extern void pcgetri_(int *, scomplex *, int *, int *, int *, int *, scomplex *,
+                     int *, int *, int *, int *);
+extern void pcgetrs_(char *, int *, int *, scomplex *, int *, int *, int *,
+                     int *, scomplex *, int *, int *, int *, int *);
+extern void pcggqrf_(int *, int *, int *, scomplex *, int *, int *, int *,
                      scomplex *, scomplex *, int *, int *, int *, scomplex *,
                      scomplex *, int *, int *);
-extern void F77_PCGGRQF(int *, int *, int *, scomplex *, int *, int *, int *,
+extern void pcggrqf_(int *, int *, int *, scomplex *, int *, int *, int *,
                      scomplex *, scomplex *, int *, int *, int *, scomplex *,
                      scomplex *, int *, int *);
-extern void F77_PCHEEV(char *, char *, int *, scomplex *, int *, int *, int *,
+extern void pcheev_(char *, char *, int *, scomplex *, int *, int *, int *,
                     float *, scomplex *, int *, int *, int *, scomplex *, int *,
                     scomplex *, int *, int *);
-extern void F77_PCHEEVD(char *, char *, int *, scomplex *, int *, int *, int *,
+extern void pcheevd_(char *, char *, int *, scomplex *, int *, int *, int *,
                      float *, scomplex *, int *, int *, int *, scomplex *,
                      int *, float *, int *, int *, int *, int *);
-extern void F77_PCHEEVR(char *, char *, char *, int *, scomplex *, int *, int *,
+extern void pcheevr_(char *, char *, char *, int *, scomplex *, int *, int *,
                      int *, float *, float *, int *, int *, int *, int *,
                      float *, scomplex *, int *, int *, int *, scomplex *,
                      int *, float *, int *, int *, int *, int *);
-extern void F77_PCHEEVX(char *, char *, char *, int *, scomplex *, int *, int *,
+extern void pcheevx_(char *, char *, char *, int *, scomplex *, int *, int *,
                      int *, float *, float *, int *, int *, float *, int *,
                      int *, float *, float *, scomplex *, int *, int *, int *,
                      scomplex *, int *, float *, int *, int *, int *, int *,
                      int *, float *, int *);
-extern void F77_PCHEGS2(int *, char *, int *, scomplex *, int *, int *, int *,
+extern void pchegs2_(int *, char *, int *, scomplex *, int *, int *, int *,
                      scomplex *, int *, int *, int *, int *);
-extern void F77_PCHEGST(int *, char *, int *, scomplex *, int *, int *, int *,
+extern void pchegst_(int *, char *, int *, scomplex *, int *, int *, int *,
                      scomplex *, int *, int *, int *, float *, int *);
-extern void F77_PCHEGVX(int *, char *, char *, char *, int *, scomplex *, int *,
+extern void pchegvx_(int *, char *, char *, char *, int *, scomplex *, int *,
                      int *, int *, scomplex *, int *, int *, int *, float *,
                      float *, int *, int *, float *, int *, int *, float *,
                      float *, scomplex *, int *, int *, int *, scomplex *,
                      int *, float *, int *, int *, int *, int *, int *, float *,
                      int *);
-extern void F77_PCHENGST(int *, char *, int *, scomplex *, int *, int *, int *,
+extern void pchengst_(int *, char *, int *, scomplex *, int *, int *, int *,
                       scomplex *, int *, int *, int *, float *, scomplex *,
                       int *, int *);
-extern void F77_PCHENTRD(char *, int *, scomplex *, int *, int *, int *, float *,
+extern void pchentrd_(char *, int *, scomplex *, int *, int *, int *, float *,
                       float *, scomplex *, scomplex *, int *, scomplex *, int *,
                       int *);
-extern void F77_PCHETD2(char *, int *, scomplex *, int *, int *, int *, float *,
+extern void pchetd2_(char *, int *, scomplex *, int *, int *, int *, float *,
                      float *, scomplex *, scomplex *, int *, int *);
-extern void F77_PCHETRD(char *, int *, scomplex *, int *, int *, int *, float *,
+extern void pchetrd_(char *, int *, scomplex *, int *, int *, int *, float *,
                      float *, scomplex *, scomplex *, int *, int *);
-extern void F77_PCHETTRD(char *, int *, scomplex *, int *, int *, int *, float *,
+extern void pchettrd_(char *, int *, scomplex *, int *, int *, int *, float *,
                       float *, scomplex *, scomplex *, int *, int *);
-extern void F77_PCLABRD(int *, int *, int *, scomplex *, int *, int *, int *,
+extern void pclabrd_(int *, int *, int *, scomplex *, int *, int *, int *,
                      float *, float *, scomplex *, scomplex *, scomplex *,
                      int *, int *, int *, scomplex *, int *, int *, int *,
                      scomplex *);
-extern void F77_PCLACGV(int *, scomplex *, int *, int *, int *, int *);
-extern void F77_PCLACON(int *, scomplex *, int *, int *, int *, scomplex *, int *,
+extern void pclacgv_(int *, scomplex *, int *, int *, int *, int *);
+extern void pclacon_(int *, scomplex *, int *, int *, int *, scomplex *, int *,
                      int *, int *, float *, int *);
-extern void F77_PCLACONSB(scomplex *, int *, int *, int *, int *, scomplex *,
+extern void pclaconsb_(scomplex *, int *, int *, int *, int *, scomplex *,
                        scomplex *, scomplex *, scomplex *, int *);
-extern void F77_PCLACP2(char *, int *, int *, scomplex *, int *, int *, int *,
+extern void pclacp2_(char *, int *, int *, scomplex *, int *, int *, int *,
                      scomplex *, int *, int *, int *);
-extern void F77_PCLACP3(int *, int *, scomplex *, int *, scomplex *, int *, int *,
+extern void pclacp3_(int *, int *, scomplex *, int *, scomplex *, int *, int *,
                      int *, int *);
-extern void F77_PCLACPY(char *, int *, int *, scomplex *, int *, int *, int *,
+extern void pclacpy_(char *, int *, int *, scomplex *, int *, int *, int *,
                      scomplex *, int *, int *, int *);
-extern void F77_PCLAEVSWP(int *, float *, int *, scomplex *, int *, int *, int *,
+extern void pclaevswp_(int *, float *, int *, scomplex *, int *, int *, int *,
                        int *, int *, float *, int *);
-extern void F77_PCLAHQR(int *, int *, int *, int *, int *, scomplex *, int *,
+extern void pclahqr_(int *, int *, int *, int *, int *, scomplex *, int *,
                      scomplex *, int *, int *, scomplex *, int *, scomplex *,
                      int *, int *, int *, int *);
-extern void F77_PCLAHRD(int *, int *, int *, scomplex *, int *, int *, int *,
+extern void pclahrd_(int *, int *, int *, scomplex *, int *, int *, int *,
                      scomplex *, scomplex *, scomplex *, int *, int *, int *,
                      scomplex *);
-extern void F77_PCLAMR1D(int *, dcomplex *, int *, int *, int *, dcomplex *, int *,
+extern void pclamr1d_(int *, dcomplex *, int *, int *, int *, dcomplex *, int *,
                       int *, int *);
-extern void F77_PCLAPIV(char *, char *, char *, int *, int *, scomplex *, int *,
+extern void pclapiv_(char *, char *, char *, int *, int *, scomplex *, int *,
                      int *, int *, int *, int *, int *, int *, int *);
-extern void F77_PCLAPV2(char *, char *, int *, int *, scomplex *, int *, int *,
+extern void pclapv2_(char *, char *, int *, int *, scomplex *, int *, int *,
                      int *, int *, int *, int *, int *);
-extern void F77_PCLAQGE(int *, int *, scomplex *, int *, int *, int *, float *,
+extern void pclaqge_(int *, int *, scomplex *, int *, int *, int *, float *,
                      float *, float *, float *, float *, char *);
-extern void F77_PCLAQSY(char *, int *, scomplex *, int *, int *, int *, float *,
+extern void pclaqsy_(char *, int *, scomplex *, int *, int *, int *, float *,
                      float *, float *, float *, char *);
-extern void F77_PCLARF(char *, int *, int *, scomplex *, int *, int *, int *,
+extern void pclarf_(char *, int *, int *, scomplex *, int *, int *, int *,
                     int *, scomplex *, scomplex *, int *, int *, int *,
                     scomplex *);
-extern void F77_PCLARFB(char *, char *, char *, char *, int *, int *, int *,
+extern void pclarfb_(char *, char *, char *, char *, int *, int *, int *,
                      scomplex *, int *, int *, int *, scomplex *, scomplex *,
                      int *, int *, int *, scomplex *);
-extern void F77_PCLARFC(char *, int *, int *, scomplex *, int *, int *, int *,
+extern void pclarfc_(char *, int *, int *, scomplex *, int *, int *, int *,
                      int *, scomplex *, scomplex *, int *, int *, int *,
                      scomplex *);
-extern void F77_PCLARFG(int *, scomplex *, int *, int *, scomplex *, int *, int *,
+extern void pclarfg_(int *, scomplex *, int *, int *, scomplex *, int *, int *,
                      int *, int *, scomplex *);
-extern void F77_PCLARFT(char *, char *, int *, int *, scomplex *, int *, int *,
+extern void pclarft_(char *, char *, int *, int *, scomplex *, int *, int *,
                      int *, scomplex *, scomplex *, scomplex *);
-extern void F77_PCLARZ(char *, int *, int *, int *, scomplex *, int *, int *,
+extern void pclarz_(char *, int *, int *, int *, scomplex *, int *, int *,
                     int *, int *, scomplex *, scomplex *, int *, int *, int *,
                     scomplex *);
-extern void F77_PCLARZB(char *, char *, char *, char *, int *, int *, int *, int *,
+extern void pclarzb_(char *, char *, char *, char *, int *, int *, int *, int *,
                      scomplex *, int *, int *, int *, scomplex *, scomplex *,
                      int *, int *, int *, scomplex *);
-extern void F77_PCLARZC(char *, int *, int *, int *, scomplex *, int *, int *,
+extern void pclarzc_(char *, int *, int *, int *, scomplex *, int *, int *,
                      int *, int *, scomplex *, scomplex *, int *, int *, int *,
                      scomplex *);
-extern void F77_PCLARZT(char *, char *, int *, int *, scomplex *, int *, int *,
+extern void pclarzt_(char *, char *, int *, int *, scomplex *, int *, int *,
                      int *, scomplex *, scomplex *, scomplex *);
-extern void F77_PCLASCL(char *, float *, float *, int *, int *, scomplex *, int *,
+extern void pclascl_(char *, float *, float *, int *, int *, scomplex *, int *,
                      int *, int *, int *);
-extern void F77_PCLASE2(char *, int *, int *, scomplex *, scomplex *, scomplex *,
+extern void pclase2_(char *, int *, int *, scomplex *, scomplex *, scomplex *,
                      int *, int *, int *);
-extern void F77_PCLASET(char *, int *, int *, scomplex *, scomplex *, scomplex *,
+extern void pclaset_(char *, int *, int *, scomplex *, scomplex *, scomplex *,
                      int *, int *, int *);
-extern void F77_PCLASMSUB(scomplex *, int *, int *, int *, int *, float *,
+extern void pclasmsub_(scomplex *, int *, int *, int *, int *, float *,
                        scomplex *, int *);
-extern void F77_PCLASSQ(int *, scomplex *, int *, int *, int *, int *, float *,
+extern void pclassq_(int *, scomplex *, int *, int *, int *, int *, float *,
                      float *);
-extern void F77_PCLASWP(char *, char *, int *, scomplex *, int *, int *, int *,
+extern void pclaswp_(char *, char *, int *, scomplex *, int *, int *, int *,
                      int *, int *, int *);
-extern void F77_PCLATRD(char *, int *, int *, scomplex *, int *, int *, int *,
+extern void pclatrd_(char *, int *, int *, scomplex *, int *, int *, int *,
                      float *, float *, scomplex *, scomplex *, int *, int *,
                      int *, scomplex *);
-extern void F77_PCLATRS(char *, char *, char *, char *, int *, scomplex *, int *,
+extern void pclatrs_(char *, char *, char *, char *, int *, scomplex *, int *,
                      int *, int *, scomplex *, int *, int *, int *, float *,
                      float *, scomplex *);
-extern void F77_PCLATRZ(int *, int *, int *, scomplex *, int *, int *, int *,
+extern void pclatrz_(int *, int *, int *, scomplex *, int *, int *, int *,
                      scomplex *, scomplex *);
-extern void F77_PCLATTRS(char *, char *, char *, char *, int *, scomplex *, int *,
+extern void pclattrs_(char *, char *, char *, char *, int *, scomplex *, int *,
                       int *, int *, scomplex *, int *, int *, int *, float *,
                       float *, int *);
-extern void F77_PCLAUU2(char *, int *, scomplex *, int *, int *, int *);
-extern void F77_PCLAUUM(char *, int *, scomplex *, int *, int *, int *);
-extern void F77_PCLAWIL(int *, int *, int *, scomplex *, int *, scomplex *,
+extern void pclauu2_(char *, int *, scomplex *, int *, int *, int *);
+extern void pclauum_(char *, int *, scomplex *, int *, int *, int *);
+extern void pclawil_(int *, int *, int *, scomplex *, int *, scomplex *,
                      scomplex *, scomplex *, scomplex *);
-extern void F77_PCMAX1(int *, scomplex *, int *, scomplex *, int *, int *, int *,
+extern void pcmax1_(int *, scomplex *, int *, scomplex *, int *, int *, int *,
                     int *);
-extern void F77_PCPBSV(char *, int *, int *, int *, scomplex *, int *, int *,
+extern void ccombamax1_(scomplex *, scomplex *);
+extern void pcpbsv_(char *, int *, int *, int *, scomplex *, int *, int *,
                     scomplex *, int *, int *, scomplex *, int *, int *);
-extern void F77_PCPBTRF(char *, int *, int *, scomplex *, int *, int *, scomplex *,
+extern void pcpbtrf_(char *, int *, int *, scomplex *, int *, int *, scomplex *,
                      int *, scomplex *, int *, int *);
-extern void F77_PCPBTRS(char *, int *, int *, int *, scomplex *, int *, int *,
+extern void pcpbtrs_(char *, int *, int *, int *, scomplex *, int *, int *,
                      scomplex *, int *, int *, scomplex *, int *, scomplex *,
                      int *, int *);
-extern void F77_PCPBTRSV(char *, char *, int *, int *, int *, scomplex *, int *,
+extern void pcpbtrsv_(char *, char *, int *, int *, int *, scomplex *, int *,
                       int *, scomplex *, int *, int *, scomplex *, int *,
                       scomplex *, int *, int *);
-extern void F77_PCPOCON(char *, int *, scomplex *, int *, int *, int *, float *,
+extern void pcpocon_(char *, int *, scomplex *, int *, int *, int *, float *,
                      float *, scomplex *, int *, float *, int *, int *);
-extern void F77_PCPOEQU(int *, scomplex *, int *, int *, int *, float *, float *,
+extern void pcpoequ_(int *, scomplex *, int *, int *, int *, float *, float *,
                      float *, float *, int *);
-extern void F77_PCPORFS(char *, int *, int *, scomplex *, int *, int *, int *,
+extern void pcporfs_(char *, int *, int *, scomplex *, int *, int *, int *,
                      scomplex *, int *, int *, int *, scomplex *, int *, int *,
                      int *, scomplex *, int *, int *, int *, float *, float *,
                      scomplex *, int *, float *, int *, int *);
-extern void F77_PCPOSV(char *, int *, int *, scomplex *, int *, int *, int *,
+extern void pcposv_(char *, int *, int *, scomplex *, int *, int *, int *,
                     scomplex *, int *, int *, int *, int *);
-extern void F77_PCPOSVX(char *, char *, int *, int *, scomplex *, int *, int *,
+extern void pcposvx_(char *, char *, int *, int *, scomplex *, int *, int *,
                      int *, scomplex *, int *, int *, int *, char *, scomplex *,
                      scomplex *, scomplex *, int *, int *, int *, scomplex *,
                      int *, int *, int *, float *, float *, float *, scomplex *,
                      int *, float *, int *, int *);
-extern void F77_PCPOTF2(char *, int *, scomplex *, int *, int *, int *, int *);
-extern void F77_PCPOTRF(char *, int *, scomplex *, int *, int *, int *, int *);
-extern void F77_PCPOTRI(char *, int *, scomplex *, int *, int *, int *, int *);
-extern void F77_PCPOTRS(char *, int *, int *, scomplex *, int *, int *, int *,
+extern void pcpotf2_(char *, int *, scomplex *, int *, int *, int *, int *);
+extern void pcpotrf_(char *, int *, scomplex *, int *, int *, int *, int *);
+extern void pcpotri_(char *, int *, scomplex *, int *, int *, int *, int *);
+extern void pcpotrs_(char *, int *, int *, scomplex *, int *, int *, int *,
                      scomplex *, int *, int *, int *, int *);
-extern void F77_PCPTSV(char *, int *, int *, scomplex *, scomplex *, int *, int *,
+extern void pcptsv_(char *, int *, int *, scomplex *, scomplex *, int *, int *,
                     scomplex *, int *, int *, scomplex *, int *, int *);
-extern void F77_PCPTTRF(int *, scomplex *, scomplex *, int *, int *, scomplex *,
+extern void pcpttrf_(int *, scomplex *, scomplex *, int *, int *, scomplex *,
                      int *, scomplex *, int *, int *);
-extern void F77_PCPTTRS(char *, int *, int *, scomplex *, scomplex *, int *, int *,
+extern void pcpttrs_(char *, int *, int *, scomplex *, scomplex *, int *, int *,
                      scomplex *, int *, int *, scomplex *, int *, scomplex *,
                      int *, int *);
-extern void F77_PCPTTRSV(char *, char *, int *, int *, scomplex *, scomplex *,
+extern void pcpttrsv_(char *, char *, int *, int *, scomplex *, scomplex *,
                       int *, int *, scomplex *, int *, int *, scomplex *, int *,
                       scomplex *, int *, int *);
-extern void F77_PCSRSCL(int *, float *, scomplex *, int *, int *, int *, int *);
-extern void F77_PCSTEIN(int *, float *, float *, int *, float *, int *, int *,
+extern void pcsrscl_(int *, float *, scomplex *, int *, int *, int *, int *);
+extern void pcstein_(int *, float *, float *, int *, float *, int *, int *,
                      float *, scomplex *, int *, int *, int *, float *, int *,
                      int *, int *, int *, int *, float *, int *);
-extern void F77_PCTRCON(char *, char *, char *, int *, scomplex *, int *, int *,
+extern void pctrcon_(char *, char *, char *, int *, scomplex *, int *, int *,
                      int *, float *, scomplex *, int *, float *, int *, int *);
-extern void F77_PCTREVC(char *, char *, int *, int *, scomplex *, int *,
+extern void pctrevc_(char *, char *, int *, int *, scomplex *, int *,
                      scomplex *, int *, scomplex *, int *, int *, int *,
                      scomplex *, float *, int *);
-extern void F77_PCTRRFS(char *, char *, char *, int *, int *, scomplex *, int *,
+extern void pctrrfs_(char *, char *, char *, int *, int *, scomplex *, int *,
                      int *, int *, scomplex *, int *, int *, int *, scomplex *,
                      int *, int *, int *, float *, float *, scomplex *, int *,
                      float *, int *, int *);
-extern void F77_PCTRTI2(char *, char *, int *, scomplex *, int *, int *, int *,
+extern void pctrti2_(char *, char *, int *, scomplex *, int *, int *, int *,
                      int *);
-extern void F77_PCTRTRI(char *, char *, int *, scomplex *, int *, int *, int *,
+extern void pctrtri_(char *, char *, int *, scomplex *, int *, int *, int *,
                      int *);
-extern void F77_PCTRTRS(char *, char *, char *, int *, int *, scomplex *, int *,
+extern void pctrtrs_(char *, char *, char *, int *, int *, scomplex *, int *,
                      int *, int *, scomplex *, int *, int *, int *, int *);
-extern void F77_PCTZRZF(int *, int *, scomplex *, int *, int *, int *, scomplex *,
+extern void pctzrzf_(int *, int *, scomplex *, int *, int *, int *, scomplex *,
                      scomplex *, int *, int *);
-extern void F77_PCUNG2L(int *, int *, int *, scomplex *, int *, int *, int *,
+extern void pcung2l_(int *, int *, int *, scomplex *, int *, int *, int *,
                      scomplex *, scomplex *, int *, int *);
-extern void F77_PCUNG2R(int *, int *, int *, scomplex *, int *, int *, int *,
+extern void pcung2r_(int *, int *, int *, scomplex *, int *, int *, int *,
                      scomplex *, scomplex *, int *, int *);
-extern void F77_PCUNGL2(int *, int *, int *, scomplex *, int *, int *, int *,
+extern void pcungl2_(int *, int *, int *, scomplex *, int *, int *, int *,
                      scomplex *, scomplex *, int *, int *);
-extern void F77_PCUNGLQ(int *, int *, int *, scomplex *, int *, int *, int *,
+extern void pcunglq_(int *, int *, int *, scomplex *, int *, int *, int *,
                      scomplex *, scomplex *, int *, int *);
-extern void F77_PCUNGQL(int *, int *, int *, scomplex *, int *, int *, int *,
+extern void pcungql_(int *, int *, int *, scomplex *, int *, int *, int *,
                      scomplex *, scomplex *, int *, int *);
-extern void F77_PCUNGQR(int *, int *, int *, scomplex *, int *, int *, int *,
+extern void pcungqr_(int *, int *, int *, scomplex *, int *, int *, int *,
                      scomplex *, scomplex *, int *, int *);
-extern void F77_PCUNGR2(int *, int *, int *, scomplex *, int *, int *, int *,
+extern void pcungr2_(int *, int *, int *, scomplex *, int *, int *, int *,
                      scomplex *, scomplex *, int *, int *);
-extern void F77_PCUNGRQ(int *, int *, int *, scomplex *, int *, int *, int *,
+extern void pcungrq_(int *, int *, int *, scomplex *, int *, int *, int *,
                      scomplex *, scomplex *, int *, int *);
-extern void F77_PCUNM2L(char *, char *, int *, int *, int *, scomplex *, int *,
+extern void pcunm2l_(char *, char *, int *, int *, int *, scomplex *, int *,
                      int *, int *, scomplex *, scomplex *, int *, int *, int *,
                      scomplex *, int *, int *);
-extern void F77_PCUNM2R(char *, char *, int *, int *, int *, scomplex *, int *,
+extern void pcunm2r_(char *, char *, int *, int *, int *, scomplex *, int *,
                      int *, int *, scomplex *, scomplex *, int *, int *, int *,
                      scomplex *, int *, int *);
-extern void F77_PCUNMBR(char *, char *, char *, int *, int *, int *, scomplex *,
+extern void pcunmbr_(char *, char *, char *, int *, int *, int *, scomplex *,
                      int *, int *, int *, scomplex *, scomplex *, int *, int *,
                      int *, scomplex *, int *, int *);
-extern void F77_PCUNMHR(char *, char *, int *, int *, int *, int *, scomplex *,
+extern void pcunmhr_(char *, char *, int *, int *, int *, int *, scomplex *,
                      int *, int *, int *, scomplex *, scomplex *, int *, int *,
                      int *, scomplex *, int *, int *);
-extern void F77_PCUNML2(char *, char *, int *, int *, int *, scomplex *, int *,
+extern void pcunml2_(char *, char *, int *, int *, int *, scomplex *, int *,
                      int *, int *, scomplex *, scomplex *, int *, int *, int *,
                      scomplex *, int *, int *);
-extern void F77_PCUNMLQ(char *, char *, int *, int *, int *, scomplex *, int *,
+extern void pcunmlq_(char *, char *, int *, int *, int *, scomplex *, int *,
                      int *, int *, scomplex *, scomplex *, int *, int *, int *,
                      scomplex *, int *, int *);
-extern void F77_PCUNMQL(char *, char *, int *, int *, int *, scomplex *, int *,
+extern void pcunmql_(char *, char *, int *, int *, int *, scomplex *, int *,
                      int *, int *, scomplex *, scomplex *, int *, int *, int *,
                      scomplex *, int *, int *);
-extern void F77_PCUNMQR(char *, char *, int *, int *, int *, scomplex *, int *,
+extern void pcunmqr_(char *, char *, int *, int *, int *, scomplex *, int *,
                      int *, int *, scomplex *, scomplex *, int *, int *, int *,
                      scomplex *, int *, int *);
-extern void F77_PCUNMR2(char *, char *, int *, int *, int *, scomplex *, int *,
+extern void pcunmr2_(char *, char *, int *, int *, int *, scomplex *, int *,
                      int *, int *, scomplex *, scomplex *, int *, int *, int *,
                      scomplex *, int *, int *);
-extern void F77_PCUNMR3(char *, char *, int *, int *, int *, int *, scomplex *,
+extern void pcunmr3_(char *, char *, int *, int *, int *, int *, scomplex *,
                      int *, int *, int *, scomplex *, scomplex *, int *, int *,
                      int *, scomplex *, int *, int *);
-extern void F77_PCUNMRQ(char *, char *, int *, int *, int *, scomplex *, int *,
+extern void pcunmrq_(char *, char *, int *, int *, int *, scomplex *, int *,
                      int *, int *, scomplex *, scomplex *, int *, int *, int *,
                      scomplex *, int *, int *);
-extern void F77_PCUNMRZ(char *, char *, int *, int *, int *, int *, scomplex *,
+extern void pcunmrz_(char *, char *, int *, int *, int *, int *, scomplex *,
                      int *, int *, int *, scomplex *, scomplex *, int *, int *,
                      int *, scomplex *, int *, int *);
-extern void F77_PCUNMTR(char *, char *, char *, int *, int *, scomplex *, int *,
+extern void pcunmtr_(char *, char *, char *, int *, int *, scomplex *, int *,
                      int *, int *, scomplex *, scomplex *, int *, int *, int *,
                      scomplex *, int *, int *);
-extern void F77_PDDBSV(int *, int *, int *, int *, double *, int *, int *,
+extern void pddbsv_(int *, int *, int *, int *, double *, int *, int *,
                     double *, int *, int *, double *, int *, int *);
-extern void F77_PDDBTRF(int *, int *, int *, double *, int *, int *, double *,
+extern void pddbtrf_(int *, int *, int *, double *, int *, int *, double *,
                      int *, double *, int *, int *);
-extern void F77_PDDBTRS(char *, int *, int *, int *, int *, double *, int *, int *,
+extern void pddbtrs_(char *, int *, int *, int *, int *, double *, int *, int *,
                      double *, int *, int *, double *, int *, double *, int *,
                      int *);
-extern void F77_PDDBTRSV(char *, char *, int *, int *, int *, int *, double *,
+extern void pddbtrsv_(char *, char *, int *, int *, int *, int *, double *,
                       int *, int *, double *, int *, int *, double *, int *,
                       double *, int *, int *);
-extern void F77_PDDTSV(int *, int *, double *, double *, double *, int *, int *,
+extern void pddtsv_(int *, int *, double *, double *, double *, int *, int *,
                     double *, int *, int *, double *, int *, int *);
-extern void F77_PDDTTRF(int *, double *, double *, double *, int *, int *,
+extern void pddttrf_(int *, double *, double *, double *, int *, int *,
                      double *, int *, double *, int *, int *);
-extern void F77_PDDTTRS(char *, int *, int *, double *, double *, double *, int *,
+extern void pddttrs_(char *, int *, int *, double *, double *, double *, int *,
                      int *, double *, int *, int *, double *, int *, double *,
                      int *, int *);
-extern void F77_PDDTTRSV(char *, char *, int *, int *, double *, double *,
+extern void pddttrsv_(char *, char *, int *, int *, double *, double *,
                       double *, int *, int *, double *, int *, int *, double *,
                       int *, double *, int *, int *);
-extern void F77_PDGBSV(int *, int *, int *, int *, double *, int *, int *, int *,
+extern void pdgbsv_(int *, int *, int *, int *, double *, int *, int *, int *,
                     double *, int *, int *, double *, int *, int *);
-extern void F77_PDGBTRF(int *, int *, int *, double *, int *, int *, int *,
+extern void pdgbtrf_(int *, int *, int *, double *, int *, int *, int *,
                      double *, int *, double *, int *, int *);
-extern void F77_PDGBTRS(char *, int *, int *, int *, int *, double *, int *, int *,
+extern void pdgbtrs_(char *, int *, int *, int *, int *, double *, int *, int *,
                      int *, double *, int *, int *, double *, int *, double *,
                      int *, int *);
-extern void F77_PDGEBAL(char *, int *, double *, int *, int *, int *, double *,
+extern void pdgebal_(char *, int *, double *, int *, int *, int *, double *,
                      int *);
-extern void F77_PDGEBD2(int *, int *, double *, int *, int *, int *, double *,
+extern void pdgebd2_(int *, int *, double *, int *, int *, int *, double *,
                      double *, double *, double *, double *, int *, int *);
-extern void F77_PDGEBRD(int *, int *, double *, int *, int *, int *, double *,
+extern void pdgebrd_(int *, int *, double *, int *, int *, int *, double *,
                      double *, double *, double *, double *, int *, int *);
-extern void F77_PDGECON(char *, int *, double *, int *, int *, int *, double *,
+extern void pdgecon_(char *, int *, double *, int *, int *, int *, double *,
                      double *, double *, int *, int *, int *, int *);
-extern void F77_PDGEEQU(int *, int *, double *, int *, int *, int *, double *,
+extern void pdgeequ_(int *, int *, double *, int *, int *, int *, double *,
                      double *, double *, double *, double *, int *);
-extern void F77_PDGEHD2(int *, int *, int *, double *, int *, int *, int *,
+extern void pdgehd2_(int *, int *, int *, double *, int *, int *, int *,
                      double *, double *, int *, int *);
-extern void F77_PDGEHRD(int *, int *, int *, double *, int *, int *, int *,
+extern void pdgehrd_(int *, int *, int *, double *, int *, int *, int *,
                      double *, double *, int *, int *);
-extern void F77_PDGELQ2(int *, int *, double *, int *, int *, int *, double *,
+extern void pdgelq2_(int *, int *, double *, int *, int *, int *, double *,
                      double *, int *, int *);
-extern void F77_PDGELQF(int *, int *, double *, int *, int *, int *, double *,
+extern void pdgelqf_(int *, int *, double *, int *, int *, int *, double *,
                      double *, int *, int *);
-extern void F77_PDGELS(char *, int *, int *, int *, double *, int *, int *, int *,
+extern void pdgels_(char *, int *, int *, int *, double *, int *, int *, int *,
                     double *, int *, int *, int *, double *, int *, int *);
-extern void F77_PDGEQL2(int *, int *, double *, int *, int *, int *, double *,
+extern void pdgeql2_(int *, int *, double *, int *, int *, int *, double *,
                      double *, int *, int *);
-extern void F77_PDGEQLF(int *, int *, double *, int *, int *, int *, double *,
+extern void pdgeqlf_(int *, int *, double *, int *, int *, int *, double *,
                      double *, int *, int *);
-extern void F77_PDGEQPF(int *, int *, double *, int *, int *, int *, int *,
+extern void pdgeqpf_(int *, int *, double *, int *, int *, int *, int *,
                      double *, double *, int *, int *);
-extern void F77_PDGEQR2(int *, int *, double *, int *, int *, int *, double *,
+extern void pdgeqr2_(int *, int *, double *, int *, int *, int *, double *,
                      double *, int *, int *);
-extern void F77_PDGEQRF(int *, int *, double *, int *, int *, int *, double *,
+extern void pdgeqrf_(int *, int *, double *, int *, int *, int *, double *,
                      double *, int *, int *);
-extern void F77_PDGERFS(char *, int *, int *, double *, int *, int *, int *,
+extern void pdgerfs_(char *, int *, int *, double *, int *, int *, int *,
                      double *, int *, int *, int *, int *, double *, int *,
                      int *, int *, double *, int *, int *, int *, double *,
                      double *, double *, int *, int *, int *, int *);
-extern void F77_PDGERQ2(int *, int *, double *, int *, int *, int *, double *,
+extern void pdgerq2_(int *, int *, double *, int *, int *, int *, double *,
                      double *, int *, int *);
-extern void F77_PDGERQF(int *, int *, double *, int *, int *, int *, double *,
+extern void pdgerqf_(int *, int *, double *, int *, int *, int *, double *,
                      double *, int *, int *);
-extern void F77_PDGESV(int *, int *, double *, int *, int *, int *, int *,
+extern void pdgesv_(int *, int *, double *, int *, int *, int *, int *,
                     double *, int *, int *, int *, int *);
-extern void F77_PDGESVD(char *, char *, int *, int *, double *, int *, int *,
+extern void pdgesvd_(char *, char *, int *, int *, double *, int *, int *,
                      int *, double *, double *, int *, int *, int *, double *,
                      int *, int *, int *, double *, int *, int *);
-extern void F77_PDGESVX(char *, char *, int *, int *, double *, int *, int *,
+extern void pdgesvx_(char *, char *, int *, int *, double *, int *, int *,
                      int *, double *, int *, int *, int *, int *, char *,
                      double *, double *, double *, int *, int *, int *,
                      double *, int *, int *, int *, double *, double *,
                      double *, double *, int *, int *, int *, int *);
-extern void F77_PDGETF2(int *, int *, double *, int *, int *, int *, int *, int *);
-extern void F77_PDGETF2K(int *, int *, double *, int *, int *, int *, int *, int *,
+extern void pdgetf2_(int *, int *, double *, int *, int *, int *, int *, int *);
+extern void pdgetf2k_(int *, int *, double *, int *, int *, int *, int *, int *,
                       int *);
-extern void F77_PDGETF2_COMM(int *, int *, double *, int *, int *, int *, int *,
+extern void pdgetf2_comm_(int *, int *, double *, int *, int *, int *, int *,
                           int *);
-extern void F77_PDGETRF(int *, int *, double *, int *, int *, int *, int *, int *);
-extern void F77_PDGETRI(int *, double *, int *, int *, int *, int *, double *,
+extern void pdgetrf_(int *, int *, double *, int *, int *, int *, int *, int *);
+extern void pdgetri_(int *, double *, int *, int *, int *, int *, double *,
                      int *, int *, int *, int *);
-extern void F77_PDGETRS(char *, int *, int *, double *, int *, int *, int *, int *,
+extern void pdgetrs_(char *, int *, int *, double *, int *, int *, int *, int *,
                      double *, int *, int *, int *, int *);
-extern void F77_PDGGQRF(int *, int *, int *, double *, int *, int *, int *,
+extern void pdggqrf_(int *, int *, int *, double *, int *, int *, int *,
                      double *, double *, int *, int *, int *, double *,
                      double *, int *, int *);
-extern void F77_PDGGRQF(int *, int *, int *, double *, int *, int *, int *,
+extern void pdggrqf_(int *, int *, int *, double *, int *, int *, int *,
                      double *, double *, int *, int *, int *, double *,
                      double *, int *, int *);
-extern void F77_PDHSEQR(char *, char *, int *, int *, int *, double *, int *,
+extern void pdhseqr_(char *, char *, int *, int *, int *, double *, int *,
                      double *, double *, double *, int *, double *, int *,
                      int *, int *, int *);
-extern void F77_PDLABAD(int *, double *, double *);
-extern void F77_PDLABRD(int *, int *, int *, double *, int *, int *, int *,
+extern void pdlabad_(int *, double *, double *);
+extern void pdlabrd_(int *, int *, int *, double *, int *, int *, int *,
                      double *, double *, double *, double *, double *, int *,
                      int *, int *, double *, int *, int *, int *, double *);
-extern void F77_PDLACON(int *, double *, int *, int *, int *, double *, int *,
+extern void pdlacon_(int *, double *, int *, int *, int *, double *, int *,
                      int *, int *, int *, double *, int *);
-extern void F77_PDLACONSB(double *, int *, int *, int *, int *, double *, double *,
+extern void pdlaconsb_(double *, int *, int *, int *, int *, double *, double *,
                        double *, double *, int *);
-extern void F77_PDLACP2(char *, int *, int *, double *, int *, int *, int *,
+extern void pdlacp2_(char *, int *, int *, double *, int *, int *, int *,
                      double *, int *, int *, int *);
-extern void F77_PDLACP3(int *, int *, double *, int *, double *, int *, int *,
+extern void pdlacp3_(int *, int *, double *, int *, double *, int *, int *,
                      int *, int *);
-extern void F77_PDLACPY(char *, int *, int *, double *, int *, int *, int *,
+extern void pdlacpy_(char *, int *, int *, double *, int *, int *, int *,
                      double *, int *, int *, int *);
-extern void F77_PDLAED0(int *, double *, double *, double *, int *, int *, int *,
+extern void pdlaed0_(int *, double *, double *, double *, int *, int *, int *,
                      double *, int *, int *);
-extern void F77_PDLAED1(int *, int *, double *, int *, double *, int *, int *,
+extern void pdlaed1_(int *, int *, double *, int *, double *, int *, int *,
                      int *, double *, double *, int *, int *);
-extern void F77_PDLAED2(int *, int *, int *, int *, int *, double *, int *, int *,
+extern void pdlaed2_(int *, int *, int *, int *, int *, double *, int *, int *,
                      double *, int *, double *, double *, double *, double *,
                      double *, int *, double *, int *, int *, int *, int *,
                      int *, int *, int *, int *, int *, int *, int *, int *,
                      int *);
-extern void F77_PDLAED3(int *, int *, int *, int *, double *, int *, int *,
+extern void pdlaed3_(int *, int *, int *, int *, double *, int *, int *,
                      double *, double *, double *, double *, double *, int *,
                      double *, int *, int *, int *, int *, int *, int *, int *,
                      int *);
-extern void F77_PDLAEDZ(int *, int *, int *, double *, int *, int *, int *, int *,
+extern void pdlaedz_(int *, int *, int *, double *, int *, int *, int *, int *,
                      double *, double *);
-extern void F77_PDLAEVSWP(int *, double *, int *, double *, int *, int *, int *,
+extern void pdlaevswp_(int *, double *, int *, double *, int *, int *, int *,
                        int *, int *, double *, int *);
-extern void F77_PDLAHQR(int *, int *, int *, int *, int *, double *, int *,
+extern void pdlahqr_(int *, int *, int *, int *, int *, double *, int *,
                      double *, double *, int *, int *, double *, int *,
                      double *, int *, int *, int *, int *);
-extern void F77_PDLAHRD(int *, int *, int *, double *, int *, int *, int *,
+extern void pdlahrd_(int *, int *, int *, double *, int *, int *, int *,
                      double *, double *, double *, int *, int *, int *,
                      double *);
-extern void F77_PDLAMR1D(int *, dcomplex *, int *, int *, int *, dcomplex *, int *,
+extern void pdlamr1d_(int *, dcomplex *, int *, int *, int *, dcomplex *, int *,
                       int *, int *);
-extern void F77_PDLAMVE(char *, int *, int *, double *, int *, int *, int *,
+extern void pdlamve_(char *, int *, int *, double *, int *, int *, int *,
                      double *, int *, int *, int *, double *);
-extern void F77_PDLAPIV(char *, char *, char *, int *, int *, double *, int *,
+extern void pdlapiv_(char *, char *, char *, int *, int *, double *, int *,
                      int *, int *, int *, int *, int *, int *, int *);
-extern void F77_PDLAPV2(char *, char *, int *, int *, double *, int *, int *,
+extern void pdlapv2_(char *, char *, int *, int *, double *, int *, int *,
                      int *, int *, int *, int *, int *);
-extern void F77_PDLAQGE(int *, int *, double *, int *, int *, int *, double *,
+extern void pdlaqge_(int *, int *, double *, int *, int *, int *, double *,
                      double *, double *, double *, double *, char *);
-extern void F77_PDLAQR2(int *, int *, int *, int *, int *, int *, double *, int *,
+extern void pdlaqr2_(int *, int *, int *, int *, int *, int *, double *, int *,
                      int *, int *, double *, int *, int *, int *, double *,
                      double *, double *, int *, double *, int *, double *,
                      double *, double *, int *);
-extern void F77_PDLAQR4(int *, int *, int *, int *, int *, double *, int *,
+extern void pdlaqr4_(int *, int *, int *, int *, int *, double *, int *,
                      double *, double *, int *, int *, double *, int *,
                      double *, int *, double *, int *, double *, int *, int *);
-extern void F77_PDLAQR5(int *, int *, int *, int *, int *, int *, int *, double *,
+extern void pdlaqr5_(int *, int *, int *, int *, int *, int *, int *, double *,
                      double *, double *, int *, int *, int *, double *, int *,
                      double *, int *, int *, int *);
-extern void F77_PDLAQSY(char *, int *, double *, int *, int *, int *, double *,
+extern void pdlaqsy_(char *, int *, double *, int *, int *, int *, double *,
                      double *, double *, double *, char *);
-extern void F77_PDLARED1D(int *, int *, int *, int *, double *, double *, double *,
+extern void pdlared1d_(int *, int *, int *, int *, double *, double *, double *,
                        int *);
-extern void F77_PDLARED2D(int *, int *, int *, int *, double *, double *, double *,
+extern void pdlared2d_(int *, int *, int *, int *, double *, double *, double *,
                        int *);
-extern void F77_PDLARF(char *, int *, int *, double *, int *, int *, int *, int *,
+extern void pdlarf_(char *, int *, int *, double *, int *, int *, int *, int *,
                     double *, double *, int *, int *, int *, double *);
-extern void F77_PDLARFB(char *, char *, char *, char *, int *, int *, int *,
+extern void pdlarfb_(char *, char *, char *, char *, int *, int *, int *,
                      double *, int *, int *, int *, double *, double *, int *,
                      int *, int *, double *);
-extern void F77_PDLARFG(int *, double *, int *, int *, double *, int *, int *,
+extern void pdlarfg_(int *, double *, int *, int *, double *, int *, int *,
                      int *, int *, double *);
-extern void F77_PDLARFT(char *, char *, int *, int *, double *, int *, int *,
+extern void pdlarft_(char *, char *, int *, int *, double *, int *, int *,
                      int *, double *, double *, double *);
-extern void F77_PDLARZ(char *, int *, int *, int *, double *, int *, int *, int *,
+extern void pdlarz_(char *, int *, int *, int *, double *, int *, int *, int *,
                     int *, double *, double *, int *, int *, int *, double *);
-extern void F77_PDLARZB(char *, char *, char *, char *, int *, int *, int *, int *,
+extern void pdlarzb_(char *, char *, char *, char *, int *, int *, int *, int *,
                      double *, int *, int *, int *, double *, double *, int *,
                      int *, int *, double *);
-extern void F77_PDLARZT(char *, char *, int *, int *, double *, int *, int *,
+extern void pdlarzt_(char *, char *, int *, int *, double *, int *, int *,
                      int *, double *, double *, double *);
-extern void F77_PDLASCL(char *, double *, double *, int *, int *, double *, int *,
+extern void pdlascl_(char *, double *, double *, int *, int *, double *, int *,
                      int *, int *, int *);
-extern void F77_PDLASE2(char *, int *, int *, double *, double *, double *, int *,
+extern void pdlase2_(char *, int *, int *, double *, double *, double *, int *,
                      int *, int *);
-extern void F77_PDLASET(char *, int *, int *, double *, double *, double *, int *,
+extern void pdlaset_(char *, int *, int *, double *, double *, double *, int *,
                      int *, int *);
-extern void F77_PDLASMSUB(double *, int *, int *, int *, int *, double *, double *,
+extern void pdlasmsub_(double *, int *, int *, int *, int *, double *, double *,
                        int *);
-extern void F77_PDLASRT(char *, int *, double *, double *, int *, int *, int *,
+extern void pdlasrt_(char *, int *, double *, double *, int *, int *, int *,
                      double *, int *, int *, int *, int *);
-extern void F77_PDLASSQ(int *, double *, int *, int *, int *, int *, double *,
+extern void pdlassq_(int *, double *, int *, int *, int *, int *, double *,
                      double *);
-extern void F77_PDLASWP(char *, char *, int *, double *, int *, int *, int *,
+extern void pdlaswp_(char *, char *, int *, double *, int *, int *, int *,
                      int *, int *, int *);
-extern void F77_PDLATRD(char *, int *, int *, double *, int *, int *, int *,
+extern void pdlatrd_(char *, int *, int *, double *, int *, int *, int *,
                      double *, double *, double *, double *, int *, int *,
                      int *, double *);
-extern void F77_PDLATRS(char *, char *, char *, char *, int *, double *, int *,
+extern void pdlatrs_(char *, char *, char *, char *, int *, double *, int *,
                      int *, int *, double *, int *, int *, int *, double *,
                      double *, double *);
-extern void F77_PDLATRZ(int *, int *, int *, double *, int *, int *, int *,
+extern void pdlatrz_(int *, int *, int *, double *, int *, int *, int *,
                      double *, double *);
-extern void F77_PDLAUU2(char *, int *, double *, int *, int *, int *);
-extern void F77_PDLAUUM(char *, int *, double *, int *, int *, int *);
-extern void F77_PDLAWIL(int *, int *, int *, double *, int *, double *, double *,
+extern void pdlauu2_(char *, int *, double *, int *, int *, int *);
+extern void pdlauum_(char *, int *, double *, int *, int *, int *);
+extern void pdlawil_(int *, int *, int *, double *, int *, double *, double *,
                      double *, double *);
-extern void F77_PDORG2L(int *, int *, int *, double *, int *, int *, int *,
+extern void pdorg2l_(int *, int *, int *, double *, int *, int *, int *,
                      double *, double *, int *, int *);
-extern void F77_PDORG2R(int *, int *, int *, double *, int *, int *, int *,
+extern void pdorg2r_(int *, int *, int *, double *, int *, int *, int *,
                      double *, double *, int *, int *);
-extern void F77_PDORGL2(int *, int *, int *, double *, int *, int *, int *,
+extern void pdorgl2_(int *, int *, int *, double *, int *, int *, int *,
                      double *, double *, int *, int *);
-extern void F77_PDORGLQ(int *, int *, int *, double *, int *, int *, int *,
+extern void pdorglq_(int *, int *, int *, double *, int *, int *, int *,
                      double *, double *, int *, int *);
-extern void F77_PDORGQL(int *, int *, int *, double *, int *, int *, int *,
+extern void pdorgql_(int *, int *, int *, double *, int *, int *, int *,
                      double *, double *, int *, int *);
-extern void F77_PDORGQR(int *, int *, int *, double *, int *, int *, int *,
+extern void pdorgqr_(int *, int *, int *, double *, int *, int *, int *,
                      double *, double *, int *, int *);
-extern void F77_PDORGR2(int *, int *, int *, double *, int *, int *, int *,
+extern void pdorgr2_(int *, int *, int *, double *, int *, int *, int *,
                      double *, double *, int *, int *);
-extern void F77_PDORGRQ(int *, int *, int *, double *, int *, int *, int *,
+extern void pdorgrq_(int *, int *, int *, double *, int *, int *, int *,
                      double *, double *, int *, int *);
-extern void F77_PDORM2L(char *, char *, int *, int *, int *, double *, int *,
+extern void pdorm2l_(char *, char *, int *, int *, int *, double *, int *,
                      int *, int *, double *, double *, int *, int *, int *,
                      double *, int *, int *);
-extern void F77_PDORM2R(char *, char *, int *, int *, int *, double *, int *,
+extern void pdorm2r_(char *, char *, int *, int *, int *, double *, int *,
                      int *, int *, double *, double *, int *, int *, int *,
                      double *, int *, int *);
-extern void F77_PDORMBR(char *, char *, char *, int *, int *, int *, double *,
+extern void pdormbr_(char *, char *, char *, int *, int *, int *, double *,
                      int *, int *, int *, double *, double *, int *, int *,
                      int *, double *, int *, int *);
-extern void F77_PDORMHR(char *, char *, int *, int *, int *, int *, double *,
+extern void pdormhr_(char *, char *, int *, int *, int *, int *, double *,
                      int *, int *, int *, double *, double *, int *, int *,
                      int *, double *, int *, int *);
-extern void F77_PDORML2(char *, char *, int *, int *, int *, double *, int *,
+extern void pdorml2_(char *, char *, int *, int *, int *, double *, int *,
                      int *, int *, double *, double *, int *, int *, int *,
                      double *, int *, int *);
-extern void F77_PDORMLQ(char *, char *, int *, int *, int *, double *, int *,
+extern void pdormlq_(char *, char *, int *, int *, int *, double *, int *,
                      int *, int *, double *, double *, int *, int *, int *,
                      double *, int *, int *);
-extern void F77_PDORMQL(char *, char *, int *, int *, int *, double *, int *,
+extern void pdormql_(char *, char *, int *, int *, int *, double *, int *,
                      int *, int *, double *, double *, int *, int *, int *,
                      double *, int *, int *);
-extern void F77_PDORMQR(char *, char *, int *, int *, int *, double *, int *,
+extern void pdormqr_(char *, char *, int *, int *, int *, double *, int *,
                      int *, int *, double *, double *, int *, int *, int *,
                      double *, int *, int *);
-extern void F77_PDORMR2(char *, char *, int *, int *, int *, double *, int *,
+extern void pdormr2_(char *, char *, int *, int *, int *, double *, int *,
                      int *, int *, double *, double *, int *, int *, int *,
                      double *, int *, int *);
-extern void F77_PDORMR3(char *, char *, int *, int *, int *, int *, double *,
+extern void pdormr3_(char *, char *, int *, int *, int *, int *, double *,
                      int *, int *, int *, double *, double *, int *, int *,
                      int *, double *, int *, int *);
-extern void F77_PDORMRQ(char *, char *, int *, int *, int *, double *, int *,
+extern void pdormrq_(char *, char *, int *, int *, int *, double *, int *,
                      int *, int *, double *, double *, int *, int *, int *,
                      double *, int *, int *);
-extern void F77_PDORMRZ(char *, char *, int *, int *, int *, int *, double *,
+extern void pdormrz_(char *, char *, int *, int *, int *, int *, double *,
                      int *, int *, int *, double *, double *, int *, int *,
                      int *, double *, int *, int *);
-extern void F77_PDORMTR(char *, char *, char *, int *, int *, double *, int *,
+extern void pdormtr_(char *, char *, char *, int *, int *, double *, int *,
                      int *, int *, double *, double *, int *, int *, int *,
                      double *, int *, int *);
-extern void F77_PDPBSV(char *, int *, int *, int *, double *, int *, int *,
+extern void pdpbsv_(char *, int *, int *, int *, double *, int *, int *,
                     double *, int *, int *, double *, int *, int *);
-extern void F77_PDPBTRF(char *, int *, int *, double *, int *, int *, double *,
+extern void pdpbtrf_(char *, int *, int *, double *, int *, int *, double *,
                      int *, double *, int *, int *);
-extern void F77_PDPBTRS(char *, int *, int *, int *, double *, int *, int *,
+extern void pdpbtrs_(char *, int *, int *, int *, double *, int *, int *,
                      double *, int *, int *, double *, int *, double *, int *,
                      int *);
-extern void F77_PDPBTRSV(char *, char *, int *, int *, int *, double *, int *,
+extern void pdpbtrsv_(char *, char *, int *, int *, int *, double *, int *,
                       int *, double *, int *, int *, double *, int *, double *,
                       int *, int *);
-extern void F77_PDPOCON(char *, int *, double *, int *, int *, int *, double *,
+extern void pdpocon_(char *, int *, double *, int *, int *, int *, double *,
                      double *, double *, int *, int *, int *, int *);
-extern void F77_PDPOEQU(int *, double *, int *, int *, int *, double *, double *,
+extern void pdpoequ_(int *, double *, int *, int *, int *, double *, double *,
                      double *, double *, int *);
-extern void F77_PDPORFS(char *, int *, int *, double *, int *, int *, int *,
+extern void pdporfs_(char *, int *, int *, double *, int *, int *, int *,
                      double *, int *, int *, int *, double *, int *, int *,
                      int *, double *, int *, int *, int *, double *, double *,
                      double *, int *, int *, int *, int *);
-extern void F77_PDPOSV(char *, int *, int *, double *, int *, int *, int *,
+extern void pdposv_(char *, int *, int *, double *, int *, int *, int *,
                     double *, int *, int *, int *, int *);
-extern void F77_PDPOSVX(char *, char *, int *, int *, double *, int *, int *,
+extern void pdposvx_(char *, char *, int *, int *, double *, int *, int *,
                      int *, double *, int *, int *, int *, char *, double *,
                      double *, double *, int *, int *, int *, double *, int *,
                      int *, int *, double *, double *, double *, double *,
                      int *, int *, int *, int *);
-extern void F77_PDPOTF2(char *, int *, double *, int *, int *, int *, int *);
-extern void F77_PDPOTRF(char *, int *, double *, int *, int *, int *, int *);
-extern void F77_PDPOTRI(char *, int *, double *, int *, int *, int *, int *);
-extern void F77_PDPOTRS(char *, int *, int *, double *, int *, int *, int *,
+extern void pdpotf2_(char *, int *, double *, int *, int *, int *, int *);
+extern void pdpotrf_(char *, int *, double *, int *, int *, int *, int *);
+extern void pdpotri_(char *, int *, double *, int *, int *, int *, int *);
+extern void pdpotrs_(char *, int *, int *, double *, int *, int *, int *,
                      double *, int *, int *, int *, int *);
-extern void F77_PDPTSV(int *, int *, double *, double *, int *, int *, double *,
+extern void pdptsv_(int *, int *, double *, double *, int *, int *, double *,
                     int *, int *, double *, int *, int *);
-extern void F77_PDPTTRF(int *, double *, double *, int *, int *, double *, int *,
+extern void pdpttrf_(int *, double *, double *, int *, int *, double *, int *,
                      double *, int *, int *);
-extern void F77_PDPTTRS(int *, int *, double *, double *, int *, int *, double *,
+extern void pdpttrs_(int *, int *, double *, double *, int *, int *, double *,
                      int *, int *, double *, int *, double *, int *, int *);
-extern void F77_PDPTTRSV(char *, int *, int *, double *, double *, int *, int *,
+extern void pdpttrsv_(char *, int *, int *, double *, double *, int *, int *,
                       double *, int *, int *, double *, int *, double *, int *,
                       int *);
-extern void F77_PDROT(int *, double *, int *, int *, int *, int *, double *, int *,
+extern void pdrot_(int *, double *, int *, int *, int *, int *, double *, int *,
                    int *, int *, int *, double *, double *, double *, int *,
                    int *);
-extern void F77_PDRSCL(int *, double *, double *, int *, int *, int *, int *);
-extern void F77_PDSTEBZ(int *, char *, char *, int *, double *, double *, int *,
+extern void pdrscl_(int *, double *, double *, int *, int *, int *, int *);
+extern void pdstebz_(int *, char *, char *, int *, double *, double *, int *,
                      int *, double *, double *, double *, int *, int *,
                      double *, int *, int *, double *, int *, int *, int *,
                      int *);
-extern void F77_PDSTEDC(char *, int *, double *, double *, double *, int *, int *,
+extern void pdlaebz_(int *, int *, int *, int *, double *, double *, double *,
+                     double *, int *, double *, int *, int *, double *, int *,
+                     int *);
+extern void pdlaecv_(int *, int *, int *, double *, int *, int *, double *,
+                     double *);
+extern void pdlapdct_(double *, int *, double *, double *, int *);
+extern void pdstedc_(char *, int *, double *, double *, double *, int *, int *,
                      int *, double *, int *, int *, int *, int *);
-extern void F77_PDSTEIN(int *, double *, double *, int *, double *, int *, int *,
+extern void pdstein_(int *, double *, double *, int *, double *, int *, int *,
                      double *, double *, int *, int *, int *, double *, int *,
                      int *, int *, int *, int *, double *, int *);
-extern void F77_PDSYEV(char *, char *, int *, double *, int *, int *, int *,
+extern void pdsyev_(char *, char *, int *, double *, int *, int *, int *,
                     double *, double *, int *, int *, int *, double *, int *,
                     int *);
-extern void F77_PDSYEVD(char *, char *, int *, double *, int *, int *, int *,
+extern void pdsyevd_(char *, char *, int *, double *, int *, int *, int *,
                      double *, double *, int *, int *, int *, double *, int *,
                      int *, int *, int *);
-extern void F77_PDSYEVR(char *, char *, char *, int *, double *, int *, int *,
+extern void pdsyevr_(char *, char *, char *, int *, double *, int *, int *,
                      int *, double *, double *, int *, int *, int *, int *,
                      double *, double *, int *, int *, int *, double *, int *,
                      int *, int *, int *);
-extern void F77_PDSYEVX(char *, char *, char *, int *, double *, int *, int *,
+extern void pdsyevx_(char *, char *, char *, int *, double *, int *, int *,
                      int *, double *, double *, int *, int *, double *, int *,
                      int *, double *, double *, double *, int *, int *, int *,
                      double *, int *, int *, int *, int *, int *, double *,
                      int *);
-extern void F77_PDSYGS2(int *, char *, int *, double *, int *, int *, int *,
+extern void pdsygs2_(int *, char *, int *, double *, int *, int *, int *,
                      double *, int *, int *, int *, int *);
-extern void F77_PDSYGST(int *, char *, int *, double *, int *, int *, int *,
+extern void pdsygst_(int *, char *, int *, double *, int *, int *, int *,
                      double *, int *, int *, int *, double *, int *);
-extern void F77_PDSYGVX(int *, char *, char *, char *, int *, double *, int *,
+extern void pdsygvx_(int *, char *, char *, char *, int *, double *, int *,
                      int *, int *, double *, int *, int *, int *, double *,
                      double *, int *, int *, double *, int *, int *, double *,
                      double *, double *, int *, int *, int *, double *, int *,
                      int *, int *, int *, int *, double *, int *);
-extern void F77_PDSYNGST(int *, char *, int *, double *, int *, int *, int *,
+extern void pdsyngst_(int *, char *, int *, double *, int *, int *, int *,
                       double *, int *, int *, int *, double *, double *, int *,
                       int *);
-extern void F77_PDSYNTRD(char *, int *, double *, int *, int *, int *, double *,
+extern void pdsyntrd_(char *, int *, double *, int *, int *, int *, double *,
                       double *, double *, double *, int *, int *);
-extern void F77_PDSYTD2(char *, int *, double *, int *, int *, int *, double *,
+extern void pdsytd2_(char *, int *, double *, int *, int *, int *, double *,
                      double *, double *, double *, int *, int *);
-extern void F77_PDSYTRD(char *, int *, double *, int *, int *, int *, double *,
+extern void pdsytrd_(char *, int *, double *, int *, int *, int *, double *,
                      double *, double *, double *, int *, int *);
-extern void F77_PDSYTTRD(char *, int *, double *, int *, int *, int *, double *,
+extern void pdsyttrd_(char *, int *, double *, int *, int *, int *, double *,
                       double *, double *, double *, int *, int *);
-extern void F77_PDTRCON(char *, char *, char *, int *, double *, int *, int *,
+extern void pdtrcon_(char *, char *, char *, int *, double *, int *, int *,
                      int *, double *, double *, int *, int *, int *, int *);
-extern void F77_PDTRORD(char *, int *, int *, int *, double *, int *, int *, int *,
+extern void pdtrord_(char *, int *, int *, int *, double *, int *, int *, int *,
                      double *, int *, int *, int *, double *, double *, int *,
                      double *, int *, int *, int *, int *);
-extern void F77_PDTRRFS(char *, char *, char *, int *, int *, double *, int *,
+extern void pdtrrfs_(char *, char *, char *, int *, int *, double *, int *,
                      int *, int *, double *, int *, int *, int *, double *,
                      int *, int *, int *, double *, double *, double *, int *,
                      int *, int *, int *);
-extern void F77_PDTRSEN(char *, char *, int *, int *, int *, double *, int *,
+extern void pdtrsen_(char *, char *, int *, int *, int *, double *, int *,
                      int *, int *, double *, int *, int *, int *, double *,
                      double *, int *, double *, double *, double *, int *,
                      int *, int *, int *);
-extern void F77_PDTRTI2(char *, char *, int *, double *, int *, int *, int *,
+extern void pdtrti2_(char *, char *, int *, double *, int *, int *, int *,
                      int *);
-extern void F77_PDTRTRI(char *, char *, int *, double *, int *, int *, int *,
+extern void pdtrtri_(char *, char *, int *, double *, int *, int *, int *,
                      int *);
-extern void F77_PDTRTRS(char *, char *, char *, int *, int *, double *, int *,
+extern void pdtrtrs_(char *, char *, char *, int *, int *, double *, int *,
                      int *, int *, double *, int *, int *, int *, int *);
-extern void F77_PDTZRZF(int *, int *, double *, int *, int *, int *, double *,
+extern void pdtzrzf_(int *, int *, double *, int *, int *, int *, double *,
                      double *, int *, int *);
-extern void F77_PDUPDATE(int *, int *, int *, int *, int *, int *, int *, int *,
+extern void pdupdate_(int *, int *, int *, int *, int *, int *, int *, int *,
                       int *, double *, int *, int *, int *, int *, int *, int *,
                       int *, int *);
-extern void F77_PDZSUM1(int *, double *, dcomplex *, int *, int *, int *, int *);
-extern void F77_PILAVER(int *, int *, int *);
-extern void F77_PMPCOL(int *, int *, int *, int *, int *, int *, int *, int *,
+extern void pdzsum1_(int *, double *, dcomplex *, int *, int *, int *, int *);
+extern void pilaver_(int *, int *, int *);
+extern void pmpcol_(int *, int *, int *, int *, int *, int *, int *, int *,
                     int *, int *);
-extern void F77_PMPIM2(int *, int *, int *, int *, int *);
-extern void F77_PSCSUM1(int *, float *, scomplex *, int *, int *, int *, int *);
-extern void F77_PSDBSV(int *, int *, int *, int *, float *, int *, int *, float *,
+extern void pmpim2_(int *, int *, int *, int *, int *);
+extern void pscsum1_(int *, float *, scomplex *, int *, int *, int *, int *);
+extern void psdbsv_(int *, int *, int *, int *, float *, int *, int *, float *,
                     int *, int *, float *, int *, int *);
-extern void F77_PSDBTRF(int *, int *, int *, float *, int *, int *, float *, int *,
+extern void psdbtrf_(int *, int *, int *, float *, int *, int *, float *, int *,
                      float *, int *, int *);
-extern void F77_PSDBTRS(char *, int *, int *, int *, int *, float *, int *, int *,
+extern void psdbtrs_(char *, int *, int *, int *, int *, float *, int *, int *,
                      float *, int *, int *, float *, int *, float *, int *,
                      int *);
-extern void F77_PSDBTRSV(char *, char *, int *, int *, int *, int *, float *,
+extern void psdbtrsv_(char *, char *, int *, int *, int *, int *, float *,
                       int *, int *, float *, int *, int *, float *, int *,
                       float *, int *, int *);
-extern void F77_PSDTSV(int *, int *, float *, float *, float *, int *, int *,
+extern void psdtsv_(int *, int *, float *, float *, float *, int *, int *,
                     float *, int *, int *, float *, int *, int *);
-extern void F77_PSDTTRF(int *, float *, float *, float *, int *, int *, float *,
+extern void psdttrf_(int *, float *, float *, float *, int *, int *, float *,
                      int *, float *, int *, int *);
-extern void F77_PSDTTRS(char *, int *, int *, float *, float *, float *, int *,
+extern void psdttrs_(char *, int *, int *, float *, float *, float *, int *,
                      int *, float *, int *, int *, float *, int *, float *,
                      int *, int *);
-extern void F77_PSDTTRSV(char *, char *, int *, int *, float *, float *, float *,
+extern void psdttrsv_(char *, char *, int *, int *, float *, float *, float *,
                       int *, int *, float *, int *, int *, float *, int *,
                       float *, int *, int *);
-extern void F77_PSGBSV(int *, int *, int *, int *, float *, int *, int *, int *,
+extern void psgbsv_(int *, int *, int *, int *, float *, int *, int *, int *,
                     float *, int *, int *, float *, int *, int *);
-extern void F77_PSGBTRF(int *, int *, int *, float *, int *, int *, int *, float *,
+extern void psgbtrf_(int *, int *, int *, float *, int *, int *, int *, float *,
                      int *, float *, int *, int *);
-extern void F77_PSGBTRS(char *, int *, int *, int *, int *, float *, int *, int *,
+extern void psgbtrs_(char *, int *, int *, int *, int *, float *, int *, int *,
                      int *, float *, int *, int *, float *, int *, float *,
                      int *, int *);
-extern void F77_PSGEBAL(char *, int *, float *, int *, int *, int *, float *,
+extern void psgebal_(char *, int *, float *, int *, int *, int *, float *,
                      int *);
-extern void F77_PSGEBD2(int *, int *, float *, int *, int *, int *, float *,
+extern void psgebd2_(int *, int *, float *, int *, int *, int *, float *,
                      float *, float *, float *, float *, int *, int *);
-extern void F77_PSGEBRD(int *, int *, float *, int *, int *, int *, float *,
+extern void psgebrd_(int *, int *, float *, int *, int *, int *, float *,
                      float *, float *, float *, float *, int *, int *);
-extern void F77_PSGECON(char *, int *, float *, int *, int *, int *, float *,
+extern void psgecon_(char *, int *, float *, int *, int *, int *, float *,
                      float *, float *, int *, int *, int *, int *);
-extern void F77_PSGEEQU(int *, int *, float *, int *, int *, int *, float *,
+extern void psgeequ_(int *, int *, float *, int *, int *, int *, float *,
                      float *, float *, float *, float *, int *);
-extern void F77_PSGEHD2(int *, int *, int *, float *, int *, int *, int *, float *,
+extern void psgehd2_(int *, int *, int *, float *, int *, int *, int *, float *,
                      float *, int *, int *);
-extern void F77_PSGEHRD(int *, int *, int *, float *, int *, int *, int *, float *,
+extern void psgehrd_(int *, int *, int *, float *, int *, int *, int *, float *,
                      float *, int *, int *);
-extern void F77_PSGELQ2(int *, int *, float *, int *, int *, int *, float *,
+extern void psgelq2_(int *, int *, float *, int *, int *, int *, float *,
                      float *, int *, int *);
-extern void F77_PSGELQF(int *, int *, float *, int *, int *, int *, float *,
+extern void psgelqf_(int *, int *, float *, int *, int *, int *, float *,
                      float *, int *, int *);
-extern void F77_PSGELS(char *, int *, int *, int *, float *, int *, int *, int *,
+extern void psgels_(char *, int *, int *, int *, float *, int *, int *, int *,
                     float *, int *, int *, int *, float *, int *, int *);
-extern void F77_PSGEQL2(int *, int *, float *, int *, int *, int *, float *,
+extern void psgeql2_(int *, int *, float *, int *, int *, int *, float *,
                      float *, int *, int *);
-extern void F77_PSGEQLF(int *, int *, float *, int *, int *, int *, float *,
+extern void psgeqlf_(int *, int *, float *, int *, int *, int *, float *,
                      float *, int *, int *);
-extern void F77_PSGEQPF(int *, int *, float *, int *, int *, int *, int *, float *,
+extern void psgeqpf_(int *, int *, float *, int *, int *, int *, int *, float *,
                      float *, int *, int *);
-extern void F77_PSGEQR2(int *, int *, float *, int *, int *, int *, float *,
+extern void psgeqr2_(int *, int *, float *, int *, int *, int *, float *,
                      float *, int *, int *);
-extern void F77_PSGEQRF(int *, int *, float *, int *, int *, int *, float *,
+extern void psgeqrf_(int *, int *, float *, int *, int *, int *, float *,
                      float *, int *, int *);
-extern void F77_PSGERFS(char *, int *, int *, float *, int *, int *, int *,
+extern void psgerfs_(char *, int *, int *, float *, int *, int *, int *,
                      float *, int *, int *, int *, int *, float *, int *, int *,
                      int *, float *, int *, int *, int *, float *, float *,
                      float *, int *, int *, int *, int *);
-extern void F77_PSGERQ2(int *, int *, float *, int *, int *, int *, float *,
+extern void psgerq2_(int *, int *, float *, int *, int *, int *, float *,
                      float *, int *, int *);
-extern void F77_PSGERQF(int *, int *, float *, int *, int *, int *, float *,
+extern void psgerqf_(int *, int *, float *, int *, int *, int *, float *,
                      float *, int *, int *);
-extern void F77_PSGESV(int *, int *, float *, int *, int *, int *, int *, float *,
+extern void psgesv_(int *, int *, float *, int *, int *, int *, int *, float *,
                     int *, int *, int *, int *);
-extern void F77_PSGESVD(char *, char *, int *, int *, float *, int *, int *, int *,
+extern void psgesvd_(char *, char *, int *, int *, float *, int *, int *, int *,
                      float *, float *, int *, int *, int *, float *, int *,
                      int *, int *, float *, int *, int *);
-extern void F77_PSGESVX(char *, char *, int *, int *, float *, int *, int *, int *,
+extern void psgesvx_(char *, char *, int *, int *, float *, int *, int *, int *,
                      float *, int *, int *, int *, int *, char *, float *,
                      float *, float *, int *, int *, int *, float *, int *,
                      int *, int *, float *, float *, float *, float *, int *,
                      int *, int *, int *);
-extern void F77_PSGETF2(int *, int *, float *, int *, int *, int *, int *, int *);
-extern void F77_PSGETRF(int *, int *, float *, int *, int *, int *, int *, int *);
-extern void F77_PSGETRI(int *, float *, int *, int *, int *, int *, float *, int *,
+extern void psgetf2_(int *, int *, float *, int *, int *, int *, int *, int *);
+extern void psgetrf_(int *, int *, float *, int *, int *, int *, int *, int *);
+extern void psgetri_(int *, float *, int *, int *, int *, int *, float *, int *,
                      int *, int *, int *);
-extern void F77_PSGETRS(char *, int *, int *, float *, int *, int *, int *, int *,
+extern void psgetrs_(char *, int *, int *, float *, int *, int *, int *, int *,
                      float *, int *, int *, int *, int *);
-extern void F77_PSGGQRF(int *, int *, int *, float *, int *, int *, int *, float *,
+extern void psggqrf_(int *, int *, int *, float *, int *, int *, int *, float *,
                      float *, int *, int *, int *, float *, float *, int *,
                      int *);
-extern void F77_PSGGRQF(int *, int *, int *, float *, int *, int *, int *, float *,
+extern void psggrqf_(int *, int *, int *, float *, int *, int *, int *, float *,
                      float *, int *, int *, int *, float *, float *, int *,
                      int *);
-extern void F77_PSHSEQR(char *, char *, int *, int *, int *, float *, int *,
+extern void pshseqr_(char *, char *, int *, int *, int *, float *, int *,
                      float *, float *, float *, int *, float *, int *, int *,
                      int *, int *);
-extern void F77_PSLABAD(int *, float *, float *);
-extern void F77_PSLABRD(int *, int *, int *, float *, int *, int *, int *, float *,
+extern void pslabad_(int *, float *, float *);
+extern void pslabrd_(int *, int *, int *, float *, int *, int *, int *, float *,
                      float *, float *, float *, float *, int *, int *, int *,
                      float *, int *, int *, int *, float *);
-extern void F77_PSLACON(int *, float *, int *, int *, int *, float *, int *, int *,
+extern void pslacon_(int *, float *, int *, int *, int *, float *, int *, int *,
                      int *, int *, float *, int *);
-extern void F77_PSLACONSB(float *, int *, int *, int *, int *, float *, float *,
+extern void pslaconsb_(float *, int *, int *, int *, int *, float *, float *,
                        float *, float *, int *);
-extern void F77_PSLACP2(char *, int *, int *, float *, int *, int *, int *,
+extern void pslacp2_(char *, int *, int *, float *, int *, int *, int *,
                      float *, int *, int *, int *);
-extern void F77_PSLACP3(int *, int *, float *, int *, float *, int *, int *, int *,
+extern void pslacp3_(int *, int *, float *, int *, float *, int *, int *, int *,
                      int *);
-extern void F77_PSLACPY(char *, int *, int *, float *, int *, int *, int *,
+extern void pslacpy_(char *, int *, int *, float *, int *, int *, int *,
                      float *, int *, int *, int *);
-extern void F77_PSLAED0(int *, float *, float *, float *, int *, int *, int *,
+extern void pslaed0_(int *, float *, float *, float *, int *, int *, int *,
                      float *, int *, int *);
-extern void F77_PSLAED1(int *, int *, float *, int *, float *, int *, int *, int *,
+extern void pslaed1_(int *, int *, float *, int *, float *, int *, int *, int *,
                      float *, float *, int *, int *);
-extern void F77_PSLAED2(int *, int *, int *, int *, int *, float *, int *, int *,
+extern void pslaed2_(int *, int *, int *, int *, int *, float *, int *, int *,
                      float *, int *, float *, float *, float *, float *,
                      float *, int *, float *, int *, int *, int *, int *, int *,
                      int *, int *, int *, int *, int *, int *, int *, int *);
-extern void F77_PSLAED3(int *, int *, int *, int *, float *, int *, int *, float *,
+extern void pslaed3_(int *, int *, int *, int *, float *, int *, int *, float *,
                      float *, float *, float *, float *, int *, float *, int *,
                      int *, int *, int *, int *, int *, int *, int *);
-extern void F77_PSLAEDZ(int *, int *, int *, float *, int *, int *, int *, int *,
+extern void pslaedz_(int *, int *, int *, float *, int *, int *, int *, int *,
                      float *, float *);
-extern void F77_PSLAEVSWP(int *, float *, int *, float *, int *, int *, int *,
+extern void pslaevswp_(int *, float *, int *, float *, int *, int *, int *,
                        int *, int *, float *, int *);
-extern void F77_PSLAHQR(int *, int *, int *, int *, int *, float *, int *, float *,
+extern void pslahqr_(int *, int *, int *, int *, int *, float *, int *, float *,
                      float *, int *, int *, float *, int *, float *, int *,
                      int *, int *, int *);
-extern void F77_PSLAHRD(int *, int *, int *, float *, int *, int *, int *, float *,
+extern void pslahrd_(int *, int *, int *, float *, int *, int *, int *, float *,
                      float *, float *, int *, int *, int *, float *);
-extern void F77_PSLAMR1D(int *, dcomplex *, int *, int *, int *, dcomplex *, int *,
+extern void pslamr1d_(int *, dcomplex *, int *, int *, int *, dcomplex *, int *,
                       int *, int *);
-extern void F77_PSLAMVE(char *, int *, int *, float *, int *, int *, int *,
+extern void pslamve_(char *, int *, int *, float *, int *, int *, int *,
                      float *, int *, int *, int *, float *);
-extern void F77_PSLAPIV(char *, char *, char *, int *, int *, float *, int *,
+extern void pslapiv_(char *, char *, char *, int *, int *, float *, int *,
                      int *, int *, int *, int *, int *, int *, int *);
-extern void F77_PSLAPV2(char *, char *, int *, int *, float *, int *, int *, int *,
+extern void pslapv2_(char *, char *, int *, int *, float *, int *, int *, int *,
                      int *, int *, int *, int *);
-extern void F77_PSLAQGE(int *, int *, float *, int *, int *, int *, float *,
+extern void pslaqge_(int *, int *, float *, int *, int *, int *, float *,
                      float *, float *, float *, float *, char *);
-extern void F77_PSLAQR2(int *, int *, int *, int *, int *, int *, float *, int *,
+extern void pslaqr2_(int *, int *, int *, int *, int *, int *, float *, int *,
                      int *, int *, float *, int *, int *, int *, float *,
                      float *, float *, int *, float *, int *, float *, float *,
                      float *, int *);
-extern void F77_PSLAQR4(int *, int *, int *, int *, int *, float *, int *, float *,
+extern void pslaqr4_(int *, int *, int *, int *, int *, float *, int *, float *,
                      float *, int *, int *, float *, int *, float *, int *,
                      float *, int *, float *, int *, int *);
-extern void F77_PSLAQR5(int *, int *, int *, int *, int *, int *, int *, float *,
+extern void pslaqr5_(int *, int *, int *, int *, int *, int *, int *, float *,
                      float *, float *, int *, int *, int *, float *, int *,
                      float *, int *, int *, int *);
-extern void F77_PSLAQSY(char *, int *, float *, int *, int *, int *, float *,
+extern void pslaqsy_(char *, int *, float *, int *, int *, int *, float *,
                      float *, float *, float *, char *);
-extern void F77_PSLARED1D(int *, int *, int *, int *, float *, float *, float *,
+extern void pslared1d_(int *, int *, int *, int *, float *, float *, float *,
                        int *);
-extern void F77_PSLARED2D(int *, int *, int *, int *, float *, float *, float *,
+extern void pslared2d_(int *, int *, int *, int *, float *, float *, float *,
                        int *);
-extern void F77_PSLARF(char *, int *, int *, float *, int *, int *, int *, int *,
+extern void pslarf_(char *, int *, int *, float *, int *, int *, int *, int *,
                     float *, float *, int *, int *, int *, float *);
-extern void F77_PSLARFB(char *, char *, char *, char *, int *, int *, int *,
+extern void pslarfb_(char *, char *, char *, char *, int *, int *, int *,
                      float *, int *, int *, int *, float *, float *, int *,
                      int *, int *, float *);
-extern void F77_PSLARFG(int *, float *, int *, int *, float *, int *, int *, int *,
+extern void pslarfg_(int *, float *, int *, int *, float *, int *, int *, int *,
                      int *, float *);
-extern void F77_PSLARFT(char *, char *, int *, int *, float *, int *, int *, int *,
+extern void pslarft_(char *, char *, int *, int *, float *, int *, int *, int *,
                      float *, float *, float *);
-extern void F77_PSLARZ(char *, int *, int *, int *, float *, int *, int *, int *,
+extern void pslarz_(char *, int *, int *, int *, float *, int *, int *, int *,
                     int *, float *, float *, int *, int *, int *, float *);
-extern void F77_PSLARZB(char *, char *, char *, char *, int *, int *, int *, int *,
+extern void pslarzb_(char *, char *, char *, char *, int *, int *, int *, int *,
                      float *, int *, int *, int *, float *, float *, int *,
                      int *, int *, float *);
-extern void F77_PSLARZT(char *, char *, int *, int *, float *, int *, int *, int *,
+extern void pslarzt_(char *, char *, int *, int *, float *, int *, int *, int *,
                      float *, float *, float *);
-extern void F77_PSLASCL(char *, float *, float *, int *, int *, float *, int *,
+extern void pslascl_(char *, float *, float *, int *, int *, float *, int *,
                      int *, int *, int *);
-extern void F77_PSLASE2(char *, int *, int *, float *, float *, float *, int *,
+extern void pslase2_(char *, int *, int *, float *, float *, float *, int *,
                      int *, int *);
-extern void F77_PSLASET(char *, int *, int *, float *, float *, float *, int *,
+extern void pslaset_(char *, int *, int *, float *, float *, float *, int *,
                      int *, int *);
-extern void F77_PSLASMSUB(float *, int *, int *, int *, int *, float *, float *,
+extern void pslasmsub_(float *, int *, int *, int *, int *, float *, float *,
                        int *);
-extern void F77_PSLASRT(char *, int *, float *, float *, int *, int *, int *,
+extern void pslasrt_(char *, int *, float *, float *, int *, int *, int *,
                      float *, int *, int *, int *, int *);
-extern void F77_PSLASSQ(int *, float *, int *, int *, int *, int *, float *,
+extern void pslassq_(int *, float *, int *, int *, int *, int *, float *,
                      float *);
-extern void F77_PSLASWP(char *, char *, int *, float *, int *, int *, int *, int *,
+extern void pslaswp_(char *, char *, int *, float *, int *, int *, int *, int *,
                      int *, int *);
-extern void F77_PSLATRD(char *, int *, int *, float *, int *, int *, int *,
+extern void pslatrd_(char *, int *, int *, float *, int *, int *, int *,
                      float *, float *, float *, float *, int *, int *, int *,
                      float *);
-extern void F77_PSLATRS(char *, char *, char *, char *, int *, float *, int *,
+extern void pslatrs_(char *, char *, char *, char *, int *, float *, int *,
                      int *, int *, float *, int *, int *, int *, float *,
                      float *, float *);
-extern void F77_PSLATRZ(int *, int *, int *, float *, int *, int *, int *, float *,
+extern void pslatrz_(int *, int *, int *, float *, int *, int *, int *, float *,
                      float *);
-extern void F77_PSLAUU2(char *, int *, float *, int *, int *, int *);
-extern void F77_PSLAUUM(char *, int *, float *, int *, int *, int *);
-extern void F77_PSLAWIL(int *, int *, int *, float *, int *, float *, float *,
+extern void pslauu2_(char *, int *, float *, int *, int *, int *);
+extern void pslauum_(char *, int *, float *, int *, int *, int *);
+extern void pslawil_(int *, int *, int *, float *, int *, float *, float *,
                      float *, float *);
-extern void F77_PSORG2L(int *, int *, int *, float *, int *, int *, int *, float *,
+extern void psorg2l_(int *, int *, int *, float *, int *, int *, int *, float *,
                      float *, int *, int *);
-extern void F77_PSORG2R(int *, int *, int *, float *, int *, int *, int *, float *,
+extern void psorg2r_(int *, int *, int *, float *, int *, int *, int *, float *,
                      float *, int *, int *);
-extern void F77_PSORGL2(int *, int *, int *, float *, int *, int *, int *, float *,
+extern void psorgl2_(int *, int *, int *, float *, int *, int *, int *, float *,
                      float *, int *, int *);
-extern void F77_PSORGLQ(int *, int *, int *, float *, int *, int *, int *, float *,
+extern void psorglq_(int *, int *, int *, float *, int *, int *, int *, float *,
                      float *, int *, int *);
-extern void F77_PSORGQL(int *, int *, int *, float *, int *, int *, int *, float *,
+extern void psorgql_(int *, int *, int *, float *, int *, int *, int *, float *,
                      float *, int *, int *);
-extern void F77_PSORGQR(int *, int *, int *, float *, int *, int *, int *, float *,
+extern void psorgqr_(int *, int *, int *, float *, int *, int *, int *, float *,
                      float *, int *, int *);
-extern void F77_PSORGR2(int *, int *, int *, float *, int *, int *, int *, float *,
+extern void psorgr2_(int *, int *, int *, float *, int *, int *, int *, float *,
                      float *, int *, int *);
-extern void F77_PSORGRQ(int *, int *, int *, float *, int *, int *, int *, float *,
+extern void psorgrq_(int *, int *, int *, float *, int *, int *, int *, float *,
                      float *, int *, int *);
-extern void F77_PSORM2L(char *, char *, int *, int *, int *, float *, int *, int *,
+extern void psorm2l_(char *, char *, int *, int *, int *, float *, int *, int *,
                      int *, float *, float *, int *, int *, int *, float *,
                      int *, int *);
-extern void F77_PSORM2R(char *, char *, int *, int *, int *, float *, int *, int *,
+extern void psorm2r_(char *, char *, int *, int *, int *, float *, int *, int *,
                      int *, float *, float *, int *, int *, int *, float *,
                      int *, int *);
-extern void F77_PSORMBR(char *, char *, char *, int *, int *, int *, float *,
+extern void psormbr_(char *, char *, char *, int *, int *, int *, float *,
                      int *, int *, int *, float *, float *, int *, int *, int *,
                      float *, int *, int *);
-extern void F77_PSORMHR(char *, char *, int *, int *, int *, int *, float *, int *,
+extern void psormhr_(char *, char *, int *, int *, int *, int *, float *, int *,
                      int *, int *, float *, float *, int *, int *, int *,
                      float *, int *, int *);
-extern void F77_PSORML2(char *, char *, int *, int *, int *, float *, int *, int *,
+extern void psorml2_(char *, char *, int *, int *, int *, float *, int *, int *,
                      int *, float *, float *, int *, int *, int *, float *,
                      int *, int *);
-extern void F77_PSORMLQ(char *, char *, int *, int *, int *, float *, int *, int *,
+extern void psormlq_(char *, char *, int *, int *, int *, float *, int *, int *,
                      int *, float *, float *, int *, int *, int *, float *,
                      int *, int *);
-extern void F77_PSORMQL(char *, char *, int *, int *, int *, float *, int *, int *,
+extern void psormql_(char *, char *, int *, int *, int *, float *, int *, int *,
                      int *, float *, float *, int *, int *, int *, float *,
                      int *, int *);
-extern void F77_PSORMQR(char *, char *, int *, int *, int *, float *, int *, int *,
+extern void psormqr_(char *, char *, int *, int *, int *, float *, int *, int *,
                      int *, float *, float *, int *, int *, int *, float *,
                      int *, int *);
-extern void F77_PSORMR2(char *, char *, int *, int *, int *, float *, int *, int *,
+extern void psormr2_(char *, char *, int *, int *, int *, float *, int *, int *,
                      int *, float *, float *, int *, int *, int *, float *,
                      int *, int *);
-extern void F77_PSORMR3(char *, char *, int *, int *, int *, int *, float *, int *,
+extern void psormr3_(char *, char *, int *, int *, int *, int *, float *, int *,
                      int *, int *, float *, float *, int *, int *, int *,
                      float *, int *, int *);
-extern void F77_PSORMRQ(char *, char *, int *, int *, int *, float *, int *, int *,
+extern void psormrq_(char *, char *, int *, int *, int *, float *, int *, int *,
                      int *, float *, float *, int *, int *, int *, float *,
                      int *, int *);
-extern void F77_PSORMRZ(char *, char *, int *, int *, int *, int *, float *, int *,
+extern void psormrz_(char *, char *, int *, int *, int *, int *, float *, int *,
                      int *, int *, float *, float *, int *, int *, int *,
                      float *, int *, int *);
-extern void F77_PSORMTR(char *, char *, char *, int *, int *, float *, int *,
+extern void psormtr_(char *, char *, char *, int *, int *, float *, int *,
                      int *, int *, float *, float *, int *, int *, int *,
                      float *, int *, int *);
-extern void F77_PSPBSV(char *, int *, int *, int *, float *, int *, int *, float *,
+extern void pspbsv_(char *, int *, int *, int *, float *, int *, int *, float *,
                     int *, int *, float *, int *, int *);
-extern void F77_PSPBTRF(char *, int *, int *, float *, int *, int *, float *,
+extern void pspbtrf_(char *, int *, int *, float *, int *, int *, float *,
                      int *, float *, int *, int *);
-extern void F77_PSPBTRS(char *, int *, int *, int *, float *, int *, int *,
+extern void pspbtrs_(char *, int *, int *, int *, float *, int *, int *,
                      float *, int *, int *, float *, int *, float *, int *,
                      int *);
-extern void F77_PSPBTRSV(char *, char *, int *, int *, int *, float *, int *,
+extern void pspbtrsv_(char *, char *, int *, int *, int *, float *, int *,
                       int *, float *, int *, int *, float *, int *, float *,
                       int *, int *);
-extern void F77_PSPOCON(char *, int *, float *, int *, int *, int *, float *,
+extern void pspocon_(char *, int *, float *, int *, int *, int *, float *,
                      float *, float *, int *, int *, int *, int *);
-extern void F77_PSPOEQU(int *, float *, int *, int *, int *, float *, float *,
+extern void pspoequ_(int *, float *, int *, int *, int *, float *, float *,
                      float *, float *, int *);
-extern void F77_PSPORFS(char *, int *, int *, float *, int *, int *, int *,
+extern void psporfs_(char *, int *, int *, float *, int *, int *, int *,
                      float *, int *, int *, int *, float *, int *, int *, int *,
                      float *, int *, int *, int *, float *, float *, float *,
                      int *, int *, int *, int *);
-extern void F77_PSPOSV(char *, int *, int *, float *, int *, int *, int *, float *,
+extern void psposv_(char *, int *, int *, float *, int *, int *, int *, float *,
                     int *, int *, int *, int *);
-extern void F77_PSPOSVX(char *, char *, int *, int *, float *, int *, int *, int *,
+extern void psposvx_(char *, char *, int *, int *, float *, int *, int *, int *,
                      float *, int *, int *, int *, char *, float *, float *,
                      float *, int *, int *, int *, float *, int *, int *, int *,
                      float *, float *, float *, float *, int *, int *, int *,
                      int *);
-extern void F77_PSPOTF2(char *, int *, float *, int *, int *, int *, int *);
-extern void F77_PSPOTRF(char *, int *, float *, int *, int *, int *, int *);
-extern void F77_PSPOTRI(char *, int *, float *, int *, int *, int *, int *);
-extern void F77_PSPOTRS(char *, int *, int *, float *, int *, int *, int *,
+extern void pspotf2_(char *, int *, float *, int *, int *, int *, int *);
+extern void pspotrf_(char *, int *, float *, int *, int *, int *, int *);
+extern void pspotri_(char *, int *, float *, int *, int *, int *, int *);
+extern void pspotrs_(char *, int *, int *, float *, int *, int *, int *,
                      float *, int *, int *, int *, int *);
-extern void F77_PSPTSV(int *, int *, float *, float *, int *, int *, float *,
+extern void psptsv_(int *, int *, float *, float *, int *, int *, float *,
                     int *, int *, float *, int *, int *);
-extern void F77_PSPTTRF(int *, float *, float *, int *, int *, float *, int *,
+extern void pspttrf_(int *, float *, float *, int *, int *, float *, int *,
                      float *, int *, int *);
-extern void F77_PSPTTRS(int *, int *, float *, float *, int *, int *, float *,
+extern void pspttrs_(int *, int *, float *, float *, int *, int *, float *,
                      int *, int *, float *, int *, float *, int *, int *);
-extern void F77_PSPTTRSV(char *, int *, int *, float *, float *, int *, int *,
+extern void pspttrsv_(char *, int *, int *, float *, float *, int *, int *,
                       float *, int *, int *, float *, int *, float *, int *,
                       int *);
-extern void F77_PSROT(int *, double *, int *, int *, int *, int *, double *, int *,
+extern void psrot_(int *, double *, int *, int *, int *, int *, double *, int *,
                    int *, int *, int *, float *, float *, float *, int *,
                    int *);
-extern void F77_PSRSCL(int *, float *, float *, int *, int *, int *, int *);
-extern void F77_PSSTEBZ(int *, char *, char *, int *, float *, float *, int *,
+extern void psrscl_(int *, float *, float *, int *, int *, int *, int *);
+extern void psstebz_(int *, char *, char *, int *, float *, float *, int *,
                      int *, float *, float *, float *, int *, int *, float *,
                      int *, int *, float *, int *, int *, int *, int *);
-extern void F77_PSSTEDC(char *, int *, float *, float *, float *, int *, int *,
+extern void pslaebz_(int *, int *, int *, int *, float *, float *, float *,
+                     float *, int *, float *, int *, int *, float *, int *,
+                     int *);
+extern void pslaecv_(int *, int *, int *, float *, int *, int *, float *,
+                     float *);
+extern void pslapdct_(float *, int *, float *, float *, int *);
+extern void psstedc_(char *, int *, float *, float *, float *, int *, int *,
                      int *, float *, int *, int *, int *, int *);
-extern void F77_PSSTEIN(int *, float *, float *, int *, float *, int *, int *,
+extern void psstein_(int *, float *, float *, int *, float *, int *, int *,
                      float *, float *, int *, int *, int *, float *, int *,
                      int *, int *, int *, int *, float *, int *);
-extern void F77_PSSYEV(char *, char *, int *, float *, int *, int *, int *,
+extern void pssyev_(char *, char *, int *, float *, int *, int *, int *,
                     float *, float *, int *, int *, int *, float *, int *,
                     int *);
-extern void F77_PSSYEVD(char *, char *, int *, float *, int *, int *, int *,
+extern void pssyevd_(char *, char *, int *, float *, int *, int *, int *,
                      float *, float *, int *, int *, int *, float *, int *,
                      int *, int *, int *);
-extern void F77_PSSYEVR(char *, char *, char *, int *, float *, int *, int *,
+extern void pssyevr_(char *, char *, char *, int *, float *, int *, int *,
                      int *, float *, float *, int *, int *, int *, int *,
                      float *, float *, int *, int *, int *, float *, int *,
                      int *, int *, int *);
-extern void F77_PSSYEVX(char *, char *, char *, int *, float *, int *, int *,
+extern void pssyevx_(char *, char *, char *, int *, float *, int *, int *,
                      int *, float *, float *, int *, int *, float *, int *,
                      int *, float *, float *, float *, int *, int *, int *,
                      float *, int *, int *, int *, int *, int *, float *,
                      int *);
-extern void F77_PSSYGS2(int *, char *, int *, float *, int *, int *, int *,
+extern void pssygs2_(int *, char *, int *, float *, int *, int *, int *,
                      float *, int *, int *, int *, int *);
-extern void F77_PSSYGST(int *, char *, int *, float *, int *, int *, int *,
+extern void pssygst_(int *, char *, int *, float *, int *, int *, int *,
                      float *, int *, int *, int *, float *, int *);
-extern void F77_PSSYGVX(int *, char *, char *, char *, int *, float *, int *,
+extern void pssygvx_(int *, char *, char *, char *, int *, float *, int *,
                      int *, int *, float *, int *, int *, int *, float *,
                      float *, int *, int *, float *, int *, int *, float *,
                      float *, float *, int *, int *, int *, float *, int *,
                      int *, int *, int *, int *, float *, int *);
-extern void F77_PSSYNGST(int *, char *, int *, float *, int *, int *, int *,
+extern void pssyngst_(int *, char *, int *, float *, int *, int *, int *,
                       float *, int *, int *, int *, float *, float *, int *,
                       int *);
-extern void F77_PSSYNTRD(char *, int *, float *, int *, int *, int *, float *,
+extern void pssyntrd_(char *, int *, float *, int *, int *, int *, float *,
                       float *, float *, float *, int *, int *);
-extern void F77_PSSYTD2(char *, int *, float *, int *, int *, int *, float *,
+extern void pssytd2_(char *, int *, float *, int *, int *, int *, float *,
                      float *, float *, float *, int *, int *);
-extern void F77_PSSYTRD(char *, int *, float *, int *, int *, int *, float *,
+extern void pssytrd_(char *, int *, float *, int *, int *, int *, float *,
                      float *, float *, float *, int *, int *);
-extern void F77_PSSYTTRD(char *, int *, float *, int *, int *, int *, float *,
+extern void pssyttrd_(char *, int *, float *, int *, int *, int *, float *,
                       float *, float *, float *, int *, int *);
-extern void F77_PSTRCON(char *, char *, char *, int *, float *, int *, int *,
+extern void pstrcon_(char *, char *, char *, int *, float *, int *, int *,
                      int *, float *, float *, int *, int *, int *, int *);
-extern void F77_PSTRORD(char *, int *, int *, int *, float *, int *, int *, int *,
+extern void pstrord_(char *, int *, int *, int *, float *, int *, int *, int *,
                      float *, int *, int *, int *, float *, float *, int *,
                      float *, int *, int *, int *, int *);
-extern void F77_PSTRRFS(char *, char *, char *, int *, int *, float *, int *,
+extern void pstrrfs_(char *, char *, char *, int *, int *, float *, int *,
                      int *, int *, float *, int *, int *, int *, float *, int *,
                      int *, int *, float *, float *, float *, int *, int *,
                      int *, int *);
-extern void F77_PSTRSEN(char *, char *, int *, int *, int *, float *, int *, int *,
+extern void pstrsen_(char *, char *, int *, int *, int *, float *, int *, int *,
                      int *, float *, int *, int *, int *, float *, float *,
                      int *, float *, float *, float *, int *, int *, int *,
                      int *);
-extern void F77_PSTRTI2(char *, char *, int *, float *, int *, int *, int *,
+extern void pstrti2_(char *, char *, int *, float *, int *, int *, int *,
                      int *);
-extern void F77_PSTRTRI(char *, char *, int *, float *, int *, int *, int *,
+extern void pstrtri_(char *, char *, int *, float *, int *, int *, int *,
                      int *);
-extern void F77_PSTRTRS(char *, char *, char *, int *, int *, float *, int *,
+extern void pstrtrs_(char *, char *, char *, int *, int *, float *, int *,
                      int *, int *, float *, int *, int *, int *, int *);
-extern void F77_PSTZRZF(int *, int *, float *, int *, int *, int *, float *,
+extern void pstzrzf_(int *, int *, float *, int *, int *, int *, float *,
                      float *, int *, int *);
-extern void F77_PZDBSV(int *, int *, int *, int *, dcomplex *, int *, int *,
+extern void pzdbsv_(int *, int *, int *, int *, dcomplex *, int *, int *,
                     dcomplex *, int *, int *, dcomplex *, int *, int *);
-extern void F77_PZDBTRF(int *, int *, int *, dcomplex *, int *, int *, dcomplex *,
+extern void pzdbtrf_(int *, int *, int *, dcomplex *, int *, int *, dcomplex *,
                      int *, dcomplex *, int *, int *);
-extern void F77_PZDBTRS(char *, int *, int *, int *, int *, dcomplex *, int *,
+extern void pzdbtrs_(char *, int *, int *, int *, int *, dcomplex *, int *,
                      int *, dcomplex *, int *, int *, dcomplex *, int *,
                      dcomplex *, int *, int *);
-extern void F77_PZDBTRSV(char *, char *, int *, int *, int *, int *, dcomplex *,
+extern void pzdbtrsv_(char *, char *, int *, int *, int *, int *, dcomplex *,
                       int *, int *, dcomplex *, int *, int *, dcomplex *, int *,
                       dcomplex *, int *, int *);
-extern void F77_PZDRSCL(int *, double *, dcomplex *, int *, int *, int *, int *);
-extern void F77_PZDTSV(int *, int *, dcomplex *, dcomplex *, dcomplex *, int *,
+extern void pzdrscl_(int *, double *, dcomplex *, int *, int *, int *, int *);
+extern void pzdtsv_(int *, int *, dcomplex *, dcomplex *, dcomplex *, int *,
                     int *, dcomplex *, int *, int *, dcomplex *, int *, int *);
-extern void F77_PZDTTRF(int *, dcomplex *, dcomplex *, dcomplex *, int *, int *,
+extern void pzdttrf_(int *, dcomplex *, dcomplex *, dcomplex *, int *, int *,
                      dcomplex *, int *, dcomplex *, int *, int *);
-extern void F77_PZDTTRS(char *, int *, int *, dcomplex *, dcomplex *, dcomplex *,
+extern void pzdttrs_(char *, int *, int *, dcomplex *, dcomplex *, dcomplex *,
                      int *, int *, dcomplex *, int *, int *, dcomplex *, int *,
                      dcomplex *, int *, int *);
-extern void F77_PZDTTRSV(char *, char *, int *, int *, dcomplex *, dcomplex *,
+extern void pzdttrsv_(char *, char *, int *, int *, dcomplex *, dcomplex *,
                       dcomplex *, int *, int *, dcomplex *, int *, int *,
                       dcomplex *, int *, dcomplex *, int *, int *);
-extern void F77_PZGBSV(int *, int *, int *, int *, dcomplex *, int *, int *, int *,
+extern void pzgbsv_(int *, int *, int *, int *, dcomplex *, int *, int *, int *,
                     dcomplex *, int *, int *, dcomplex *, int *, int *);
-extern void F77_PZGBTRF(int *, int *, int *, dcomplex *, int *, int *, int *,
+extern void pzgbtrf_(int *, int *, int *, dcomplex *, int *, int *, int *,
                      dcomplex *, int *, dcomplex *, int *, int *);
-extern void F77_PZGBTRS(char *, int *, int *, int *, int *, dcomplex *, int *,
+extern void pzgbtrs_(char *, int *, int *, int *, int *, dcomplex *, int *,
                      int *, int *, dcomplex *, int *, int *, dcomplex *, int *,
                      dcomplex *, int *, int *);
-extern void F77_PZGEBD2(int *, int *, dcomplex *, int *, int *, int *, double *,
+extern void pzgebd2_(int *, int *, dcomplex *, int *, int *, int *, double *,
                      double *, dcomplex *, dcomplex *, dcomplex *, int *,
                      int *);
-extern void F77_PZGEBRD(int *, int *, dcomplex *, int *, int *, int *, double *,
+extern void pzgebrd_(int *, int *, dcomplex *, int *, int *, int *, double *,
                      double *, dcomplex *, dcomplex *, dcomplex *, int *,
                      int *);
-extern void F77_PZGECON(char *, int *, dcomplex *, int *, int *, int *, double *,
+extern void pzgecon_(char *, int *, dcomplex *, int *, int *, int *, double *,
                      double *, dcomplex *, int *, double *, int *, int *);
-extern void F77_PZGEEQU(int *, int *, dcomplex *, int *, int *, int *, double *,
+extern void pzgeequ_(int *, int *, dcomplex *, int *, int *, int *, double *,
                      double *, double *, double *, double *, int *);
-extern void F77_PZGEHD2(int *, int *, int *, dcomplex *, int *, int *, int *,
+extern void pzgehd2_(int *, int *, int *, dcomplex *, int *, int *, int *,
                      dcomplex *, dcomplex *, int *, int *);
-extern void F77_PZGEHRD(int *, int *, int *, dcomplex *, int *, int *, int *,
+extern void pzgehrd_(int *, int *, int *, dcomplex *, int *, int *, int *,
                      dcomplex *, dcomplex *, int *, int *);
-extern void F77_PZGELQ2(int *, int *, dcomplex *, int *, int *, int *, dcomplex *,
+extern void pzgelq2_(int *, int *, dcomplex *, int *, int *, int *, dcomplex *,
                      dcomplex *, int *, int *);
-extern void F77_PZGELQF(int *, int *, dcomplex *, int *, int *, int *, dcomplex *,
+extern void pzgelqf_(int *, int *, dcomplex *, int *, int *, int *, dcomplex *,
                      dcomplex *, int *, int *);
-extern void F77_PZGELS(char *, int *, int *, int *, dcomplex *, int *, int *,
+extern void pzgels_(char *, int *, int *, int *, dcomplex *, int *, int *,
                     int *, dcomplex *, int *, int *, int *, dcomplex *, int *,
                     int *);
-extern void F77_PZGEQL2(int *, int *, dcomplex *, int *, int *, int *, dcomplex *,
+extern void pzgeql2_(int *, int *, dcomplex *, int *, int *, int *, dcomplex *,
                      dcomplex *, int *, int *);
-extern void F77_PZGEQLF(int *, int *, dcomplex *, int *, int *, int *, dcomplex *,
+extern void pzgeqlf_(int *, int *, dcomplex *, int *, int *, int *, dcomplex *,
                      dcomplex *, int *, int *);
-extern void F77_PZGEQPF(int *, int *, dcomplex *, int *, int *, int *, int *,
+extern void pzgeqpf_(int *, int *, dcomplex *, int *, int *, int *, int *,
                      dcomplex *, dcomplex *, int *, double *, int *, int *);
-extern void F77_PZGEQR2(int *, int *, dcomplex *, int *, int *, int *, dcomplex *,
+extern void pzgeqr2_(int *, int *, dcomplex *, int *, int *, int *, dcomplex *,
                      dcomplex *, int *, int *);
-extern void F77_PZGEQRF(int *, int *, dcomplex *, int *, int *, int *, dcomplex *,
+extern void pzgeqrf_(int *, int *, dcomplex *, int *, int *, int *, dcomplex *,
                      dcomplex *, int *, int *);
-extern void F77_PZGERFS(char *, int *, int *, dcomplex *, int *, int *, int *,
+extern void pzgerfs_(char *, int *, int *, dcomplex *, int *, int *, int *,
                      dcomplex *, int *, int *, int *, int *, dcomplex *, int *,
                      int *, int *, dcomplex *, int *, int *, int *, double *,
                      double *, dcomplex *, int *, double *, int *, int *);
-extern void F77_PZGERQ2(int *, int *, dcomplex *, int *, int *, int *, dcomplex *,
+extern void pzgerq2_(int *, int *, dcomplex *, int *, int *, int *, dcomplex *,
                      dcomplex *, int *, int *);
-extern void F77_PZGERQF(int *, int *, dcomplex *, int *, int *, int *, dcomplex *,
+extern void pzgerqf_(int *, int *, dcomplex *, int *, int *, int *, dcomplex *,
                      dcomplex *, int *, int *);
-extern void F77_PZGESV(int *, int *, dcomplex *, int *, int *, int *, int *,
+extern void pzgesv_(int *, int *, dcomplex *, int *, int *, int *, int *,
                     dcomplex *, int *, int *, int *, int *);
-extern void F77_PZGESVD(char *, char *, int *, int *, dcomplex *, int *, int *,
+extern void pzgesvd_(char *, char *, int *, int *, dcomplex *, int *, int *,
                      int *, double *, dcomplex *, int *, int *, int *,
                      dcomplex *, int *, int *, int *, dcomplex *, int *,
                      float *, int *);
-extern void F77_PZGESVX(char *, char *, int *, int *, dcomplex *, int *, int *,
+extern void pzgesvx_(char *, char *, int *, int *, dcomplex *, int *, int *,
                      int *, dcomplex *, int *, int *, int *, int *, char *,
                      double *, double *, dcomplex *, int *, int *, int *,
                      dcomplex *, int *, int *, int *, double *, double *,
                      double *, dcomplex *, int *, double *, int *, int *);
-extern void F77_PZGETF2(int *, int *, dcomplex *, int *, int *, int *, int *,
+extern void pzgetf2_(int *, int *, dcomplex *, int *, int *, int *, int *,
                      int *);
-extern void F77_PZGETRF(int *, int *, dcomplex *, int *, int *, int *, int *,
+extern void pzgetrf_(int *, int *, dcomplex *, int *, int *, int *, int *,
                      int *);
-extern void F77_PZGETRI(int *, dcomplex *, int *, int *, int *, int *, dcomplex *,
+extern void pzgetri_(int *, dcomplex *, int *, int *, int *, int *, dcomplex *,
                      int *, int *, int *, int *);
-extern void F77_PZGETRS(char *, int *, int *, dcomplex *, int *, int *, int *,
+extern void pzgetrs_(char *, int *, int *, dcomplex *, int *, int *, int *,
                      int *, dcomplex *, int *, int *, int *, int *);
-extern void F77_PZGGQRF(int *, int *, int *, dcomplex *, int *, int *, int *,
+extern void pzggqrf_(int *, int *, int *, dcomplex *, int *, int *, int *,
                      dcomplex *, dcomplex *, int *, int *, int *, dcomplex *,
                      dcomplex *, int *, int *);
-extern void F77_PZGGRQF(int *, int *, int *, dcomplex *, int *, int *, int *,
+extern void pzggrqf_(int *, int *, int *, dcomplex *, int *, int *, int *,
                      dcomplex *, dcomplex *, int *, int *, int *, dcomplex *,
                      dcomplex *, int *, int *);
-extern void F77_PZHEEV(char *, char *, int *, dcomplex *, int *, int *, int *,
+extern void pzheev_(char *, char *, int *, dcomplex *, int *, int *, int *,
                     double *, dcomplex *, int *, int *, int *, dcomplex *,
                     int *, dcomplex *, int *, int *);
-extern void F77_PZHEEVD(char *, char *, int *, dcomplex *, int *, int *, int *,
+extern void pzheevd_(char *, char *, int *, dcomplex *, int *, int *, int *,
                      double *, dcomplex *, int *, int *, int *, dcomplex *,
                      int *, double *, int *, int *, int *, int *);
-extern void F77_PZHEEVR(char *, char *, char *, int *, dcomplex *, int *, int *,
+extern void pzheevr_(char *, char *, char *, int *, dcomplex *, int *, int *,
                      int *, double *, double *, int *, int *, int *, int *,
                      double *, dcomplex *, int *, int *, int *, dcomplex *,
                      int *, double *, int *, int *, int *, int *);
-extern void F77_PZHEEVX(char *, char *, char *, int *, dcomplex *, int *, int *,
+extern void pzheevx_(char *, char *, char *, int *, dcomplex *, int *, int *,
                      int *, double *, double *, int *, int *, double *, int *,
                      int *, double *, double *, dcomplex *, int *, int *, int *,
                      dcomplex *, int *, double *, int *, int *, int *, int *,
                      int *, double *, int *);
-extern void F77_PZHEGS2(int *, char *, int *, dcomplex *, int *, int *, int *,
+extern void pzhegs2_(int *, char *, int *, dcomplex *, int *, int *, int *,
                      dcomplex *, int *, int *, int *, int *);
-extern void F77_PZHEGST(int *, char *, int *, dcomplex *, int *, int *, int *,
+extern void pzhegst_(int *, char *, int *, dcomplex *, int *, int *, int *,
                      dcomplex *, int *, int *, int *, double *, int *);
-extern void F77_PZHEGVX(int *, char *, char *, char *, int *, dcomplex *, int *,
+extern void pzhegvx_(int *, char *, char *, char *, int *, dcomplex *, int *,
                      int *, int *, dcomplex *, int *, int *, int *, double *,
                      double *, int *, int *, double *, int *, int *, double *,
                      double *, dcomplex *, int *, int *, int *, dcomplex *,
                      int *, double *, int *, int *, int *, int *, int *,
                      double *, int *);
-extern void F77_PZHENGST(int *, char *, int *, dcomplex *, int *, int *, int *,
+extern void pzhengst_(int *, char *, int *, dcomplex *, int *, int *, int *,
                       dcomplex *, int *, int *, int *, double *, dcomplex *,
                       int *, int *);
-extern void F77_PZHENTRD(char *, int *, dcomplex *, int *, int *, int *, double *,
+extern void pzhentrd_(char *, int *, dcomplex *, int *, int *, int *, double *,
                       double *, dcomplex *, dcomplex *, int *, dcomplex *,
                       int *, int *);
-extern void F77_PZHETD2(char *, int *, dcomplex *, int *, int *, int *, double *,
+extern void pzhetd2_(char *, int *, dcomplex *, int *, int *, int *, double *,
                      double *, dcomplex *, dcomplex *, int *, int *);
-extern void F77_PZHETRD(char *, int *, dcomplex *, int *, int *, int *, double *,
+extern void pzhetrd_(char *, int *, dcomplex *, int *, int *, int *, double *,
                      double *, dcomplex *, dcomplex *, int *, int *);
-extern void F77_PZHETTRD(char *, int *, dcomplex *, int *, int *, int *, double *,
+extern void pzhettrd_(char *, int *, dcomplex *, int *, int *, int *, double *,
                       double *, dcomplex *, dcomplex *, int *, int *);
-extern void F77_PZLABRD(int *, int *, int *, dcomplex *, int *, int *, int *,
+extern void pzlabrd_(int *, int *, int *, dcomplex *, int *, int *, int *,
                      double *, double *, dcomplex *, dcomplex *, dcomplex *,
                      int *, int *, int *, dcomplex *, int *, int *, int *,
                      dcomplex *);
-extern void F77_PZLACGV(int *, dcomplex *, int *, int *, int *, int *);
-extern void F77_PZLACON(int *, dcomplex *, int *, int *, int *, dcomplex *, int *,
+extern void pzlacgv_(int *, dcomplex *, int *, int *, int *, int *);
+extern void pzlacon_(int *, dcomplex *, int *, int *, int *, dcomplex *, int *,
                      int *, int *, double *, int *);
-extern void F77_PZLACONSB(dcomplex *, int *, int *, int *, int *, dcomplex *,
+extern void pzlaconsb_(dcomplex *, int *, int *, int *, int *, dcomplex *,
                        dcomplex *, dcomplex *, dcomplex *, int *);
-extern void F77_PZLACP2(char *, int *, int *, dcomplex *, int *, int *, int *,
+extern void pzlacp2_(char *, int *, int *, dcomplex *, int *, int *, int *,
                      dcomplex *, int *, int *, int *);
-extern void F77_PZLACP3(int *, int *, dcomplex *, int *, dcomplex *, int *, int *,
+extern void pzlacp3_(int *, int *, dcomplex *, int *, dcomplex *, int *, int *,
                      int *, int *);
-extern void F77_PZLACPY(char *, int *, int *, dcomplex *, int *, int *, int *,
+extern void pzlacpy_(char *, int *, int *, dcomplex *, int *, int *, int *,
                      dcomplex *, int *, int *, int *);
-extern void F77_PZLAEVSWP(int *, double *, int *, dcomplex *, int *, int *, int *,
+extern void pzlaevswp_(int *, double *, int *, dcomplex *, int *, int *, int *,
                        int *, int *, double *, int *);
-extern void F77_PZLAHQR(int *, int *, int *, int *, int *, dcomplex *, int *,
+extern void pzlahqr_(int *, int *, int *, int *, int *, dcomplex *, int *,
                      dcomplex *, int *, int *, dcomplex *, int *, dcomplex *,
                      int *, int *, int *, int *);
-extern void F77_PZLAHRD(int *, int *, int *, dcomplex *, int *, int *, int *,
+extern void pzlahrd_(int *, int *, int *, dcomplex *, int *, int *, int *,
                      dcomplex *, dcomplex *, dcomplex *, int *, int *, int *,
                      dcomplex *);
-extern void F77_PZLAMR1D(int *, dcomplex *, int *, int *, int *, dcomplex *, int *,
+extern void pzlamr1d_(int *, dcomplex *, int *, int *, int *, dcomplex *, int *,
                       int *, int *);
-extern void F77_PZLAPIV(char *, char *, char *, int *, int *, dcomplex *, int *,
+extern void pzlapiv_(char *, char *, char *, int *, int *, dcomplex *, int *,
                      int *, int *, int *, int *, int *, int *, int *);
-extern void F77_PZLAPV2(char *, char *, int *, int *, dcomplex *, int *, int *,
+extern void pzlapv2_(char *, char *, int *, int *, dcomplex *, int *, int *,
                      int *, int *, int *, int *, int *);
-extern void F77_PZLAQGE(int *, int *, dcomplex *, int *, int *, int *, double *,
+extern void pzlaqge_(int *, int *, dcomplex *, int *, int *, int *, double *,
                      double *, double *, double *, double *, char *);
-extern void F77_PZLAQSY(char *, int *, dcomplex *, int *, int *, int *, double *,
+extern void pzlaqsy_(char *, int *, dcomplex *, int *, int *, int *, double *,
                      double *, double *, double *, char *);
-extern void F77_PZLARF(char *, int *, int *, dcomplex *, int *, int *, int *,
+extern void pzlarf_(char *, int *, int *, dcomplex *, int *, int *, int *,
                     int *, dcomplex *, dcomplex *, int *, int *, int *,
                     dcomplex *);
-extern void F77_PZLARFB(char *, char *, char *, char *, int *, int *, int *,
+extern void pzlarfb_(char *, char *, char *, char *, int *, int *, int *,
                      dcomplex *, int *, int *, int *, dcomplex *, dcomplex *,
                      int *, int *, int *, dcomplex *);
-extern void F77_PZLARFC(char *, int *, int *, dcomplex *, int *, int *, int *,
+extern void pzlarfc_(char *, int *, int *, dcomplex *, int *, int *, int *,
                      int *, dcomplex *, dcomplex *, int *, int *, int *,
                      dcomplex *);
-extern void F77_PZLARFG(int *, dcomplex *, int *, int *, dcomplex *, int *, int *,
+extern void pzlarfg_(int *, dcomplex *, int *, int *, dcomplex *, int *, int *,
                      int *, int *, dcomplex *);
-extern void F77_PZLARFT(char *, char *, int *, int *, dcomplex *, int *, int *,
+extern void pzlarft_(char *, char *, int *, int *, dcomplex *, int *, int *,
                      int *, dcomplex *, dcomplex *, dcomplex *);
-extern void F77_PZLARZ(char *, int *, int *, int *, dcomplex *, int *, int *,
+extern void pzlarz_(char *, int *, int *, int *, dcomplex *, int *, int *,
                     int *, int *, dcomplex *, dcomplex *, int *, int *, int *,
                     dcomplex *);
-extern void F77_PZLARZB(char *, char *, char *, char *, int *, int *, int *, int *,
+extern void pzlarzb_(char *, char *, char *, char *, int *, int *, int *, int *,
                      dcomplex *, int *, int *, int *, dcomplex *, dcomplex *,
                      int *, int *, int *, dcomplex *);
-extern void F77_PZLARZC(char *, int *, int *, int *, dcomplex *, int *, int *,
+extern void pzlarzc_(char *, int *, int *, int *, dcomplex *, int *, int *,
                      int *, int *, dcomplex *, dcomplex *, int *, int *, int *,
                      dcomplex *);
-extern void F77_PZLARZT(char *, char *, int *, int *, dcomplex *, int *, int *,
+extern void pzlarzt_(char *, char *, int *, int *, dcomplex *, int *, int *,
                      int *, dcomplex *, dcomplex *, dcomplex *);
-extern void F77_PZLASCL(char *, double *, double *, int *, int *, dcomplex *,
+extern void pzlascl_(char *, double *, double *, int *, int *, dcomplex *,
                      int *, int *, int *, int *);
-extern void F77_PZLASE2(char *, int *, int *, dcomplex *, dcomplex *, dcomplex *,
+extern void pzlase2_(char *, int *, int *, dcomplex *, dcomplex *, dcomplex *,
                      int *, int *, int *);
-extern void F77_PZLASET(char *, int *, int *, dcomplex *, dcomplex *, dcomplex *,
+extern void pzlaset_(char *, int *, int *, dcomplex *, dcomplex *, dcomplex *,
                      int *, int *, int *);
-extern void F77_PZLASMSUB(dcomplex *, int *, int *, int *, int *, double *,
+extern void pzlasmsub_(dcomplex *, int *, int *, int *, int *, double *,
                        dcomplex *, int *);
-extern void F77_PZLASSQ(int *, dcomplex *, int *, int *, int *, int *, double *,
+extern void pzlassq_(int *, dcomplex *, int *, int *, int *, int *, double *,
                      double *);
-extern void F77_PZLASWP(char *, char *, int *, dcomplex *, int *, int *, int *,
+extern void pzlaswp_(char *, char *, int *, dcomplex *, int *, int *, int *,
                      int *, int *, int *);
-extern void F77_PZLATRD(char *, int *, int *, dcomplex *, int *, int *, int *,
+extern void pzlatrd_(char *, int *, int *, dcomplex *, int *, int *, int *,
                      double *, double *, dcomplex *, dcomplex *, int *, int *,
                      int *, dcomplex *);
-extern void F77_PZLATRS(char *, char *, char *, char *, int *, dcomplex *, int *,
+extern void pzlatrs_(char *, char *, char *, char *, int *, dcomplex *, int *,
                      int *, int *, dcomplex *, int *, int *, int *, double *,
                      double *, int *);
-extern void F77_PZLATRZ(int *, int *, int *, dcomplex *, int *, int *, int *,
+extern void pzlatrz_(int *, int *, int *, dcomplex *, int *, int *, int *,
                      dcomplex *, dcomplex *);
-extern void F77_PZLATTRS(char *, char *, char *, char *, int *, dcomplex *, int *,
+extern void pzlattrs_(char *, char *, char *, char *, int *, dcomplex *, int *,
                       int *, int *, dcomplex *, int *, int *, int *, double *,
                       double *, int *);
-extern void F77_PZLAUU2(char *, int *, dcomplex *, int *, int *, int *);
-extern void F77_PZLAUUM(char *, int *, dcomplex *, int *, int *, int *);
-extern void F77_PZLAWIL(int *, int *, int *, dcomplex *, int *, dcomplex *,
+extern void pzlauu2_(char *, int *, dcomplex *, int *, int *, int *);
+extern void pzlauum_(char *, int *, dcomplex *, int *, int *, int *);
+extern void pzlawil_(int *, int *, int *, dcomplex *, int *, dcomplex *,
                      dcomplex *, dcomplex *, dcomplex *);
-extern void F77_PZMAX1(int *, double *, int *, dcomplex *, int *, int *, int *,
+extern void pzmax1_(int *, double *, int *, dcomplex *, int *, int *, int *,
                     int *);
-extern void F77_PZPBSV(char *, int *, int *, int *, dcomplex *, int *, int *,
+extern void zcombamax1_(dcomplex *, dcomplex *);
+extern void pzpbsv_(char *, int *, int *, int *, dcomplex *, int *, int *,
                     dcomplex *, int *, int *, dcomplex *, int *, int *);
-extern void F77_PZPBTRF(char *, int *, int *, dcomplex *, int *, int *, dcomplex *,
+extern void pzpbtrf_(char *, int *, int *, dcomplex *, int *, int *, dcomplex *,
                      int *, dcomplex *, int *, int *);
-extern void F77_PZPBTRS(char *, int *, int *, int *, dcomplex *, int *, int *,
+extern void pzpbtrs_(char *, int *, int *, int *, dcomplex *, int *, int *,
                      dcomplex *, int *, int *, dcomplex *, int *, dcomplex *,
                      int *, int *);
-extern void F77_PZPBTRSV(char *, char *, int *, int *, int *, dcomplex *, int *,
+extern void pzpbtrsv_(char *, char *, int *, int *, int *, dcomplex *, int *,
                       int *, dcomplex *, int *, int *, dcomplex *, int *,
                       dcomplex *, int *, int *);
-extern void F77_PZPOCON(char *, int *, dcomplex *, int *, int *, int *, double *,
+extern void pzpocon_(char *, int *, dcomplex *, int *, int *, int *, double *,
                      double *, dcomplex *, int *, double *, int *, int *);
-extern void F77_PZPOEQU(int *, dcomplex *, int *, int *, int *, double *, double *,
+extern void pzpoequ_(int *, dcomplex *, int *, int *, int *, double *, double *,
                      double *, double *, int *);
-extern void F77_PZPORFS(char *, int *, int *, dcomplex *, int *, int *, int *,
+extern void pzporfs_(char *, int *, int *, dcomplex *, int *, int *, int *,
                      dcomplex *, int *, int *, int *, dcomplex *, int *, int *,
                      int *, dcomplex *, int *, int *, int *, double *, double *,
                      dcomplex *, int *, double *, int *, int *);
-extern void F77_PZPOSV(char *, int *, int *, dcomplex *, int *, int *, int *,
+extern void pzposv_(char *, int *, int *, dcomplex *, int *, int *, int *,
                     dcomplex *, int *, int *, int *, int *);
-extern void F77_PZPOSVX(char *, char *, int *, int *, dcomplex *, int *, int *,
+extern void pzposvx_(char *, char *, int *, int *, dcomplex *, int *, int *,
                      int *, dcomplex *, int *, int *, int *, char *, dcomplex *,
                      dcomplex *, dcomplex *, int *, int *, int *, dcomplex *,
                      int *, int *, int *, double *, double *, double *,
                      dcomplex *, int *, double *, int *, int *);
-extern void F77_PZPOTF2(char *, int *, dcomplex *, int *, int *, int *, int *);
-extern void F77_PZPOTRF(char *, int *, dcomplex *, int *, int *, int *, int *);
-extern void F77_PZPOTRI(char *, int *, dcomplex *, int *, int *, int *, int *);
-extern void F77_PZPOTRS(char *, int *, int *, dcomplex *, int *, int *, int *,
+extern void pzpotf2_(char *, int *, dcomplex *, int *, int *, int *, int *);
+extern void pzpotrf_(char *, int *, dcomplex *, int *, int *, int *, int *);
+extern void pzpotri_(char *, int *, dcomplex *, int *, int *, int *, int *);
+extern void pzpotrs_(char *, int *, int *, dcomplex *, int *, int *, int *,
                      dcomplex *, int *, int *, int *, int *);
-extern void F77_PZPTSV(char *, int *, int *, dcomplex *, dcomplex *, int *, int *,
+extern void pzptsv_(char *, int *, int *, dcomplex *, dcomplex *, int *, int *,
                     dcomplex *, int *, int *, dcomplex *, int *, int *);
-extern void F77_PZPTTRF(int *, dcomplex *, dcomplex *, int *, int *, dcomplex *,
+extern void pzpttrf_(int *, dcomplex *, dcomplex *, int *, int *, dcomplex *,
                      int *, dcomplex *, int *, int *);
-extern void F77_PZPTTRS(char *, int *, int *, dcomplex *, dcomplex *, int *, int *,
+extern void pzpttrs_(char *, int *, int *, dcomplex *, dcomplex *, int *, int *,
                      dcomplex *, int *, int *, dcomplex *, int *, dcomplex *,
                      int *, int *);
-extern void F77_PZPTTRSV(char *, char *, int *, int *, dcomplex *, dcomplex *,
+extern void pzpttrsv_(char *, char *, int *, int *, dcomplex *, dcomplex *,
                       int *, int *, dcomplex *, int *, int *, dcomplex *, int *,
                       dcomplex *, int *, int *);
-extern void F77_PZSTEIN(int *, double *, double *, int *, double *, int *, int *,
+extern void pzstein_(int *, double *, double *, int *, double *, int *, int *,
                      double *, dcomplex *, int *, int *, int *, double *, int *,
                      int *, int *, int *, int *, double *, int *);
-extern void F77_PZTRCON(char *, char *, char *, int *, dcomplex *, int *, int *,
+extern void pztrcon_(char *, char *, char *, int *, dcomplex *, int *, int *,
                      int *, double *, dcomplex *, int *, double *, int *,
                      int *);
-extern void F77_PZTREVC(char *, char *, int *, int *, dcomplex *, int *,
+extern void pztrevc_(char *, char *, int *, int *, dcomplex *, int *,
                      dcomplex *, int *, dcomplex *, int *, int *, int *,
                      dcomplex *, double *, int *);
-extern void F77_PZTRRFS(char *, char *, char *, int *, int *, dcomplex *, int *,
+extern void pztrrfs_(char *, char *, char *, int *, int *, dcomplex *, int *,
                      int *, int *, dcomplex *, int *, int *, int *, dcomplex *,
                      int *, int *, int *, double *, double *, dcomplex *, int *,
                      double *, int *, int *);
-extern void F77_PZTRTI2(char *, char *, int *, dcomplex *, int *, int *, int *,
+extern void pztrti2_(char *, char *, int *, dcomplex *, int *, int *, int *,
                      int *);
-extern void F77_PZTRTRI(char *, char *, int *, dcomplex *, int *, int *, int *,
+extern void pztrtri_(char *, char *, int *, dcomplex *, int *, int *, int *,
                      int *);
-extern void F77_PZTRTRS(char *, char *, char *, int *, int *, dcomplex *, int *,
+extern void pztrtrs_(char *, char *, char *, int *, int *, dcomplex *, int *,
                      int *, int *, dcomplex *, int *, int *, int *, int *);
-extern void F77_PZTZRZF(int *, int *, dcomplex *, int *, int *, int *, dcomplex *,
+extern void pztzrzf_(int *, int *, dcomplex *, int *, int *, int *, dcomplex *,
                      dcomplex *, int *, int *);
-extern void F77_PZUNG2L(int *, int *, int *, dcomplex *, int *, int *, int *,
+extern void pzung2l_(int *, int *, int *, dcomplex *, int *, int *, int *,
                      dcomplex *, dcomplex *, int *, int *);
-extern void F77_PZUNG2R(int *, int *, int *, dcomplex *, int *, int *, int *,
+extern void pzung2r_(int *, int *, int *, dcomplex *, int *, int *, int *,
                      dcomplex *, dcomplex *, int *, int *);
-extern void F77_PZUNGL2(int *, int *, int *, dcomplex *, int *, int *, int *,
+extern void pzungl2_(int *, int *, int *, dcomplex *, int *, int *, int *,
                      dcomplex *, dcomplex *, int *, int *);
-extern void F77_PZUNGLQ(int *, int *, int *, dcomplex *, int *, int *, int *,
+extern void pzunglq_(int *, int *, int *, dcomplex *, int *, int *, int *,
                      dcomplex *, dcomplex *, int *, int *);
-extern void F77_PZUNGQL(int *, int *, int *, dcomplex *, int *, int *, int *,
+extern void pzungql_(int *, int *, int *, dcomplex *, int *, int *, int *,
                      dcomplex *, dcomplex *, int *, int *);
-extern void F77_PZUNGQR(int *, int *, int *, dcomplex *, int *, int *, int *,
+extern void pzungqr_(int *, int *, int *, dcomplex *, int *, int *, int *,
                      dcomplex *, dcomplex *, int *, int *);
-extern void F77_PZUNGR2(int *, int *, int *, dcomplex *, int *, int *, int *,
+extern void pzungr2_(int *, int *, int *, dcomplex *, int *, int *, int *,
                      dcomplex *, dcomplex *, int *, int *);
-extern void F77_PZUNGRQ(int *, int *, int *, dcomplex *, int *, int *, int *,
+extern void pzungrq_(int *, int *, int *, dcomplex *, int *, int *, int *,
                      dcomplex *, dcomplex *, int *, int *);
-extern void F77_PZUNM2L(char *, char *, int *, int *, int *, dcomplex *, int *,
+extern void pzunm2l_(char *, char *, int *, int *, int *, dcomplex *, int *,
                      int *, int *, dcomplex *, dcomplex *, int *, int *, int *,
                      dcomplex *, int *, int *);
-extern void F77_PZUNM2R(char *, char *, int *, int *, int *, dcomplex *, int *,
+extern void pzunm2r_(char *, char *, int *, int *, int *, dcomplex *, int *,
                      int *, int *, dcomplex *, dcomplex *, int *, int *, int *,
                      dcomplex *, int *, int *);
-extern void F77_PZUNMBR(char *, char *, char *, int *, int *, int *, dcomplex *,
+extern void pzunmbr_(char *, char *, char *, int *, int *, int *, dcomplex *,
                      int *, int *, int *, dcomplex *, dcomplex *, int *, int *,
                      int *, dcomplex *, int *, int *);
-extern void F77_PZUNMHR(char *, char *, int *, int *, int *, int *, dcomplex *,
+extern void pzunmhr_(char *, char *, int *, int *, int *, int *, dcomplex *,
                      int *, int *, int *, dcomplex *, dcomplex *, int *, int *,
                      int *, dcomplex *, int *, int *);
-extern void F77_PZUNML2(char *, char *, int *, int *, int *, dcomplex *, int *,
+extern void pzunml2_(char *, char *, int *, int *, int *, dcomplex *, int *,
                      int *, int *, dcomplex *, dcomplex *, int *, int *, int *,
                      dcomplex *, int *, int *);
-extern void F77_PZUNMLQ(char *, char *, int *, int *, int *, dcomplex *, int *,
+extern void pzunmlq_(char *, char *, int *, int *, int *, dcomplex *, int *,
                      int *, int *, dcomplex *, dcomplex *, int *, int *, int *,
                      dcomplex *, int *, int *);
-extern void F77_PZUNMQL(char *, char *, int *, int *, int *, dcomplex *, int *,
+extern void pzunmql_(char *, char *, int *, int *, int *, dcomplex *, int *,
                      int *, int *, dcomplex *, dcomplex *, int *, int *, int *,
                      dcomplex *, int *, int *);
-extern void F77_PZUNMQR(char *, char *, int *, int *, int *, dcomplex *, int *,
+extern void pzunmqr_(char *, char *, int *, int *, int *, dcomplex *, int *,
                      int *, int *, dcomplex *, dcomplex *, int *, int *, int *,
                      dcomplex *, int *, int *);
-extern void F77_PZUNMR2(char *, char *, int *, int *, int *, dcomplex *, int *,
+extern void pzunmr2_(char *, char *, int *, int *, int *, dcomplex *, int *,
                      int *, int *, dcomplex *, dcomplex *, int *, int *, int *,
                      dcomplex *, int *, int *);
-extern void F77_PZUNMR3(char *, char *, int *, int *, int *, int *, dcomplex *,
+extern void pzunmr3_(char *, char *, int *, int *, int *, int *, dcomplex *,
                      int *, int *, int *, dcomplex *, dcomplex *, int *, int *,
                      int *, dcomplex *, int *, int *);
-extern void F77_PZUNMRQ(char *, char *, int *, int *, int *, dcomplex *, int *,
+extern void pzunmrq_(char *, char *, int *, int *, int *, dcomplex *, int *,
                      int *, int *, dcomplex *, dcomplex *, int *, int *, int *,
                      dcomplex *, int *, int *);
-extern void F77_PZUNMRZ(char *, char *, int *, int *, int *, int *, dcomplex *,
+extern void pzunmrz_(char *, char *, int *, int *, int *, int *, dcomplex *,
                      int *, int *, int *, dcomplex *, dcomplex *, int *, int *,
                      int *, dcomplex *, int *, int *);
-extern void F77_PZUNMTR(char *, char *, char *, int *, int *, dcomplex *, int *,
+extern void pzunmtr_(char *, char *, char *, int *, int *, dcomplex *, int *,
                      int *, int *, dcomplex *, dcomplex *, int *, int *, int *,
                      dcomplex *, int *, int *);
-extern void F77_SDBTF2(int *, int *, int *, int *, float *, int *, int *);
-extern void F77_SDBTRF(int *, int *, int *, int *, float *, int *, int *);
-extern void F77_SDTTRF(int *, scomplex *, scomplex *, scomplex *, int *);
-extern void F77_SDTTRSV(char *, char *, int *, int *, scomplex *, scomplex *,
+extern void sdbtf2_(int *, int *, int *, int *, float *, int *, int *);
+extern void sdbtrf_(int *, int *, int *, int *, float *, int *, int *);
+extern void sdttrf_(int *, scomplex *, scomplex *, scomplex *, int *);
+extern void sdttrsv_(char *, char *, int *, int *, scomplex *, scomplex *,
                      scomplex *, scomplex *, int *, int *);
-extern void F77_SLAMSH(float *, int *, int *, int *, float *, int *, int *,
+extern void slamsh_(float *, int *, int *, int *, float *, int *, int *,
                     float *);
-extern void F77_SLAPST(char *, int *, float *, int *, int *);
-extern void F77_SLAQR6(char *, int *, int *, int *, int *, int *, int *, int *,
+extern void slapst_(char *, int *, float *, int *, int *);
+extern void slaqr6_(char *, int *, int *, int *, int *, int *, int *, int *,
                     float *, float *, float *, int *, int *, int *, float *,
                     int *, float *, int *, float *, int *, int *, float *,
                     int *, int *, float *, int *);
-extern void F77_SLAR1VA(int *, int *, int *, float *, float *, float *, float *,
+extern void slar1va_(int *, int *, int *, float *, float *, float *, float *,
                      float *, float *, float *, float *, int *, int *, float *,
                      float *, int *, int *, float *, float *, float *, float *);
-extern void F77_SLAREF(char *, float *, int *, int *, float *, int *, int *, int *,
+extern void slaref_(char *, float *, int *, int *, float *, int *, int *, int *,
                     int *, int *, int *, int *, int *, int *, int *, float *,
                     float *, float *, float *, float *, float *);
-extern void F77_SLARRB2(int *, float *, float *, int *, int *, float *, float *,
+extern void slarrb2_(int *, float *, float *, int *, int *, float *, float *,
                      int *, float *, float *, float *, float *, int *, float *,
                      float *, float *, int *, int *);
-extern void F77_SLARRD2(char *, char *, int *, float *, float *, int *, int *,
+extern void slaneg2_(int *, float *, float *, float *, float *, int *);
+extern void slaneg2a_(int *, float *, float *, float *, int *);
+extern void slarrd2_(char *, char *, int *, float *, float *, int *, int *,
                      float *, float *, float *, float *, float *, float *,
                      int *, int *, int *, float *, float *, float *, float *,
                      int *, int *, float *, int *, int *, int *, int *);
-extern void F77_SLARRE2(char *, int *, float *, float *, int *, int *, float *,
+extern void slarre2_(char *, int *, float *, float *, int *, int *, float *,
                      float *, float *, float *, float *, float *, int *, int *,
                      int *, int *, int *, float *, float *, float *, int *,
                      int *, float *, double *, float *, int *, int *);
-extern void F77_SLARRE2A(char *, int *, float *, float *, int *, int *, float *,
+extern void slarre2a_(char *, int *, float *, float *, int *, int *, float *,
                       float *, float *, float *, float *, float *, int *, int *,
                       int *, int *, int *, int *, int *, float *, float *,
                       float *, int *, int *, float *, float *, double *,
                       float *, int *, float *, int *);
-extern void F77_SLARRF2(int *, float *, float *, float *, int *, int *, int *,
+extern void slarrf2_(int *, float *, float *, float *, int *, int *, int *,
                      int *, float *, float *, float *, int *, float *, float *,
                      float *, double *, float *, float *, float *, float *,
                      int *);
-extern void F77_SLARRV2(int *, float *, float *, float *, float *, double *, int *,
+extern void slarrv2_(int *, float *, float *, float *, float *, double *, int *,
                      int *, int *, int *, int *, int *, float *, float *,
                      float *, float *, float *, float *, int *, int *, float *,
                      float *, float *, int *, int *, float *, int *, int *,
                      int *, int *, int *, int *, int *, int *);
-extern void F77_SLASORTE(float *, int *, int *, float *, int *);
-extern void F77_SLASRT2(char *, int *, float *, int *, int *);
-extern void F77_SPTTRSV(char *, int *, int *, float *, scomplex *, scomplex *,
+extern void slasorte_(float *, int *, int *, float *, int *);
+extern void slasrt2_(char *, int *, float *, int *, int *);
+extern void spttrsv_(char *, int *, int *, float *, scomplex *, scomplex *,
                      int *, int *);
-extern void F77_SSTEGR2(char *, char *, int *, float *, float *, float *, float *,
+extern void sstegr2_(char *, char *, int *, float *, float *, float *, float *,
                      int *, int *, int *, float *, float *, int *, int *, int *,
                      float *, int *, int *, int *, int *, int *, int *, int *);
-extern void F77_SSTEGR2A(char *, char *, int *, float *, float *, float *, float *,
+extern void sstegr2a_(char *, char *, int *, float *, float *, float *, float *,
                       int *, int *, int *, float *, float *, int *, int *,
                       float *, int *, int *, int *, int *, int *, int *, int *,
                       int *, int *, float *, float *, float *, float *, int *);
-extern void F77_SSTEGR2B(char *, int *, float *, float *, int *, float *, float *,
+extern void sstegr2b_(char *, int *, float *, float *, int *, float *, float *,
                       int *, int *, int *, float *, int *, int *, int *, int *,
                       int *, int *, int *, float *, float *, float *, float *,
                       float *, int *, int *, int *, int *, int *, int *, int *);
-extern void F77_SSTEIN2(int *, float *, float *, int *, float *, int *, int *,
+extern void sstein2_(int *, float *, float *, int *, float *, int *, int *,
                      float *, float *, int *, float *, int *, int *, int *);
-extern void F77_SSTEQR2(char *, int *, float *, float *, float *, int *, int *,
+extern void ssteqr2_(char *, int *, float *, float *, float *, int *, int *,
                      float *, int *);
-extern void F77_STRMVT(char *, int *, float *, int *, float *, int *, float *,
+extern void strmvt_(char *, int *, float *, int *, float *, int *, float *,
                     int *, float *, int *, float *, int *);
-extern void F77_ZDBTF2(int *, int *, int *, int *, dcomplex *, int *, int *);
-extern void F77_ZDBTRF(int *, int *, int *, int *, float *, int *, int *);
-extern void F77_ZDTTRF(int *, scomplex *, scomplex *, scomplex *, int *);
-extern void F77_ZDTTRSV(char *, char *, int *, int *, scomplex *, scomplex *,
+extern void zdbtf2_(int *, int *, int *, int *, dcomplex *, int *, int *);
+extern void zdbtrf_(int *, int *, int *, int *, float *, int *, int *);
+extern void zdttrf_(int *, scomplex *, scomplex *, scomplex *, int *);
+extern void zdttrsv_(char *, char *, int *, int *, scomplex *, scomplex *,
                      scomplex *, scomplex *, int *, int *);
-extern void F77_ZLAHQR2(int *, int *, int *, int *, int *, dcomplex *, int *,
+extern void zlahqr2_(int *, int *, int *, int *, int *, dcomplex *, int *,
                      dcomplex *, int *, int *, dcomplex *, int *, int *);
-extern void F77_ZLAMSH(dcomplex *, int *, int *, int *, dcomplex *, int *, int *,
+extern void zlamsh_(dcomplex *, int *, int *, int *, dcomplex *, int *, int *,
                     double *);
-extern void F77_ZLANV2(dcomplex *, dcomplex *, dcomplex *, dcomplex *, dcomplex *,
+extern void zlanv2_(dcomplex *, dcomplex *, dcomplex *, dcomplex *, dcomplex *,
                     dcomplex *, double *, dcomplex *);
-extern void F77_ZLAREF(char *, dcomplex *, int *, int *, dcomplex *, int *, int *,
+extern void zlaref_(char *, dcomplex *, int *, int *, dcomplex *, int *, int *,
                     int *, int *, int *, int *, int *, int *, int *, int *,
                     dcomplex *, dcomplex *, dcomplex *, dcomplex *, dcomplex *,
                     dcomplex *);
-extern void F77_ZPTTRSV(char *, char *, int *, int *, float *, scomplex *,
+extern void zpttrsv_(char *, char *, int *, int *, float *, scomplex *,
                      scomplex *, int *, int *);
-extern void F77_ZSTEQR2(char *, int *, double *, double *, dcomplex *, int *,
+extern void zsteqr2_(char *, int *, double *, double *, dcomplex *, int *,
                      int *, double *, int *);
-extern void F77_ZTRMVT(char *, int *, scomplex *, int *, scomplex *, int *,
+extern void ztrmvt_(char *, int *, scomplex *, int *, scomplex *, int *,
                     scomplex *, int *, scomplex *, int *, scomplex *, int *);
-#ifdef __cplusplus
-}
-#endif
-
-#endif

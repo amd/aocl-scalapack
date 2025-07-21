@@ -26,8 +26,10 @@ set(SL_FRAMEWORK_INCLUDE_PATH  "${SCALAPACK_SOURCE_DIR}/FRAMEWORK")
 
 # ------   Build Options List  -----------
 # Fortran to C Name Mangling build option
-set(CDEFS "NoChange" CACHE STRING "Naming strategy needed for a fortran routine to call a C routine")
-set_property(CACHE CDEFS PROPERTY STRINGS "NoChange" "UpCase" "Add_")
+# Defaulting to the standard Add_
+#set(CDEFS "NoChange" CACHE STRING "Naming strategy needed for a fortran routine to call a C routine")
+#set_property(CACHE CDEFS PROPERTY STRINGS "NoChange" "UpCase" "Add_")
+set(CDEFS "Add_")
 
 # ILP64 build option
 option(ENABLE_ILP64 "Enable ILP64 " OFF)
@@ -56,17 +58,13 @@ option (ENABLE_LARGE_MATRIX_TESTING "Dynamic allocation of work buffer memory in
 
 # ------   Build Options List End   -----------
 
-
+#Default to the lowercase with underscore
 if (WIN32 AND CMAKE_Fortran_COMPILER_ID MATCHES "Intel")
     set (CMAKE_IFORT_LIBDEPS_DIR "C:/Program Files (x86)/IntelSWTools/compilers_and_libraries/windows/compiler/lib/intel64_win" CACHE STRING "")
     # set the "FORCE:MULTIPLE" option to handle linker errors due to some
     # of the common functions of scalapack and lapack in case of static build.
-	if("${CDEFS}" STREQUAL "NoChange")
-	   set (CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} /names:lowercase")
-	elseif("${CDEFS}" STREQUAL "Add_")
-	   set (CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} /names:lowercase")
-	   set (CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} /assume:underscore")
-    endif ()
+	set (CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} /names:lowercase")
+	set (CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} /assume:underscore")
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /FORCE:MULTIPLE")
 endif()
 
