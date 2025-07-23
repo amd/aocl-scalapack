@@ -119,6 +119,8 @@ if(WIN32)
   target_link_libraries(xcqr scalapack ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES} ${OpenMP_libomp_LIBRARY})
   target_link_libraries(xzqr scalapack ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES} ${OpenMP_libomp_LIBRARY})
 
+  target_link_libraries(xdorqr scalapack ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES} ${OpenMP_libomp_LIBRARY})
+
   target_link_libraries(xsls scalapack ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES} ${OpenMP_libomp_LIBRARY})
   target_link_libraries(xdls scalapack ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES} ${OpenMP_libomp_LIBRARY})
   target_link_libraries(xcls scalapack ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES} ${OpenMP_libomp_LIBRARY})
@@ -175,6 +177,8 @@ else(WIN32)
   target_link_libraries(xcqr scalapack ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES})
   target_link_libraries(xzqr scalapack ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES})
 
+  target_link_libraries(xdorqr scalapack ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES})
+  
   target_link_libraries(xsls scalapack ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES})
   target_link_libraries(xdls scalapack ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES})
   target_link_libraries(xcls scalapack ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES})
