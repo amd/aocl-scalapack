@@ -37,6 +37,8 @@ dsepexe = ../xdsep
 csepexe = ../xcsep
 zsepexe = ../xzsep
 
+dstedexe = ../xdsted
+
 sgsepexe = ../xsgsep
 dgsepexe = ../xdgsep
 cgsepexe = ../xcgsep
