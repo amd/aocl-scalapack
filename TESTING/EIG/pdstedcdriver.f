@@ -2,7 +2,6 @@
 *
       PROGRAM PDSTEDCDRIVER
 *
-      IMPLICIT NONE
 *
 *
 *     Parallel DOUBLE PRECISION symmetric eigen solver test driver
