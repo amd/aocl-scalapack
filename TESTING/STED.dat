@@ -1,0 +1,25 @@
+
+'ScaLAPACK Symmetric Eigensolver Test File'
+' '
+'sted.out'                       output file name (if any)
+6                               device out (13 & 14 reserved for internal testing)
+4 				maximum number of processes
+'N'				disable pxsyev tests, recommended for heterogeneous systems.
+' '
+'TEST 1 - test matrices - different process configurations'
+6                               number of matrices
+4 6 10 12 24 50				matrix size
+2				number of uplo choices
+'U' 'L'				uplo choices
+2				number of processor configurations (P, Q, NB)
+1 2	         		values of P (NPROW)
+2 2	 			values of Q (NPCOL)
+1 2	 			values of NB
+2				number of matrix types
+10 15 			 	matrix types (see pdseptst.f)
+'N'				perform subset tests?
+80.0				Threshold (* 5 for generalized tests)
+-1 				Absolute Tolerance
+' '
+'End of tests'
+-1
