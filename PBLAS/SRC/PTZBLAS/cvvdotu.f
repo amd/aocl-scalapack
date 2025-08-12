@@ -54,13 +54,23 @@
 *
 *  =====================================================================
 *
-*     .. External Functions ..
-      COMPLEX            CDOTU
+*     .. Local Scalars ..
+#ifdef F2C
+      COMPLEX            TMP
+#endif
+*     ..
+*     .. External Subroutines ..
       EXTERNAL           CDOTU
 *     ..
 *     .. Executable Statements ..
 *
+
+#ifdef F2C
+      CALL CDOTU( TMP, N, X, INCX, Y, INCY )
+      DOT = DOT + TMP
+#else
       DOT = DOT + CDOTU( N, X, INCX, Y, INCY )
+#endif
 *
       RETURN
 *

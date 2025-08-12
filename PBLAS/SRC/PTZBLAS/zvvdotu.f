@@ -54,13 +54,22 @@
 *
 *  =====================================================================
 *
-*     .. External Functions ..
-      COMPLEX*16         ZDOTU
-      EXTERNAL           ZDOTU
+*     .. Local Scalars ..
+#ifdef F2C
+      COMPLEX*16         TMP
+#endif
+*     ..
+*     .. External Subroutines ..
+      EXTERNAL           ZZDOTU
 *     ..
 *     .. Executable Statements ..
 *
-      DOT = DOT + ZDOTU( N, X, INCX, Y, INCY )
+#ifdef F2C
+      CALL ZDOTC( TMP, N, X, INCX, Y, INCY )
+      DOT = DOT + TMP
+#else
+      DOT = DOT + ZDOTC( N, X, INCX, Y, INCY )
+#endif
 *
       RETURN
 *
