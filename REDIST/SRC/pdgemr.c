@@ -339,7 +339,7 @@ Cpdgemr2d(m, n,
   assert((myprow1 < p1 && mypcol1 < q1) || (myprow1 == -1 && mypcol1 == -1));
   /* exchange the missing parameters among the processors: shape of grids and
    * location of the processors */
-  param = (Int *) mr2d_malloc(3 * (nprocs * 2 + NBPARAM) * sizeof(Int));
+  param = (Int *) mr2d_malloc(3 * ((size_t)nprocs * 2 + NBPARAM) * sizeof(Int));
   ra = param + nprocs * 2 + NBPARAM;
   ca = param + (nprocs * 2 + NBPARAM) * 2;
   for (i = 0; i < nprocs * 2 + NBPARAM; i++)
@@ -569,7 +569,7 @@ init_chenille(mypnum, nprocs, n0, proc0, n1, proc1, psend, precv, myrang)
   Int   ns, nr, i, tot;
   Int  *sender, *recver, *g0, *g1;
   tot = max(n0, n1);
-  sender = (Int *) mr2d_malloc((nprocs + tot) * sizeof(Int) * 2);
+  sender = (Int *) mr2d_malloc((size_t)(nprocs + tot) * sizeof(Int) * 2);
   recver = sender + tot;
   *psend = sender;
   *precv = recver;
@@ -633,7 +633,7 @@ Int _m,_n,_lda,_ldb; \
       _b += _ldb; \
       _a += _lda; \
     } \
-}
+} (void)0
 static2 Int 
 block2buff(vi, vinb, hi, hinb, ptra, ma, buff)
   Int   hinb, vinb;
@@ -713,7 +713,7 @@ gridreshape(Int *ctxtp)
   Int   i, j;
   ori = *ctxtp;
   Cblacs_gridinfo(ori, &nprow, &npcol, &myrow, &mycol);
-  usermap = mr2d_malloc(sizeof(Int) * nprow * npcol);
+  usermap = mr2d_malloc(sizeof(Int) * (size_t)nprow * (size_t)npcol);
   for (i = 0; i < nprow; i++)
     for (j = 0; j < npcol; j++) {
       usermap[i + j * nprow] = Cblacs_pnum(ori, i, j);

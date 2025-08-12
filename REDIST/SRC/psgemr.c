@@ -339,7 +339,7 @@ Cpsgemr2d(m, n,
   assert((myprow1 < p1 && mypcol1 < q1) || (myprow1 == -1 && mypcol1 == -1));
   /* exchange the missing parameters among the processors: shape of grids and
    * location of the processors */
-  param = (Int *) mr2d_malloc(3 * (nprocs * 2 + NBPARAM) * sizeof(Int));
+  param = (Int *) mr2d_malloc(3 * ((size_t)nprocs * 2 + NBPARAM) * sizeof(Int));
   ra = param + nprocs * 2 + NBPARAM;
   ca = param + (nprocs * 2 + NBPARAM) * 2;
   for (i = 0; i < nprocs * 2 + NBPARAM; i++)
@@ -374,12 +374,8 @@ Cpsgemr2d(m, n,
     param[18] = ib;
     param[19] = jb;
   }
-  // printf("Aproc0 = {%d,%d}\n", proc0[0], proc0[1]);
-  // printf("Aproc1 = {%d,%d}\n", proc1[0], proc1[1]);
   Cigamn2d(gcontext, "All", "H", 2 * nprocs + NBPARAM, (Int)1, param, 2 * nprocs + NBPARAM,
 	   ra, ca, 2 * nprocs + NBPARAM, (Int)-1, (Int)-1);
-  // printf("Bproc0 = {%d,%d}\n", proc0[0], proc0[1]);
-  // printf("Bproc1 = {%d,%d}\n", proc1[0], proc1[1]);
   newa = *ma;
   newb = *mb;
   ma = &newa;
@@ -571,7 +567,7 @@ init_chenille(Int mypnum, Int nprocs, Int n0, Int *proc0, Int n1, Int *proc1, In
   Int   ns, nr, i, tot;
   Int  *sender, *recver, *g0, *g1;
   tot = max(n0, n1);
-  sender = (Int *) mr2d_malloc((nprocs + tot) * sizeof(Int) * 2);
+  sender = (Int *) mr2d_malloc((size_t)(nprocs + tot) * sizeof(Int) * 2);
   recver = sender + tot;
   *psend = sender;
   *precv = recver;
@@ -635,7 +631,7 @@ Int _m,_n,_lda,_ldb; \
       _b += _ldb; \
       _a += _lda; \
     } \
-}
+} (void)0
 static2 Int 
 block2buff(IDESC *vi, Int vinb, IDESC *hi, Int hinb, float *ptra, MDESC *ma, float *buff)
 {
@@ -707,7 +703,7 @@ gridreshape(Int *ctxtp)
   Int   i, j;
   ori = *ctxtp;
   Cblacs_gridinfo(ori, &nprow, &npcol, &myrow, &mycol);
-  usermap = mr2d_malloc(sizeof(Int) * nprow * npcol);
+  usermap = mr2d_malloc(sizeof(Int) * (size_t)nprow * (size_t)npcol);
   for (i = 0; i < nprow; i++)
     for (j = 0; j < npcol; j++) {
       usermap[i + j * nprow] = Cblacs_pnum(ori, i, j);

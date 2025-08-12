@@ -1,6 +1,6 @@
 /* ---------------------------------------------------------------------
 *
-*     Copyright (c) 2020-21 Advanced Micro Devices, Inc.  All rights reserved.
+*     Copyright (c) 2020-21 Advanced Micro Devices, Inc.ï¿½ All rights reserved.
 *     August 11, 2020
 *
 *  ---------------------------------------------------------------------
@@ -336,7 +336,6 @@ Int BI_ContxtNum(BLACSCONTEXT *ctxt);
 #else
 #define BI_MPI_TYPE_FREE(t) MPI_Type_free(t)
 #endif
-
 
 #if (FORTRAN_CALL_C == FCISF2C)
 /*

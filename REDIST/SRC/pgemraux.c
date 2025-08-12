@@ -110,7 +110,7 @@ extern void Cpigemr2d();
 #include <assert.h>
 const size_t NEGFLAG = ~( ((size_t)-1) >> 1);
 void *
-mr2d_malloc(Int n)
+mr2d_malloc(size_t n)
 {
   void *ptr;
   assert((n & NEGFLAG) == 0);
