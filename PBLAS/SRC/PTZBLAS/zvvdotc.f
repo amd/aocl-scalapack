@@ -57,6 +57,10 @@
 *
 *  =====================================================================
 *
+*     .. Local Scalars ..
+#ifdef F2C
+      COMPLEX*16         TMP
+#endif
 *     .. External Functions ..
 #ifndef F2C
       COMPLEX*16         ZDOTC

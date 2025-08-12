@@ -368,7 +368,7 @@
       REAL               ELEM, EST, SCALE, RNORM
 *     .. Local Arrays ..
       INTEGER            DESCT12( DLEN_ ), MBNB2( 2 ), MMAX( 1 ),
-     $                   MMIN( 1 ), INFODUM( 1 )
+     $                   MMIN( 1 )
       REAL               DPDUM1( 1 )
 *     ..
 *     .. External Functions ..
@@ -561,10 +561,10 @@
             MMAX( 1 ) = M
             MMIN( 1 ) = M
             IF( NPROCS.GT.1 )
-     $           CALL IGAMX2D( ICTXT, 'All', TOP, 1, 1, MMAX, 1, -1,
+     $         CALL IGAMX2D( ICTXT, 'All', TOP, 1, 1, MMAX( 1 ), 1, -1,
      $                -1, -1, -1, -1 )
             IF( NPROCS.GT.1 )
-     $           CALL IGAMN2D( ICTXT, 'All', TOP, 1, 1, MMIN, 1, -1,
+     $         CALL IGAMN2D( ICTXT, 'All', TOP, 1, 1, MMIN( 1 ), 1, -1,
      $                -1, -1, -1, -1 )
             IF( MMAX( 1 ).GT.MMIN( 1 ) ) THEN
                M = MMAX( 1 )
@@ -640,9 +640,8 @@ c     $              IERR )
 *     Global maximum on info
 *
       IF( NPROCS.GT.1 ) THEN
-         CALL IGAMX2D( ICTXT, 'All', TOP, 1, 1, INFODUM, 1, -1, -1, -1,
+         CALL IGAMX2D( ICTXT, 'All', TOP, 1, 1, INFO, 1, -1, -1, -1,
      $          -1, -1 )
-         INFO = INFODUM( 1 )
       END IF
 *
 *     Return if some argument is incorrect
