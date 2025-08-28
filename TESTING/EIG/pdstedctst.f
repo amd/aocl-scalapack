@@ -10,6 +10,7 @@
 *     August 14, 2001
 *     Modifications Copyright (c) 2024-2025 Advanced Micro Devices, Inc. All rights reserved.
 *
+      IMPLICIT NONE
 *     .. Scalar Arguments ..
       CHARACTER          HETERO, SUBTESTS, UPLO
       INTEGER            INFO, IPOSTPAD, IPREPAD, LDA, LIWORK, LWORK,

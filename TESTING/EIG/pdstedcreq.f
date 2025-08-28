@@ -9,6 +9,7 @@
 *     May 1, 1997
 *     Modifications Copyright (c) 2024-2025 Advanced Micro Devices, Inc. All rights reserved.
 *
+      IMPLICIT NONE
 *     .. Scalar Arguments ..
       CHARACTER          HETERO
       INTEGER            INFO, MEMSIZE, NIN, NNOCHECK, NOUT, NPASSED,
