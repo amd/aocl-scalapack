@@ -118,6 +118,7 @@
 *           -1 = end of file
 *           -2 = incorrrect data specification
 *
+      IMPLICIT NONE
 *     .. Scalar Arguments ..
       CHARACTER          SUBTESTS
       INTEGER            CONTEXT, IAM, INFO, MAXSETSIZE, MAXTYPE, NIN,
