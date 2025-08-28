@@ -641,9 +641,21 @@ void PB_CpgemmAB( TYPE, DIRECA, DIRECB, TRANSA, TRANSB, M, N, K, ALPHA,
                    DBUFB, &Broc, WB, Wkbb, WBd0 );
 
          if( Afr & ( AisR || ( AmyprocR == AcurrocR ) ) )
-            if( Abuf ) free( Abuf );
+         {
+            if( Abuf )
+            {
+               free( Abuf );
+               Abuf = NULL;
+            }
+         }
          if( Bfr & ( BisR || ( BmyprocR == BcurrocR ) ) )
-            if( Bbuf ) free( Bbuf );
+         {
+            if( Bbuf )
+            {
+               free( Bbuf );
+               Bbuf = NULL;
+            }
+         }
 /*
 *  ABrocs rows or columns of sub( A ) and sub( B ) have been replicated,
 *  update the number of diagonals in this virtual process as well as the
