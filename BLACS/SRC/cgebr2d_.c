@@ -75,7 +75,7 @@ F_VOID_FUNC cgebr2d_(Int *ConTxt, F_CHAR scope, F_CHAR top, Int *m, Int *n,
    BLACBUFF *bp=NULL;
    SDRVPTR send;
    MPI_Datatype MatTyp;
-   Int length, src, tlda, error, one=1;
+   Int length, src=-1, tlda, error, one=1;
    char ttop, tscope;
    extern BLACBUFF BI_AuxBuff, *BI_ActiveQ;
 

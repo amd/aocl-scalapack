@@ -107,7 +107,7 @@ F_VOID_FUNC cgamx2d_(Int *ConTxt, F_CHAR scope, F_CHAR top, Int *m, Int *n,
    BLACBUFF *bp, *bp2;
    BLACSCONTEXT *ctxt;
    char ttop, tscope;
-   Int i, j, N, dest, idist, length, tlda, tldia, trdest, ierr;
+   Int i, j, N, dest=-1, idist, length, tlda, tldia, trdest, ierr;
    MpiInt len[2];
    MPI_Aint disp[2];
    MPI_Datatype dtypes[2];

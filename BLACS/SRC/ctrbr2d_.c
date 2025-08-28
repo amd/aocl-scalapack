@@ -88,7 +88,7 @@ F_VOID_FUNC ctrbr2d_(Int *ConTxt, F_CHAR scope, F_CHAR top, F_CHAR uplo,
    BLACBUFF *bp=NULL;
    SDRVPTR send;
    MPI_Datatype MatTyp;
-   Int length, src, tlda, error, one=1;
+   Int length, src=-1, tlda, error, one=1;
    char ttop, tscope, tuplo, tdiag;
    extern BLACBUFF BI_AuxBuff, *BI_ActiveQ;
 

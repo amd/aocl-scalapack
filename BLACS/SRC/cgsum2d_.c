@@ -80,7 +80,7 @@ F_VOID_FUNC cgsum2d_(Int *ConTxt, F_CHAR scope, F_CHAR top, Int *m, Int *n,
    BLACBUFF *bp, *bp2;
    BLACSCONTEXT *ctxt;
    char ttop, tscope;
-   Int N, length, dest, tlda, trdest, ierr;
+   Int N, length, dest=-1, tlda, trdest, ierr;
    MPI_Op BlacComb;
    extern BLACBUFF *BI_ActiveQ;
    extern BLACBUFF BI_AuxBuff;

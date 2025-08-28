@@ -5710,7 +5710,7 @@ extern float pclantr_(float *NORM, float *UPLO, float *DIAG, float *M, float *N,
                       float *WORK);
 extern scomplex pclatra_(float *N, float *A, float *IA, float *JA,
                          float *DESCA);
-extern void pdlamch_(int *ICTXT, char *CMACH);
+extern double pdlamch_(int *ICTXT, char *CMACH);
 extern void pdlange_(float *NORM, float *M, float *N, float *A, float *IA,
                      float *JA, float *DESCA, float *WORK);
 extern void pdlanhs_(float *NORM, float *N, float *A, float *IA, float *JA,

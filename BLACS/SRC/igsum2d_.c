@@ -79,7 +79,7 @@ F_VOID_FUNC igsum2d_(Int *ConTxt, F_CHAR scope, F_CHAR top, Int *m, Int *n,
    BLACBUFF *bp, *bp2;
    BLACSCONTEXT *ctxt;
    char ttop, tscope;
-   Int N, length, dest, tlda, trdest, ierr, itr;
+   Int N, length, dest=-1, tlda, trdest, ierr, itr;
    MPI_Datatype Dtype;
    extern BLACBUFF *BI_ActiveQ;
    extern BLACBUFF BI_AuxBuff;
