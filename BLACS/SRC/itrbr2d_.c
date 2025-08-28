@@ -88,7 +88,7 @@ F_VOID_FUNC itrbr2d_(Int *ConTxt, F_CHAR scope, F_CHAR top, F_CHAR uplo,
    BLACBUFF *bp=NULL;
    SDRVPTR send;
    MPI_Datatype IntTyp, MatTyp;
-   Int length, src, tlda, error, one=1;
+   Int length, src=-1, tlda, error, one=1;
    char ttop, tscope, tuplo, tdiag;
    extern BLACBUFF BI_AuxBuff, *BI_ActiveQ;
 
@@ -189,6 +189,11 @@ F_VOID_FUNC itrbr2d_(Int *ConTxt, F_CHAR scope, F_CHAR top, F_CHAR uplo,
    case '7':
    case '8':
    case '9':
+                      
+   /* The static analysis tool reports a potential issue of integer overflow for 'ttop'
+   However, it is not applicable within this context as ttop is well defined ('1' - '9')
+   within the switch block. Hence this case is marked as false positive  */
+   
       BI_TreeBR(ctxt, bp, send, src, ttop-47);
       break;
    case 't':

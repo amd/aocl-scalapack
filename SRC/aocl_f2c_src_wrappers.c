@@ -12452,9 +12452,9 @@ scomplex PCLATRA_(float *N, float *A, float *IA, float *JA, float *DESCA) {
 }
 
 /* pdlamch */
-double pdlamch(int *ICTXT, char *CMACH) { pdlamch_(ICTXT, CMACH); }
-double PDLAMCH(int *ICTXT, char *CMACH) { pdlamch_(ICTXT, CMACH); }
-double PDLAMCH_(int *ICTXT, char *CMACH) { pdlamch_(ICTXT, CMACH); }
+double pdlamch(int *ICTXT, char *CMACH) { return pdlamch_(ICTXT, CMACH); }
+double PDLAMCH(int *ICTXT, char *CMACH) { return pdlamch_(ICTXT, CMACH); }
+double PDLAMCH_(int *ICTXT, char *CMACH) { return pdlamch_(ICTXT, CMACH); }
 
 /* pdlange */
 void pdlange(float *NORM, float *M, float *N, float *A, float *IA, float *JA,

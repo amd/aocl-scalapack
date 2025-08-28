@@ -161,8 +161,13 @@ F_VOID_FUNC dgebs2d_(Int *ConTxt, F_CHAR scope, F_CHAR top, Int *m, Int *n,
    case '7':
    case '8':
    case '9':
-      BI_TreeBS(ctxt, bp, send, ttop-47);
-      break;
+        
+   /* The static analysis tool reports a potential issue of integer overflow for 'ttop'
+   However, it is not applicable within this context as ttop is well defined ('1' - '9')
+   within the switch block. Hence this case is marked as false positive  */
+   
+     BI_TreeBS(ctxt, bp, send, (unsigned char) ttop - 47);
+     break;
    case 't':
       BI_TreeBS(ctxt, bp, send, ctxt->Nb_bs);
       break;
