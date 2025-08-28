@@ -9,9 +9,13 @@
 *     and University of California, Berkeley.
 *     March 16, 2000
 *     Modifications Copyright (c) 2024-2025 Advanced Micro Devices, Inc. All rights reserved.
+
 *
 *
       use,intrinsic :: ieee_arithmetic
+      
+      IMPLICIT NONE
+      
 *     .. Scalar Arguments ..
       LOGICAL            WKNOWN
       CHARACTER          UPLO, JOBZ
@@ -162,10 +166,19 @@
      $                   SIZECHK, SIZEMQRLEFT, SIZEMQRRIGHT, SIZEQRF,
      $                   SIZEQTQ, SIZESUBTST, SIZESYEV, SIZESYEVX,
      $                   SIZETMS, SIZETST, SIZESYEVD, ISIZESYEVD,
-     $                   TRILWMIN
+     $                   TRILWMIN, IK, JK, IINFO
       DOUBLE PRECISION   EPS, EPSNORMA, ERROR, MAXERROR, MINERROR,
      $                   NORMWIN, SAFMIN
       LOGICAL            UPPER
+*     .. Added explicit declarations for previously implicit symbols ..
+      INTEGER            IZ, JZ, NB, IROFFA, ICOFFA, IROFFZ, ICOFFZ,
+     $                   IAROW, IACOL, INDTAU, INDE, INDD, INDE2,
+     $                   INDWORK, LLWORK, INDWORK2, LLWORK2, ISCALE,
+     $                   OFFSET
+      LOGICAL            LQUERY
+      DOUBLE PRECISION   LWMIN, LIWMIN, SMLNUM, BIGNUM, ONE,
+     $                   RMIN, RMAX, SIGMA, ANRM
+*     ................................................................
 *     ..
 *     .. Local Arrays ..
       INTEGER            DESCZ( DLEN_ ), ITMP( 2 ), IDUM1( 2 ),
@@ -174,18 +187,18 @@
 *     .. External Functions ..
 *
       LOGICAL            LSAME
-      INTEGER            NUMROC
+      INTEGER            NUMROC, INDXG2P
       DOUBLE PRECISION   PDLAMCH, PDLANSY
-      EXTERNAL           LSAME, NUMROC, PDLAMCH, PDLANSY
+      EXTERNAL           LSAME, NUMROC, INDXG2P, PDLAMCH, PDLANSY
 *     ..
 *     .. External Subroutines ..
       EXTERNAL           BLACS_GRIDINFO, DESCINIT, IGAMN2D, IGAMX2D,
      $                   PDCHEKPAD, PDELSET, PDFILLPAD, PDLASIZESQP,
      $                   PDSEPCHK, PDSEPQTQ, PDSYEVD, DGAMN2D,
      $                   DGAMX2D, DLACPY, SLBOOT, SLTIMER,
-     $                   PCHK1MAT,
+     $                   CHK1MAT, PCHK1MAT,
      $                   PDLARED1D, PDLASCL, PDLASET, PDORMTR, PDSTEDC,
-     $                   PDSYTRD, PXERBLA
+     $                   PDSYTRD, PXERBLA, DSCAL
 *     ..
 *     .. Intrinsic Functions ..
       INTRINSIC          ABS, MAX, MIN, MOD, ICHAR
@@ -214,6 +227,7 @@
       QTQNRM = NEGONE
       EPS = PDLAMCH( DESCA( CTXT_ ), 'Eps' )
       SAFMIN = PDLAMCH( DESCA( CTXT_ ), 'Safe min' )
+      ONE = 1.0D0
 *
       NORMWIN = SAFMIN / EPS
       IF( N.GE.1 )
@@ -442,7 +456,7 @@
 *     If matrix was scaled, then rescale eigenvalues appropriately.
 *
       IF( ISCALE.EQ.1 ) THEN
-         CALL DSCAL( N, ONE / SIGMA, W, 1 )
+         CALL DSCAL( N, ONE / SIGMA, WNEW(1+IPREPAD), 1 )
       END IF
 
 *
