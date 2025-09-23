@@ -26,10 +26,8 @@ set(SL_FRAMEWORK_INCLUDE_PATH  "${SCALAPACK_SOURCE_DIR}/FRAMEWORK")
 
 # ------   Build Options List  -----------
 # Fortran to C Name Mangling build option
-# Defaulting to the standard Add_
-#set(CDEFS "NoChange" CACHE STRING "Naming strategy needed for a fortran routine to call a C routine")
-#set_property(CACHE CDEFS PROPERTY STRINGS "NoChange" "UpCase" "Add_")
-set(CDEFS "Add_")
+set(CDEFS "NoChange" CACHE STRING "Naming strategy needed for a fortran routine to call a C routine")
+set_property(CACHE CDEFS PROPERTY STRINGS "NoChange" "UpCase" "Add_")
 
 # ILP64 build option
 option(ENABLE_ILP64 "Enable ILP64 " OFF)
@@ -56,15 +54,21 @@ set(ENABLE_SET_LIB_VERSION "default_version" CACHE STRING "Set the library versi
 # Helpful to test larger matrix sizes more than 2K
 option (ENABLE_LARGE_MATRIX_TESTING "Dynamic allocation of work buffer memory in test code" OFF)
 
+#Option to enable wrappers, default is set to ON
+option(ENABLE_WRAPPERS "Enable building the f2c wrapper interfaces" ON)
 # ------   Build Options List End   -----------
 
-#Default to the lowercase with underscore
+
 if (WIN32 AND CMAKE_Fortran_COMPILER_ID MATCHES "Intel")
     set (CMAKE_IFORT_LIBDEPS_DIR "C:/Program Files (x86)/IntelSWTools/compilers_and_libraries/windows/compiler/lib/intel64_win" CACHE STRING "")
     # set the "FORCE:MULTIPLE" option to handle linker errors due to some
     # of the common functions of scalapack and lapack in case of static build.
-	set (CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} /names:lowercase")
-	set (CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} /assume:underscore")
+	if("${CDEFS}" STREQUAL "NoChange")
+	   set (CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} /names:lowercase")
+	elseif("${CDEFS}" STREQUAL "Add_")
+	   set (CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} /names:lowercase")
+	   set (CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} /assume:underscore")
+    endif ()
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /FORCE:MULTIPLE")
 endif()
 
@@ -256,6 +260,11 @@ ENDIF(ENABLE_DTL)
 if(ENABLE_DRIVER_CHECK)
   add_definitions("-DENABLE_DRIVER_CHECK")
 ENDIF(ENABLE_DRIVER_CHECK)
+
+if(ENABLE_WRAPPERS)
+  add_definitions("-DENABLE_AOCL_WRAPPERS")
+  set(ENABLE_AOCL_WRAPPERS TRUE)
+ENDIF(ENABLE_WRAPPERS)
 
 if(ENABLE_ILP64)
   if(UNIX)
@@ -517,6 +526,7 @@ if (UNIX)
     target_compile_options(scalapack PUBLIC -fprofile-arcs  -ftest-coverage)
     target_link_options(scalapack PUBLIC -fprofile-arcs  -ftest-coverage)
   endif(ENABLE_COVERAGE)
+
 else (UNIX) # Need to separate Fortran and C Code
     if (CMAKE_C_COMPILER_ID MATCHES MSVC)
         # create Fortran objects and add to scalapack library first
@@ -590,6 +600,17 @@ else (UNIX) # Need to separate Fortran and C Code
       endif(CUSTOM_BLACS_FOUND)
     endif ()
 endif (UNIX)
+
+if(ENABLE_WRAPPERS AND TARGET scalapack)
+  # Skip if scalapack is an imported prebuilt library
+  get_target_property(_is_imported scalapack IMPORTED)
+  if(NOT _is_imported)
+    message(STATUS "ENABLE_WRAPPERS = ON (adding f2c wrappers)")
+    target_compile_definitions(scalapack PUBLIC AOCL_ENABLE_WRAPPERS=1)
+  else()
+    message(WARNING "ENABLE_WRAPPERS requested, but scalapack is IMPORTED. Ignoring wrappers.")
+  endif()
+endif()
 
 if(${SCALAPACK_BUILD_TESTS})
   add_subdirectory(TESTING)
