@@ -495,10 +495,14 @@
 *                 If N < 0 in LU.dat file then PDGETRF API sets INFO = -2
                   IF ((M.LT.0 .AND. INFO.EQ.-1) .OR.
      $                (N.LT.0 .AND. INFO.EQ.-2)) THEN
+                     IF(NOUT .LE. 0 .OR. NOUT .GT. 6) THEN
+*                    resetting stdout, corrupted by negative cases
+                        NOUT = 6
+                     END IF
 *                    PDGETRF is returning correct error code, do nothing
-                     WRITE( *, FMT = 9983 ) 'PDGETRF'
+                     WRITE( NOUT, FMT = 9983 ) 'PDGETRF'
                   ELSE IF (INFO.GT.0 .AND. EX_FLAG)  THEN
-                     WRITE(*,*) 'PCGETRF INFO=', INFO
+                     WRITE(NOUT,*) 'PDGETRF INFO=', INFO
 *                    do nothing, skip residual calculation
 *                    Pass this case in INF/NAN residual calculation
                   ELSE
@@ -511,6 +515,10 @@
 *                 This is the case of early return from ScaLAPACK API
 *                 early return from ScaLAPACK API.
 *                 If there is safe exit from API we need to pass this case
+                  IF(NOUT .LE. 0 .OR. NOUT .GT. 6) THEN
+*                 resetting stdout, corrupted by early return cases
+                    NOUT = 6
+                  END IF
                   WRITE( NOUT, FMT = 9982 ) 'PDGETRF'
                   KPASS = KPASS + 1
                   RCOND = ZERO
@@ -790,7 +798,11 @@
      $                           IERR(1) .EQ. -12)) THEN
 *                             If DESCINIT is returns correct error code
 *                          do nothing
-                           WRITE( *, FMT = 9984 ) 'NRHS'
+                           IF(NOUT .LE. 0 .OR. NOUT .GT. 6) THEN
+*                          resetting stdout, corrupted by negative cases
+                              NOUT = 6
+                           END IF
+                           WRITE( NOUT, FMT = 9984 ) 'NRHS'
 *                             disable extreme value case when N < 0
                               EX_FLAG = .FALSE.
                            ELSE IF (N.LT.0 .AND. (IERR( 1 ).EQ.-2 .OR.
