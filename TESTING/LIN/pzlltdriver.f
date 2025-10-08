@@ -464,6 +464,10 @@
 *
 
                IF( INFO.NE.0 ) THEN
+                  IF(NOUT .LE. 0 .OR. NOUT .GT. 6) THEN
+*                 resetting stdout, corrupted by negative cases
+                     NOUT = 6
+                  END IF
                   IF( IAM.EQ.0 )
      $               WRITE( NOUT, FMT = * ) 'PZPOTRF INFO=', INFO
 *                 If N < 0 in LLT.dat file then PZPOTRF API sets INFO = -2
@@ -484,6 +488,10 @@
 *                 If N = 0 this is the case of
 *                 early return from ScaLAPACK API.
 *                 If there is safe exit from API we need to pass this case
+                   IF(NOUT .LE. 0 .OR. NOUT .GT. 6) THEN
+*                    resetting stdout, corrupted by negative cases
+                     NOUT = 6
+                   END IF
                    WRITE( NOUT, FMT = 9982 ) 'PZPOTRF'
                   RCOND = ZERO
                END IF
@@ -588,6 +596,10 @@
      $                           IERR(1) .EQ. -12) THEN
 *                             If DESCINIT is returns correct error code
 *                       do nothing
+                        IF(NOUT .LE. 0 .OR. NOUT .GT. 6) THEN
+*                       resetting stdout, corrupted by negative cases
+                           NOUT = 6
+                        END IF
                         WRITE( NOUT, FMT = 9984 ) 'NRHS'
                      END IF
 *
@@ -698,6 +710,10 @@
                      CALL SLTIMER( 2 )
 *
                      IF( INFO.NE.0 ) THEN
+                        IF(NOUT .LE. 0 .OR. NOUT .GT. 6) THEN
+*                       resetting stdout, corrupted by negative cases
+                           NOUT = 6
+                        END IF
                         IF( IAM.EQ.0 )
      $                     WRITE( NOUT, FMT = * ) 'PZPOTRS INFO=', INFO
 *                       If NRHS < 0 in LLT.dat file then

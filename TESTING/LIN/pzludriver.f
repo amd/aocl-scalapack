@@ -485,9 +485,13 @@
                   IF ((M.LT.0 .AND. INFO.EQ.-1) .OR.
      $                (N.LT.0 .AND. INFO.EQ.-2)) THEN
 *                    PDGETRF is returning correct error code, do nothing
-                     WRITE( *, FMT = 9983 ) 'PZGETRF'
+                     IF(NOUT .LE. 0 .OR. NOUT .GT. 6) THEN
+*                    resetting stdout, corrupted by negative cases
+                        NOUT = 6
+                     END IF
+                     WRITE( NOUT, FMT = 9983 ) 'PZGETRF'
                   ELSE IF (INFO.GT.0 .AND. EX_FLAG)  THEN
-                     WRITE(*,*) 'PZGETRF INFO=', INFO
+                     WRITE(NOUT,*) 'PZGETRF INFO=', INFO
 *                    do nothing, skip residual calculation
 *                    Pass this case in INF/NAN residual calculation
                   ELSE
@@ -500,7 +504,11 @@
 *                 If M = 0 or N =0 this is the case of
 *                 early return from ScaLAPACK API.
 *                 If there is safe exit from API we need to pass this case
-                  WRITE( *, FMT = 9982 ) 'PZGETRF'
+                  IF(NOUT .LE. 0 .OR. NOUT .GT. 6) THEN
+*                 resetting stdout, corrupted by early return cases
+                    NOUT = 6
+                  END IF
+                  WRITE( NOUT, FMT = 9982 ) 'PZGETRF'
                   KPASS = KPASS + 1
                   RCOND = ZERO
                   IF(NAN_PERCENT .GT. 0 .OR.
@@ -779,21 +787,25 @@
      $                           IERR(1) .EQ. -12)) THEN
 *                             If DESCINIT is returns correct error code
 *                          do nothing
-                           WRITE( *, FMT = 9984 ) 'NRHS'
+                           IF(NOUT .LE. 0 .OR. NOUT .GT. 6) THEN
+*                          resetting stdout, corrupted by negative cases
+                              NOUT = 6
+                           END IF
+                           WRITE( NOUT, FMT = 9984 ) 'NRHS'
 *                             disable extreme value case when N < 0
                               EX_FLAG = .FALSE.
                            ELSE IF (N.LT.0 .AND. (IERR( 1 ).EQ.-2 .OR.
      $                           IERR( 1 ).EQ. -8 )) THEN
 *                               If DESCINIT is returns correct error code
 *                               do nothing
-                                WRITE( *, FMT = 9984 ) 'N'
+                                WRITE( NOUT, FMT = 9984 ) 'N'
 *                             disable extreme value case when N < 0
                               EX_FLAG = .FALSE.
                            ELSE IF (M.LT.0 .AND. (IERR( 1 ).EQ.-2 .OR.
      $                           IERR( 1 ).EQ. -8 )) THEN
 *                               If DESCINIT is returns correct error code
 *                               do nothing
-                                WRITE( *, FMT = 9984 ) 'M'
+                                WRITE( NOUT, FMT = 9984 ) 'M'
 *                             disable extreme value case when N < 0
                               EX_FLAG = .FALSE.
                         ELSE IF( IERR( 1 ).LT.0 ) THEN
