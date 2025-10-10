@@ -67,7 +67,7 @@ pcsepchk.f pcsepqtq.f pclatms.f pcseprtst.f pssepinfo.f pclagsy.f pclasizesep.f 
 add_executable(xzheevr  pzlasizesepr.f pzlasizeheevr.f pzseprdriver.f pzseprreq.f pzseprsubtst.f
 pzsepchk.f pzsepqtq.f pzlatms.f pzseprtst.f pdsepinfo.f pzlagsy.f pzlasizesep.f ${zmatgen})
 
-add_executable(xshseqr pshseqrdriver.f psmatgen2.f ${cmatgen})
+add_executable(xshseqr pshseqrdriver.f pshseqrinfo.f psmatgen2.f ${cmatgen})
 add_executable(xdhseqr pdhseqrdriver.f pdmatgen2.f ${cmatgen})
 
 if(WIN32)
