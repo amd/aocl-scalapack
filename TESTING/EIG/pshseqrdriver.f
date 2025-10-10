@@ -29,7 +29,6 @@
      $                    UNI_LAPACK = .TRUE. )
       INTEGER           N, NB, ARSRC, ACSRC
       INTEGER           NIN, NMAT, NNB, NGRIDS, I  
-      INTEGER, ALLOCATABLE :: NVAL(:), NBVAL(:), PVAL(:), QVAL(:)  
       CHARACTER(LEN=100) :: SUMMRY, USRINFO  
       INTEGER           NOUT  
       INTEGER           BLOCK_CYCLIC_2D, CSRC_, CTXT_, DLEN_, DT_,
@@ -37,11 +36,13 @@
       PARAMETER         ( BLOCK_CYCLIC_2D = 1, DLEN_ = 9, DT_ = 1,
      $                    CTXT_ = 2, M_ = 3, N_ = 4, MB_ = 5, NB_ = 6,
      $                    RSRC_ = 7, CSRC_ = 8, LLD_ = 9 )
-      INTEGER           DPALLOC, INTALLC
+      INTEGER           DPALLOC, INTALLC, NTESTS
       INTEGER           DPSIZ, INTSZ, IZERO  
       PARAMETER         ( DPSIZ = 8, DPALLOC = 8 000 000,
      $                    INTSZ = 4, INTALLC = 8 000 000,
-     $                    IZERO = 0)  
+     $                    IZERO = 0, NTESTS = 20)
+      INTEGER           NVAL(NTESTS), NBVAL(NTESTS), PVAL(NTESTS), 
+     $                  QVAL(NTESTS)
       REAL              ZERO, ONE, TWO
       PARAMETER         ( ZERO = 0.0, ONE = 1.0, TWO = 2.0 )
 *
@@ -51,7 +52,7 @@
       INTEGER           THREADS
       INTEGER           INFO, KTOP, KBOT, ILO, IHI  
       INTEGER           IPA, IPACPY, IPQ, WR1, WI1, WR2, WI2, IPW1,
-     $                  IPW2, IPIW
+     $                  IPW2, IPIW, REM, NH
       INTEGER           TOTIT, SWEEPS, TOTNS, HESS
       REAL              EPS, THRESH
       DOUBLE PRECISION  STAMP, TOTTIME, T_BA, T_GEN, T_HS, T_SCH, T_QR,
@@ -61,6 +62,7 @@
      $                  ELEM2, ELEM3, EDIFF
       INTEGER           SOLVER
       CHARACTER*6       PASSED
+      INTEGER           REQ_LWORK, REQ_LIWORK
 *
 *     ...Local Arrays...
       INTEGER           DESCA( DLEN_ ), DESCQ( DLEN_ ), DESCVEC( DLEN_ )
@@ -82,91 +84,46 @@
       EXTERNAL          MPI_WTIME
       EXTERNAL          PSGEBAL
       EXTERNAL          PSMATGEN2
-
-      IF( IAM.EQ.0 ) THEN
-*  
-*     	 Open file and skip data file header  
-*  	     
-    		 NIN = 10  
-    		 OPEN( NIN, FILE='EQR.dat', STATUS='OLD' )  
-    		 READ( NIN, FMT = * ) SUMMRY  
-    		 SUMMRY = ' '  
-		 
-*     	 Read in user-supplied info about machine type, compiler, etc.  
-*  	     
-    		 READ( NIN, FMT = * ) USRINFO  
-		 
-*     	 Read name and unit number for summary output file  
-*  	     
-    		 READ( NIN, FMT = * ) SUMMRY  
-    		 READ( NIN, FMT = * ) NOUT  
-    		 IF( NOUT.NE.0 .AND. NOUT.NE.6 ) THEN  
-    		 	OPEN( NOUT, FILE = SUMMRY, STATUS = 'UNKNOWN' )  
-    		 END IF  
-		 
-*     	 Read and check the parameter values for the tests.  
-*  	     
-*     	 Get number of matrices and their dimensions  
-*  	     
-    		 READ( NIN, FMT = * ) NMAT  
-    		 ALLOCATE(NVAL(NMAT))  
-    		 READ( NIN, FMT = * ) ( NVAL( I ), I = 1, NMAT )  
-		 
-*     	 Get values of NB  
-*
-    		 READ( NIN, FMT = * ) NNB  
-    		 ALLOCATE(NBVAL(NNB))  
-    		 READ( NIN, FMT = * ) ( NBVAL( I ), I = 1, NNB )  
-		 
-*     	 Get number of grids  
-*  	     
-    		 READ( NIN, FMT = * ) NGRIDS  
-    		 ALLOCATE(PVAL(NGRIDS), QVAL(NGRIDS))  
-		 
-*     	 Get values of P and Q  
-*  	     
-    		 READ( NIN, FMT = * ) ( PVAL( I ), I = 1, NGRIDS )  
-    		 READ( NIN, FMT = * ) ( QVAL( I ), I = 1, NGRIDS )  
-		 
-*     	 Close input file  
-*  	     
-    		 CLOSE( NIN )  
-		 
-*     	 Use the first values from NVAL and NBVAL for N and NB  
-    		 N = NVAL(1)  
-    		 NB = NBVAL(1)  
-		 
-*     	 Allocate SCALE array  
-    		 ALLOCATE(SCALE(N))  
-		 
-*     	 What processor should hold the first element in A?  
-    		 ARSRC = 0  
-    		 ACSRC = 0  
-      END IF
+      EXTERNAL          PSHSEQRINFO
       
 *     ...Executable statements...
 *
-      CALL BLACS_PINFO( IAM, SYS_NPROCS )
+      CALL BLACS_PINFO( IAM, NPROCS )
+
+      CALL PSHSEQRINFO( SUMMRY, NOUT, NMAT, NVAL, NTESTS,
+     $                  NNB, NBVAL, NTESTS, NGRIDS, PVAL, NTESTS,
+     $                  QVAL, NTESTS, THRESH, IAM, NPROCS )
+
+      N  = NVAL(1)
+      NB = NBVAL(1)
       NPROW = PVAL(1)
       NPCOL = QVAL(1)
       CALL BLACS_GET( 0, 0, ICTXT )
       CALL BLACS_GRIDINIT( ICTXT, '2D', NPROW, NPCOL )
       CALL BLACS_GRIDINFO( ICTXT, NPROW, NPCOL, MYROW, MYCOL )
-c      print*, iam, ictxt, myrow, mycol
-c      IF ( ( MYROW.GE.NPROW ) .OR. ( MYCOL.GE.NPCOL ) ) GO TO 777
       IF ( ICTXT.LT.0 ) GO TO 777
+
+      
+*     Initialize sources (previously lost)
+      ARSRC = 0
+      ACSRC = 0
+
+      TOTIT = 0
+      SWEEPS = 0
+      TOTNS = 0
+      
+      IF (.NOT. ALLOCATED(SCALE)) ALLOCATE(SCALE(N))
 *
 *     Read out the number of underlying threads and set stack size in
 *     kilobytes.
 *
-	THRESH = 30.0
+!   Do NOT overwrite THRESH here; value comes from input via PSHSEQRINFO
       TOTTIME = MPI_WTIME()
       T_GEN = 0.0D+00
       T_RES = 0.0D+00
       T_SCH = 0.0D+00
 *
-*     Allocate and Init memory with zeros.
-*
+*     Allocate DP & INT memory up front again (query needs writable IWORK array)
       INFO = 0
       ALLOCATE ( MEM( DPALLOC ), STAT = INFO )
       IF( INFO.NE.0 ) THEN
@@ -221,6 +178,7 @@ c      IF ( ( MYROW.GE.NPROW ) .OR. ( MYCOL.GE.NPCOL ) ) GO TO 777
          INFO = 0
          NPROCS = NPROW*NPCOL
          TEMP_ICTXT = ICTXT
+         
 *
 *        Count the number of rows and columns of current problem
 *        for the current block sizes and grid properties.
@@ -295,6 +253,7 @@ c      IF ( ( MYROW.GE.NPROW ) .OR. ( MYCOL.GE.NPCOL ) ) GO TO 777
      $           CALL PSLASET( 'Lower triangular', N-KBOT, N-KBOT,
      $           ZERO, ZERO, MEM(IPA), KBOT+1, KBOT, DESCQ )
          END IF
+         
 *
 *        Do balancing if general matrix.
 *
@@ -350,6 +309,7 @@ c     $      ' %%% Generation took in seconds:',T_GEN
 *
          T_HS = MPI_WTIME()
          IF( .NOT. COMPHESS ) GO TO 30
+         
 *
 *        Reduce A to Hessenberg form.
 *
@@ -386,6 +346,7 @@ c     $      ' %%% Generation took in seconds:',T_GEN
                GO TO 999
             END IF
          END IF
+         
 *
 *        Form Q explicitly.
 *
@@ -416,9 +377,9 @@ c     $      ' %%% Generation took in seconds:',T_GEN
 *        Print reduced matrix A in debugging mode.
 *
          IF( PRN ) THEN
-            CALL PSLAPRNT( N, N, MEM(IPA), 1, 1, DESCA, 0, 0, 'H', NOUT,
+           CALL PSLAPRNT( N, N, MEM(IPA), 1, 1, DESCA, 0, 0, 'H', NOUT,
      $           MEM(IPW1) )
-            CALL PSLAPRNT( N, N, MEM(IPQ), 1, 1, DESCQ, 0, 0, 'Q', NOUT,
+           CALL PSLAPRNT( N, N, MEM(IPQ), 1, 1, DESCQ, 0, 0, 'Q', NOUT,
      $           MEM(IPW1) )
          END IF
 *
@@ -455,22 +416,74 @@ c     $      ' %%% Hessenberg took in seconds:',T_HS
             IF( DEBUG ) WRITE(*,*) '% #', IAM, ': == pdhseqr =='
 *            PRINT*, '% PSHSEQR: IPW1,MEM(IPW1)', IPW1, MEM(IPW1)
          IF( BARR ) CALL BLACS_BARRIER(ICTXT, 'A')
+            IMEM(1) = 0
             CALL PSHSEQR( 'Schur', 'Vectors', N, ILO, IHI, MEM(IPA),
      $           DESCA, MEM(WR2), MEM(WI2), MEM(IPQ), DESCQ, MEM(IPW1),
      $           -1, IMEM, -1, INFO )
-         IF( BARR ) CALL BLACS_BARRIER(ICTXT, 'A')
-            IF (DPALLOC-IPW1.LT.MEM(IPW1)) THEN
+            IF (INFO .NE. 0) THEN
+               IF (IAM.EQ.0) WRITE(*,*) '% PSHSEQR query failed 
+     $             INFO=',INFO
+               GO TO 999
+            END IF
+            REQ_LWORK  = INT( MEM(IPW1) )
+            REQ_LIWORK = IMEM(1)
+            IF( BARR ) CALL BLACS_BARRIER(ICTXT, 'A')
+            ! Capacity checks using queried sizes
+            IF (DPALLOC-IPW1+1 .LT. REQ_LWORK) THEN
+               IF (IAM.EQ.0) WRITE(*,*) "% Not enough DP memory for 
+     $             PSHSEQR (need/have)", REQ_LWORK, DPALLOC-IPW1+1
+               GO TO 999
+            END IF
+            IF (REQ_LIWORK .GT. INTALLC) THEN
+               IF (IAM.EQ.0) WRITE(*,*) '% Not enough INT memory 
+     $             reserved (need/have)=', REQ_LIWORK, INTALLC
+               GO TO 999
+            END IF
+            IF (DPALLOC-IPW1+1 .LT. REQ_LWORK) THEN
                WRITE(*,*) "% Not enough DP memory for PSHSEQR"
                GO TO 999
             END IF
-            IF (INTALLC.LT.IMEM(1)) THEN
-               WRITE(*,*) "% Not enough INT memory for PSHSEQR"
+! IMEM(1) will be overwritten during real call; no manual initialization.
+         IF( BARR ) CALL BLACS_BARRIER(ICTXT, 'A')            
+            
+            IF (NB <= 0) THEN
+               IF (IAM.EQ.0) WRITE(*,*) 'ERROR: NB <= 0 (SIGFPE)'
                GO TO 999
             END IF
-         IF( BARR ) CALL BLACS_BARRIER(ICTXT, 'A')
-            CALL PSHSEQR( 'Schur', 'Vectors', N, ILO, IHI, MEM(IPA),
+            IF (DESCA(MB_) <= 0 .OR. DESCA(NB_) <= 0) THEN
+               IF (IAM.EQ.0) WRITE(*,*) 'ERROR: block sizes invalid'
+               GO TO 999
+            END IF
+            IF (DPALLOC - IPW1 + 1 <= 0) THEN
+               IF (IAM.EQ.0) WRITE(*,*) 'ERROR: LWORK <= 0'
+               GO TO 999
+            END IF
+            IF (REAL(DPALLOC-IPW1+1) < MEM(IPW1)) THEN
+               IF (IAM.EQ.0) WRITE(*,*) 'ERR: Insufficient DP workspace'
+               GO TO 999
+            END IF
+            IF (REQ_LIWORK <= 0) THEN
+               IF (IAM.EQ.0) WRITE(*,*) 'ERROR: NEGATIVE LIWORK'
+               GO TO 999
+            END IF
+            IF (ILO < 1 .OR. IHI > N .OR. ILO > IHI) THEN
+               IF (IAM.EQ.0) WRITE(*,*) 'ERROR: Invalid ILO/IHI:',
+     $             ILO,IHI
+               GO TO 999
+            END IF
+
+
+            NH  = IHI - ILO + 1
+            REM = MOD(NH, NB)
+            IF (REM .EQ. 0) REM = NB  ! logical full last block
+            IF (NB <= 0 .OR. NH <= 0) THEN
+               IF (IAM.EQ.0) WRITE(*,*) 'Guard: invalid NB or NH, 
+     $           aborting before PSHSEQR'
+               GO TO 999
+            END IF
+        CALL PSHSEQR( 'Schur', 'Vectors', N, ILO, IHI, MEM(IPA),
      $           DESCA, MEM(WR2), MEM(WI2), MEM(IPQ), DESCQ, MEM(IPW1),
-     $           DPALLOC-IPW1+1, IMEM, INTALLC, INFO )
+     $           DPALLOC-IPW1+1, IMEM, REQ_LIWORK, INFO )
             IF (INFO.NE.0) THEN
                WRITE(*,*) "% PSHSEQR: INFO =", INFO
             END IF
@@ -478,6 +491,7 @@ c     $      ' %%% Hessenberg took in seconds:',T_HS
              WRITE(*,*) '% ERROR: Illegal SOLVER number!'
              GO TO 999
          END IF
+         
          T_QR = MPI_WTIME() - T_QR
 c         IF( TIMESTEPS.AND.IAM.EQ.0 ) WRITE(*,*)
 c     $      ' %%% QR-algorithm took in seconds:',T_QR
@@ -517,7 +531,7 @@ c     $      ' %%% QR-algorithm took in seconds:',T_QR
             ELSE
                ELEM3 = ZERO
             END IF
-            IF( ELEM2.NE.ZERO .AND. ABS(ELEM1)+ABS(ELEM2)+ABS(ELEM3).GT.
+            IF( ELEM2.NE.ZERO.AND. ABS(ELEM1)+ABS(ELEM2)+ABS(ELEM3).GT.
      $         ABS(ELEM2) ) HESS = HESS + 1
          END DO
 *
