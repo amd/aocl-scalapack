@@ -421,9 +421,10 @@
 *                   -4, -6 or -12 incase of incorrect grid info
 *                   MAIN API can be validated.
 *                   Do NOTHING
-                  WRITE( NOUT, FMT = 9983 ) 'N'
+                    IF( IAM.EQ.0 )
+     $                  WRITE( NOUT, FMT = 9983 ) 'N'
 *                   disable extreme value case when N < 0
-                  EX_FLAG = .FALSE.
+                    EX_FLAG = .FALSE.
                ELSE IF(N .EQ. 0 .AND. (IERR(1) .EQ. 0 .OR.
      $              IERR(1) .EQ. -5 .OR. IERR(1) .EQ. -10 .OR.
      $              IERR(1) .EQ. -15 .OR. IERR(1) .EQ. -20 )) THEN
@@ -620,12 +621,14 @@
                   IF(N .LT. 0 .AND. (INFO .EQ. -3 .OR.
      $                INFO .EQ. -604 .OR. INFO .EQ. -1)) THEN
 *                    expected error code, pass this case to solve API
-                     WRITE( NOUT, FMT = * ) 'PCPTTRF INFO=', INFO
+                     IF( IAM.EQ.0 )
+     $                 WRITE( NOUT, FMT = * ) 'PCPTTRF INFO=', INFO
 *                 When N = 0, make BWL and BWU = 0 for early return
                   ELSE IF(N .EQ. 0 .AND. INFO .EQ. -3) THEN
 *                    expected error code, when bandwidth is > 0
 *                    pass this case to solve API
-                     WRITE( NOUT, FMT = * ) 'PCPTTRF INFO=', INFO
+                     IF( IAM.EQ.0 )
+     $                 WRITE( NOUT, FMT = * ) 'PCPTTRF INFO=', INFO
                   ELSE
                     IF( IAM.EQ.0 ) THEN
                      WRITE( NOUT, FMT = * ) 'PCPTTRF INFO=', INFO
@@ -754,10 +757,12 @@
      $                       INFO .EQ. -704 .OR. INFO .EQ. -604 .OR.
      $                       INFO .EQ. -1)) THEN
 *                          expected error code, pass this case to solve API
-                           WRITE( NOUT, FMT = * ) 'PCPTTRS INFO=', INFO
+                           IF( IAM.EQ.0 )
+     $                     WRITE( NOUT, FMT = * ) 'PCPTTRS INFO=', INFO
                         ELSE IF(N .EQ. 0 .AND. INFO .EQ. -3) THEN
 *                          expected error code, pass this case to solve API
-                           WRITE( NOUT, FMT = * ) 'PCPTTRS INFO=', INFO
+                           IF( IAM.EQ.0 )
+     $                     WRITE( NOUT, FMT = * ) 'PCPTTRS INFO=', INFO
                         ELSE
                          IF( IAM.EQ.0 )
      $                    WRITE( NOUT, FMT = * ) 'PCPTTRS INFO=', INFO
@@ -810,7 +815,8 @@
 *                       early return from ScaLAPACK API.
 *                       If there is safe exit from API; pass this case
                            KPASS = KPASS + 1
-                           WRITE( NOUT, FMT = 9984 ) 'PCPTTRS'
+                           IF( IAM.EQ.0 )
+     $                         WRITE( NOUT, FMT = 9984 ) 'PCPTTRS'
                            PASSED = 'PASSED'
 *                          Re-enable EX_FLAG
                            IF(NAN_PERCENT .GT. 0 .OR.
@@ -824,7 +830,8 @@
 *                       Expected Error code for N < 0
 *                       Hence this case can be passed
                            KPASS = KPASS + 1
-                           WRITE( NOUT, FMT = 9982 ) 'PCPTTRS'
+                           IF( IAM.EQ.0 )
+     $                         WRITE( NOUT, FMT = 9982 ) 'PCPTTRS'
                            PASSED = 'PASSED'
 *                          Re-enable EX_FLAG
                            IF(NAN_PERCENT .GT. 0 .OR.
