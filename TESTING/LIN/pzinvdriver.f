@@ -362,7 +362,8 @@
 *                   DESCINIT returns the correct error code,
 *                   MAIN API can be validated.
 *                   Do NOTHING
-                    WRITE( NOUT, FMT = 9984 ) 'N'
+                    IF( IAM.EQ.0 )
+     $                  WRITE( NOUT, FMT = 9984 ) 'N'
 *                   disable extreme flag for negative case
                     EX_FLAG = .FALSE.
                   ELSE IF(IERR(1) .LT. 0) THEN
@@ -805,7 +806,8 @@
 *                       early return from ScaLAPACK API.
 *                       If there is safe exit from API; pass this case
                         KPASS = KPASS + 1
-                        WRITE( NOUT, FMT = 9985 ) KPASS, API_NAME
+                        IF( IAM.EQ.0 )
+     $                      WRITE( NOUT, FMT = 9985 ) KPASS, API_NAME
                         PASSED = 'PASSED'
                         GO TO 10
                      ELSE IF( FRESID.LE.THRESH .AND. INFO.EQ.0 .AND.
@@ -824,7 +826,8 @@
 *                       Expected Error code for N < 0
 *                       Hence this case can be passed
                         KPASS = KPASS + 1
-                        WRITE( NOUT, FMT = 9983 ) API_NAME
+                        IF( IAM.EQ.0 )
+     $                      WRITE( NOUT, FMT = 9983 ) API_NAME
                         PASSED = 'PASSED'
 *                       re-enable extreme flag for next case
                         IF(INF_PERCENT .GT. 0 .OR.
@@ -848,7 +851,8 @@
 *                       early return from ScaLAPACK API.
 *                       If there is safe exit from API; pass this case
                         KPASS = KPASS + 1
-                        WRITE( NOUT, FMT = 9985 ) KPASS, API_NAME
+                        IF( IAM.EQ.0 )
+     $                      WRITE( NOUT, FMT = 9985 ) KPASS, API_NAME
                         PASSED = 'PASSED'
                         GO TO 10
                      ELSE IF(EX_FLAG .AND. N.GT.0) THEN

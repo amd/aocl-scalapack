@@ -341,12 +341,14 @@
      $             IERR( 1 ).EQ. -8 .OR. IERR(1).EQ.-12 )) THEN
 *                 If DESCINIT is returning correct error code then
 *                 do nothing
-                  WRITE( NOUT, FMT = 9985 ) 'M'
+                  IF( IAM.EQ.0 )
+     $                WRITE( NOUT, FMT = 9985 ) 'M'
                ELSE IF (N.LT.0 .AND. (IERR( 1 ).EQ.-3 .OR.
      $             IERR( 1 ).EQ. -8 .OR. IERR(1).EQ.-12 )) THEN
 *                 If DESCINIT is returning correct error code then
 *                 do nothing
-                  WRITE( NOUT, FMT = 9985 ) 'N'
+                  IF( IAM.EQ.0 )
+     $                WRITE( NOUT, FMT = 9985 ) 'N'
                ELSE IF( IERR( 1 ).LT.0 ) THEN
                   IF( IAM.EQ.0 )
      $               WRITE( NOUT, FMT = 9997 ) 'descriptor'
@@ -480,21 +482,24 @@
      $                           IERR(1) .EQ. -12)) THEN
 *                             If DESCINIT is returns correct error code then
 *                             do nothing
-                              WRITE( NOUT, FMT = 9985 ) 'NRHS'
+                              IF( IAM.EQ.0 )
+     $                            WRITE( NOUT, FMT = 9985 ) 'NRHS'
                            ELSE IF (N.LT.0 .AND. (IERR( 1 ).EQ.-2 .OR.
      $                           IERR( 1 ).EQ. -8 .OR.
      $                           IERR( 2 ).EQ.-2 .OR.
      $                           IERR( 2 ).EQ. -8) ) THEN
 *                               If DESCINIT is returns correct error code then
 *                               do nothing
-                                WRITE( NOUT, FMT = 9985 ) 'N'
+                                IF( IAM.EQ.0 )
+     $                              WRITE( NOUT, FMT = 9985 ) 'N'
                            ELSE IF (M.LT.0 .AND. (IERR( 1 ).EQ.-2 .OR.
      $                           IERR( 1 ).EQ. -8 .OR.
      $                           IERR( 2 ).EQ. -2 .OR.
      $                           IERR( 2 ).EQ. -8)) THEN
 *                               If DESCINIT is returns correct error code then
 *                               do nothing
-                                WRITE( NOUT, FMT = 9985 ) 'M'
+                                IF( IAM.EQ.0 )
+     $                              WRITE( NOUT, FMT = 9985 ) 'M'
                            ELSE IF( IERR( 1 ).LT.0 .OR.
      $                      IERR( 2 ).LT.0 ) THEN
                               IF( IAM.EQ.0 )
@@ -743,7 +748,8 @@
      $                          NRHS .EQ. 0 ) .AND. INF0.EQ.0) THEN
 *                             If M = 0 or N =0 this is the case of
 *                             safe exit, early return from ScaLAPACK API.
-                              WRITE( NOUT, FMT = 9983 ) 'PCGELS'
+                              IF( IAM.EQ.0 )
+     $                            WRITE( NOUT, FMT = 9983 ) 'PCGELS'
                            END IF
                            IF( CHECK .AND. M.GT.0 .AND.
      $                          N.GT.0 .AND. NRHS.GT.0 ) THEN
@@ -1105,7 +1111,8 @@
 *
 *                               If PZGELS returns correct error code
 *                               pass this case
-                                WRITE( NOUT, FMT = 9984 ) 'PZGELS'
+                                IF( IAM.EQ.0 )
+     $                              WRITE( NOUT, FMT = 9984 ) 'PZGELS'
                                 KPASS = KPASS + 1
                                 SRESID = SRESID - SRESID
                                 PASSED = 'PASSED'
