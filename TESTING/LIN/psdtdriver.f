@@ -431,7 +431,8 @@
 *                   -4, -6 or -12 incase of incorrect grid info
 *                   MAIN API can be validated.
 *                   Do NOTHING
-                  WRITE( NOUT, FMT = 9983 ) 'N'
+                  IF( IAM.EQ.0 )
+     $                WRITE( NOUT, FMT = 9983 ) 'N'
 *                   disable extreme value case when N < 0
                   EX_FLAG = .FALSE.
                ELSE IF(N .EQ. 0 .AND. (IERR(1) .EQ. 0 .OR.
@@ -609,12 +610,14 @@
                   IF(N .LT. 0 .AND. (INFO .EQ. -1 .OR.
      $                   INFO .EQ. -604 )) THEN
 *                    expected error code, pass this case to solve API
-                     WRITE( NOUT, FMT = * ) 'PSDTTRF INFO=', INFO
+                     IF( IAM.EQ.0 )
+     $                   WRITE( NOUT, FMT = * ) 'PSDTTRF INFO=', INFO
 *                 When N = 0, make BWL and BWU = 0 for early return
                   ELSE IF(N .EQ. 0 .AND. INFO .EQ. -3) THEN
 *                    expected error code, when bandwidth is > 0
 *                    pass this case to solve API
-                     WRITE( NOUT, FMT = * ) 'PSDTTRF INFO=', INFO
+                     IF( IAM.EQ.0 )
+     $                   WRITE( NOUT, FMT = * ) 'PSDTTRF INFO=', INFO
                   ELSE
                     IF( IAM.EQ.0 ) THEN
                      WRITE( NOUT, FMT = * ) 'PSDTTRF INFO=', INFO
@@ -740,10 +743,12 @@
                         IF(N .LT. 0 .AND. (INFO .EQ. -2 .OR.
      $                           INFO .EQ. -804)) THEN
 *                          expected error code, pass this case to solve API
-                           WRITE( NOUT, FMT = * ) 'PSDTTRS INFO=', INFO
+                        IF( IAM.EQ.0 )
+     $                   WRITE( NOUT, FMT = * ) 'PSDTTRS INFO=', INFO
                         ELSE IF(N .EQ. 0 .AND. INFO .EQ. -4) THEN
 *                          expected error code, pass this case to solve API
-                           WRITE( NOUT, FMT = * ) 'PSDTTRS INFO=', INFO
+                        IF( IAM.EQ.0 )
+     $                   WRITE( NOUT, FMT = * ) 'PSDTTRS INFO=', INFO
                         ELSE
                          IF( IAM.EQ.0 )
      $                    WRITE( NOUT, FMT = * ) 'PSDTTRS INFO=', INFO
@@ -795,7 +800,8 @@
 *                       early return from ScaLAPACK API.
 *                       If there is safe exit from API; pass this case
                            KPASS = KPASS + 1
-                           WRITE( NOUT, FMT = 9984 ) 'PSDTTRS'
+                           IF( IAM.EQ.0 )
+     $                         WRITE( NOUT, FMT = 9984 ) 'PSDTTRS'
                            PASSED = 'PASSED'
 *                          Re-enable EX_FLAG
                            IF(NAN_PERCENT .GT. 0 .OR.
@@ -808,7 +814,8 @@
 *                       Expected Error code for N < 0
 *                       Hence this case can be passed
                            KPASS = KPASS + 1
-                           WRITE( NOUT, FMT = 9982 ) 'PSDTTRS'
+                           IF( IAM.EQ.0 )
+     $                         WRITE( NOUT, FMT = 9982 ) 'PSDTTRS'
                            PASSED = 'PASSED'
 *                          Re-enable EX_FLAG
                            IF(NAN_PERCENT .GT. 0 .OR.

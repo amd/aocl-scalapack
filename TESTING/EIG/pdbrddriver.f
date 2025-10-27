@@ -322,11 +322,13 @@
 *                   -4, -8 or -12 incase of incorrect grid info
 *                   MAIN API can be validated.
 *                   Do NOTHING
-                    WRITE( NOUT, FMT = 9984 ) 'N'
+                    IF( IAM.EQ.0 )
+     $                  WRITE( NOUT, FMT = 9984 ) 'N'
                   ELSE IF(M .LT. 0 .AND. (IERR(1) .EQ. -2 .OR.
      $               IERR(1) .EQ. -4 .OR. IERR(1) .EQ. -8 .OR.
      $               IERR(1) .EQ. -3 .OR. IERR(1) .EQ. -12  )) THEN
-                    WRITE( NOUT, FMT = 9984 ) 'M'
+                    IF( IAM.EQ.0 )
+     $                  WRITE( NOUT, FMT = 9984 ) 'M'
                   ELSE IF(IERR(1) .LT. 0) THEN
                      IF( IAM.EQ.0 )
      $                  WRITE( NOUT, FMT = 9997 ) 'descriptor'
@@ -498,7 +500,8 @@
 *                   early return from ScaLAPACK API.
 *                   If there is safe exit from API; pass this case
                     KPASS = KPASS + 1
-                    WRITE( NOUT, FMT = 9985 ) 'PDGEBRD'
+                    IF( IAM.EQ.0 )
+     $                  WRITE( NOUT, FMT = 9985 ) 'PDGEBRD'
                     PASSED = 'PASSED'
                     FRESID = 0
                   ELSE IF( FRESID.LE.THRESH .AND.
@@ -528,7 +531,8 @@
 *                   early return from ScaLAPACK API.
 *                   If there is safe exit from API; pass this case
                     KPASS = KPASS + 1
-                    WRITE( NOUT, FMT = 9985 ) 'PDGEBRD'
+                    IF( IAM.EQ.0 )
+     $                  WRITE( NOUT, FMT = 9985 ) 'PDGEBRD'
                     PASSED = 'PASSED'
 *                 Invalid M/N
                   ELSE IF( ( M .LT. 0 .AND. INFO .EQ. -1 ) .OR.
@@ -538,7 +542,8 @@
 *                   When M < 0/Invalid, INFO = -1
 *                   Expected Error code for N < 0
 *                   Hence this case can be passed
-                    WRITE( NOUT, FMT = 9983 ) 'PDGEBRD'
+                    IF( IAM.EQ.0 )
+     $                  WRITE( NOUT, FMT = 9983 ) 'PDGEBRD'
                     KPASS = KPASS + 1
                     PASSED = 'PASSED'
 *
