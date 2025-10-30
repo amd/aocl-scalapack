@@ -349,7 +349,7 @@
 *                 If DESCINIT is returning correct error code then
 *                 do nothing
                   IF( IAM.EQ.0 )
-     #                WRITE( NOUT, FMT = 9985 ) 'N'
+     $                WRITE( NOUT, FMT = 9985 ) 'N'
                ELSE IF( IERR( 1 ).LT.0 ) THEN
                   IF( IAM.EQ.0 )
      $               WRITE( NOUT, FMT = 9997 ) 'descriptor'
