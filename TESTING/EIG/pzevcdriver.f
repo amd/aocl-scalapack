@@ -335,7 +335,8 @@
      $                 IERR( 2 ).EQ. -4) ) THEN
 *              If DESCINIT is returning correct error code we need to pass
 *              and it will be ScaLAPACK API
-                  WRITE( NOUT, FMT = 9983 ) 'N'
+                  IF( IAM.EQ.0 )
+     $                WRITE( NOUT, FMT = 9983 ) 'N'
 *                   disable extreme value case when N < 0
                   EX_FLAG = .FALSE.
                ELSE IF(N .EQ. 0 .AND. (IERR(1) .EQ. 0 .OR.
@@ -348,7 +349,8 @@
 *                   Do NOTHING
 *                   disable extreme value case when N = 0
                     EX_FLAG = .FALSE.
-                  WRITE ( NOUT, FMT = 9984 ) 'PZTREVC'
+                  IF( IAM.EQ.0 )
+     $               WRITE ( NOUT, FMT = 9984 ) 'PZTREVC'
                ELSE IF( IERR( 1 ).LT.0 .OR. IERR( 2 ).LT.0 ) THEN
                   IF( IAM.EQ.0 )
      $               WRITE( NOUT, FMT = 9997 ) 'descriptor'
@@ -506,7 +508,8 @@
                   IF (N.LT.0 .AND. INFO.EQ.-4) THEN
 *                    If PZTREVC is returning correct error
 *                    code we need to pass this case
-                     WRITE( NOUT, FMT = 9983 ) 'PZTREVC'
+                     IF( IAM.EQ.0 )
+     $                   WRITE( NOUT, FMT = 9983 ) 'PZTREVC'
                   ELSE IF ( N.GT.1 .AND. INFO.NE.0 ) THEN
                      KFAIL = KFAIL + 1
                      GO TO 20
@@ -514,7 +517,8 @@
                ELSE IF (N.EQ.0) THEN
 *                 If N =0 this is the case of
 *                 early return from ScaLAPACK API.
-                  WRITE( NOUT, FMT = 9982 ) 'PZTREVC'
+                  IF( IAM.EQ.0 )
+     $                WRITE( NOUT, FMT = 9982 ) 'PZTREVC'
                END IF
 *
                IF( CHECK .AND. INFO.EQ.0 .AND. .NOT.(EX_FLAG) ) THEN
@@ -581,7 +585,8 @@
 *                       early return from ScaLAPACK API.
 *                       If there is safe exit from API; pass this case
                            KPASS = KPASS + 1
-                           WRITE( NOUT, FMT = 9984 ) 'PZTREVC'
+                           IF( IAM.EQ.0 )
+     $                         WRITE( NOUT, FMT = 9984 ) 'PZTREVC'
                            PASSED = 'PASSED'
 *                          Re-enable EX_FLAG
                            IF(NAN_PERCENT .GT. 0 .OR.
@@ -594,7 +599,8 @@
 *                       Expected Error code for N < 0
 *                       Hence this case can be passed
                            KPASS = KPASS + 1
-                           WRITE( NOUT, FMT = 9982 ) 'PZTREVC'
+                           IF( IAM.EQ.0 )
+     $                         WRITE( NOUT, FMT = 9982 ) 'PZTREVC'
                            PASSED = 'PASSED'
 *                          Re-enable EX_FLAG
                            IF(NAN_PERCENT .GT. 0 .OR.

@@ -1,0 +1,12 @@
+'ScaLAPACK, Orthogonal factorizations input file'
+'MPI machine'
+'EQR.out'			output file name (if any)
+6                       device out
+1                       number of problems sizes
+500	                    values of N
+1                       number of NB's
+50		                  values of NB
+2                       Number of processor grids (ordered pairs of P & Q)
+1 2  		                values of P
+2 1  		                values of Q
+5.0				              threshold

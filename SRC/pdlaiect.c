@@ -251,7 +251,7 @@ void pdlachkieee_( Int *isieee, double *rmax, double *rmin )
 *  .. Local Scalars ..
 */
    double x, pinf, pzero, ninf, nzero;
-   Int         ieflag, *ix, sbit1, sbit2, negone=-1, errornum;
+   Int         ieflag, *ix, sbit1=0, sbit2=0, negone=-1, errornum;
 /* ..
 *  .. Executable Statements ..
 */

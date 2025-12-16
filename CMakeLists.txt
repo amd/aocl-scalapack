@@ -54,6 +54,8 @@ set(ENABLE_SET_LIB_VERSION "default_version" CACHE STRING "Set the library versi
 # Helpful to test larger matrix sizes more than 2K
 option (ENABLE_LARGE_MATRIX_TESTING "Dynamic allocation of work buffer memory in test code" OFF)
 
+#Option to enable wrappers, default is set to ON
+option(ENABLE_WRAPPERS "Enable building the f2c wrapper interfaces" ON)
 # ------   Build Options List End   -----------
 
 
@@ -258,6 +260,11 @@ ENDIF(ENABLE_DTL)
 if(ENABLE_DRIVER_CHECK)
   add_definitions("-DENABLE_DRIVER_CHECK")
 ENDIF(ENABLE_DRIVER_CHECK)
+
+if(ENABLE_WRAPPERS)
+  add_definitions("-DENABLE_AOCL_WRAPPERS")
+  set(ENABLE_AOCL_WRAPPERS TRUE)
+ENDIF(ENABLE_WRAPPERS)
 
 if(ENABLE_ILP64)
   if(UNIX)
@@ -519,6 +526,7 @@ if (UNIX)
     target_compile_options(scalapack PUBLIC -fprofile-arcs  -ftest-coverage)
     target_link_options(scalapack PUBLIC -fprofile-arcs  -ftest-coverage)
   endif(ENABLE_COVERAGE)
+
 else (UNIX) # Need to separate Fortran and C Code
     if (CMAKE_C_COMPILER_ID MATCHES MSVC)
         # create Fortran objects and add to scalapack library first
@@ -592,6 +600,17 @@ else (UNIX) # Need to separate Fortran and C Code
       endif(CUSTOM_BLACS_FOUND)
     endif ()
 endif (UNIX)
+
+if(ENABLE_WRAPPERS AND TARGET scalapack)
+  # Skip if scalapack is an imported prebuilt library
+  get_target_property(_is_imported scalapack IMPORTED)
+  if(NOT _is_imported)
+    message(STATUS "ENABLE_WRAPPERS = ON (adding f2c wrappers)")
+    target_compile_definitions(scalapack PUBLIC AOCL_ENABLE_WRAPPERS=1)
+  else()
+    message(WARNING "ENABLE_WRAPPERS requested, but scalapack is IMPORTED. Ignoring wrappers.")
+  endif()
+endif()
 
 if(${SCALAPACK_BUILD_TESTS})
   add_subdirectory(TESTING)

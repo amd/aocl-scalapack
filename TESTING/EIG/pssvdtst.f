@@ -319,11 +319,14 @@
       IF( M.LT.0 .AND. DINFO.EQ.-2 ) THEN
 *        If DESCINIT is returning correct error code then
 *        do nothing
-         WRITE( NOUT, FMT = 9997 ) 'M'
+         IF( IAM.EQ.0 )
+     $      WRITE( NOUT, FMT = 9997 ) 'M'
       ELSE IF( N.LT.0 .AND. DINFO.EQ.-3 ) THEN
-         WRITE( NOUT, FMT = 9997 ) 'N'
+         IF( IAM.EQ.0 )
+     $      WRITE( NOUT, FMT = 9997 ) 'N'
       ELSE IF( DINFO.LT.0 ) THEN
-          WRITE( NOUT, FMT = 9996 ) 'descriptor'
+          IF( IAM.EQ.0 )
+     $       WRITE( NOUT, FMT = 9996 ) 'descriptor'
           GO TO 120
       END IF
       CALL DESCINIT( DESCU, M, SIZE, NB, NB, 0, 0, CONTEXT, LDU, DINFO )
@@ -402,10 +405,12 @@
 *         If N =0 or M =0 this is the case of
 *         early return from ScaLAPACK API.
 *         If there is safe exit from API; pass this case
-         WRITE( NOUT, FMT = 9999 )'Passed', WTIME( 1 ),
+         IF( IAM.EQ.0 ) THEN
+            WRITE( NOUT, FMT = 9999 )'Passed', WTIME( 1 ),
      $            CTIME( 1 ), M, N, NPROW, NPCOL, NB, ITYPE, CHK, MTM,
      $            DELTA, HETERO
-         WRITE( NOUT, FMT = 9998) 'PSGESVD'
+            WRITE( NOUT, FMT = 9998) 'PSGESVD'
+         END IF
          GO TO 120
       END IF
 *
@@ -413,24 +418,29 @@
 *       If N < 0 in SVD.dat file then PSGESVD API sets DINFO = -4
 *
       IF ( DINFO.LT.0 .AND. .NOT.EX_FLAG ) THEN
-         WRITE( NOUT, FMT = * ) 'PSGESVD DINFO=', DINFO
+         IF( IAM.EQ.0 )
+     $          WRITE( NOUT, FMT = * ) 'PSGESVD DINFO=', DINFO
          IF( M.LT.0 .AND. DINFO.EQ.-3 .AND. .NOT.EX_FLAG ) THEN
 *        When M < 0/Invalid, PSGESVD DINFO = -3
 *        Expected Error code for M < 0
 *        Hence this case can be passed
-            WRITE( NOUT, FMT = 9999 )'Passed', WTIME( 1 ),
+            IF( IAM.EQ.0 ) THEN
+                  WRITE( NOUT, FMT = 9999 )'Passed', WTIME( 1 ),
      $                 CTIME( 1 ), M, N, NPROW, NPCOL, NB, ITYPE,
      $                 CHK, MTM, DELTA, HETERO
-         WRITE( NOUT, FMT = 9995) 'PSGESVD'
+                  WRITE( NOUT, FMT = 9995) 'PSGESVD'
+            END IF
          GO TO 120
          ELSE IF( N.LT.0 .AND. DINFO.EQ.-4 .AND. .NOT.EX_FLAG ) THEN
 *           When N < 0/Invalid, PSGESVD DINFO = -4
 *           Expected Error code for N < 0
 *           Hence this case can be passed
-            WRITE( NOUT, FMT = 9999 )'Passed', WTIME( 1 ),
+            IF( IAM.EQ.0 ) THEN
+                  WRITE( NOUT, FMT = 9999 )'Passed', WTIME( 1 ),
      $                  CTIME( 1 ), M, N, NPROW, NPCOL, NB, ITYPE,
      $                  CHK, MTM, DELTA, HETERO
-            WRITE( NOUT, FMT = 9995) 'PSGESVD'
+                  WRITE( NOUT, FMT = 9995) 'PSGESVD'
+            END IF
             GO TO 120
          ELSE
 *           For other error code we will mark test case as fail

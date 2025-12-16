@@ -517,7 +517,13 @@ void PB_CpgemmAC( TYPE, DIRECA, DIRECC, TRANSA, TRANSB, M, N, K, ALPHA,
                      talpha, WA, &WAd[LLD_], Bptr, &Bld, zero, WC, &WCd[LLD_] );
             if( WAfr ) free( WA );
             if( Afr && ( AisR || ( AmyprocR == AcurrocR ) ) )
-               if( Abuf ) free( Abuf );
+            {
+               if( Abuf )
+               {
+                  free( Abuf );
+                  Abuf = NULL;
+               }
+            }
 /*
 *  Accumulate the intermediate results in WC
 */
@@ -565,7 +571,11 @@ void PB_CpgemmAC( TYPE, DIRECA, DIRECC, TRANSA, TRANSB, M, N, K, ALPHA,
                PB_CVMpack( TYPE, &VM, ROW, ROW,    UNPACKING, NOTRAN, mbb, Cnq,
                            BETA, Mptr( C, Ckk, Cjj, Cld, size ), Cld, one, Cbuf,
                            Cbufld );
-               if( Cbuf ) free( Cbuf );
+               if( Cbuf )
+               {
+                  free( Cbuf );
+                  Cbuf = NULL;
+               }
             }
             if( WCfr ) free( WC );
          }
@@ -589,7 +599,13 @@ void PB_CpgemmAC( TYPE, DIRECA, DIRECC, TRANSA, TRANSB, M, N, K, ALPHA,
                      talpha, Bptr, &Bld, WA, &WAd[LLD_], zero, WC, &WCd[LLD_] );
             if( WAfr ) free( WA );
             if( Afr && ( AisR || ( AmyprocR == AcurrocR ) ) )
-               if( Abuf ) free( Abuf );
+            {
+               if( Abuf )
+               {
+                  free( Abuf );
+                  Abuf = NULL;
+               }
+            }
 /*
 *  Accumulate the intermediate results in WC
 */
@@ -638,7 +654,11 @@ void PB_CpgemmAC( TYPE, DIRECA, DIRECC, TRANSA, TRANSB, M, N, K, ALPHA,
                PB_CVMpack( TYPE, &VM, ROW, ROW,    UNPACKING, NOTRAN, mbb, Cnq,
                            BETA, Mptr( C, Ckk, Cjj, Cld, size ), Cld, one, Cbuf,
                            Cbufld );
-               if( Cbuf ) free( Cbuf );
+               if( Cbuf )
+               {
+                  free( Cbuf );
+                  Cbuf = NULL;
+               }
             }
             if( WCfr ) free( WC );
          }

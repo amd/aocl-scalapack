@@ -1,0 +1,14 @@
+'ScaLAPACK, Orthogonal factorizations input file'
+'MPI machine'
+'QR.out'			output file name (if any)
+6				device out
+4				number of problems sizes
+7 10 15 36 26 30 15		values of M. The M value should be more than the MB, NB values.
+7 10 15 36 18 30 30 35		values of N. The N value should be more than the MB, NB values.
+3				number of blocking sizes
+2 3 5 5 4 6			values of MB
+2 3 5 5 8 2			values of NB
+4				number of process grids (ordered pairs P & Q)
+1 4 2 1 2 3 8			values of P
+4 1 2 2 3 2 1			values of Q
+5.0				threshold

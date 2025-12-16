@@ -443,7 +443,13 @@ void PB_Cpgeadd( TYPE, DIRECA, DIRECC, CONJUG, M, N, ALPHA, A, IA, JA,
 *  Release the buffer containing the packed rows of sub( A )
 */
                if( Afr && ( AisR || ( ACmyprocR == AcurrocR ) ) )
-                  if( Abuf ) free( Abuf );
+               {
+                  if( Abuf )
+                  {
+                     free( Abuf );
+                     Abuf = NULL;
+                  }
+               }
 /*
 *  Unpack the kbb rows of sub( C ) and release the buffer containing them.
 */
@@ -452,7 +458,11 @@ void PB_Cpgeadd( TYPE, DIRECA, DIRECC, CONJUG, M, N, ALPHA, A, IA, JA,
                   PB_CVMpack( TYPE, &VM, ROW, &ACroc, UNPACKING, NOTRAN, kbb,
                               CnpD, BETA, Mptr( C, Ckk, CiiD, Cld, size ), Cld,
                               ALPHA, Cbuf, Cbufld );
-                  if( Cbuf ) free( Cbuf );
+                  if( Cbuf )
+                  {
+                     free( Cbuf );
+                     Cbuf = NULL;
+                  }
                }
 /*
 *  Update the local row indexes of sub( A ) and sub( C )
@@ -530,7 +540,14 @@ void PB_Cpgeadd( TYPE, DIRECA, DIRECC, CONJUG, M, N, ALPHA, A, IA, JA,
 *  Release the buffer containing the packed columns of sub( A )
 */
                if( Afr && ( AisR || ( ACmyprocR == AcurrocR ) ) )
-                  if( Abuf ) free( Abuf );
+               {
+                  if (Abuf)
+                  {
+                      free( Abuf );
+                      Abuf = NULL;
+                  }
+                  
+               }
 /*
 *  Unpack the kbb columns of sub( C ) and release the buffer containing them.
 */
@@ -539,7 +556,11 @@ void PB_Cpgeadd( TYPE, DIRECA, DIRECC, CONJUG, M, N, ALPHA, A, IA, JA,
                   PB_CVMpack( TYPE, &VM, ROW, &ACroc, UNPACKING, NOTRAN, kbb,
                               CnpD, BETA, Mptr( C, CiiD, Ckk, Cld, size ), Cld,
                               ALPHA, Cbuf, Cbufld );
-                  if( Cbuf ) free( Cbuf );
+                  if( Cbuf )
+                  {
+                      free( Cbuf );
+                      Cbuf = NULL;
+                  }
                }
 /*
 *  Update the local row index of sub( A ) and the local column index of sub( C )

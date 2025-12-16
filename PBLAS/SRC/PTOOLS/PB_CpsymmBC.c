@@ -638,7 +638,13 @@ void PB_CpsymmBC( TYPE, DIRECAB, CONJUG, SIDE, UPLO, M, N, ALPHA, A, IA,
          if( WBRfr ) free( WBR );
 
          if( Bfr && ( BisR || ( BCmyprocR == BcurrocR ) ) )
-            if( Bbuf ) free( Bbuf );
+         {
+            if( Bbuf )
+            {
+               free( Bbuf );
+               Bbuf = NULL;
+            }
+         }
 
          if( lside )
          {
@@ -704,7 +710,11 @@ void PB_CpsymmBC( TYPE, DIRECAB, CONJUG, SIDE, UPLO, M, N, ALPHA, A, IA,
                PB_CVMpack( TYPE, &VM, ROW,   COLUMN, UNPACKING, NOTRAN, nbb,
                            CnpD, BETA, Mptr( C, CiiD, Ckk, Cld, size ), Cld,
                            one, Cbuf, Cbufld );
-               if( Cbuf ) free( Cbuf );
+               if( Cbuf )
+               {
+                  free( Cbuf );
+                  Cbuf = NULL;
+               }
             }
          }
          else
@@ -772,7 +782,11 @@ void PB_CpsymmBC( TYPE, DIRECAB, CONJUG, SIDE, UPLO, M, N, ALPHA, A, IA,
                PB_CVMpack( TYPE, &VM, ROW,   ROW,    UNPACKING, NOTRAN, nbb,
                            CnpD, BETA, Mptr( C, Ckk, CiiD, Cld, size ), Cld,
                            one, Cbuf, Cbufld );
-               if( Cbuf ) free( Cbuf );
+               if( Cbuf )
+               {
+                  free( Cbuf );
+                  Cbuf = NULL;
+               }
             }
          }
 /*

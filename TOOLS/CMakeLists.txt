@@ -42,5 +42,5 @@ set(tools
      ${ATOOLS} ${ITOOLS} ${STOOLS} ${DTOOLS} ${CTOOLS} ${ZTOOLS})
      
 set(tools-C 
-    reshape.c  SL_gridreshape.c )
+    reshape.c  SL_gridreshape.c aocl_f2c_tools_wrappers.c)
      

@@ -58,7 +58,11 @@ void aocl_sl_dtl_trace_entry_( const char * fileName, unsigned int * lineNumber,
   Int    i, fnlen, cval;
 
   fnlen = strlen( fileName );
-  funcName = (char *) malloc( fnlen );
+
+  //Make sure a valid file fetch happened and the length was determined.
+  if(fnlen < 2)
+    return;
+  funcName = (char *) malloc( fnlen + 1);
 
   if( funcName != NULL)
   {

@@ -675,7 +675,13 @@ void PB_Cpsyr2kA( TYPE, DIRECAB, CONJUG, UPLO, TRANS, N, K, ALPHA, A, IA,
             PB_CInV2( TYPE, NOCONJG, COLUMN, N, N, Cd0, ABrocs, Abuf, 0, 0,
                       DBUFA, COLUMN, WAC, Wkbb, WACd0 );
             if( Afr & ( AisR || ( ABmyprocR == AcurrocR ) ) )
-               if( Abuf ) free( Abuf );
+            {
+               if( Abuf )
+               { 
+                  free( Abuf );
+                  Abuf = NULL;
+               }
+            }
 
 /*
 *  Compute the descriptor DBUFB for the buffer that will contained the packed
@@ -713,7 +719,13 @@ void PB_Cpsyr2kA( TYPE, DIRECAB, CONJUG, UPLO, TRANS, N, K, ALPHA, A, IA,
             PB_CInV2( TYPE, NOCONJG, COLUMN, N, N, Cd0, ABrocs, Bbuf, 0, 0,
                       DBUFB, COLUMN, WBC, Wkbb, WBCd0 );
             if( Bfr & ( BisR || ( ABmyprocR == BcurrocR ) ) )
-               if( Bbuf ) free( Bbuf );
+            {
+               if( Bbuf )
+               {
+                  free( Bbuf );
+                  Bbuf = NULL;
+               }
+            }
          }
          else
          {
@@ -753,7 +765,13 @@ void PB_Cpsyr2kA( TYPE, DIRECAB, CONJUG, UPLO, TRANS, N, K, ALPHA, A, IA,
             PB_CInV2( TYPE, NOCONJG, ROW,    N, N, Cd0, ABrocs, Abuf, 0, 0,
                       DBUFA, ROW,    WAR, Wkbb, WARd0 );
             if( Afr & ( AisR || ( ABmyprocR == AcurrocR ) ) )
-               if( Abuf ) free( Abuf );
+            {
+               if( Abuf )
+               {
+                  free( Abuf );
+                  Abuf = NULL;
+               }
+            }
 /*
 *  Compute the descriptor DBUFB for the buffer that will contained the packed
 *  rows of sub( B ).
@@ -790,7 +808,13 @@ void PB_Cpsyr2kA( TYPE, DIRECAB, CONJUG, UPLO, TRANS, N, K, ALPHA, A, IA,
             PB_CInV2( TYPE, NOCONJG, ROW,    N, N, Cd0, ABrocs, Bbuf, 0, 0,
                       DBUFB, ROW,    WBR, Wkbb, WBRd0 );
             if( Bfr & ( BisR || ( ABmyprocR == BcurrocR ) ) )
-               if( Bbuf ) free( Bbuf );
+            {
+               if( Bbuf ) 
+               {
+                  free( Bbuf );
+                  Bbuf = NULL;
+               }
+            }
          }
 /*
 *  Update the local indexes of sub( A ) and sub( B )

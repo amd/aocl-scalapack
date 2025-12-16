@@ -1,4 +1,4 @@
-##Copyright (C) 2021, Advanced Micro Devices, Inc. All rights reserved.##
+##Copyright (C) 2025, Advanced Micro Devices, Inc. All rights reserved.##
 
 add_subdirectory(LIN)
 add_subdirectory(EIG)
@@ -31,6 +31,9 @@ file(COPY SEPR.dat DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 file(COPY SVD.dat DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 file(COPY TRD.dat DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 file(COPY GESV.dat DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
+file(COPY EQR.dat DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
+file(COPY OQR.dat DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
+file(COPY STED.dat DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 
 add_test(xslu ${MPIEXEC} ${MPIEXEC_NUMPROC_FLAG} 4 ./xslu)
 add_test(xdlu ${MPIEXEC} ${MPIEXEC_NUMPROC_FLAG} 4 ./xdlu)
@@ -77,6 +80,8 @@ add_test(xdqr ${MPIEXEC} ${MPIEXEC_NUMPROC_FLAG} 4 ./xdqr)
 add_test(xcqr ${MPIEXEC} ${MPIEXEC_NUMPROC_FLAG} 4 ./xcqr)
 add_test(xzqr ${MPIEXEC} ${MPIEXEC_NUMPROC_FLAG} 4 ./xzqr)
 
+add_test(xdorqr ${MPIEXEC} ${MPIEXEC_NUMPROC_FLAG} 4 ./xdorqr)
+
 add_test(xsbrd ${MPIEXEC} ${MPIEXEC_NUMPROC_FLAG} 4 ./xsbrd)
 add_test(xdbrd ${MPIEXEC} ${MPIEXEC_NUMPROC_FLAG} 4 ./xdbrd)
 add_test(xcbrd ${MPIEXEC} ${MPIEXEC_NUMPROC_FLAG} 4 ./xcbrd)
@@ -104,6 +109,8 @@ add_test(xsgsep ${MPIEXEC} ${MPIEXEC_NUMPROC_FLAG} 4 ./xsgsep)
 add_test(xdgsep ${MPIEXEC} ${MPIEXEC_NUMPROC_FLAG} 4 ./xdgsep)
 add_test(xcgsep ${MPIEXEC} ${MPIEXEC_NUMPROC_FLAG} 4 ./xcgsep)
 add_test(xzgsep ${MPIEXEC} ${MPIEXEC_NUMPROC_FLAG} 4 ./xzgsep)
+
+add_test(xdsted ${MPIEXEC} ${MPIEXEC_NUMPROC_FLAG} 4 ./xdsted)
 
 add_test(xsnep ${MPIEXEC} ${MPIEXEC_NUMPROC_FLAG} 4 ./xsnep)
 add_test(xdnep ${MPIEXEC} ${MPIEXEC_NUMPROC_FLAG} 4 ./xdnep)

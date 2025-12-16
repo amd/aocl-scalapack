@@ -61,6 +61,8 @@ dqrexe = ../xdqr
 cqrexe = ../xcqr
 zqrexe = ../xzqr
 
+dorqrexe = ../xdorqr
+
 slsexe = ../xsls
 dlsexe = ../xdls
 clsexe = ../xcls

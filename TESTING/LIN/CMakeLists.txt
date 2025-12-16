@@ -61,6 +61,8 @@ add_executable(xdqr pdqrdriver.f pdqrinfo.f pdgeqrrv.f pdgeqlrv.f pdgelqrv.f pdg
 add_executable(xcqr pcqrdriver.f pcqrinfo.f pcgeqrrv.f pcgeqlrv.f pcgelqrv.f pcgerqrv.f pctzrzrv.f pclafchk.f ${cmatgen})
 add_executable(xzqr pzqrdriver.f pzqrinfo.f pzgeqrrv.f pzgeqlrv.f pzgelqrv.f pzgerqrv.f pztzrzrv.f pzlafchk.f ${zmatgen})
 
+add_executable(xdorqr pdorgqrdriver.f pdorgqrinfo.f pdgeqrrv.f pdtzrzrv.f pdlafchk.f ${dmatgen})
+
 add_executable(xsls pslsdriver.f pslsinfo.f psqrt13.f psqrt14.f psqrt16.f psqrt17.f ${smatgen})
 add_executable(xdls pdlsdriver.f pdlsinfo.f pdqrt13.f pdqrt14.f pdqrt16.f pdqrt17.f ${dmatgen})
 add_executable(xcls pclsdriver.f pclsinfo.f pcqrt13.f pcqrt14.f pcqrt16.f pcqrt17.f ${cmatgen})
@@ -116,6 +118,8 @@ if(WIN32)
   target_link_libraries(xdqr scalapack ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES} ${OpenMP_libomp_LIBRARY})
   target_link_libraries(xcqr scalapack ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES} ${OpenMP_libomp_LIBRARY})
   target_link_libraries(xzqr scalapack ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES} ${OpenMP_libomp_LIBRARY})
+
+  target_link_libraries(xdorqr scalapack ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES} ${OpenMP_libomp_LIBRARY})
 
   target_link_libraries(xsls scalapack ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES} ${OpenMP_libomp_LIBRARY})
   target_link_libraries(xdls scalapack ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES} ${OpenMP_libomp_LIBRARY})
@@ -173,6 +177,8 @@ else(WIN32)
   target_link_libraries(xcqr scalapack ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES})
   target_link_libraries(xzqr scalapack ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES})
 
+  target_link_libraries(xdorqr scalapack ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES})
+  
   target_link_libraries(xsls scalapack ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES})
   target_link_libraries(xdls scalapack ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES})
   target_link_libraries(xcls scalapack ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES})

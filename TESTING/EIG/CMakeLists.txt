@@ -43,6 +43,8 @@ add_executable(xdsep pdseptst.f pdsepsubtst.f pdsepchk.f pdsepqtq.f pdlagsy.f pd
 add_executable(xcsep pcseptst.f pcsepsubtst.f pcsepchk.f pcsepqtq.f pclagsy.f pclatms.f pclasizesep.f pclasizeheevx.f pcsepdriver.f pcsepreq.f pssepinfo.f pcsdpsubtst.f ${cmatgen})
 add_executable(xzsep pzseptst.f pzsepsubtst.f pzsepchk.f pzsepqtq.f pzlagsy.f pzlatms.f pzlasizesep.f pzlasizeheevx.f pzsepdriver.f pzsepreq.f pdsepinfo.f pzsdpsubtst.f ${zmatgen})
 
+add_executable(xdsted pdstedctst.f pdstedcsubtst.f pdsepchk.f pdsepqtq.f pdlagsy.f pdlatms.f pdlasizesep.f pdlasizesyevx.f pdstedcdriver.f pdstedcreq.f pdstedcinfo.f pdlasizesyev.f pdlasizesqp.f ${dmatgen})
+
 add_executable(xsgsep psgseptst.f psgsepsubtst.f psgsepchk.f pslagsy.f pslatms.f pslasizesyevx.f pslasizegsep.f pslasizesep.f psgsepdriver.f psgsepreq.f pssepinfo.f ${smatgen})
 add_executable(xdgsep pdgseptst.f pdgsepsubtst.f pdgsepchk.f pdlagsy.f pdlatms.f pdlasizesyevx.f pdlasizegsep.f pdlasizesep.f pdgsepdriver.f pdgsepreq.f pdsepinfo.f ${dmatgen})
 add_executable(xcgsep pcgseptst.f pcgsepsubtst.f pcgsepchk.f pclagsy.f pclatms.f pclasizegsep.f pclasizeheevx.f pclasizesep.f pcgsepdriver.f pcgsepreq.f pssepinfo.f ${cmatgen})
@@ -65,7 +67,9 @@ pcsepchk.f pcsepqtq.f pclatms.f pcseprtst.f pssepinfo.f pclagsy.f pclasizesep.f 
 add_executable(xzheevr  pzlasizesepr.f pzlasizeheevr.f pzseprdriver.f pzseprreq.f pzseprsubtst.f
 pzsepchk.f pzsepqtq.f pzlatms.f pzseprtst.f pdsepinfo.f pzlagsy.f pzlasizesep.f ${zmatgen})
 
-add_executable(xshseqr pshseqrdriver.f psmatgen2.f ${cmatgen})
+
+add_executable(xshseqr pshseqrdriver.f pshseqrinfo.f psmatgen2.f ${cmatgen})
+
 add_executable(xdhseqr pdhseqrdriver.f pdmatgen2.f ${cmatgen})
 
 if(WIN32)
@@ -91,6 +95,8 @@ if(WIN32)
   target_link_libraries(xdsep scalapack ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES} ${OpenMP_libomp_LIBRARY})
   target_link_libraries(xcsep scalapack ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES} ${OpenMP_libomp_LIBRARY})
   target_link_libraries(xzsep scalapack ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES} ${OpenMP_libomp_LIBRARY})
+
+  target_link_libraries(xdsted scalapack ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES} ${OpenMP_libomp_LIBRARY})
 
   target_link_libraries(xsgsep scalapack ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES} ${OpenMP_libomp_LIBRARY})
   target_link_libraries(xdgsep scalapack ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES} ${OpenMP_libomp_LIBRARY})
@@ -136,6 +142,8 @@ else(WIN32)
   target_link_libraries(xdsep scalapack ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES})
   target_link_libraries(xcsep scalapack ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES})
   target_link_libraries(xzsep scalapack ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES})
+  
+  target_link_libraries(xdsted scalapack ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES})
 
   target_link_libraries(xsgsep scalapack ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES})
   target_link_libraries(xdgsep scalapack ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES})

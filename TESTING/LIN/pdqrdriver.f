@@ -417,13 +417,17 @@
 *                   -4, -8 or -12 incase of incorrect grid info
 *                   MAIN API can be validated.
 *                   Do NOTHING
-                    WRITE( NOUT, FMT = 9984 ) 'N'
+                    IF( IAM.EQ.0 ) THEN
+                        WRITE( NOUT, FMT = 9984 ) 'N'
+                    END IF
 *                   disable extreme value case when N < 0
                     EX_FLAG = .FALSE.
                   ELSE IF(M .LT. 0 .AND. (IERR(1) .EQ. -2 .OR.
      $               IERR(1) .EQ. -4 .OR. IERR(1) .EQ. -8 .OR.
      $               IERR(1) .EQ. -3 .OR. IERR(1) .EQ. -12  )) THEN
-                    WRITE( NOUT, FMT = 9984 ) 'M'
+                    IF( IAM.EQ.0 ) THEN
+                        WRITE( NOUT, FMT = 9984 ) 'M'
+                    END IF
 *                   disable extreme value case when M < 0
                     EX_FLAG = .FALSE.
                   ELSE IF(M .EQ. 0 .OR. N .EQ. 0) THEN
@@ -913,7 +917,9 @@
 *                       early return from ScaLAPACK API.
 *                       If there is safe exit from API; pass this case
                         KPASS = KPASS + 1
-                        WRITE( NOUT, FMT = 9985 ) KPASS, API_NAME
+                        IF( IAM.EQ.0 ) THEN
+                           WRITE( NOUT, FMT = 9985 ) KPASS, API_NAME
+                        END IF
                         PASSED = 'PASSED'
 *                       RE-ENABLE for EX CASE
                         IF(INF_PERCENT .GT. 0 .OR.
@@ -927,7 +933,9 @@
 *                       Expected Error code for N < 0
 *                       Hence this case can be passed
                         KPASS = KPASS + 1
-                        WRITE( NOUT, FMT = 9983 ) KPASS, API_NAME
+                        IF( IAM.EQ.0 ) THEN
+                           WRITE( NOUT, FMT = 9983 ) KPASS, API_NAME
+                        END IF
                         PASSED = 'PASSED'
 *                       RE-ENABLE for EX CASE
                         IF(INF_PERCENT .GT. 0 .OR.

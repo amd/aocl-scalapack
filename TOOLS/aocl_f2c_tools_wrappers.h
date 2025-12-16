@@ -1,0 +1,873 @@
+/* ---------------------------------------------------------------------
+ *
+ *  -- AOCL ScaLAPACK Wrappers --
+ *     Copyright (c) 2025 Advanced Micro Devices, Inc.  All rights reserved.
+ *
+ *  ---------------------------------------------------------------------
+ */
+
+#ifdef ENABLE_AOCL_WRAPPERS
+
+#include "aocl_tools_mangle_function_prototypes.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+typedef struct scomplex {
+  float real, imag;
+} scomplex;
+typedef struct dcomplex {
+  double real, imag;
+} dcomplex;
+
+// sl_init: SUBROUTINE SL_INIT( ICTXT, NPROW, NPCOL )
+void SL_INIT_(int *ictxt, int *nprow, int *npcol);
+void SL_INIT(int *ictxt, int *nprow, int *npcol);
+void mangle_sl_init(int *ictxt, int *nprow, int *npcol);
+
+// mangle_ccdotc: SUBROUTINE CCDOTC( N, DOTC, X, INCX, Y, INCY )
+void CCDOTC_(int *n, scomplex *dotc, scomplex *x, int *incx, scomplex *y,
+             int *incy);
+void CCDOTC(int *n, scomplex *dotc, scomplex *x, int *incx, scomplex *y,
+            int *incy);
+void mangle_ccdotc(int *n, scomplex *dotc, scomplex *x, int *incx, scomplex *y,
+            int *incy);
+
+// mangle_ccdotu: SUBROUTINE CCDOTU( N, DOTU, X, INCX, Y, INCY )
+void CCDOTU_(int *n, scomplex *dotu, scomplex *x, int *incx, scomplex *y,
+             int *incy);
+void CCDOTU(int *n, scomplex *dotu, scomplex *x, int *incx, scomplex *y,
+            int *incy);
+void mangle_ccdotu(int *n, scomplex *dotu, scomplex *x, int *incx, scomplex *y,
+            int *incy);
+
+// CHK1MAT: SUBROUTINE CHK1MAT( MA, MAPOS0, NA, NAPOS0, IA, JA, DESCA,
+// DESCAPOS0, INFO )
+void CHK1MAT_(int *ma, int *mapos0, int *na, int *napos0, int *ia, int *ja,
+              int *desca, int *descapos0, int *info);
+void CHK1MAT(int *ma, int *mapos0, int *na, int *napos0, int *ia, int *ja,
+             int *desca, int *descapos0, int *info);
+void mangle_chk1mat(int *ma, int *mapos0, int *na, int *napos0, int *ia, int *ja,
+             int *desca, int *descapos0, int *info);
+
+// mangle_numroc: INTEGER FUNCTION NUMROC( N, NB, IPROC, ISRCPROC, NPROCS )
+int NUMROC_(int *n, int *nb, int *iproc, int *isrcproc, int *nprocs);
+int NUMROC(int *n, int *nb, int *iproc, int *isrcproc, int *nprocs);
+int mangle_numroc(int *n, int *nb, int *iproc, int *isrcproc, int *nprocs);
+
+// mangle_ssdot: SUBROUTINE SSDOT( N, DOT, X, INCX, Y, INCY )
+void SSDOT_(int *n, float *dot, float *x, int *incx, float *y, int *incy);
+void SSDOT(int *n, float *dot, float *x, int *incx, float *y, int *incy);
+void mangle_ssdot(int *n, float *dot, float *x, int *incx, float *y, int *incy);
+
+// mangle_smatadd: SUBROUTINE SMATADD( M, N, ALPHA, A, LDA, BETA, C, LDC )
+void SMATADD_(int *m, int *n, float *alpha, float *a, int *lda, float *beta,
+              float *c, int *ldc);
+void SMATADD(int *m, int *n, float *alpha, float *a, int *lda, float *beta,
+             float *c, int *ldc);
+void mangle_smatadd(int *m, int *n, float *alpha, float *a, int *lda, float *beta,
+             float *c, int *ldc);
+
+// mangle_zmatadd: SUBROUTINE ZMATADD( M, N, ALPHA, A, LDA, BETA, C, LDC )
+void ZMATADD_(int *m, int *n, dcomplex *alpha, dcomplex *a, int *lda,
+              dcomplex *beta, dcomplex *c, int *ldc);
+void ZMATADD(int *m, int *n, dcomplex *alpha, dcomplex *a, int *lda,
+             dcomplex *beta, dcomplex *c, int *ldc);
+void mangle_zmatadd(int *m, int *n, dcomplex *alpha, dcomplex *a, int *lda,
+             dcomplex *beta, dcomplex *c, int *ldc);
+
+// mangle_zlatcpy: SUBROUTINE ZLATCPY( UPLO, M, N, A, LDA, B, LDB )
+void ZLATCPY_(char *uplo, int *m, int *n, dcomplex *a, int *lda, dcomplex *b,
+              int *ldb);
+void ZLATCPY(char *uplo, int *m, int *n, dcomplex *a, int *lda, dcomplex *b,
+             int *ldb);
+void mangle_zlatcpy(char *uplo, int *m, int *n, dcomplex *a, int *lda, dcomplex *b,
+             int *ldb);
+
+// mangle_slatcpy: SUBROUTINE SLATCPY( UPLO, M, N, A, LDA, B, LDB )
+void SLATCPY_(char *uplo, int *m, int *n, float *a, int *lda, float *b,
+              int *ldb);
+void SLATCPY(char *uplo, int *m, int *n, float *a, int *lda, float *b,
+             int *ldb);
+void mangle_slatcpy(char *uplo, int *m, int *n, float *a, int *lda, float *b,
+             int *ldb);
+
+// DLATCPY: SUBROUTINE DLATCPY( UPLO, M, N, A, LDA, BETA, C, LDC )
+void DLATCPY_(char *uplo, int *m, int *n, double *a, int *lda, double *b,
+              int *ldb);
+void DLATCPY(char *uplo, int *m, int *n, double *a, int *lda, double *b,
+             int *ldb);
+void mangle_dlatcpy(char *uplo, int *m, int *n, double *a, int *lda, double *b,
+             int *ldb);
+
+// mangle_zzdotu: SUBROUTINE ZZDOTU( N, DOTU, X, INCX, Y, INCY )
+void ZZDOTU_(int *n, dcomplex *dotu, dcomplex *x, int *incx, dcomplex *y,
+             int *incy);
+void ZZDOTU(int *n, dcomplex *dotu, dcomplex *x, int *incx, dcomplex *y,
+            int *incy);
+void mangle_zzdotu(int *n, dcomplex *dotu, dcomplex *x, int *incx, dcomplex *y,
+            int *incy);
+
+// mangle_zzdotc: SUBROUTINE ZZDOTC( N, DOTC, X, INCX, Y, INCY )
+void ZZDOTC_(int *n, dcomplex *dotc, dcomplex *x, int *incx, dcomplex *y,
+             int *incy);
+void ZZDOTC(int *n, dcomplex *dotc, dcomplex *x, int *incx, dcomplex *y,
+            int *incy);
+void mangle_zzdotc(int *n, dcomplex *dotc, dcomplex *x, int *incx, dcomplex *y,
+            int *incy);
+
+// PSCHEKPAD: SUBROUTINE PSCHEKPAD( ICTXT, MESS, M, N, A, LDA, IPRE, IPOST,
+// CHKVAL )
+void PSCHEKPAD_(int *ictxt, char *mess, int *m, int *n, float *a, int *lda,
+                int *ipre, int *ipost, float *chkval);
+void PSCHEKPAD(int *ictxt, char *mess, int *m, int *n, float *a, int *lda,
+               int *ipre, int *ipost, float *chkval);
+void mangle_pschekpad(int *ictxt, char *mess, int *m, int *n, float *a, int *lda,
+               int *ipre, int *ipost, float *chkval);
+
+// PSLAPRNT: SUBROUTINE PSLAPRNT( M, N, A, IA, JA, DESCA, IRPRNT, ICPRNT,
+// CMATNM, NOUT, WORK )
+void PSLAPRNT_(int *m, int *n, float *a, int *ia, int *ja, int *desca,
+               int *irprnt, int *icprnt, char *cmatnm, int *nout, float *work);
+void PSLAPRNT(int *m, int *n, float *a, int *ia, int *ja, int *desca,
+              int *irprnt, int *icprnt, char *cmatnm, int *nout, float *work);
+void mangle_pslaprnt(int *m, int *n, float *a, int *ia, int *ja, int *desca,
+              int *irprnt, int *icprnt, char *cmatnm, int *nout, float *work);
+
+// PSFILLPAD: SUBROUTINE PSFILLPAD( ICTXT, M, N, A, LDA, IPRE, IPOST, CHKVAL )
+void PSFILLPAD_(int *ictxt, int *m, int *n, float *a, int *lda, int *ipre,
+                int *ipost, float *chkval);
+void PSFILLPAD(int *ictxt, int *m, int *n, float *a, int *lda, int *ipre,
+               int *ipost, float *chkval);
+void mangle_psfillpad(int *ictxt, int *m, int *n, float *a, int *lda, int *ipre,
+               int *ipost, float *chkval);
+
+// PSCOL2ROW: SUBROUTINE PSCOL2ROW( ICTXT, M, N, NB, VS, LDVS, VD, LDVD, RSRC,
+// CSRC, RDEST, CDEST, WORK )
+void PSCOL2ROW_(int *ictxt, int *m, int *n, int *nb, float *vs, int *ldvs,
+                float *vd, int *ldvd, int *rsrc, int *csrc, int *rdest,
+                int *cdest, float *work);
+void PSCOL2ROW(int *ictxt, int *m, int *n, int *nb, float *vs, int *ldvs,
+               float *vd, int *ldvd, int *rsrc, int *csrc, int *rdest,
+               int *cdest, float *work);
+void mangle_pscol2row(int *ictxt, int *m, int *n, int *nb, float *vs, int *ldvs,
+               float *vd, int *ldvd, int *rsrc, int *csrc, int *rdest,
+               int *cdest, float *work);
+
+// PDCHEKPAD: SUBROUTINE PDCHEKPAD( ICTXT, MESS, M, N, A, LDA, IPRE, IPOST,
+// CHKVAL )
+void PDCHEKPAD_(int *ictxt, char *mess, int *m, int *n, double *a, int *lda,
+                int *ipre, int *ipost, double *chkval);
+void PDCHEKPAD(int *ictxt, char *mess, int *m, int *n, double *a, int *lda,
+               int *ipre, int *ipost, double *chkval);
+void mangle_pdchekpad(int *ictxt, char *mess, int *m, int *n, double *a, int *lda,
+               int *ipre, int *ipost, double *chkval);
+
+// PDLAPRNT: SUBROUTINE PDLAPRNT( M, N, A, IA, JA, DESCA, IRPRNT, ICPRNT,
+// CMATNM, NOUT, WORK )
+void PDLAPRNT_(int *m, int *n, double *a, int *ia, int *ja, int *desca,
+               int *irprnt, int *icprnt, char *cmatnm, int *nout, double *work);
+void PDLAPRNT(int *m, int *n, double *a, int *ia, int *ja, int *desca,
+              int *irprnt, int *icprnt, char *cmatnm, int *nout, double *work);
+void mangle_pdlaprnt(int *m, int *n, double *a, int *ia, int *ja, int *desca,
+              int *irprnt, int *icprnt, char *cmatnm, int *nout, double *work);
+
+// PDFILLPAD: SUBROUTINE PDFILLPAD( ICTXT, M, N, A, LDA, IPRE, IPOST, CHKVAL )
+void PDFILLPAD_(int *ictxt, int *m, int *n, double *a, int *lda, int *ipre,
+                int *ipost, double *chkval);
+void PDFILLPAD(int *ictxt, int *m, int *n, double *a, int *lda, int *ipre,
+               int *ipost, double *chkval);
+void mangle_pdfillpad(int *ictxt, int *m, int *n, double *a, int *lda, int *ipre,
+               int *ipost, double *chkval);
+
+// PDCOL2ROW: SUBROUTINE PDCOL2ROW( ICTXT, M, N, NB, VS, LDVS, VD, LDVD, RSRC,
+// CSRC, RDEST, CDEST, WORK )
+void PDCOL2ROW_(int *ictxt, int *m, int *n, int *nb, double *vs, int *ldvs,
+                double *vd, int *ldvd, int *rsrc, int *csrc, int *rdest,
+                int *cdest, double *work);
+void PDCOL2ROW(int *ictxt, int *m, int *n, int *nb, double *vs, int *ldvs,
+               double *vd, int *ldvd, int *rsrc, int *csrc, int *rdest,
+               int *cdest, double *work);
+void mangle_pdcol2row(int *ictxt, int *m, int *n, int *nb, double *vs, int *ldvs,
+               double *vd, int *ldvd, int *rsrc, int *csrc, int *rdest,
+               int *cdest, double *work);
+
+// SLBOOT, SLTIMER, SLENABLE, SLDISABLE, SLINQUIRE, SLCOMBINE wrappers
+void SLBOOT_();
+void SLBOOT();
+void mangle_slboot();
+
+void SLTIMER_(int *i);
+void SLTIMER(int *i);
+void mangle_sltimer(int *i);
+
+void SLENABLE_();
+void SLENABLE();
+void mangle_slenable();
+
+void SLDISABLE_();
+void SLDISABLE();
+void mangle_sldisable();
+
+double SLINQUIRE_(char *timetype, int *i);
+double SLINQUIRE(char *timetype, int *i);
+double mangle_slinquire(char *timetype, int *i);
+
+void SLCOMBINE_(int *ictxt, char *scope, char *op, char *timetype, int *n,
+                int *ibeg, double *times);
+void SLCOMBINE(int *ictxt, char *scope, char *op, char *timetype, int *n,
+               int *ibeg, double *times);
+void mangle_sl_combine(int *ictxt, char *scope, char *op, char *timetype, int *n,
+               int *ibeg, double *times);
+
+// DESCINIT: SUBROUTINE DESCINIT( DESC, M, N, MB, NB, IRSRC, ICSRC, ICTXT, LLD,
+// INFO )
+void DESCINIT_(int *desc, int *m, int *n, int *mb, int *nb, int *isrc,
+               int *icsrc, int *ictxt, int *lld, int *info);
+void DESCINIT(int *desc, int *m, int *n, int *mb, int *nb, int *isrc,
+              int *icsrc, int *ictxt, int *lld, int *info);
+void mangle_descinit(int *desc, int *m, int *n, int *mb, int *nb, int *isrc,
+              int *icsrc, int *ictxt, int *lld, int *info);
+
+// DESCSET: SUBROUTINE DESCSET( DESC, M, N, MB, NB, IRSRC, ICSRC, ICTXT, LLD )
+void DESCSET_(int *desc, int *m, int *n, int *mb, int *nb, int *isrc,
+              int *icsrc, int *ictxt, int *lld);
+void DESCSET(int *desc, int *m, int *n, int *mb, int *nb, int *isrc, int *icsrc,
+             int *ictxt, int *lld);
+void mangle_descset(int *desc, int *m, int *n, int *mb, int *nb, int *isrc, int *icsrc,
+             int *ictxt, int *lld);
+
+// DESC_CONVERT: SUBROUTINE DESC_CONVERT( DESC_IN, DESC_OUT, INFO )
+void DESC_CONVERT_(int *desc_in, int *desc_out, int *info);
+void DESC_CONVERT(int *desc_in, int *desc_out, int *info);
+void mangle_desc_convert(int *desc_in, int *desc_out, int *info);
+
+// ILCM: INTEGER FUNCTION ILCM( M, N )
+int ILCM_(int *m, int *n);
+int ILCM(int *m, int *n);
+int mangle_ilcm(int *m, int *n);
+
+// INFOG2L: SUBROUTINE INFOG2L( GRINDX, GCINDX, DESC, NPROW, NPCOL, MYROW,
+// MYCOL, LRINDX, LCINDX, RSRC, CSRC )
+void INFOG2L_(int *grindx, int *gcindx, int *desc, int *nprow, int *npcol,
+              int *myrow, int *mycol, int *lrindx, int *lcindx, int *rsrc,
+              int *csrc);
+void INFOG2L(int *grindx, int *gcindx, int *desc, int *nprow, int *npcol,
+             int *myrow, int *mycol, int *lrindx, int *lcindx, int *rsrc,
+             int *csrc);
+void mangle_infog2l(int *grindx, int *gcindx, int *desc, int *nprow, int *npcol,
+             int *myrow, int *mycol, int *lrindx, int *lcindx, int *rsrc,
+             int *csrc);
+
+// INDXL2G: INTEGER FUNCTION INDXL2G( INDXLOC, NB, IPROC, ISRCPROC, NPROCS )
+int INDXL2G_(int *indxloc, int *nb, int *iproc, int *isrcproc, int *nprocs);
+int INDXL2G(int *indxloc, int *nb, int *iproc, int *isrcproc, int *nprocs);
+int mangle_indxl2g(int *indxloc, int *nb, int *iproc, int *isrcproc, int *nprocs);
+
+// INDXG2P: INTEGER FUNCTION INDXG2P( INDXGLOB, NB, IPROC, ISRCPROC, NPROCS )
+int INDXG2P_(int *indxglob, int *nb, int *iproc, int *isrcproc, int *nprocs);
+int INDXG2P(int *indxglob, int *nb, int *iproc, int *isrcproc, int *nprocs);
+int mangle_indxg2p(int *indxglob, int *nb, int *iproc, int *isrcproc, int *nprocs);
+
+// INFOG1L: SUBROUTINE INFOG1L( GINDX, NB, NPROCS, MYROC, ISRCPROC, LINDX,
+// ROCSRC )
+void INFOG1L_(int *gindx, int *nb, int *nprocs, int *myroc, int *isrcproc,
+              int *lindx, int *rocsrc);
+void INFOG1L(int *gindx, int *nb, int *nprocs, int *myroc, int *isrcproc,
+             int *lindx, int *rocsrc);
+void mangle_infog1l(int *gindx, int *nb, int *nprocs, int *myroc, int *isrcproc,
+             int *lindx, int *rocsrc);
+
+// NPREROC: INTEGER FUNCTION NPREROC( N, NB, IPROC, ISRCPROC, NPROCS )
+int NPREROC_(int *n, int *nb, int *iproc, int *isrcproc, int *nprocs);
+int NPREROC(int *n, int *nb, int *iproc, int *isrcproc, int *nprocs);
+int mangle_npreroc(int *n, int *nb, int *iproc, int *isrcproc, int *nprocs);
+
+// ICEIL: INTEGER FUNCTION ICEIL( INUM, IDENOM )
+int ICEIL_(int *inum, int *idenom);
+int ICEIL(int *inum, int *idenom);
+int mangle_iceil(int *inum, int *idenom);
+
+// PCHK1MAT: SUBROUTINE PCHK1MAT( MA, MAPOS0, NA, NAPOS0, IA, JA, DESCA,
+// DESCAPOS0, NEXTRA, EX, EXPOS, INFO )
+void PCHK1MAT_(int *ma, int *mapos0, int *na, int *napos0, int *ia, int *ja,
+               int *desca, int *descapos0, int *nextra, int *ex, int *expos,
+               int *info);
+void PCHK1MAT(int *ma, int *mapos0, int *na, int *napos0, int *ia, int *ja,
+              int *desca, int *descapos0, int *nextra, int *ex, int *expos,
+              int *info);
+void mangle_pchk1mat(int *ma, int *mapos0, int *na, int *napos0, int *ia, int *ja,
+              int *desca, int *descapos0, int *nextra, int *ex, int *expos,
+              int *info);
+
+// PCFILLPAD: SUBROUTINE PCFILLPAD( ICTXT, M, N, A, LDA, IPRE, IPOST, CHKVAL )
+void PCFILLPAD_(int *ictxt, int *m, int *n, scomplex *a, int *lda, int *ipre,
+                int *ipost, scomplex *chkval);
+void PCFILLPAD(int *ictxt, int *m, int *n, scomplex *a, int *lda, int *ipre,
+               int *ipost, scomplex *chkval);
+void mangle_pcfillpad(int *ictxt, int *m, int *n, scomplex *a, int *lda, int *ipre,
+               int *ipost, scomplex *chkval);
+
+// PCCHEKPAD: SUBROUTINE PCCHEKPAD( ICTXT, MESS, M, N, A, LDA, IPRE, IPOST,
+// CHKVAL )
+void PCCHEKPAD_(int *ictxt, char *mess, int *m, int *n, scomplex *a, int *lda,
+                int *ipre, int *ipost, scomplex *chkval);
+void PCCHEKPAD(int *ictxt, char *mess, int *m, int *n, scomplex *a, int *lda,
+               int *ipre, int *ipost, scomplex *chkval);
+void mangle_pcchekpad(int *ictxt, char *mess, int *m, int *n, scomplex *a, int *lda,
+               int *ipre, int *ipost, scomplex *chkval);
+
+// PCLAPRNT: SUBROUTINE PCLAPRNT( M, N, A, IA, JA, DESCA, IRPRNT, ICPRNT,
+// CMATNM, NOUT, WORK )
+void PCLAPRNT_(int *m, int *n, scomplex *a, int *ia, int *ja, int *desca,
+               int *irprnt, int *icprnt, char *cmatnm, int *nout,
+               scomplex *work);
+void PCLAPRNT(int *m, int *n, scomplex *a, int *ia, int *ja, int *desca,
+              int *irprnt, int *icprnt, char *cmatnm, int *nout,
+              scomplex *work);
+void mangle_pclaprnt(int *m, int *n, scomplex *a, int *ia, int *ja, int *desca,
+              int *irprnt, int *icprnt, char *cmatnm, int *nout,
+              scomplex *work);
+
+// PZLAPRNT: SUBROUTINE PZLAPRNT( M, N, A, IA, JA, DESCA, IRPRNT, ICPRNT,
+// CMATNM, NOUT, WORK )
+void PZLAPRNT_(int *m, int *n, dcomplex *a, int *ia, int *ja, int *desca,
+               int *irprnt, int *icprnt, char *cmatnm, int *nout,
+               dcomplex *work);
+void PZLAPRNT(int *m, int *n, dcomplex *a, int *ia, int *ja, int *desca,
+              int *irprnt, int *icprnt, char *cmatnm, int *nout,
+              dcomplex *work);
+void mangle_pzlaprnt(int *m, int *n, dcomplex *a, int *ia, int *ja, int *desca,
+              int *irprnt, int *icprnt, char *cmatnm, int *nout,
+              dcomplex *work);
+
+// PZFILLPAD: SUBROUTINE PZFILLPAD( ICTXT, M, N, A, LDA, IPRE, IPOST, CHKVAL )
+void PZFILLPAD_(int *ictxt, int *m, int *n, dcomplex *a, int *lda, int *ipre,
+                int *ipost, dcomplex *chkval);
+void PZFILLPAD(int *ictxt, int *m, int *n, dcomplex *a, int *lda, int *ipre,
+               int *ipost, dcomplex *chkval);
+void mangle_pzfillpad(int *ictxt, int *m, int *n, dcomplex *a, int *lda, int *ipre,
+               int *ipost, dcomplex *chkval);
+
+// PCCOL2ROW: SUBROUTINE PCCOL2ROW( ICTXT, M, N, NB, VS, LDVS, VD, LDVD, RSRC,
+// CSRC, RDEST, CDEST, WORK )
+void PCCOL2ROW_(int *ictxt, int *m, int *n, int *nb, scomplex *vs, int *ldvs,
+                scomplex *vd, int *ldvd, int *rsrc, int *csrc, int *rdest,
+                int *cdest, scomplex *work);
+void PCCOL2ROW(int *ictxt, int *m, int *n, int *nb, scomplex *vs, int *ldvs,
+               scomplex *vd, int *ldvd, int *rsrc, int *csrc, int *rdest,
+               int *cdest, scomplex *work);
+void mangle_pccol2row(int *ictxt, int *m, int *n, int *nb, scomplex *vs, int *ldvs,
+               scomplex *vd, int *ldvd, int *rsrc, int *csrc, int *rdest,
+               int *cdest, scomplex *work);
+
+// PZCOL2ROW: SUBROUTINE PZCOL2ROW( ICTXT, M, N, NB, VS, LDVS, VD, LDVD, RSRC,
+// CSRC, RDEST, CDEST, WORK )
+void PZCOL2ROW_(int *ictxt, int *m, int *n, int *nb, dcomplex *vs, int *ldvs,
+                dcomplex *vd, int *ldvd, int *rsrc, int *csrc, int *rdest,
+                int *cdest, dcomplex *work);
+void PZCOL2ROW(int *ictxt, int *m, int *n, int *nb, dcomplex *vs, int *ldvs,
+               dcomplex *vd, int *ldvd, int *rsrc, int *csrc, int *rdest,
+               int *cdest, dcomplex *work);
+void mangle_pzcol2row(int *ictxt, int *m, int *n, int *nb, dcomplex *vs, int *ldvs,
+               dcomplex *vd, int *ldvd, int *rsrc, int *csrc, int *rdest,
+               int *cdest, dcomplex *work);
+
+// PZCHEKPAD: SUBROUTINE PZCHEKPAD( ICTXT, MESS, M, N, A, LDA, IPRE, IPOST,
+// CHKVAL )
+void PZCHEKPAD_(int *ictxt, char *mess, int *m, int *n, dcomplex *a, int *lda,
+                int *ipre, int *ipost, dcomplex *chkval);
+void PZCHEKPAD(int *ictxt, char *mess, int *m, int *n, dcomplex *a, int *lda,
+               int *ipre, int *ipost, dcomplex *chkval);
+void mangle_pzchekpad(int *ictxt, char *mess, int *m, int *n, dcomplex *a, int *lda,
+               int *ipre, int *ipost, dcomplex *chkval);
+
+// mangle_clatcpy
+void mangle_clatcpy(char *uplo, int *m, int *n, scomplex *a, int *lda, scomplex *b,
+             int *ldb);
+void CLATCPY(char *uplo, int *m, int *n, scomplex *a, int *lda, scomplex *b,
+             int *ldb);
+void CLATCPY_(char *uplo, int *m, int *n, scomplex *a, int *lda, scomplex *b,
+              int *ldb);
+
+// mangle_cmatadd
+void mangle_cmatadd(int *m, int *n, scomplex *alpha, scomplex *a, int *lda,
+             scomplex *beta, scomplex *c, int *ldc);
+void CMATADD(int *m, int *n, scomplex *alpha, scomplex *a, int *lda,
+             scomplex *beta, scomplex *c, int *ldc);
+void CMATADD_(int *m, int *n, scomplex *alpha, scomplex *a, int *lda,
+              scomplex *beta, scomplex *c, int *ldc);
+
+// mangle_dddot
+void mangle_dddot(int *n, double *x, int *incx, double *y, int *incy, double *z,
+           int *incz, double *dot);
+void DDDOT(int *n, double *x, int *incx, double *y, int *incy, double *z,
+           int *incz, double *dot);
+void DDDOT_(int *n, double *x, int *incx, double *y, int *incy, double *z,
+            int *incz, double *dot);
+
+// mangle_dmatadd
+void mangle_dmatadd(int *m, int *n, double *alpha, double *a, int *lda, double *beta,
+             double *c, int *ldc);
+void DMATADD(int *m, int *n, double *alpha, double *a, int *lda, double *beta,
+             double *c, int *ldc);
+void DMATADD_(int *m, int *n, double *alpha, double *a, int *lda, double *beta,
+              double *c, int *ldc);
+
+// mangle_dsasum
+double mangle_dsasum(int *n, double *x, int *incx);
+double DSASUM(int *n, double *x, int *incx);
+double DSASUM_(int *n, double *x, int *incx);
+
+// mangle_dscasum
+double mangle_dscasum(int *n, double *x, int *incx);
+double DSCASUM(int *n, double *x, int *incx);
+double DSCASUM_(int *n, double *x, int *incx);
+
+// mangle_dscnrm2
+double mangle_dscnrm2(int *n, double *x, int *incx);
+double DSCNRM2(int *n, double *x, int *incx);
+double DSCNRM2_(int *n, double *x, int *incx);
+
+// mangle_dsnrm2
+double mangle_dsnrm2(int *n, double *x, int *incx);
+double DSNRM2(int *n, double *x, int *incx);
+double DSNRM2_(int *n, double *x, int *incx);
+
+// mangle_ilacpy
+void mangle_ilacpy(char *uplo, int *m, int *n, int *a, int *lda, int *b, int *ldb);
+void ILACPY(char *uplo, int *m, int *n, int *a, int *lda, int *b, int *ldb);
+void ILACPY_(char *uplo, int *m, int *n, int *a, int *lda, int *b, int *ldb);
+
+// mangle_indxg2l
+int mangle_indxg2l(int *indxglob, int *nb, int *iproc, int *isrcproc, int *nprocs);
+int INDXG2L(int *indxglob, int *nb, int *iproc, int *isrcproc, int *nprocs);
+int INDXG2L_(int *indxglob, int *nb, int *iproc, int *isrcproc, int *nprocs);
+
+// mangle_pcelset2
+void mangle_pcelset2(int *desc, int *i, int *j, scomplex *val);
+void PCELSET2(int *desc, int *i, int *j, scomplex *val);
+void PCELSET2_(int *desc, int *i, int *j, scomplex *val);
+
+// mangle_pcelget
+void mangle_pcelget(int *desc, int *i, int *j, scomplex *val);
+void PCELGET(int *desc, int *i, int *j, scomplex *val);
+void PCELGET_(int *desc, int *i, int *j, scomplex *val);
+
+// mangle_pcelset
+void mangle_pcelset(int *desc, int *i, int *j, scomplex *val);
+void PCELSET(int *desc, int *i, int *j, scomplex *val);
+void PCELSET_(int *desc, int *i, int *j, scomplex *val);
+
+// mangle_pctreecomb
+void mangle_pctreecomb(int *ictxt, char *scope, char *op, int *m, int *n, scomplex *a,
+                int *lda, scomplex *work);
+void PCTREECOMB(int *ictxt, char *scope, char *op, int *m, int *n, scomplex *a,
+                int *lda, scomplex *work);
+void PCTREECOMB_(int *ictxt, char *scope, char *op, int *m, int *n, scomplex *a,
+                 int *lda, scomplex *work);
+
+// mangle_pchkxmat
+void mangle_pchkxmat(int *ma, int *mapos0, int *na, int *napos0, int *ia, int *ja,
+              int *desca, int *descapos0, int *info);
+void PCHKXMAT(int *ma, int *mapos0, int *na, int *napos0, int *ia, int *ja,
+              int *desca, int *descapos0, int *info);
+void PCHKXMAT_(int *ma, int *mapos0, int *na, int *napos0, int *ia, int *ja,
+               int *desca, int *descapos0, int *info);
+
+// mangle_pclaread
+void mangle_pclaread(char *filename, int *m, int *n, scomplex *a, int *lda, int *desc,
+              int *info);
+void PCLAREAD(char *filename, int *m, int *n, scomplex *a, int *lda, int *desc,
+              int *info);
+void PCLAREAD_(char *filename, int *m, int *n, scomplex *a, int *lda, int *desc,
+               int *info);
+
+// mangle_pclawrite
+void mangle_pclawrite(char *filename, int *m, int *n, scomplex *a, int *lda, int *desc,
+               int *info);
+void PCLAWRITE(char *filename, int *m, int *n, scomplex *a, int *lda, int *desc,
+               int *info);
+void PCLAWRITE_(char *filename, int *m, int *n, scomplex *a, int *lda,
+                int *desc, int *info);
+
+// mangle_pcmatadd
+void mangle_pcmatadd(int *m, int *n, scomplex *alpha, scomplex *a, int *lda,
+              scomplex *beta, scomplex *c, int *ldc);
+void PCMATADD(int *m, int *n, scomplex *alpha, scomplex *a, int *lda,
+              scomplex *beta, scomplex *c, int *ldc);
+void PCMATADD_(int *m, int *n, scomplex *alpha, scomplex *a, int *lda,
+               scomplex *beta, scomplex *c, int *ldc);
+
+// mangle_pcrow2col
+void mangle_pcrow2col(int *ictxt, int *m, int *n, int *nb, scomplex *vs, int *ldvs,
+               scomplex *vd, int *ldvd, int *rsrc, int *csrc, int *rdest,
+               int *cdest, scomplex *work);
+void PCROW2COL(int *ictxt, int *m, int *n, int *nb, scomplex *vs, int *ldvs,
+               scomplex *vd, int *ldvd, int *rsrc, int *csrc, int *rdest,
+               int *cdest, scomplex *work);
+void PCROW2COL_(int *ictxt, int *m, int *n, int *nb, scomplex *vs, int *ldvs,
+                scomplex *vd, int *ldvd, int *rsrc, int *csrc, int *rdest,
+                int *cdest, scomplex *work);
+
+// mangle_pdmatadd
+void mangle_pdmatadd(int *m, int *n, double *alpha, double *a, int *lda, double *beta,
+              double *c, int *ldc);
+void PDMATADD(int *m, int *n, double *alpha, double *a, int *lda, double *beta,
+              double *c, int *ldc);
+void PDMATADD_(int *m, int *n, double *alpha, double *a, int *lda, double *beta,
+               double *c, int *ldc);
+
+// mangle_pdelget
+void mangle_pdelget(int *desc, int *i, int *j, double *val);
+void PDELGET(int *desc, int *i, int *j, double *val);
+void PDELGET_(int *desc, int *i, int *j, double *val);
+
+// mangle_pdelset
+void mangle_pdelset(int *desc, int *i, int *j, double *val);
+void PDELSET(int *desc, int *i, int *j, double *val);
+void PDELSET_(int *desc, int *i, int *j, double *val);
+
+// mangle_pdelset2
+void mangle_pdelset2(int *desc, int *i, int *j, double *val);
+void PDELSET2(int *desc, int *i, int *j, double *val);
+void PDELSET2_(int *desc, int *i, int *j, double *val);
+
+// mangle_pdlaread
+void mangle_pdlaread(char *filename, int *m, int *n, void *a, int *lda, int *desc,
+              int *info);
+void PDLAREAD(char *filename, int *m, int *n, void *a, int *lda, int *desc,
+              int *info);
+void PDLAREAD_(char *filename, int *m, int *n, void *a, int *lda, int *desc,
+               int *info);
+
+// mangle_pdlawrite
+void mangle_pdlawrite(char *filename, int *m, int *n, void *a, int *lda, int *desc,
+               int *info);
+void PDLAWRITE(char *filename, int *m, int *n, void *a, int *lda, int *desc,
+               int *info);
+void PDLAWRITE_(char *filename, int *m, int *n, void *a, int *lda, int *desc,
+                int *info);
+
+// mangle_pirow2col
+void mangle_pirow2col(int *ictxt, int *m, int *n, int *nb, int *vs, int *ldvs, int *vd,
+               int *ldvd, int *rsrc, int *csrc, int *rdest, int *cdest,
+               int *work);
+void PIROW2COL(int *ictxt, int *m, int *n, int *nb, int *vs, int *ldvs, int *vd,
+               int *ldvd, int *rsrc, int *csrc, int *rdest, int *cdest,
+               int *work);
+void PIROW2COL_(int *ictxt, int *m, int *n, int *nb, int *vs, int *ldvs,
+                int *vd, int *ldvd, int *rsrc, int *csrc, int *rdest,
+                int *cdest, int *work);
+
+// mangle_pdrow2col
+void mangle_pdrow2col(int *ictxt, int *m, int *n, int *nb, double *vs, int *ldvs,
+               double *vd, int *ldvd, int *rsrc, int *csrc, int *rdest,
+               int *cdest, double *work);
+void PDROW2COL(int *ictxt, int *m, int *n, int *nb, double *vs, int *ldvs,
+               double *vd, int *ldvd, int *rsrc, int *csrc, int *rdest,
+               int *cdest, double *work);
+void PDROW2COL_(int *ictxt, int *m, int *n, int *nb, double *vs, int *ldvs,
+                double *vd, int *ldvd, int *rsrc, int *csrc, int *rdest,
+                int *cdest, double *work);
+
+// mangle_pdtreecomb
+void mangle_pdtreecomb(int *ictxt, char *scope, char *op, int *m, int *n, double *a,
+                int *lda, double *work);
+void PDTREECOMB(int *ictxt, char *scope, char *op, int *m, int *n, double *a,
+                int *lda, double *work);
+void PDTREECOMB_(int *ictxt, char *scope, char *op, int *m, int *n, double *a,
+                 int *lda, double *work);
+
+// mangle_pichekpad
+void mangle_pichekpad(int *ictxt, char *mess, int *m, int *n, int *a, int *lda,
+               int *ipre, int *ipost, int *chkval);
+void PICHEKPAD(int *ictxt, char *mess, int *m, int *n, int *a, int *lda,
+               int *ipre, int *ipost, int *chkval);
+void PICHEKPAD_(int *ictxt, char *mess, int *m, int *n, int *a, int *lda,
+                int *ipre, int *ipost, int *chkval);
+
+// mangle_picol2row
+void mangle_picol2row(int *ictxt, int *m, int *n, int *nb, int *vs, int *ldvs, int *vd,
+               int *ldvd, int *rsrc, int *csrc, int *rdest, int *cdest,
+               int *work);
+void PICOL2ROW(int *ictxt, int *m, int *n, int *nb, int *vs, int *ldvs, int *vd,
+               int *ldvd, int *rsrc, int *csrc, int *rdest, int *cdest,
+               int *work);
+void PICOL2ROW_(int *ictxt, int *m, int *n, int *nb, int *vs, int *ldvs,
+                int *vd, int *ldvd, int *rsrc, int *csrc, int *rdest,
+                int *cdest, int *work);
+
+// mangle_pielget
+void mangle_pielget(int *desc, int *i, int *j, int *val);
+void PIELGET(int *desc, int *i, int *j, int *val);
+void PIELGET_(int *desc, int *i, int *j, int *val);
+
+// mangle_pielset
+void mangle_pielset(int *desc, int *i, int *j, int *val);
+void PIELSET(int *desc, int *i, int *j, int *val);
+void PIELSET_(int *desc, int *i, int *j, int *val);
+
+// mangle_pielset2
+void mangle_pielset2(int *desc, int *i, int *j, int *val);
+void PIELSET2(int *desc, int *i, int *j, int *val);
+void PIELSET2_(int *desc, int *i, int *j, int *val);
+
+// mangle_pifillpad
+void mangle_pifillpad(int *ictxt, int *m, int *n, int *a, int *lda, int *ipre,
+               int *ipost, int *chkval);
+void PIFILLPAD(int *ictxt, int *m, int *n, int *a, int *lda, int *ipre,
+               int *ipost, int *chkval);
+void PIFILLPAD_(int *ictxt, int *m, int *n, int *a, int *lda, int *ipre,
+                int *ipost, int *chkval);
+
+// mangle_pilaprnt
+void mangle_pilaprnt(int *m, int *n, int *a, int *ia, int *ja, int *desca, int *irprnt,
+              int *icprnt, char *cmatnm, int *nout, int *work);
+void PILAPRNT(int *m, int *n, int *a, int *ia, int *ja, int *desca, int *irprnt,
+              int *icprnt, char *cmatnm, int *nout, int *work);
+void PILAPRNT_(int *m, int *n, int *a, int *ia, int *ja, int *desca,
+               int *irprnt, int *icprnt, char *cmatnm, int *nout, int *work);
+
+// mangle_pslawrite
+void mangle_pslawrite(char *filename, int *m, int *n, float *a, int *lda, int *desc,
+               int *info);
+void PSLAWRITE(char *filename, int *m, int *n, float *a, int *lda, int *desc,
+               int *info);
+void PSLAWRITE_(char *filename, int *m, int *n, float *a, int *lda, int *desc,
+                int *info);
+
+// mangle_pselget
+void mangle_pselget(int *desc, int *i, int *j, float *val);
+void PSELGET(int *desc, int *i, int *j, float *val);
+void PSELGET_(int *desc, int *i, int *j, float *val);
+
+// mangle_pselset
+void mangle_pselset(int *desc, int *i, int *j, float *val);
+void PSELSET(int *desc, int *i, int *j, float *val);
+void PSELSET_(int *desc, int *i, int *j, float *val);
+
+// mangle_pselset2
+void mangle_pselset2(int *desc, int *i, int *j, float *val);
+void PSELSET2(int *desc, int *i, int *j, float *val);
+void PSELSET2_(int *desc, int *i, int *j, float *val);
+
+// mangle_pitreecomb
+void mangle_pitreecomb(int *ictxt, char *scope, char *op, int *m, int *n, int *a,
+                int *lda, int *work);
+void PITREECOMB(int *ictxt, char *scope, char *op, int *m, int *n, int *a,
+                int *lda, int *work);
+void PITREECOMB_(int *ictxt, char *scope, char *op, int *m, int *n, int *a,
+                 int *lda, int *work);
+
+// mangle_pslaread
+void mangle_pslaread(char *filename, int *m, int *n, float *a, int *lda, int *desc,
+              int *info);
+void PSLAREAD(char *filename, int *m, int *n, float *a, int *lda, int *desc,
+              int *info);
+void PSLAREAD_(char *filename, int *m, int *n, float *a, int *lda, int *desc,
+               int *info);
+
+// mangle_pzmatadd
+void mangle_pzmatadd(int *m, int *n, dcomplex *alpha, dcomplex *a, int *lda,
+              dcomplex *beta, dcomplex *c, int *ldc);
+void PZMATADD(int *m, int *n, dcomplex *alpha, dcomplex *a, int *lda,
+              dcomplex *beta, dcomplex *c, int *ldc);
+void PZMATADD_(int *m, int *n, dcomplex *alpha, dcomplex *a, int *lda,
+               dcomplex *beta, dcomplex *c, int *ldc);
+
+// mangle_pzrow2col
+void mangle_pzrow2col(int *ictxt, int *m, int *n, int *nb, dcomplex *vs, int *ldvs,
+               dcomplex *vd, int *ldvd, int *rsrc, int *csrc, int *rdest,
+               int *cdest, dcomplex *work);
+void PZROW2COL(int *ictxt, int *m, int *n, int *nb, dcomplex *vs, int *ldvs,
+               dcomplex *vd, int *ldvd, int *rsrc, int *csrc, int *rdest,
+               int *cdest, dcomplex *work);
+void PZROW2COL_(int *ictxt, int *m, int *n, int *nb, dcomplex *vs, int *ldvs,
+                dcomplex *vd, int *ldvd, int *rsrc, int *csrc, int *rdest,
+                int *cdest, dcomplex *work);
+
+// mangle_pztreecomb
+void mangle_pztreecomb(int *ictxt, char *scope, char *op, int *m, int *n, dcomplex *a,
+                int *lda, dcomplex *work);
+void PZTREECOMB(int *ictxt, char *scope, char *op, int *m, int *n, dcomplex *a,
+                int *lda, dcomplex *work);
+void PZTREECOMB_(int *ictxt, char *scope, char *op, int *m, int *n, dcomplex *a,
+                 int *lda, dcomplex *work);
+
+// Fortran function declarations for all routines called by the wrappers
+extern void F77_SL_INIT(int *ictxt, int *nprow, int *npcol);
+extern void F77_CCDOTC(int *n, scomplex *dotc, scomplex *x, int *incx, scomplex *y,
+                    int *incy);
+extern void F77_CCDOTU(int *n, scomplex *dotu, scomplex *x, int *incx, scomplex *y,
+                    int *incy);
+extern void F77_CHK1MAT(int *ma, int *mapos0, int *na, int *napos0, int *ia,
+                     int *ja, int *desca, int *descapos0, int *info);
+extern int F77_NUMROC(int *n, int *nb, int *iproc, int *isrcproc, int *nprocs);
+extern void F77_SSDOT(int *n, float *dot, float *x, int *incx, float *y,
+                   int *incy);
+extern void F77_SMATADD(int *m, int *n, float *alpha, float *a, int *lda,
+                     float *beta, float *c, int *ldc);
+extern void F77_ZMATADD(int *m, int *n, dcomplex *alpha, dcomplex *a, int *lda,
+                     dcomplex *beta, dcomplex *c, int *ldc);
+extern void F77_ZLATCPY(char *uplo, int *m, int *n, dcomplex *a, int *lda,
+                     dcomplex *b, int *ldb);
+extern void F77_SLATCPY(char *uplo, int *m, int *n, float *a, int *lda, float *b,
+                     int *ldb);
+extern void F77_DLATCPY(char *uplo, int *m, int *n, double *a, int *lda, double *b,
+                     int *ldb);
+extern void F77_ZZDOTU(int *n, dcomplex *dotu, dcomplex *x, int *incx, dcomplex *y,
+                    int *incy);
+extern void F77_ZZDOTC(int *n, dcomplex *dotc, dcomplex *x, int *incx, dcomplex *y,
+                    int *incy);
+extern void F77_PSCHEKPAD(int *ictxt, char *mess, int *m, int *n, float *a,
+                       int *lda, int *ipre, int *ipost, float *chkval);
+extern void F77_PSLAPRNT(int *m, int *n, float *a, int *ia, int *ja, int *desca,
+                      int *irprnt, int *icprnt, char *cmatnm, int *nout,
+                      float *work);
+extern void F77_PSFILLPAD(int *ictxt, int *m, int *n, float *a, int *lda,
+                       int *ipre, int *ipost, float *chkval);
+extern void F77_PSCOL2ROW(int *ictxt, int *m, int *n, int *nb, float *vs,
+                       int *ldvs, float *vd, int *ldvd, int *rsrc, int *csrc,
+                       int *rdest, int *cdest, float *work);
+extern void F77_PZTREECOMB(int *ictxt, char *scope, char *op, int *m, int *n,
+                        dcomplex *a, int *lda, dcomplex *work);
+extern void F77_PZROW2COL(int *ictxt, int *m, int *n, int *nb, dcomplex *vs,
+                       int *ldvs, dcomplex *vd, int *ldvd, int *rsrc, int *csrc,
+                       int *rdest, int *cdest, dcomplex *work);
+extern void F77_PDCHEKPAD(int *ictxt, char *mess, int *m, int *n, double *a,
+                       int *lda, int *ipre, int *ipost, double *chkval);
+extern void F77_PDLAPRNT(int *m, int *n, double *a, int *ia, int *ja, int *desca,
+                      int *irprnt, int *icprnt, char *cmatnm, int *nout,
+                      double *work);
+extern void F77_PDFILLPAD(int *ictxt, int *m, int *n, double *a, int *lda,
+                       int *ipre, int *ipost, double *chkval);
+extern void F77_PDCOL2ROW(int *ictxt, int *m, int *n, int *nb, double *vs,
+                       int *ldvs, double *vd, int *ldvd, int *rsrc, int *csrc,
+                       int *rdest, int *cdest, double *work);
+extern void F77_SLBOOT();
+extern void F77_SLTIMER(int *i);
+extern void F77_SLENABLE();
+extern void F77_SLDISABLE();
+extern double F77_SLINQUIRE(char *timetype, int *i);
+extern void F77_SL_COMBINE(int *ictxt, char *scope, char *op, char *timetype,
+                       int *n, int *ibeg, double *times);
+extern void F77_DESCINIT(int *desc, int *m, int *n, int *mb, int *nb, int *isrc,
+                      int *icsrc, int *ictxt, int *lld, int *info);
+extern void F77_DESCSET(int *desc, int *m, int *n, int *mb, int *nb, int *isrc,
+                     int *icsrc, int *ictxt, int *lld);
+extern void F77_DESC_CONVERT(int *desc_in, int *desc_out, int *info);
+extern int F77_ILCM(int *m, int *n);
+extern void F77_INFOG2L(int *grindx, int *gcindx, int *desc, int *nprow,
+                     int *npcol, int *myrow, int *mycol, int *lrindx,
+                     int *lcindx, int *rsrc, int *csrc);
+extern int F77_INDXL2G(int *indxloc, int *nb, int *iproc, int *isrcproc,
+                    int *nprocs);
+extern int F77_INDXG2P(int *indxglob, int *nb, int *iproc, int *isrcproc,
+                    int *nprocs);
+extern void F77_INFOG1L(int *gindx, int *nb, int *nprocs, int *myroc,
+                     int *isrcproc, int *lindx, int *rocsrc);
+extern int F77_NPREROC(int *n, int *nb, int *iproc, int *isrcproc, int *nprocs);
+extern int F77_ICEIL(int *inum, int *idenom);
+extern void F77_PCHK1MAT(int *ma, int *mapos0, int *na, int *napos0, int *ia,
+                      int *ja, int *desca, int *descapos0, int *nextra, int *ex,
+                      int *expos, int *info);
+extern void F77_PCFILLPAD(int *ictxt, int *m, int *n, scomplex *a, int *lda,
+                       int *ipre, int *ipost, scomplex *chkval);
+extern void F77_PCCHEKPAD(int *ictxt, char *mess, int *m, int *n, scomplex *a,
+                       int *lda, int *ipre, int *ipost, scomplex *chkval);
+extern void F77_PCLAPRNT(int *m, int *n, scomplex *a, int *ia, int *ja, int *desca,
+                      int *irprnt, int *icprnt, char *cmatnm, int *nout,
+                      scomplex *work);
+extern void F77_PZLAPRNT(int *m, int *n, dcomplex *a, int *ia, int *ja, int *desca,
+                      int *irprnt, int *icprnt, char *cmatnm, int *nout,
+                      dcomplex *work);
+extern void F77_PZFILLPAD(int *ictxt, int *m, int *n, dcomplex *a, int *lda,
+                       int *ipre, int *ipost, dcomplex *chkval);
+extern void F77_PCCOL2ROW(int *ictxt, int *m, int *n, int *nb, scomplex *vs,
+                       int *ldvs, scomplex *vd, int *ldvd, int *rsrc, int *csrc,
+                       int *rdest, int *cdest, void *work);
+extern void F77_PZCOL2ROW(int *ictxt, int *m, int *n, int *nb, dcomplex *vs,
+                       int *ldvs, dcomplex *vd, int *ldvd, int *rsrc, int *csrc,
+                       int *rdest, int *cdest, void *work);
+extern void F77_PZCHEKPAD(int *ictxt, char *mess, int *m, int *n, dcomplex *a,
+                       int *lda, int *ipre, int *ipost, dcomplex *chkval);
+extern void F77_CLATCPY(char *uplo, int *m, int *n, scomplex *a, int *lda,
+                     scomplex *b, int *ldb);
+extern void F77_CMATADD(int *m, int *n, scomplex *alpha, scomplex *a, int *lda,
+                     scomplex *beta, scomplex *c, int *ldc);
+extern void F77_DDDOT(int *n, double *x, int *incx, double *y, int *incy,
+                   double *z, int *incz, double *dot);
+extern void F77_DMATADD(int *m, int *n, double *alpha, double *a, int *lda,
+                     double *beta, double *c, int *ldc);
+extern double F77_DSASUM(int *n, double *x, int *incx);
+extern double F77_DSCASUM(int *n, double *x, int *incx);
+extern double F77_DSCNRM2(int *n, double *x, int *incx);
+extern double F77_DSNRM2(int *n, double *x, int *incx);
+extern void F77_ILACPY(char *uplo, int *m, int *n, int *a, int *lda, int *b,
+                    int *ldb);
+extern int F77_INDXG2L(int *indxglob, int *nb, int *iproc, int *isrcproc,
+                    int *nprocs);
+extern void F77_PCELSET2(int *desc, int *i, int *j, scomplex *val);
+extern void F77_PCELGET(int *desc, int *i, int *j, scomplex *val);
+extern void F77_PCELSET(int *desc, int *i, int *j, scomplex *val);
+extern void F77_PCTREECOMB(int *ictxt, char *scope, char *op, int *m, int *n,
+                        scomplex *a, int *lda, scomplex *work);
+extern void F77_PCHKXMAT(int *ma, int *mapos0, int *na, int *napos0, int *ia,
+                      int *ja, int *desca, int *descapos0, int *info);
+extern void F77_PCLAREAD(char *filename, int *m, int *n, scomplex *a, int *lda,
+                      int *desc, int *info);
+extern void F77_PCLAWRITE(char *filename, int *m, int *n, scomplex *a, int *lda,
+                       int *desc, int *info);
+extern void F77_PCMATADD(int *m, int *n, scomplex *alpha, scomplex *a, int *lda,
+                      scomplex *beta, scomplex *c, int *ldc);
+extern void F77_PCROW2COL(int *ictxt, int *m, int *n, int *nb, scomplex *vs,
+                       int *ldvs, scomplex *vd, int *ldvd, int *rsrc, int *csrc,
+                       int *rdest, int *cdest, void *work);
+extern void F77_PDMATADD(int *m, int *n, double *alpha, double *a, int *lda,
+                      double *beta, double *c, int *ldc);
+extern void F77_PDELGET(int *desc, int *i, int *j, double *val);
+extern void F77_PDELSET(int *desc, int *i, int *j, double *val);
+extern void F77_PDELSET2(int *desc, int *i, int *j, double *val);
+extern void F77_PDLAREAD(char *filename, int *m, int *n, double *a, int *lda,
+                      int *desc, int *info);
+extern void F77_PDLAWRITE(char *filename, int *m, int *n, double *a, int *lda,
+                       int *desc, int *info);
+extern void F77_PIROW2COL(int *ictxt, int *m, int *n, int *nb, int *vs, int *ldvs,
+                       int *vd, int *ldvd, int *rsrc, int *csrc, int *rdest,
+                       int *cdest, int *work);
+extern void F77_PDROW2COL(int *ictxt, int *m, int *n, int *nb, double *vs,
+                       int *ldvs, double *vd, int *ldvd, int *rsrc, int *csrc,
+                       int *rdest, int *cdest, double *work);
+extern void F77_PDTREECOMB(int *ictxt, char *scope, char *op, int *m, int *n,
+                        double *a, int *lda, double *work);
+extern void F77_PICHEKPAD(int *ictxt, char *mess, int *m, int *n, int *a, int *lda,
+                       int *ipre, int *ipost, int *chkval);
+extern void F77_PICOL2ROW(int *ictxt, int *m, int *n, int *nb, int *vs, int *ldvs,
+                       int *vd, int *ldvd, int *rsrc, int *csrc, int *rdest,
+                       int *cdest, int *work);
+extern void F77_PIELGET(int *desc, int *i, int *j, int *val);
+extern void F77_PIELSET(int *desc, int *i, int *j, int *val);
+extern void F77_PIELSET2(int *desc, int *i, int *j, int *val);
+extern void F77_PIFILLPAD(int *ictxt, int *m, int *n, int *a, int *lda, int *ipre,
+                       int *ipost, int *chkval);
+extern void F77_PILAPRNT(int *m, int *n, int *a, int *ia, int *ja, int *desca,
+                      int *irprnt, int *icprnt, char *cmatnm, int *nout,
+                      int *work);
+extern void F77_PSLAWRITE(char *filename, int *m, int *n, float *a, int *lda,
+                       int *desc, int *info);
+extern void F77_PSELGET(int *desc, int *i, int *j, float *val);
+extern void F77_PSELSET(int *desc, int *i, int *j, float *val);
+extern void F77_PSELSET2(int *desc, int *i, int *j, float *val);
+extern void F77_PITREECOMB(int *ictxt, char *scope, char *op, int *m, int *n,
+                        int *a, int *lda, int *work);
+extern void F77_PSLAREAD(char *filename, int *m, int *n, float *a, int *lda,
+                      int *desc, int *info);
+extern void F77_PZMATADD(int *m, int *n, dcomplex *alpha, dcomplex *a, int *lda,
+                      dcomplex *beta, dcomplex *c, int *ldc);
+#ifdef __cplusplus
+}
+#endif
+
+#endif
