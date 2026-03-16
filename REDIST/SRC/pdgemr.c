@@ -287,14 +287,9 @@ static2 Int block2buff( IDESC *vi, Int vinb, IDESC *hi, Int hinb, double *ptra, 
 static2 void buff2block( IDESC *vi, Int vinb, IDESC *hi, Int hinb, double *buff, double *ptrb, MDESC *mb );
 static2 void gridreshape( Int *ctxtp );
 void
-Cpdgemr2do(m, n,
-	   ptrmyblock, ia, ja, ma,
-	   ptrmynewblock, ib, jb, mb)
-  double *ptrmyblock, *ptrmynewblock;
-/* pointers to the memory location of the matrix and the redistributed matrix */
-  MDESC *ma;
-  MDESC *mb;
-  Int   ia, ja, ib, jb, m, n;
+Cpdgemr2do(Int m, Int n,
+	   double *ptrmyblock, Int ia, Int ja, MDESC *ma,
+	   double *ptrmynewblock, Int ib, Int jb, MDESC *mb)
 {
   Int   dummy, nprocs;
   Int   gcontext;
@@ -311,14 +306,9 @@ Cpdgemr2do(m, n,
 			 * idem B puis ia,ja puis ib,jb */
 #define MAGIC_MAX 100000000
 void
-Cpdgemr2d(m, n,
-	  ptrmyblock, ia, ja, ma,
-	  ptrmynewblock, ib, jb, mb, globcontext)
-  double *ptrmyblock, *ptrmynewblock;
-/* pointers to the memory location of the matrix and the redistributed matrix */
-  MDESC *ma;
-  MDESC *mb;
-  Int   ia, ja, ib, jb, m, n, globcontext;
+Cpdgemr2d(Int m, Int n,
+	  double *ptrmyblock, Int ia, Int ja, MDESC *ma,
+	  double *ptrmynewblock, Int ib, Int jb, MDESC *mb, Int globcontext)
 {
   double *ptrsendbuff, *ptrrecvbuff, *ptrNULL = 0;
   double *recvptr;
@@ -586,10 +576,9 @@ after_comm:
   free(h_inter);
   free(param);
 }/* distrib */
-static2 void 
-init_chenille(mypnum, nprocs, n0, proc0, n1, proc1, psend, precv, myrang)
-  Int   nprocs, mypnum, n0, n1;
-  Int  *proc0, *proc1, **psend, **precv, *myrang;
+static2 void
+init_chenille(Int mypnum, Int nprocs, Int n0, Int *proc0, Int n1, Int *proc1,
+	      Int **psend, Int **precv, Int *myrang)
 {
   Int   ns, nr, i, tot;
   Int  *sender, *recver, *g0, *g1;
@@ -659,12 +648,9 @@ Int _m,_n,_lda,_ldb; \
       _a += _lda; \
     } \
 } (void)0
-static2 Int 
-block2buff(vi, vinb, hi, hinb, ptra, ma, buff)
-  Int   hinb, vinb;
-  IDESC *hi, *vi;
-  MDESC *ma;
-  double *buff, *ptra;
+static2 Int
+block2buff(IDESC *vi, Int vinb, IDESC *hi, Int hinb, double *ptra,
+	   MDESC *ma, double *buff)
 {
   Int   h, v, sizebuff;
   double *ptr2;
@@ -681,12 +667,9 @@ block2buff(vi, vinb, hi, hinb, ptra, ma, buff)
   }
   return sizebuff;
 }
-static2 void 
-buff2block(vi, vinb, hi, hinb, buff, ptrb, mb)
-  Int   hinb, vinb;
-  IDESC *hi, *vi;
-  MDESC *mb;
-  double *buff, *ptrb;
+static2 void
+buff2block(IDESC *vi, Int vinb, IDESC *hi, Int hinb, double *buff,
+	   double *ptrb, MDESC *mb)
 {
   Int   h, v, sizebuff;
   double *ptr2;

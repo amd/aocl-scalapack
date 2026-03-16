@@ -297,20 +297,14 @@ fortran_mr2dnew(char *uplo, char *diag, Int *m, Int *n, float *A, Int *ia, Int *
   return;
 }
 static2 void init_chenille( Int mypnum, Int nprocs, Int n0, Int *proc0, Int n1, Int *proc1, Int **psend, Int **precv, Int *myrang );
-static2 Int inter_len();
-static2 Int block2buff();
-static2 void buff2block();
+static2 Int inter_len( Int hinb, IDESC *hi, Int vinb, IDESC *vi );
+static2 Int block2buff( IDESC *vi, Int vinb, IDESC *hi, Int hinb, float *ptra, MDESC *ma, float *buff );
+static2 void buff2block( IDESC *vi, Int vinb, IDESC *hi, Int hinb, float *buff, float *ptrb, MDESC *mb );
 static2 void gridreshape( Int *ctxtp );
 void
-Cpstrmr2do(uplo, diag, m, n,
-	   ptrmyblock, ia, ja, ma,
-	   ptrmynewblock, ib, jb, mb)
-  char *uplo, *diag;
-  float *ptrmyblock, *ptrmynewblock;
-/* pointers to the memory location of the matrix and the redistributed matrix */
-  MDESC *ma;
-  MDESC *mb;
-  Int   ia, ja, ib, jb, m, n;
+Cpstrmr2do(char *uplo, char *diag, Int m, Int n,
+	   float *ptrmyblock, Int ia, Int ja, MDESC *ma,
+	   float *ptrmynewblock, Int ib, Int jb, MDESC *mb)
 {
   Int   dummy, nprocs;
   Int   gcontext;

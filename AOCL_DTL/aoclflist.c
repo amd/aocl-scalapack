@@ -88,8 +88,9 @@ AOCL_FAL_FILE *AOCL_FLIST_AddFile(const int8 *pchFilePrefix, AOCL_FLIST_Node **p
         return file;
     }
 
-    /* We don't have exiting file, lets try to open new one */
-    sprintf(pchFileName, "P%d_T%d_Rank%d_%s", AOCL_getpid(), tid,scalapack_context.rank, pchFilePrefix);
+        /* We don't have exiting file, lets try to open new one */
+        sprintf(pchFileName, "P%d_T%d_Rank%ld_%s", AOCL_getpid(), tid,
+            (long)scalapack_context.rank, pchFilePrefix);
     file = AOCL_FAL_Open(pchFileName, "wb");
     if (file == NULL)
     {

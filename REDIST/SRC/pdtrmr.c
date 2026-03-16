@@ -297,20 +297,14 @@ fortran_mr2dnew(char *uplo, char *diag, Int *m, Int *n, double *A, Int *ia, Int 
   return;
 }
 static2 void init_chenille( Int mypnum, Int nprocs, Int n0, Int *proc0, Int n1, Int *proc1, Int **psend, Int **precv, Int *myrang );
-static2 Int inter_len();
-static2 Int block2buff();
-static2 void buff2block();
+static2 Int inter_len( Int hinb, IDESC *hi, Int vinb, IDESC *vi );
+static2 Int block2buff( IDESC *vi, Int vinb, IDESC *hi, Int hinb, double *ptra, MDESC *ma, double *buff );
+static2 void buff2block( IDESC *vi, Int vinb, IDESC *hi, Int hinb, double *buff, double *ptrb, MDESC *mb );
 static2 void gridreshape( Int *ctxtp );
 void
-Cpdtrmr2do(uplo, diag, m, n,
-	   ptrmyblock, ia, ja, ma,
-	   ptrmynewblock, ib, jb, mb)
-  char *uplo, *diag;
-  double *ptrmyblock, *ptrmynewblock;
-/* pointers to the memory location of the matrix and the redistributed matrix */
-  MDESC *ma;
-  MDESC *mb;
-  Int   ia, ja, ib, jb, m, n;
+Cpdtrmr2do(char *uplo, char *diag, Int m, Int n,
+	   double *ptrmyblock, Int ia, Int ja, MDESC *ma,
+	   double *ptrmynewblock, Int ib, Int jb, MDESC *mb)
 {
   Int   dummy, nprocs;
   Int   gcontext;
@@ -327,15 +321,9 @@ Cpdtrmr2do(uplo, diag, m, n,
 			 * idem B puis ia,ja puis ib,jb */
 #define MAGIC_MAX 100000000
 void
-Cpdtrmr2d(uplo, diag, m, n,
-	  ptrmyblock, ia, ja, ma,
-	  ptrmynewblock, ib, jb, mb, globcontext)
-  char *uplo, *diag;
-  double *ptrmyblock, *ptrmynewblock;
-/* pointers to the memory location of the matrix and the redistributed matrix */
-  MDESC *ma;
-  MDESC *mb;
-  Int   ia, ja, ib, jb, m, n, globcontext;
+Cpdtrmr2d(char *uplo, char *diag, Int m, Int n,
+	  double *ptrmyblock, Int ia, Int ja, MDESC *ma,
+	  double *ptrmynewblock, Int ib, Int jb, MDESC *mb, Int globcontext)
 {
   double *ptrsendbuff, *ptrrecvbuff, *ptrNULL = 0;
   double *recvptr;
