@@ -157,10 +157,7 @@ freememory(Int *ptrtobefreed)
  * the first one from i, i,j can be negative out of borns, the number of
  * elements returned can be negative (means 0) */
 static2 Int
-insidemat(uplo, diag, i, j, m, n, offset)
-  Int   m, n, i, j;	/* coordonnees de depart, taille de la sous-matrice */
-  char *uplo, *diag;
-  Int  *offset;
+insidemat(char *uplo, char *diag, Int i, Int j, Int m, Int n, Int *offset)
 {
   /* tests outside mxn */
   assert(j >= 0 && j < n);
@@ -251,12 +248,8 @@ intersect(char *uplo, char *diag,
  * contains the result that are stocked in IDESC structure, the function
  * returns the number of intersections found */
 Int 
-scan_intervals(type, ja, jb, n, ma, mb, q0, q1, col0, col1,
-	       result)
-  char  type;
-  Int   ja, jb, n, q0, q1, col0, col1;
-  MDESC *ma, *mb;
-  IDESC *result;
+scan_intervals(char type, Int ja, Int jb, Int n, MDESC *ma, MDESC *mb,
+	       Int q0, Int q1, Int col0, Int col1, IDESC *result)
 {
   Int   offset, j0, j1, templatewidth0, templatewidth1, nbcol0, nbcol1;
   Int   l;	/* local indice on the beginning of the interval */
@@ -321,25 +314,13 @@ scan_intervals(type, ja, jb, n, ma, mb, q0, q1, col0, col1,
 /*********************************************************************/
 /* Do the scanning of intervals and the requested action */
 void
-scanD0(uplo, diag, action, ptrbuff, ptrsizebuff,
-       m, n,
-       ma, ia, ja, p0, q0,
-       mb, ib, jb, p1, q1,
-       v_inter, vinter_nb,
-       h_inter, hinter_nb,
-       ptrblock)
-  Int   action,	/* # of the action done on the intersected intervals  */
-       *ptrsizebuff;	/* size of the communication ptrbuffer (chosen to be
-			 * an output parameter in every cases) */
-  Int  *ptrbuff	/* address of the communication ptrbuffer (a suffisant memory
-      space is supposed to be allocated before the call) */ , *ptrblock;
-  Int   p0, q0, p1, q1;
-  IDESC *v_inter, *h_inter;
-  Int   vinter_nb, hinter_nb;
-  Int   m, n;
-  Int   ia, ja, ib, jb;
-  MDESC *ma, *mb;
-  char *uplo, *diag;
+scanD0(char *uplo, char *diag, Int action, Int *ptrbuff, Int *ptrsizebuff,
+     Int m, Int n,
+     MDESC *ma, Int ia, Int ja, Int p0, Int q0,
+     MDESC *mb, Int ib, Int jb, Int p1, Int q1,
+     IDESC *v_inter, Int vinter_nb,
+     IDESC *h_inter, Int hinter_nb,
+     Int *ptrblock)
 {/* Rmk: the a+au type addresses are strict bounds as a+au does not belong to
   * the [a..a+au-1] interval of length au */
   Int   templateheight1, templatewidth1;

@@ -13,8 +13,9 @@ F_VOID_FUNC blacs_abort_(Int *ConTxt, Int *ErrNo)
 
    Cblacs_gridinfo(Mpval(ConTxt), &nprow, &npcol, &myrow, &mycol);
    fprintf(stderr,
-"{%d,%d}, pnum=%d, Contxt=%d, killed other procs, exiting with error #%d.\n\n",
-           myrow, mycol, BI_Iam, Mpval(ConTxt), Mpval(ErrNo));
+"{%ld,%ld}, pnum=%ld, Contxt=%ld, killed other procs, exiting with error #%ld.\n\n",
+           (long)myrow, (long)mycol, (long)BI_Iam,
+           (long)Mpval(ConTxt), (long)Mpval(ErrNo));
 
    BI_BlacsAbort(Mpval(ErrNo));
 }

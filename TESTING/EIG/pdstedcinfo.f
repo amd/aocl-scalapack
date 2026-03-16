@@ -157,6 +157,9 @@
 *
 *     .. Local Arrays ..
       INTEGER            IUPLOS( 2 )
+      INTEGER            INMATSIZES( 1 ), INUPLOS( 1 ),
+     $                   INPCONFIGS( 1 ), INMATTYPES( 1 ),
+     $                   IISUBTESTS( 1 )
 *     ..
 *     .. Executable Statements ..
 *       This is just to keep ftnchek happy
@@ -173,9 +176,11 @@
 *
       IF( IAM.EQ.0 ) THEN
          READ( NIN, FMT = * )NMATSIZES
-         CALL IGEBS2D( CONTEXT, 'All', ' ', 1, 1, NMATSIZES, 1 )
+          INMATSIZES( 1 ) = NMATSIZES
+          CALL IGEBS2D( CONTEXT, 'All', ' ', 1, 1, INMATSIZES, 1 )
       ELSE
-         CALL IGEBR2D( CONTEXT, 'All', ' ', 1, 1, NMATSIZES, 1, 0, 0 )
+          CALL IGEBR2D( CONTEXT, 'All', ' ', 1, 1, INMATSIZES, 1, 0, 0 )
+          NMATSIZES = INMATSIZES( 1 )
       END IF
       IF( NMATSIZES.EQ.-1 ) THEN
          INFO = -1
@@ -201,9 +206,11 @@
 *
       IF( IAM.EQ.0 ) THEN
          READ( NIN, FMT = * )NUPLOS
-         CALL IGEBS2D( CONTEXT, 'All', ' ', 1, 1, NUPLOS, 1 )
+          INUPLOS( 1 ) = NUPLOS
+          CALL IGEBS2D( CONTEXT, 'All', ' ', 1, 1, INUPLOS, 1 )
       ELSE
-         CALL IGEBR2D( CONTEXT, 'All', ' ', 1, 1, NUPLOS, 1, 0, 0 )
+          CALL IGEBR2D( CONTEXT, 'All', ' ', 1, 1, INUPLOS, 1, 0, 0 )
+          NUPLOS = INUPLOS( 1 )
       END IF
       IF( NUPLOS.LT.1 .OR. NUPLOS.GT.2 ) THEN
          IF( IAM.EQ.0 ) THEN
@@ -236,9 +243,11 @@
 *
       IF( IAM.EQ.0 ) THEN
          READ( NIN, FMT = * )NPCONFIGS
-         CALL IGEBS2D( CONTEXT, 'All', ' ', 1, 1, NPCONFIGS, 1 )
+          INPCONFIGS( 1 ) = NPCONFIGS
+          CALL IGEBS2D( CONTEXT, 'All', ' ', 1, 1, INPCONFIGS, 1 )
       ELSE
-         CALL IGEBR2D( CONTEXT, 'All', ' ', 1, 1, NPCONFIGS, 1, 0, 0 )
+          CALL IGEBR2D( CONTEXT, 'All', ' ', 1, 1, INPCONFIGS, 1, 0, 0 )
+          NPCONFIGS = INPCONFIGS( 1 )
       END IF
       IF( NPCONFIGS.LT.1 .OR. NPCONFIGS.GT.MAXSETSIZE ) THEN
          IF( IAM.EQ.0 ) THEN
@@ -306,9 +315,11 @@
 *
       IF( IAM.EQ.0 ) THEN
          READ( NIN, FMT = * )NMATTYPES
-         CALL IGEBS2D( CONTEXT, 'All', ' ', 1, 1, NMATTYPES, 1 )
+          INMATTYPES( 1 ) = NMATTYPES
+          CALL IGEBS2D( CONTEXT, 'All', ' ', 1, 1, INMATTYPES, 1 )
       ELSE
-         CALL IGEBR2D( CONTEXT, 'All', ' ', 1, 1, NMATTYPES, 1, 0, 0 )
+          CALL IGEBR2D( CONTEXT, 'All', ' ', 1, 1, INMATTYPES, 1, 0, 0 )
+          NMATTYPES = INMATTYPES( 1 )
       END IF
       IF( NMATTYPES.LT.1 .OR. NMATTYPES.GT.MAXSETSIZE ) THEN
          IF( IAM.EQ.0 ) THEN
@@ -344,9 +355,12 @@
          ELSE
             ISUBTESTS = 1
          END IF
-         CALL IGEBS2D( CONTEXT, 'All', ' ', 1, 1, ISUBTESTS, 1 )
+            IISUBTESTS( 1 ) = ISUBTESTS
+            CALL IGEBS2D( CONTEXT, 'All', ' ', 1, 1, IISUBTESTS, 1 )
       ELSE
-         CALL IGEBR2D( CONTEXT, 'All', ' ', 1, 1, ISUBTESTS, 1, 0, 0 )
+         CALL IGEBR2D( CONTEXT, 'All', ' ', 1, 1, IISUBTESTS, 1,
+     $                 0, 0 )
+         ISUBTESTS = IISUBTESTS( 1 )
       END IF
       IF( ISUBTESTS.EQ.2 ) THEN
          SUBTESTS = 'Y'
