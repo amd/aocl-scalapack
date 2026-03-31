@@ -10,7 +10,7 @@
 *     University of Tennessee, Knoxville, Oak Ridge National Laboratory,
 *     and University of California, Berkeley.
 *     March 15, 2002
-*     Modifications Copyright (c) 2026 Advanced Micro Devices, Inc. All rights reserved. 
+*     Modifications Copyright (c) 2025 Advanced Micro Devices, Inc. All rights reserved. 
 *
 *     .. Scalar Arguments ..
       CHARACTER          SUBTESTS, UPLO
@@ -269,14 +269,6 @@
      $                   0, 0, 4, 3, 1, 4, 4, 3, 0 /
 *     ..
 *     .. Executable Statements ..
-*
-*     Take command-line arguments if requested
-      CHARACTER*80 arg
-      INTEGER numArgs, count
-      LOGICAL :: EX_FLAG = .FALSE.
-      INTEGER :: INF_PERCENT = 0
-      INTEGER :: NAN_PERCENT = 0
-*
 *       This is just to keep ftnchek happy
       IF( BLOCK_CYCLIC_2D*CSRC_*CTXT_*DLEN_*DTYPE_*LLD_*MB_*M_*NB_*N_*
      $    RSRC_.LT.0 )RETURN
@@ -288,34 +280,7 @@
 *
       CALL BLACS_PINFO( IAM, NNODES )
       CALL BLACS_GRIDINFO( CONTEXT, NPROW, NPCOL, MYROW, MYCOL )
-      
-*     Get the number of command-line arguments
-      numArgs = command_argument_count()
 *
-*     Process command-line arguments
-      do count = 1, numArgs, 2
-         call get_command_argument(count, arg)
-         arg = trim(arg)
-         select case (arg)
-            case ("-h", "--help")
-                  exit
-            case ("-inf")
-                  call get_command_argument(count + 1, arg)
-                  read(arg, *) INF_PERCENT
-                  IF (INF_PERCENT .GT. 0) THEN
-                     EX_FLAG = .TRUE.
-                  END IF
-            case ("-nan")
-                  call get_command_argument(count + 1, arg)
-                  read(arg, *) NAN_PERCENT
-                  IF (NAN_PERCENT .GT. 0) THEN
-                     EX_FLAG = .TRUE.
-                  END IF
-            case default
-                  print *, "Invalid option: ", arg
-                  exit
-            end select
-      end do
 *
 *     Make sure that we have enough memory
 *
@@ -405,19 +370,11 @@
             COND = ULPINV*ANINV / TEN
          END IF
 *
-*
-*      IF extreme flag is enabled, opt to the general matgen
-*      routine to populate the input with INF/NANs
-*
-         IF(EX_FLAG) THEN
-           ITYPE = 8
-         END IF
-*
 *     Special Matrices
 *
 *     Zero
-*         
-         
+*
+*
          IF( ITYPE.EQ.1 ) THEN
 *
 *     Zero Matrix
@@ -495,12 +452,10 @@
             CALL PCFILLPAD( DESCA( CTXT_ ), SIZETMS, 1, WORK( INDWORK ),
      $                      SIZETMS, IPREPAD, IPOSTPAD, PADVAL+3.0E+0 )
 *
-            IF( N.GT.0) THEN
             CALL PCLATMS( N, N, 'S', ISEED, 'S', RWORK( INDD ), IMODE,
      $                    COND, ANORM, N, N, 'N', COPYA, 1, 1, DESCA,
      $                    ORDER, WORK( INDWORK+IPREPAD ), SIZETMS,
      $                    IINFO )
-            END IF
 *
             WKNOWN = .TRUE.
 *
@@ -574,12 +529,10 @@
             CALL PCFILLPAD( DESCA( CTXT_ ), SIZETMS, 1, WORK( INDWORK ),
      $                      SIZETMS, IPREPAD, IPOSTPAD, PADVAL+4.0E+0 )
 *
-            IF( N.GT.0) THEN
             CALL PCLATMS( N, N, 'S', ISEED, 'S', RWORK( INDD ), IMODE,
      $                    COND, ANORM, 0, 0, 'N', COPYA, 1, 1, DESCA,
      $                    ORDER, WORK( INDWORK+IPREPAD ), SIZETMS,
      $                    IINFO )
-            END IF
 *
             CALL PCCHEKPAD( DESCA( CTXT_ ), 'PCLATMS4-WORK', SIZETMS, 1,
      $                      WORK( INDWORK ), SIZETMS, IPREPAD, IPOSTPAD,
@@ -593,7 +546,7 @@
             IINFO = 1
          END IF
 *
-         IF( WKNOWN .AND. N.GT.0)
+         IF( WKNOWN )
      $      CALL SLASRT( 'I', N, RWORK( INDD ), IINFO )
 *
 *
@@ -1107,12 +1060,9 @@
 *
       PASSED = 'PASSED  EEVD'
 *
-*     Currently negative test handling for PCHEEVD is not implemented
-*     Hence N.LT.0 and Extreme Value cases are skipped.
 *     PCHEEVD test1:
 *
-         IF( INFO.EQ.0 . AND. N .GE. 0 .AND.
-     $            .NOT.(EX_FLAG)) THEN
+      IF( INFO.EQ.0 ) THEN
 *
          NP0 = NUMROC( N, NB, 0, 0, NPROW )
          NQ0 = NUMROC( MAX( N, 1 ), NB, 0, 0, NPCOL )
@@ -1220,8 +1170,6 @@
  9982 FORMAT( '      ABSTOL=', D16.6 )
  9981 FORMAT( '      THRESH=', D16.6 )
  9980 FORMAT( ' Increase TOTMEM in PCSEPDRIVER' )
- 9979 FORMAT( 'N < 0, negative test case detected for PCHEEVX with'
-     $        ' INFO = -4, Passing this case')
 *
 *     End of PCSEPTST
 *
