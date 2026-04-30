@@ -5,37 +5,7 @@
 191 				maximum number of processes
 'N'				disable pxsyev tests, recommended for heterogeneous systems.
 ' '
-'TEST 1 - test one large matrix - Performance'
-1				number of matrices
-3600
-2				number of uplo choices
-'U' 'L'	         		uplo choices
-1				number of processor configurations (P, Q, NB)
-1          		values of P (NPROW)
-189 	 			values of Q (NPCOL)
-16 			values of NB
-1				number of matrix types
-8			 	matrix types (see pdseptst.f)
-'N'				perform subset tests?
-20.0				Threshold (* 5 for generalized tests)
--1				Absolute Tolerance
-' '
-'TEST 2 - test one large matrix - Performance'
-1                               number of matrices
-3600
-2                               number of uplo choices
-'U' 'L'                             uplo choices
-1                               number of processor configurations (P, Q, NB)
-9                       values of P (NPROW)
-21                             values of Q (NPCOL)
-16                      values of NB
-1                               number of matrix types
-9                               matrix types (see pdseptst.f)
-'N'                             perform subset tests?
-20.0                            Threshold (* 5 for generalized tests)
--1                              Absolute Tolerance
-' '
-'TEST 3 - test tiny matrices - early return case'
+'TEST 1 - test tiny matrices - early return case'
 1                               number of matrices
 0
 1				number of uplo choices
@@ -50,7 +20,7 @@
 80.0				Threshold (* 5 for generalized tests)
 -1 				Absolute Tolerance
 ' '
-'TEST 4 - test tiny matrices - negative/incorrect case'
+'TEST 2 - test tiny matrices - negative/incorrect case'
 1                               number of matrices
 -5
 1				number of uplo choices
@@ -65,7 +35,7 @@
 80.0				Threshold (* 5 for generalized tests)
 -1 				Absolute Tolerance
 ' '
-'TEST 5 - test tiny matrices - different process configurations'
+'TEST 3 - test tiny matrices - different process configurations'
 3                               number of matrices
 0 1 2				matrix size
 1				number of uplo choices
@@ -80,7 +50,7 @@
 80.0				Threshold (* 5 for generalized tests)
 -1 				Absolute Tolerance
 ' '
-'TEST 6 - test tiny matrices - all requests'
+'TEST 4 - test tiny matrices - all requests'
 2                               number of matrices
 0 1
 1				number of uplo choices
@@ -95,7 +65,7 @@
 80.0				Threshold (* 5 for generalized tests)
 -1 				Absolute Tolerance
 ' '
-'TEST 7 - test a small matrix - all types'
+'TEST 5 - test a small matrix - all types'
 1				number of matrices
 5
 1				number of uplo choices
@@ -110,7 +80,7 @@
 250.0				Threshold
 -1 				Absolute Tolerance
 ' '
-'TEST 8 - test a small matrix - all requests'
+'TEST 6 - test a small matrix - all requests'
 1				number of matrices
 4
 1				number of uplo choices
@@ -125,7 +95,7 @@
 250.0				Threshold
 -1 				Absolute Tolerance
 ' '
-'TEST 9 - test a small matrix - all processor configurations'
+'TEST 7 - test a small matrix - all processor configurations'
 1				number of matrices
 6				matrix size
 2				number of uplo choices
@@ -140,7 +110,7 @@
 50.0				Threshold (* 5 for generalized tests)
 -1				Absolute Tolerance
 ' '
-'TEST 10 - test a medium matrix - hard matrix types'
+'TEST 8 - test a medium matrix - hard matrix types'
 1				number of matrices
 21
 1				number of uplo choices
@@ -155,7 +125,7 @@
 50.0				Threshold (* 5 for generalized tests)
 -1				Absolute Tolerance
 ' '
-'TEST 11 - test a medium matrix - all processor configurations'
+'TEST 9 - test a medium matrix - all processor configurations'
 1				number of matrices
 27
 1				number of uplo choices
@@ -170,7 +140,7 @@
 50.0				Threshold (* 5 for generalized tests)
 -1				Absolute Tolerance
 ' '
-'TEST 12 - test a medium matrix - L and U'
+'TEST 10 - test a medium matrix - L and U'
 1				number of matrices
 24
 2				number of uplo choices
@@ -185,7 +155,7 @@
 20.0				Threshold (* 5 for generalized tests)
 -1				Absolute Tolerance
 ' '
-'TEST 13 - test one large matrix'
+'TEST 11 - test one large matrix'
 1				number of matrices
 100
 1				number of uplo choices

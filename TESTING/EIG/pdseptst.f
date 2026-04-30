@@ -8,7 +8,7 @@
 *     University of Tennessee, Knoxville, Oak Ridge National Laboratory,
 *     and University of California, Berkeley.
 *     August 14, 2001
-*     Modifications Copyright (c) 2025 Advanced Micro Devices, Inc. All rights reserved.
+*     Modifications Copyright (c) 2025-2026 Advanced Micro Devices, Inc. All rights reserved.
 *
 *     .. Scalar Arguments ..
       CHARACTER          HETERO, SUBTESTS, UPLO
@@ -428,7 +428,8 @@
             DO 50 I = 1, N
                WORK( INDD+I-1 ) = ZERO
    50       CONTINUE
-            CALL PDLASET( 'All', N, N, ZERO, ZERO, COPYA, 1, 1, DESCA )
+            CALL PDLASET( 'All', N, N, ZERO, ZERO,
+     $                    COPYA, 1, 1, DESCA )
             WKNOWN = .TRUE.
 *
          ELSE IF( ITYPE.EQ.2 ) THEN
@@ -438,7 +439,8 @@
             DO 60 I = 1, N
                WORK( INDD+I-1 ) = ONE
    60       CONTINUE
-            CALL PDLASET( 'All', N, N, ZERO, ONE, COPYA, 1, 1, DESCA )
+            CALL PDLASET( 'All', N, N, ZERO, ONE,
+     $                    COPYA, 1, 1, DESCA )
             WKNOWN = .TRUE.
 *
          ELSE IF( ITYPE.EQ.4 ) THEN
@@ -486,7 +488,8 @@
 *
             NP = NUMROC( N, DESCA( MB_ ), MYROW, 0, NPROW )
             NQ = NUMROC( N, DESCA( NB_ ), MYCOL, 0, NPCOL )
-            CALL PDMATGEN( DESCA( CTXT_ ), 'S', 'N', N, N, DESCA( MB_ ),
+            CALL PDMATGEN( DESCA( CTXT_ ), 'S', 'N', N,
+     $                     N, DESCA( MB_ ),
      $                     DESCA( NB_ ), COPYA, DESCA( LLD_ ),
      $                     DESCA( RSRC_ ), DESCA( CSRC_ ), ISEED( 1 ),
      $                     0, NP, 0, NQ, MYROW, MYCOL, NPROW, NPCOL )
@@ -519,7 +522,8 @@
 *     Block diagonal matrix with each block being a positive
 *     definite tridiagonal submatrix.
 *
-            CALL PDLASET( 'All', N, N, ZERO, ZERO, COPYA, 1, 1, DESCA )
+            CALL PDLASET( 'All', N, N, ZERO, ZERO,
+     $                    COPYA, 1, 1, DESCA )
             NP = NUMROC( N, DESCA( MB_ ), 0, 0, NPROW )
             NQ = NUMROC( N, DESCA( NB_ ), 0, 0, NPCOL )
             NLOC = MIN( NP, NQ )
@@ -609,7 +613,8 @@
          VL = ONE
          VU = -ONE
 *
-         CALL PDLASIZESYEVX( WKNOWN, 'A', N, DESCA, VL, VU, IL, IU,
+         CALL PDLASIZESYEVX( WKNOWN, 'A', N, DESCA, VL, VU,
+     $                       IL, IU,
      $                       ISEED, WORK( INDD ), MAXSIZE, VECSIZE,
      $                       VALSIZE )
 *
@@ -1369,7 +1374,3 @@
 *     End of PDSEPTST
 *
       END
-
-
-
-

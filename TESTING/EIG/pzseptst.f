@@ -10,7 +10,7 @@
 *     University of Tennessee, Knoxville, Oak Ridge National Laboratory,
 *     and University of California, Berkeley.
 *     March 15, 2002
-*     Modifications Copyright (c) 2025 Advanced Micro Devices, Inc. All rights reserved. 
+*     Modifications Copyright (c) 2025-2026 Advanced Micro Devices, Inc. All rights reserved.
 *
 *     .. Scalar Arguments ..
       CHARACTER          SUBTESTS, UPLO
@@ -382,7 +382,8 @@
             DO 50 I = 1, N
                RWORK( INDD+I-1 ) = ZERO
    50       CONTINUE
-            CALL PZLASET( 'All', N, N, ZZERO, ZZERO, COPYA, 1, 1,
+            CALL PZLASET( 'All', N, N, ZZERO,
+     $                    ZZERO, COPYA, 1, 1,
      $                    DESCA )
             WKNOWN = .TRUE.
 *
@@ -393,7 +394,8 @@
             DO 60 I = 1, N
                RWORK( INDD+I-1 ) = ONE
    60       CONTINUE
-            CALL PZLASET( 'All', N, N, ZZERO, ZONE, COPYA, 1, 1, DESCA )
+            CALL PZLASET( 'All', N, N, ZZERO,
+     $                    ZONE, COPYA, 1, 1, DESCA )
             WKNOWN = .TRUE.
 *
          ELSE IF( ITYPE.EQ.4 ) THEN
@@ -468,7 +470,8 @@
 *     Block diagonal matrix with each block being a positive
 *     definite tridiagonal submatrix.
 *
-            CALL PZLASET( 'All', N, N, ZZERO, ZZERO, COPYA, 1, 1,
+            CALL PZLASET( 'All', N, N, ZZERO,
+     $                    ZZERO, COPYA, 1, 1,
      $                    DESCA )
             NP = NUMROC( N, DESCA( MB_ ), 0, 0, NPROW )
             NQ = NUMROC( N, DESCA( NB_ ), 0, 0, NPCOL )

@@ -9,6 +9,8 @@
 *     and University of California, Berkeley.
 *     February 28, 2000
 *
+*     Modifications Copyright (c) 2026 Advanced Micro Devices, Inc. All rights reserved.
+*
 *     .. Scalar Arguments ..
       LOGICAL            WKNOWN
       CHARACTER          UPLO
@@ -281,6 +283,16 @@
      $              LWORK1, IWORK( 1+IPREPAD ), LIWORK, INFO )
       CALL SLTIMER( 6 )
       CALL SLTIMER( 1 )
+*
+*     Incorrect test case validation
+*
+*      When N < 0/Invalid, PCHEEVD INFO = -3
+*      Expected Error code for N < 0
+*      Hence this case can be passed by setting RESULT = 0
+      IF( N.LT.0 .AND. INFO.EQ.-3 ) THEN
+         RESULT = 0
+         GO TO 60
+      END IF
 *
       IF( THRESH.LE.0 ) THEN
          RESULT = 0
