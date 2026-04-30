@@ -1,4 +1,4 @@
-##Copyright (C) 2021-2025, Advanced Micro Devices, Inc. All rights reserved.##
+##Copyright (C) 2021-2026, Advanced Micro Devices, Inc. All rights reserved.##
 
 cmake_minimum_required(VERSION 3.26)
 
@@ -100,16 +100,17 @@ endif(ENABLE_LARGE_MATRIX_TESTING)
 
 
 if (UNIX)
+   set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -I ${SL_FRAMEWORK_INCLUDE_PATH}/" )
    if ("${CMAKE_C_COMPILER_ID}" STREQUAL "GNU")
-      set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -ffixed-line-length-none -I ${SL_FRAMEWORK_INCLUDE_PATH}/" )
+      set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -ffixed-line-length-none" )
    endif ()
    if ("${CMAKE_Fortran_COMPILER_ID}" STREQUAL "Flang")
-      set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -ffixed-line-length-132 -I ${SL_FRAMEWORK_INCLUDE_PATH}/" )
+      set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -ffixed-line-length-132" )
    endif ()
    if ("${CMAKE_Fortran_COMPILER_ID}" STREQUAL "Intel")
-      set( CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -fltconsistency -fp-port -no-vec -I ${SL_FRAMEWORK_INCLUDE_PATH}/" )
+      set( CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -fltconsistency -fp-port -no-vec" )
    elseif ("${CMAKE_Fortran_COMPILER}" MATCHES "ifort" )
-      set( CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -fltconsistency -fp-port -no-vec -I ${SL_FRAMEWORK_INCLUDE_PATH}/" )
+      set( CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -fltconsistency -fp-port -no-vec" )
    endif ()
 
    if (("${CMAKE_C_COMPILER_ID}" STREQUAL "Intel") AND ( "${CMAKE_C_COMPILER}" MATCHES "icc" ) )
