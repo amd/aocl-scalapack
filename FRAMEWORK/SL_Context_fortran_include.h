@@ -1,6 +1,6 @@
-
+#ifdef AOCL_SL_COPYRIGHT_H
 /* ************************************************************************
- * Copyright (c) 2023 Advanced Micro Devices, Inc.
+ * Copyright (c) 2023-2026 Advanced Micro Devices, Inc.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,6 +21,7 @@
  * THE SOFTWARE.
  *
  * ************************************************************************ */
+#endif /* AOCL_SL_COPYRIGHT_H */
 
 #ifndef SL_CONTEXT_FORTRAN_H
 #define SL_CONTEXT_FORTRAN_H
