@@ -10,7 +10,7 @@
 *     University of Tennessee, Knoxville, Oak Ridge National Laboratory,
 *     and University of California, Berkeley.
 *     March 15, 2002
-*     Modifications Copyright (c) 2025 Advanced Micro Devices, Inc. All rights reserved. 
+*     Modifications Copyright (c) 2025-2026 Advanced Micro Devices, Inc. All rights reserved.
 *
 *     .. Scalar Arguments ..
       CHARACTER          SUBTESTS, UPLO
@@ -403,7 +403,8 @@
             CALL PCFILLPAD( DESCA( CTXT_ ), SIZETMS, 1, WORK( INDWORK ),
      $                      SIZETMS, IPREPAD, IPOSTPAD, PADVAL+1.0E+0 )
 *
-            CALL PCLATMS( N, N, 'S', ISEED, 'S', RWORK( INDD ), IMODE,
+            CALL PCLATMS( N, N, 'S', ISEED, 'S',
+     $                    RWORK( INDD ), IMODE,
      $                    COND, ANORM, 0, 0, 'N', COPYA, 1, 1, DESCA,
      $                    ORDER, WORK( INDWORK+IPREPAD ), SIZETMS,
      $                    IINFO )
@@ -420,8 +421,10 @@
             CALL PCFILLPAD( DESCA( CTXT_ ), SIZETMS, 1, WORK( INDWORK ),
      $                      SIZETMS, IPREPAD, IPOSTPAD, PADVAL+2.0E+0 )
 *
-            CALL PCLATMS( N, N, 'S', ISEED, 'S', RWORK( INDD ), IMODE,
-     $                    COND, ANORM, N, N, 'N', COPYA, 1, 1, DESCA,
+            CALL PCLATMS( N, N, 'S', ISEED, 'S',
+     $                     RWORK( INDD ), IMODE,
+     $                    COND, ANORM, N, N, 'N',
+     $                     COPYA, 1, 1, DESCA,
      $                    ORDER, WORK( INDWORK+IPREPAD ), SIZETMS,
      $                    IINFO )
 *
@@ -452,8 +455,10 @@
             CALL PCFILLPAD( DESCA( CTXT_ ), SIZETMS, 1, WORK( INDWORK ),
      $                      SIZETMS, IPREPAD, IPOSTPAD, PADVAL+3.0E+0 )
 *
-            CALL PCLATMS( N, N, 'S', ISEED, 'S', RWORK( INDD ), IMODE,
-     $                    COND, ANORM, N, N, 'N', COPYA, 1, 1, DESCA,
+            CALL PCLATMS( N, N, 'S', ISEED, 'S',
+     $                     RWORK( INDD ), IMODE,
+     $                    COND, ANORM, N, N, 'N',
+     $                    COPYA, 1, 1, DESCA,
      $                    ORDER, WORK( INDWORK+IPREPAD ), SIZETMS,
      $                    IINFO )
 *
@@ -529,7 +534,8 @@
             CALL PCFILLPAD( DESCA( CTXT_ ), SIZETMS, 1, WORK( INDWORK ),
      $                      SIZETMS, IPREPAD, IPOSTPAD, PADVAL+4.0E+0 )
 *
-            CALL PCLATMS( N, N, 'S', ISEED, 'S', RWORK( INDD ), IMODE,
+            CALL PCLATMS( N, N, 'S', ISEED, 'S',
+     $                    RWORK( INDD ), IMODE,
      $                    COND, ANORM, 0, 0, 'N', COPYA, 1, 1, DESCA,
      $                    ORDER, WORK( INDWORK+IPREPAD ), SIZETMS,
      $                    IINFO )

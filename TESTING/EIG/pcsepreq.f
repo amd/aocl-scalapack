@@ -8,6 +8,8 @@
 *     and University of California, Berkeley.
 *     May 1, 1997
 *
+*     Modifications Copyright (c) 2026 Advanced Micro Devices, Inc. All rights reserved.
+*
 *     .. Scalar Arguments ..
       INTEGER            INFO, MEMSIZE, NIN, NNOCHECK, NOUT, NPASSED,
      $                   NSKIPPED, NTESTS
@@ -171,6 +173,16 @@
                      IF( MYROW.GE.0 ) THEN
                         CALL DESCINIT( DESCA, N, N, NB, NB, 0, 0,
      $                                 CONTEXT, LDA, INFO )
+*
+*                       Incorrect test case
+*
+*                       When N < 0/Invalid, DESCINIT INFO = -2 is
+*                       expected, Hence for this case INFO can
+*                       be reset to 0.
+                        IF(N.LT.0 .AND. INFO.EQ.-2) THEN
+                              INFO = 0
+                        END IF
+*
                         CALL PCLASIZESEP( DESCA, IPREPAD, IPOSTPAD,
      $                                    SIZEMQRLEFT, SIZEMQRRIGHT,
      $                                    SIZEQRF, SIZETMS, RSIZEQTQ,

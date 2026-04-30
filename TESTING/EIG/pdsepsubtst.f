@@ -9,7 +9,7 @@
 *     University of Tennessee, Knoxville, Oak Ridge National Laboratory,
 *     and University of California, Berkeley.
 *     March 15, 2000
-*     Modifications Copyright (c) 2024-2025 Advanced Micro Devices, Inc. All rights reserved.
+*     Modifications Copyright (c) 2024-2026 Advanced Micro Devices, Inc. All rights reserved.
 *
 *
       use,intrinsic :: ieee_arithmetic
@@ -384,7 +384,8 @@
       CALL PDFILLPAD( DESCZ( CTXT_ ), NP, MQ, Z, DESCZ( LLD_ ), IPREPAD,
      $                IPOSTPAD, PADVAL+1.0D+0 )
 *
-      CALL PDFILLPAD( DESCA( CTXT_ ), N, 1, WNEW, N, IPREPAD, IPOSTPAD,
+      CALL PDFILLPAD( DESCA( CTXT_ ), N, 1, WNEW,
+     $                N, IPREPAD, IPOSTPAD,
      $                PADVAL+2.0D+0 )
 *
       CALL PDFILLPAD( DESCA( CTXT_ ), NPROW*NPCOL, 1, GAP, NPROW*NPCOL,

@@ -9,7 +9,7 @@
 *     University of Tennessee, Knoxville, Oak Ridge National Laboratory,
 *     and University of California, Berkeley.
 *     March 15, 2000
-*     Modifications Copyright (c) 2024-2025 Advanced Micro Devices, Inc. All rights reserved.
+*     Modifications Copyright (c) 2024-2026 Advanced Micro Devices, Inc. All rights reserved.
 *
 *
       use,intrinsic :: ieee_arithmetic
@@ -368,8 +368,9 @@
 *
       DSEED( 1 ) = 1
 *
-      CALL PSLASIZESYEVX( WKNOWN, RANGE, N, DESCA, VL, VU, IL, IU,
-     $                    DSEED, WIN, MAXSIZE, VECSIZE, VALSIZE )
+      CALL PSLASIZESYEVX( WKNOWN, RANGE, N, DESCA, VL, VU,
+     $                    IL, IU, DSEED, WIN, MAXSIZE, VECSIZE,
+     $                    VALSIZE )
 *
       NP = NUMROC( N, DESCA( MB_ ), MYROW, 0, NPROW )
       NQ = NUMROC( N, DESCA( NB_ ), MYCOL, 0, NPCOL )
@@ -384,8 +385,8 @@
       CALL PSFILLPAD( DESCZ( CTXT_ ), NP, MQ, Z, DESCZ( LLD_ ), IPREPAD,
      $                IPOSTPAD, PADVAL+1.0E+0 )
 *
-      CALL PSFILLPAD( DESCA( CTXT_ ), N, 1, WNEW, N, IPREPAD, IPOSTPAD,
-     $                PADVAL+2.0E+0 )
+      CALL PSFILLPAD( DESCA( CTXT_ ), N, 1, WNEW,
+     $                N, IPREPAD, IPOSTPAD, PADVAL+2.0E+0 )
 *
       CALL PSFILLPAD( DESCA( CTXT_ ), NPROW*NPCOL, 1, GAP, NPROW*NPCOL,
      $                IPREPAD, IPOSTPAD, PADVAL+3.0E+0 )
@@ -396,8 +397,8 @@
       CALL PIFILLPAD( DESCA( CTXT_ ), LIWORK, 1, IWORK, LIWORK, IPREPAD,
      $                IPOSTPAD, IPADVAL )
 *
-      CALL PIFILLPAD( DESCA( CTXT_ ), N, 1, IFAIL, N, IPREPAD, IPOSTPAD,
-     $                IPADVAL )
+      CALL PIFILLPAD( DESCA( CTXT_ ), N, 1, IFAIL,
+     $                N, IPREPAD, IPOSTPAD, IPADVAL )
 *
       CALL PIFILLPAD( DESCA( CTXT_ ), 2*NPROW*NPCOL, 1, ICLUSTR,
      $                2*NPROW*NPCOL, IPREPAD, IPOSTPAD, IPADVAL )
