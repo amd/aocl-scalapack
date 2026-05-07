@@ -1,4 +1,28 @@
+/* ************************************************************************
+ * Copyright (c) 2026 Advanced Micro Devices, Inc.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ *
+ * ************************************************************************ */
+
 #include "redist.h"
+#include <stddef.h>
 /* $Id: pztrmr2.c,v 1.1.1.1 2000/02/15 18:04:10 susan Exp $
  * 
  * some functions used by the pztrmr2d routine see file pztrmr.c for more
@@ -20,11 +44,11 @@
 #define zcopy_ zcopy
 #define zlacpy_ zlacpy
 #endif
-#define Clacpy Cztrlacpy
-void  Clacpy();
 typedef struct {
   double r, i;
 }     dcomplex;
+#define Clacpy Cztrlacpy
+void  Clacpy( Int m, Int n, dcomplex *a, Int lda, dcomplex *b, Int ldb );
 typedef struct {
   Int   desctype;
   Int   ctxt;
@@ -52,46 +76,46 @@ typedef struct {
 #define realloc myrealloc
 #endif
 /* Cblacs */
-extern void Cblacs_pcoord();
-extern Int Cblacs_pnum();
+extern void Cblacs_pcoord( Int context, Int pnum, Int* prow, Int* pcol );
+extern Int Cblacs_pnum( Int context, Int prow, Int pcol );
 extern void Csetpvmtids();
-extern void Cblacs_get();
-extern void Cblacs_pinfo();
-extern void Cblacs_gridinfo();
-extern void Cblacs_gridinit();
-extern void Cblacs_exit();
-extern void Cblacs_gridexit();
-extern void Cblacs_setup();
-extern void Cigebs2d();
-extern void Cigebr2d();
-extern void Cigesd2d();
-extern void Cigerv2d();
-extern void Cigsum2d();
-extern void Cigamn2d();
-extern void Cigamx2d();
-extern void Czgesd2d();
-extern void Czgerv2d();
+extern void Cblacs_get( Int context, Int what, Int* val );
+extern void Cblacs_pinfo( Int* mypnum, Int* nprocs );
+extern void Cblacs_gridinfo( Int context, Int* nprow, Int* npcol, Int* myrow, Int* mycol );
+extern void Cblacs_gridinit( Int* context, char* order, Int nprow, Int npcol );
+extern void Cblacs_exit( Int continue_blacs );
+extern void Cblacs_gridexit( Int context );
+extern void Cblacs_setup( Int* mypnum, Int* nprocs );
+extern void Cigebs2d( Int context, char* scope, char* top, Int m, Int n, Int* A, Int lda );
+extern void Cigebr2d( Int context, char* scope, char* top, Int m, Int n, Int* A, Int lda, Int rsrc, Int csrc );
+extern void Cigesd2d( Int context, Int m, Int n, Int* A, Int lda, Int rdest, Int cdest );
+extern void Cigerv2d( Int context, Int m, Int n, Int* A, Int lda, Int rsrc, Int csrc );
+extern void Cigsum2d( Int context, char* scope, char* top, Int m, Int n, Int* A, Int lda, Int rdest, Int cdest );
+extern void Cigamn2d( Int context, char* scope, char* top, Int m, Int n, Int* A, Int lda, Int* RA, Int* CA, Int rcflag, Int rdest, Int cdest );
+extern void Cigamx2d( Int context, char* scope, char* top, Int m, Int n, Int* A, Int lda, Int* RA, Int* CA, Int rcflag, Int rdest, Int cdest );
+extern void Czgesd2d( Int context, Int m, Int n, dcomplex* A, Int lda, Int rdest, Int cdest );
+extern void Czgerv2d( Int context, Int m, Int n, dcomplex* A, Int lda, Int rsrc, Int csrc );
 /* lapack */
 void  zlacpy_();
 /* aux fonctions */
-extern Int localindice();
-extern void *mr2d_malloc();
-extern Int ppcm();
-extern Int localsize();
-extern Int memoryblocksize();
-extern Int changeorigin();
-extern void paramcheck();
+extern Int localindice( Int ig, Int jg, Int templateheight, Int templatewidth, MDESC *a );
+extern void *mr2d_malloc( size_t n );
+extern Int ppcm( Int a, Int b );
+extern Int localsize( Int myprow, Int p, Int nbrow, Int m );
+extern Int memoryblocksize( MDESC *a );
+extern Int changeorigin( Int myp, Int sp, Int p, Int bs, Int i, Int *decal, Int *newsp );
+extern void paramcheck( MDESC *a, Int i, Int j, Int m, Int n, Int p, Int q, Int gcontext );
 /* tools and others function */
 #define scanD0 ztrscanD0
 #define dispmat ztrdispmat
 #define setmemory ztrsetmemory
 #define freememory ztrfreememory
 #define scan_intervals ztrscan_intervals
-extern void scanD0();
+extern void scanD0( char* uplo, char* diag, Int action, dcomplex* ptrbuff, Int* ptrsizebuff, Int m, Int n, MDESC* ma, Int ia, Int ja, Int p0, Int q0, MDESC* mb, Int ib, Int jb, Int p1, Int q1, IDESC* v_inter, Int vinter_nb, IDESC* h_inter, Int hinter_nb, dcomplex* ptrblock );
 extern void dispmat();
-extern void setmemory();
-extern void freememory();
-extern Int scan_intervals();
+extern void setmemory( dcomplex** ptr, Int size );
+extern void freememory( dcomplex* ptr );
+extern Int scan_intervals( char type, Int ja, Int jb, Int n, MDESC *ma, MDESC *mb, Int q0, Int q1, Int col0, Int col1, IDESC *result );
 extern void Cpztrmr2do();
 extern void Cpztrmr2d();
 /* some defines for Cpztrmr2do */
@@ -138,10 +162,7 @@ freememory(dcomplex *ptrtobefreed)
  * the first one from i, i,j can be negative out of borns, the number of
  * elements returned can be negative (means 0) */
 static2 Int
-insidemat(uplo, diag, i, j, m, n, offset)
-  Int   m, n, i, j;	/* coordonnees de depart, taille de la sous-matrice */
-  char *uplo, *diag;
-  Int  *offset;
+insidemat(char *uplo, char *diag, Int i, Int j, Int m, Int n, Int *offset)
 {
   /* tests outside mxn */
   assert(j >= 0 && j < n);
@@ -173,21 +194,13 @@ insidemat(uplo, diag, i, j, m, n, offset)
  * action can be the filling of the memory buffer, the count of the memory
  * buffer size or the setting of the memory with the element received) */
 static2 void
-intersect(uplo, diag,
-	  j, start, end,
-	  action,
-	  ptrsizebuff, pptrbuff, ptrblock,
-	  m, n,
-	  ma, ia, ja, templateheight0, templatewidth0,
-	  mb, ib, jb, templateheight1, templatewidth1)
-  Int   action, *ptrsizebuff;
-  Int   j, start, end;
-  dcomplex **pptrbuff, *ptrblock;
-  Int   templateheight0, templatewidth0;
-  Int   templateheight1, templatewidth1;
-  MDESC *ma, *mb;
-  Int   ia, ja, ib, jb, m, n;
-  char *uplo, *diag;
+intersect(char *uplo, char *diag,
+    Int j, Int start, Int end,
+    Int action,
+    Int *ptrsizebuff, dcomplex **pptrbuff, dcomplex *ptrblock,
+    Int m, Int n,
+    MDESC *ma, Int ia, Int ja, Int templateheight0, Int templatewidth0,
+    MDESC *mb, Int ib, Int jb, Int templateheight1, Int templatewidth1)
 /* Execute the action on the local memory for the current interval and
  * increment pptrbuff and ptrsizebuff of the intervalsize */
 /* Notice that if the interval is contigous in the virtual matrice, it is
@@ -240,12 +253,8 @@ intersect(uplo, diag,
  * contains the result that are stocked in IDESC structure, the function
  * returns the number of intersections found */
 Int 
-scan_intervals(type, ja, jb, n, ma, mb, q0, q1, col0, col1,
-	       result)
-  char  type;
-  Int   ja, jb, n, q0, q1, col0, col1;
-  MDESC *ma, *mb;
-  IDESC *result;
+scan_intervals(char type, Int ja, Int jb, Int n, MDESC *ma, MDESC *mb,
+	       Int q0, Int q1, Int col0, Int col1, IDESC *result)
 {
   Int   offset, j0, j1, templatewidth0, templatewidth1, nbcol0, nbcol1;
   Int   l;	/* local indice on the beginning of the interval */
@@ -310,26 +319,13 @@ scan_intervals(type, ja, jb, n, ma, mb, q0, q1, col0, col1,
 /*********************************************************************/
 /* Do the scanning of intervals and the requested action */
 void
-scanD0(uplo, diag, action, ptrbuff, ptrsizebuff,
-       m, n,
-       ma, ia, ja, p0, q0,
-       mb, ib, jb, p1, q1,
-       v_inter, vinter_nb,
-       h_inter, hinter_nb,
-       ptrblock)
-  Int   action,	/* # of the action done on the intersected intervals  */
-       *ptrsizebuff;	/* size of the communication ptrbuffer (chosen to be
-			 * an output parameter in every cases) */
-  dcomplex *ptrbuff	/* address of the communication ptrbuffer (a
-			 * suffisant memory space is supposed to be allocated
-      before the call) */ , *ptrblock;
-  Int   p0, q0, p1, q1;
-  IDESC *v_inter, *h_inter;
-  Int   vinter_nb, hinter_nb;
-  Int   m, n;
-  Int   ia, ja, ib, jb;
-  MDESC *ma, *mb;
-  char *uplo, *diag;
+scanD0(char *uplo, char *diag, Int action, dcomplex *ptrbuff, Int *ptrsizebuff,
+     Int m, Int n,
+     MDESC *ma, Int ia, Int ja, Int p0, Int q0,
+     MDESC *mb, Int ib, Int jb, Int p1, Int q1,
+     IDESC *v_inter, Int vinter_nb,
+     IDESC *h_inter, Int hinter_nb,
+     dcomplex *ptrblock)
 {/* Rmk: the a+au type addresses are strict bounds as a+au does not belong to
   * the [a..a+au-1] interval of length au */
   Int   templateheight1, templatewidth1;

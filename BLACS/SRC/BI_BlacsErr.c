@@ -26,8 +26,9 @@ void BI_BlacsErr(Int ConTxt, Int line, char *file, char *form, ...)
    else myrow = mycol = -1;
 
    fprintf(stderr,
-"BLACS ERROR '%s'\nfrom {%d,%d}, pnum=%d, Contxt=%d, on line %d of file '%s'.\n\n",
-           cline, myrow, mycol, BI_Iam, ConTxt, line, file);
+"BLACS ERROR '%s'\nfrom {%ld,%ld}, pnum=%ld, Contxt=%ld, on line %ld of file '%s'.\n\n",
+           cline, (long)myrow, (long)mycol, (long)BI_Iam,
+           (long)ConTxt, (long)line, file);
 
    BI_BlacsAbort(1);
 }

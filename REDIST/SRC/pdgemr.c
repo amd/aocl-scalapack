@@ -1,4 +1,28 @@
+/* ************************************************************************
+ * Copyright (c) 2026 Advanced Micro Devices, Inc.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ *
+ * ************************************************************************ */
+
 #include "redist.h"
+#include <stddef.h>
 /** $Id: pdgemr.c,v 1.1.1.1 2000/02/15 18:04:09 susan Exp $
   ------------------------------------------------------------------------
 
@@ -156,7 +180,7 @@
 #define dlacpy_ dlacpy
 #endif
 #define Clacpy Cdgelacpy
-void  Clacpy();
+void  Clacpy( Int m, Int n, double *a, Int lda, double *b, Int ldb );
 typedef struct {
   Int   desctype;
   Int   ctxt;
@@ -184,35 +208,36 @@ typedef struct {
 #define realloc myrealloc
 #endif
 /* Cblacs */
-extern void Cblacs_pcoord();
-extern Int Cblacs_pnum();
+extern void Cblacs_pcoord( Int context, Int pnum, Int* prow, Int* pcol );
+extern Int Cblacs_pnum( Int context, Int prow, Int pcol );
 extern void Csetpvmtids();
-extern void Cblacs_get();
-extern void Cblacs_pinfo();
-extern void Cblacs_gridinfo();
-extern void Cblacs_gridinit();
-extern void Cblacs_exit();
-extern void Cblacs_gridexit();
-extern void Cblacs_setup();
-extern void Cigebs2d();
-extern void Cigebr2d();
-extern void Cigesd2d();
-extern void Cigerv2d();
-extern void Cigsum2d();
-extern void Cigamn2d();
-extern void Cigamx2d();
-extern void Cdgesd2d();
-extern void Cdgerv2d();
+extern void Cblacs_get( Int context, Int what, Int* val );
+extern void Cblacs_pinfo( Int* mypnum, Int* nprocs );
+extern void Cblacs_gridinfo( Int context, Int* nprow, Int* npcol, Int* myrow, Int* mycol );
+extern void Cblacs_gridinit( Int* context, char* order, Int nprow, Int npcol );
+extern void Cblacs_gridmap( Int* context, Int* usermap, Int ldumap, Int nprow, Int npcol );
+extern void Cblacs_exit( Int continue_blacs );
+extern void Cblacs_gridexit( Int context );
+extern void Cblacs_setup( Int* mypnum, Int* nprocs );
+extern void Cigebs2d( Int context, char* scope, char* top, Int m, Int n, Int* A, Int lda );
+extern void Cigebr2d( Int context, char* scope, char* top, Int m, Int n, Int* A, Int lda, Int rsrc, Int csrc );
+extern void Cigesd2d( Int context, Int m, Int n, Int* A, Int lda, Int rdest, Int cdest );
+extern void Cigerv2d( Int context, Int m, Int n, Int* A, Int lda, Int rsrc, Int csrc );
+extern void Cigsum2d( Int context, char* scope, char* top, Int m, Int n, Int* A, Int lda, Int rdest, Int cdest );
+extern void Cigamn2d( Int context, char* scope, char* top, Int m, Int n, Int* A, Int lda, Int* RA, Int* CA, Int rcflag, Int rdest, Int cdest );
+extern void Cigamx2d( Int context, char* scope, char* top, Int m, Int n, Int* A, Int lda, Int* RA, Int* CA, Int rcflag, Int rdest, Int cdest );
+extern void Cdgesd2d( Int context, Int m, Int n, double* A, Int lda, Int rdest, Int cdest );
+extern void Cdgerv2d( Int context, Int m, Int n, double* A, Int lda, Int rsrc, Int csrc );
 /* lapack */
 void  dlacpy_();
 /* aux fonctions */
-extern Int localindice();
-extern void *mr2d_malloc();
-extern Int ppcm();
-extern Int localsize();
-extern Int memoryblocksize();
-extern Int changeorigin();
-extern void paramcheck();
+extern Int localindice( Int ig, Int jg, Int templateheight, Int templatewidth, MDESC *a );
+extern void *mr2d_malloc( size_t n );
+extern Int ppcm( Int a, Int b );
+extern Int localsize( Int myprow, Int p, Int nbrow, Int m );
+extern Int memoryblocksize( MDESC *a );
+extern Int changeorigin( Int myp, Int sp, Int p, Int bs, Int i, Int *decal, Int *newsp );
+extern void paramcheck( MDESC *a, Int i, Int j, Int m, Int n, Int p, Int q, Int gcontext );
 /* tools and others function */
 #define scanD0 dgescanD0
 #define dispmat dgedispmat
@@ -221,11 +246,11 @@ extern void paramcheck();
 #define scan_intervals dgescan_intervals
 extern void scanD0();
 extern void dispmat();
-extern void setmemory();
-extern void freememory();
-extern Int scan_intervals();
-extern void Cpdgemr2do();
-extern void Cpdgemr2d();
+extern void setmemory( double** ptr, Int size );
+extern void freememory( char* ptr );
+extern Int scan_intervals( char type, Int ja, Int jb, Int n, MDESC *ma, MDESC *mb, Int q0, Int q1, Int col0, Int col1, IDESC *result );
+extern void Cpdgemr2do( Int m, Int n, double *ptrmyblock, Int ia, Int ja, MDESC *ma, double *ptrmynewblock, Int ib, Int jb, MDESC *mb );
+extern void Cpdgemr2d( Int m, Int n, double *ptrmyblock, Int ia, Int ja, MDESC *ma, double *ptrmynewblock, Int ib, Int jb, MDESC *mb, Int globcontext );
 /* some defines for Cpdgemr2do */
 #define SENDBUFF 0
 #define RECVBUFF 1
@@ -256,20 +281,15 @@ fortran_mr2dnew(Int *m, Int *n, double *A, Int *ia, Int *ja, Int desc_A[DESCLEN]
 	    B, *ib, *jb, (MDESC *) desc_B, *gcontext);
   return;
 }
-static2 void init_chenille();
-static2 Int inter_len();
-static2 Int block2buff();
-static2 void buff2block();
-static2 void gridreshape();
+static2 void init_chenille( Int mypnum, Int nprocs, Int n0, Int *proc0, Int n1, Int *proc1, Int **psend, Int **precv, Int *myrang );
+static2 Int inter_len( Int hinb, IDESC *hi, Int vinb, IDESC *vi );
+static2 Int block2buff( IDESC *vi, Int vinb, IDESC *hi, Int hinb, double *ptra, MDESC *ma, double *buff );
+static2 void buff2block( IDESC *vi, Int vinb, IDESC *hi, Int hinb, double *buff, double *ptrb, MDESC *mb );
+static2 void gridreshape( Int *ctxtp );
 void
-Cpdgemr2do(m, n,
-	   ptrmyblock, ia, ja, ma,
-	   ptrmynewblock, ib, jb, mb)
-  double *ptrmyblock, *ptrmynewblock;
-/* pointers to the memory location of the matrix and the redistributed matrix */
-  MDESC *ma;
-  MDESC *mb;
-  Int   ia, ja, ib, jb, m, n;
+Cpdgemr2do(Int m, Int n,
+	   double *ptrmyblock, Int ia, Int ja, MDESC *ma,
+	   double *ptrmynewblock, Int ib, Int jb, MDESC *mb)
 {
   Int   dummy, nprocs;
   Int   gcontext;
@@ -286,14 +306,9 @@ Cpdgemr2do(m, n,
 			 * idem B puis ia,ja puis ib,jb */
 #define MAGIC_MAX 100000000
 void
-Cpdgemr2d(m, n,
-	  ptrmyblock, ia, ja, ma,
-	  ptrmynewblock, ib, jb, mb, globcontext)
-  double *ptrmyblock, *ptrmynewblock;
-/* pointers to the memory location of the matrix and the redistributed matrix */
-  MDESC *ma;
-  MDESC *mb;
-  Int   ia, ja, ib, jb, m, n, globcontext;
+Cpdgemr2d(Int m, Int n,
+	  double *ptrmyblock, Int ia, Int ja, MDESC *ma,
+	  double *ptrmynewblock, Int ib, Int jb, MDESC *mb, Int globcontext)
 {
   double *ptrsendbuff, *ptrrecvbuff, *ptrNULL = 0;
   double *recvptr;
@@ -561,10 +576,9 @@ after_comm:
   free(h_inter);
   free(param);
 }/* distrib */
-static2 void 
-init_chenille(mypnum, nprocs, n0, proc0, n1, proc1, psend, precv, myrang)
-  Int   nprocs, mypnum, n0, n1;
-  Int  *proc0, *proc1, **psend, **precv, *myrang;
+static2 void
+init_chenille(Int mypnum, Int nprocs, Int n0, Int *proc0, Int n1, Int *proc1,
+	      Int **psend, Int **precv, Int *myrang)
 {
   Int   ns, nr, i, tot;
   Int  *sender, *recver, *g0, *g1;
@@ -634,12 +648,9 @@ Int _m,_n,_lda,_ldb; \
       _a += _lda; \
     } \
 } (void)0
-static2 Int 
-block2buff(vi, vinb, hi, hinb, ptra, ma, buff)
-  Int   hinb, vinb;
-  IDESC *hi, *vi;
-  MDESC *ma;
-  double *buff, *ptra;
+static2 Int
+block2buff(IDESC *vi, Int vinb, IDESC *hi, Int hinb, double *ptra,
+	   MDESC *ma, double *buff)
 {
   Int   h, v, sizebuff;
   double *ptr2;
@@ -656,12 +667,9 @@ block2buff(vi, vinb, hi, hinb, ptra, ma, buff)
   }
   return sizebuff;
 }
-static2 void 
-buff2block(vi, vinb, hi, hinb, buff, ptrb, mb)
-  Int   hinb, vinb;
-  IDESC *hi, *vi;
-  MDESC *mb;
-  double *buff, *ptrb;
+static2 void
+buff2block(IDESC *vi, Int vinb, IDESC *hi, Int hinb, double *buff,
+	   double *ptrb, MDESC *mb)
 {
   Int   h, v, sizebuff;
   double *ptr2;

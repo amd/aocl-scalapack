@@ -44,7 +44,7 @@
 *
       INTEGER            TOTMEM, DBLESZ, NIN
 #ifndef DYNAMIC_WORK_MEM_ALLOC
-      PARAMETER          ( TOTMEM = 2000000 )
+      PARAMETER          ( TOTMEM = 100000000 )
 #else
       PARAMETER          ( TOTMEM = 2100000000 )
 #endif

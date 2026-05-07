@@ -1,3 +1,26 @@
+/* ************************************************************************
+ * Copyright (c) 2026 Advanced Micro Devices, Inc.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ *
+ * ************************************************************************ */
+
 /* ---------------------------------------------------------------------
 *
 *  -- Mark R. Fahey
@@ -181,15 +204,16 @@ void pzrot_( Int *n, complex16 X[], Int *ix, Int *jx, Int desc_X[], Int *incx, c
 /* ..
 *  .. External Functions ..
 */
-   void        blacs_gridinfo_();
-   void        zgerv2d_();
-   void        zgesd2d_();
-   void        pbchkvect();
-   void        PB_Cabort();
-   char        * getpbbuf();
-   F_INTG_FCT  pbztrnv_();
-   F_INTG_FCT  zrot_();
-   F_INTG_FCT  ilcm_();
+   void        blacs_gridinfo_( Int *ictxt, Int *nprow, Int *npcol, Int *myrow, Int *mycol );
+   void        zgerv2d_( Int *ictxt, Int *m, Int *n, complex16 *A, Int *lda, Int *rsrc, Int *csrc );
+   void        zgesd2d_( Int *ictxt, Int *m, Int *n, complex16 *A, Int *lda, Int *rdest, Int *cdest );
+   void        pbchkvect( Int n, Int npos0, Int ix, Int jx, Int desc_X[], Int incx, Int dpos0, Int *iix, Int *jjx, Int *ixrow, Int *ixcol, Int nprow, Int npcol, Int myrow, Int mycol, Int *info );
+   void        PB_Cabort( Int ictxt, char *srname, Int info );
+   char        * getpbbuf( char *mess, Int length );
+   F_INTG_FCT  pbztrnv_( Int *ictxt, char *scope, char *trans, Int *n, Int *nb, Int *nz, complex16 *A, Int *lda, complex16 *beta, complex16 *work, Int *ldwork, Int *prow, Int *pcol, Int *qrow, Int *qcol, complex16 *buf );
+   F_INTG_FCT  zrot_( Int *n, complex16 *cx, Int *incx, complex16 *cy, Int *incy, double *c, complex16 *s );
+   F_INTG_FCT  ilcm_( Int *m, Int *n );
+   Int         numroc_( Int*, Int*, Int*, Int*, Int* );
 /* ..
 *  .. Executable Statements ..
 *

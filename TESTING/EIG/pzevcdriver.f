@@ -34,17 +34,11 @@
 *  Internal Parameters
 *  ===================
 *
-*  TOTMEM   INTEGER, default = 2000000
-*           TOTMEM is a machine-specific parameter indicating the
-*           maximum amount of available memory in bytes.
-*           The user should customize TOTMEM to his platform.  Remember
-*           to leave room in memory for the operating system, the BLACS
-*           buffer, etc.  For example, on a system with 8 MB of memory
-*           per process (e.g., one processor on an Intel iPSC/860), the
-*           parameters we use are TOTMEM=6200000 (leaving 1.8 MB for OS,
-*           code, BLACS buffer, etc).  However, for PVM, we usually set
-*           TOTMEM = 2000000.  Some experimenting with the maximum value
-*           of TOTMEM may be required.
+*    TOTMEM : Total bytes available for the workspace array MEM.
+*             Non-dynamic build (no DYNAMIC_WORK_MEM_ALLOC):
+*                default = 250,000,000 bytes.
+*             Dynamic build (with DYNAMIC_WORK_MEM_ALLOC):
+*                default = 2,100,000,000 bytes.
 *
 *  ZPLXSZ   INTEGER, default = 16 bytes.
 *           ZPLXSZ indicate the length in bytes on the given platform
@@ -72,7 +66,7 @@
      $                     RSRC_ = 7, CSRC_ = 8, LLD_ = 9 )
       INTEGER            ZPLXSZ, TOTMEM, MEMSIZ, NTESTS
 #ifndef DYNAMIC_WORK_MEM_ALLOC
-      PARAMETER          ( TOTMEM = 200000000 )
+      PARAMETER          ( TOTMEM = 250000000 )
 #else
       PARAMETER          ( TOTMEM = 2100000000 )
 #endif
