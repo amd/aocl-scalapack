@@ -54,7 +54,7 @@ jobs:
         shell: bash
         run: |
           # Remove broken Python cmake wrapper from PATH; ensure real cmake is used
-          FILTERED_PATH="$(echo "$PATH" | tr ':' '\n' | grep -v '/home/amd/.local/bin' | paste -sd ':' -)"
+          FILTERED_PATH="$(printf '%s' "$PATH" | tr ':' '\n' | grep -v '/home/amd/.local/bin' | paste -sd ':' -)"
           export PATH="/usr/bin${FILTERED_PATH:+:$FILTERED_PATH}"
 
           if [ "${{ matrix.compiler }}" = "gcc" ]; then
@@ -62,19 +62,30 @@ jobs:
             export CC=${GCC_PATH}/gcc
             export CXX=${GCC_PATH}/g++
             export FC=${GCC_PATH}/gfortran
-            export OPENMPI=/home/amd/mpi5.1.0/openmpi-5.0.1/openMPI_gcc
             export AOCL_ROOT=/home/amd/aocl-daily-lib/daily/gcc/MT
+            OPENMPI_PREFIX="${RUNNER_TEMP}/openmpi_gcc"
           else
             export AOCC_INSTALL_PATH=/home/amd/aocc-compiler-5.2.0
             export CC=${AOCC_INSTALL_PATH}/bin/clang
             export CXX=${AOCC_INSTALL_PATH}/bin/clang++
             export FC=${AOCC_INSTALL_PATH}/bin/flang
-            export OPENMPI=/home/amd/mpi5.1.0/aocc/openmpi-5.0.1/openMPI_aocc
             export AOCL_ROOT=/home/amd/aocl-daily-lib/daily/aocc/MT
+            OPENMPI_PREFIX="${RUNNER_TEMP}/openmpi_aocc"
             export PATH="${AOCC_INSTALL_PATH}/bin:${PATH}"
             export LD_LIBRARY_PATH="${AOCC_INSTALL_PATH}/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}"
           fi
 
+          # Build OpenMPI from source to match the system GLIBC version
+          # (pre-installed OpenMPI at /home/amd/mpi5.1.0 requires GLIBC_2.34)
+          wget -nv -O openmpi-5.0.1.tar.gz https://download.open-mpi.org/release/open-mpi/v5.0/openmpi-5.0.1.tar.gz
+          tar -xf openmpi-5.0.1.tar.gz
+          cd openmpi-5.0.1
+          ./configure --prefix="${OPENMPI_PREFIX}" CC="${CC}" CXX="${CXX}" FC="${FC}" --quiet
+          make -j$(nproc)
+          make install
+          cd "$GITHUB_WORKSPACE"
+
+          export OPENMPI=${OPENMPI_PREFIX}
           export PATH="${OPENMPI}/bin:${PATH}"
           export LD_LIBRARY_PATH="${OPENMPI}/lib:${AOCL_ROOT}/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}"
 
