@@ -76,7 +76,7 @@ jobs:
           fi
 
           export PATH="${OPENMPI}/bin:${PATH}"
-export LD_LIBRARY_PATH="${OPENMPI}/lib:${AOCL_ROOT}/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}"
+          export LD_LIBRARY_PATH="${OPENMPI}/lib:${AOCL_ROOT}/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}"
 
           mkdir -p build
           cmake -S . -B build \
