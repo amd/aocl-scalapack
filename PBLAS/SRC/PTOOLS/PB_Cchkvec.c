@@ -266,7 +266,7 @@ void PB_Cchkvec( ICTXT, ROUT, VNAME, N, NPOS0, IX, JX, DESCX, INCX,
       *INFO = MIN( *INFO, icpos );
       PB_Cwarn( ICTXT, -1, ROUT,
                 "Illegal INC%s = %d, INC%s should be either 1 or %d", VNAME,
-                DESCX[M_], VNAME );
+                INCX, VNAME, DESCX[M_] );
    }
 
    if( N == 0 )
