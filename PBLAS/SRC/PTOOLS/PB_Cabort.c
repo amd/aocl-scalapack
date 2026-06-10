@@ -149,7 +149,7 @@ void PB_Cabort( ICTXT, ROUT, INFO )
 *  Error code is incorrect, it should be negative
 */
       PB_Cwarn( ICTXT, -1, ROUT,
-                "Positive error code %d returned by %s!!!", INFO );
+                "Positive error code %d returned!!!", INFO );
    }
    Cblacs_abort( ICTXT, INFO );
 /*

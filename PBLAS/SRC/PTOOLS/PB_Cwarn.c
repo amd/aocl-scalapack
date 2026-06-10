@@ -139,7 +139,7 @@ va_dcl
 */
    if( PB_NoAbort( &ICTXT ) ) return;
 #endif
-   vsprintf( cline, FORM, argptr );
+   vsnprintf( cline, sizeof(cline), FORM, argptr );
    va_end( argptr );
 
    Cblacs_gridinfo( ICTXT, &nprow, &npcol, &myrow, &mycol );
