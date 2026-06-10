@@ -332,20 +332,6 @@
             END IF
 #endif
 *
-#ifdef AOCL_PROGRESS
-*        Update the progress and callback if progress is enabled
-*
-            IF( SCALAPACK_CONTEXT%IS_PROGRESS_ENABLED.EQ.1 ) THEN
-*
-*           Capture the Loop count 'J' to a separate 'PROGRESS'
-*           variable to avoid the corruption at application side.
-*
-               PROGRESS = J
-               CALL AOCL_SCALAPACK_PROGRESS ( API_NAME, LEN_API_NAME,
-     $                PROGRESS, CURRENT_RANK, TOTAL_MPI_PROCESSES )
-            END IF
-#endif
-*
 *           Perform unblocked Cholesky factorization on JB block
 *
             CALL PDPOTF2( UPLO, JB, A, I, J, DESCA, INFO )
@@ -410,20 +396,6 @@
          DO 20 J = JN+1, JA+N-1, DESCA( NB_ )
             JB = MIN( N-J+JA, DESCA( NB_ ) )
             I = IA + J - JA
-*
-#ifdef AOCL_PROGRESS
-*        Update the progress and callback if progress is enabled
-*
-            IF( SCALAPACK_CONTEXT%IS_PROGRESS_ENABLED.EQ.1 ) THEN
-*
-*           Capture the Loop count 'J' to a separate 'PROGRESS'
-*           variable to avoid the corruption at application side.
-*
-               PROGRESS = J
-               CALL AOCL_SCALAPACK_PROGRESS ( API_NAME, LEN_API_NAME,
-     $                PROGRESS, CURRENT_RANK, TOTAL_MPI_PROCESSES )
-            END IF
-#endif
 *
 #ifdef AOCL_PROGRESS
 *        Update the progress and callback if progress is enabled
