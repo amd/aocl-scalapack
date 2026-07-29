@@ -462,6 +462,35 @@ add_subdirectory(SRC)
 append_subdir_files(src "SRC")
 append_subdir_files(src-C "SRC")
 
+# Windows: AOCL libFlame (and some other LAPACKs) already export the complex-symmetric
+# BLAS extensions and zlarnv that ScaLAPACK bundles. The stricter lld-link then fails
+# with "duplicate symbol". Detect and drop our copies only when LAPACK already provides them.
+if (WIN32 AND LAPACK_FOUND)
+  include(CheckFortranFunctionExists)
+  set(CMAKE_REQUIRED_LIBRARIES ${LAPACK_LIBRARIES};${BLAS_LIBRARIES};${OpenMP_libomp_LIBRARY})
+
+  set(_dup_csymv  "PBLAS/SRC/PTZBLAS/csymv.f")
+  set(_dup_csyr   "PBLAS/SRC/PTZBLAS/csyr.f")
+  set(_dup_zsymv  "PBLAS/SRC/PTZBLAS/zsymv.f")
+  set(_dup_zsyr   "PBLAS/SRC/PTZBLAS/zsyr.f")
+  set(_dup_clarnv "TOOLS/LAPACK/clarnv.f")
+  set(_dup_zlarnv "TOOLS/LAPACK/zlarnv.f")
+
+  foreach(_fn csymv csyr zsymv zsyr clarnv zlarnv)
+    unset(SCALAPACK_LAPACK_HAS_${_fn} CACHE)
+    check_fortran_function_exists(${_fn} SCALAPACK_LAPACK_HAS_${_fn})
+    if (SCALAPACK_LAPACK_HAS_${_fn})
+      message(STATUS "External LAPACK provides ${_fn}; skipping ScaLAPACK's bundled copy")
+      list(REMOVE_ITEM ptzblas      "${_dup_${_fn}}")
+      list(REMOVE_ITEM extra_lapack "${_dup_${_fn}}")
+    else()
+      message(STATUS "External LAPACK lacks ${_fn}; keeping ScaLAPACK's bundled copy")
+    endif()
+  endforeach()
+
+  unset(CMAKE_REQUIRED_LIBRARIES)
+endif()
+
 #compiler conforms to ISO Standard C
 if (WIN32)
   add_definitions(-D__STDC__)
