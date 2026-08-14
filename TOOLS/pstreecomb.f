@@ -254,6 +254,7 @@
 *
       END
 *
+#ifndef SCALAPACK_SKIP_SCOMBSSQ
       SUBROUTINE SCOMBSSQ( V1, V2 )
 *
 *  -- ScaLAPACK tools routine (version 1.7) --
@@ -301,6 +302,7 @@
 *     End of SCOMBSSQ
 *
       END
+#endif
 *
       SUBROUTINE SCOMBNRM2( X, Y )
 *

@@ -255,6 +255,7 @@
 *
       END
 *
+#ifndef SCALAPACK_SKIP_DCOMBSSQ
       SUBROUTINE DCOMBSSQ( V1, V2 )
 *
 *  -- ScaLAPACK tools routine (version 1.7) --
@@ -302,6 +303,7 @@
 *     End of DCOMBSSQ
 *
       END
+#endif
 *
       SUBROUTINE DCOMBNRM2( X, Y )
 *
