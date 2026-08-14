@@ -141,6 +141,28 @@ if (MPI_FOUND)
    message(STATUS "Found MPI_LIBRARY : ${MPI_FOUND} ")
    INCLUDE_DIRECTORIES(${MPI_INCLUDE_PATH})
 
+ if (WIN32)
+   # Windows: do NOT swap in the mpicc/mpif77 wrappers. Intel MPI's mpicc.bat
+   # mangles Ninja/clang-cl command lines (splits the spaced version define, turns
+   # -I flags into stray inputs). Keep the native compilers (clang-cl/ifx) and link
+   # MPI's own import libs + include dirs from find_package(MPI) directly.
+   if (MPI_C_INCLUDE_DIRS)
+     include_directories(${MPI_C_INCLUDE_DIRS})
+   endif()
+   if (MPI_Fortran_INCLUDE_DIRS)
+     include_directories(${MPI_Fortran_INCLUDE_DIRS})
+   endif()
+
+   set(MPI_LIBRARY "")
+   if (MPI_C_LIBRARIES)
+     list(APPEND MPI_LIBRARY ${MPI_C_LIBRARIES})
+   endif()
+   if (MPI_Fortran_LIBRARIES)
+     list(APPEND MPI_LIBRARY ${MPI_Fortran_LIBRARIES})
+   endif()
+
+   message(STATUS "--> Windows: native compilers + MPI import libs: ${MPI_LIBRARY}")
+ else ()
    find_program(MPI_C_COMPILER
       NAMES mpicc
       HINTS "${MPI_BASE_DIR}"
@@ -171,6 +193,7 @@ if (MPI_FOUND)
       SET(CMAKE_Fortran_COMPILER "${MPI_Fortran_COMPILER}")
       message(STATUS "--> Fortran Compiler : ${CMAKE_Fortran_COMPILER}")
    endif()
+ endif ()
 
 else()
    message(STATUS "Found MPI_LIBRARY : ${MPI_FOUND} ")
@@ -488,6 +511,24 @@ if (WIN32 AND LAPACK_FOUND)
     endif()
   endforeach()
 
+  foreach(_fn dcombssq scombssq)
+    unset(SCALAPACK_LAPACK_HAS_${_fn} CACHE)
+    check_fortran_function_exists(${_fn} SCALAPACK_LAPACK_HAS_${_fn})
+    if (SCALAPACK_LAPACK_HAS_${_fn})
+      message(STATUS "External LAPACK provides ${_fn}; skipping ScaLAPACK's bundled copy")
+    else()
+      message(STATUS "External LAPACK lacks ${_fn}; keeping ScaLAPACK's bundled copy")
+    endif()
+  endforeach()
+
+  if (SCALAPACK_LAPACK_HAS_dcombssq)
+    add_compile_definitions(SCALAPACK_SKIP_DCOMBSSQ)
+  endif()
+
+  if (SCALAPACK_LAPACK_HAS_scombssq)
+    add_compile_definitions(SCALAPACK_SKIP_SCOMBSSQ)
+  endif()
+
   unset(CMAKE_REQUIRED_LIBRARIES)
 endif()
 
@@ -630,6 +671,14 @@ else (UNIX) # Need to separate Fortran and C Code
       endif(CUSTOM_BLACS_FOUND)
     endif ()
 endif (UNIX)
+
+# Windows: AOCL MT libs need OpenMP library;
+if(WIN32 AND TARGET scalapack AND OpenMP_libomp_LIBRARY)
+  get_target_property(_scalapack_imported scalapack IMPORTED)
+  if(NOT _scalapack_imported)
+    target_link_libraries(scalapack ${OpenMP_libomp_LIBRARY})
+  endif()
+endif()
 
 if(ENABLE_WRAPPERS AND TARGET scalapack)
   # Skip if scalapack is an imported prebuilt library

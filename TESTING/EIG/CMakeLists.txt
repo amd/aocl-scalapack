@@ -28,6 +28,16 @@ if(MSVC AND BUILD_SHARED_LIBS)
     add_executable(xdtrd xpjlaenv.f pdtrddriver.f pdttrdtester.f pdlatran.f pdtrdinfo.f pdsytdrv.f pdlafchk.f ${TTRD_SRC}/pdsyttrd.f ${dmatgen} SL_Context_module_eig.f )
     add_executable(xctrd xpjlaenv.f pctrddriver.f pcttrdtester.f pclatran.f pctrdinfo.f pchetdrv.f pclafchk.f ${TTRD_SRC}/pchettrd.f ${cmatgen} SL_Context_module_eig.f )
     add_executable(xztrd xpjlaenv.f pztrddriver.f pzttrdtester.f pzlatran.f pztrdinfo.f pzhetdrv.f pzlafchk.f ${TTRD_SRC}/pzhettrd.f ${zmatgen} SL_Context_module_eig.f )
+
+    # Ninja + MSVC: each TRD test exe compiles SL_Context_module_eig.f, which emits
+    # link_to_c_globals.mod. Give each target its own Fortran module directory so
+    # Ninja does not generate duplicate rules for the same .mod output path.
+    if(MSVC AND BUILD_SHARED_LIBS AND CMAKE_GENERATOR MATCHES "^Ninja")
+        foreach(_t xstrd xdtrd xctrd xztrd)
+            set_target_properties(${_t} PROPERTIES
+                Fortran_MODULE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/${_t}_mod)
+        endforeach()
+    endif()
 else()
     add_executable(xstrd pstrddriver.f psttrdtester.f pslatran.f pstrdinfo.f pssytdrv.f pslafchk.f xpjlaenv.f ${smatgen})
     add_executable(xdtrd pdtrddriver.f pdttrdtester.f pdlatran.f pdtrdinfo.f pdsytdrv.f pdlafchk.f xpjlaenv.f ${dmatgen})
