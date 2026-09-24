@@ -6,6 +6,16 @@ if ("${CMAKE_Fortran_COMPILER_ID}" STREQUAL "GNU" AND CMAKE_Fortran_COMPILER_VER
     set_source_files_properties(blacstest.f PROPERTIES COMPILE_FLAGS "-std=legacy")
 endif()
 
+# BLACS/TESTING/Makefile builds tools.f (SLAMCH/DLAMCH) without optimization.
+# Intel Fortran also needs -fp-port for SLAMCH probing (Netlib errata).
+if (CMAKE_Fortran_COMPILER_ID MATCHES "Intel")
+  if (WIN32)
+    set_source_files_properties(tools.f PROPERTIES COMPILE_FLAGS "/Od /fp-port /fltconsistency")
+  else()
+    set_source_files_properties(tools.f PROPERTIES COMPILE_FLAGS "-O0 -fp-port -fltconsistency")
+  endif()
+endif ()
+
 # SCALAPACK_BUILD_SOURCE flag determines whether to compile the source code. If this of OFF we need to linked pre-compiled
 # ScaLAPACK library.
 if(SCALAPACK_BUILD_SOURCE STREQUAL "OFF")
@@ -56,6 +66,12 @@ if(SCALAPACK_BUILD_TESTS)
     add_executable(xCbtest ${FTestObj})
     target_link_libraries(xCbtest scalapack CTestObj)
   endif ()
+  # Intel MPI exports its ILP64 Fortran entry points under Intel Fortran's
+  # default uppercase naming.
+  if (WIN32 AND ENABLE_ILP64 AND CMAKE_Fortran_COMPILER_ID MATCHES "Intel")
+    target_compile_options(xFbtest PRIVATE /names:uppercase)
+    target_compile_options(xCbtest PRIVATE /names:uppercase)
+  endif ()
 endif ()
 
 if (UNIX)
@@ -66,6 +82,11 @@ file(COPY bsbr.dat DESTINATION ${SCALAPACK_BINARY_DIR}/BLACS/TESTING/${CMAKE_BUI
 file(COPY bt.dat DESTINATION ${SCALAPACK_BINARY_DIR}/BLACS/TESTING/${CMAKE_BUILD_TYPE})
 file(COPY comb.dat DESTINATION ${SCALAPACK_BINARY_DIR}/BLACS/TESTING/${CMAKE_BUILD_TYPE})
 file(COPY sdrv.dat DESTINATION ${SCALAPACK_BINARY_DIR}/BLACS/TESTING/${CMAKE_BUILD_TYPE})
+
+file(COPY bsbr.dat DESTINATION ${SCALAPACK_BINARY_DIR}/TESTING/${CMAKE_BUILD_TYPE})
+file(COPY bt.dat DESTINATION ${SCALAPACK_BINARY_DIR}/TESTING/${CMAKE_BUILD_TYPE})
+file(COPY comb.dat DESTINATION ${SCALAPACK_BINARY_DIR}/TESTING/${CMAKE_BUILD_TYPE})
+file(COPY sdrv.dat DESTINATION ${SCALAPACK_BINARY_DIR}/TESTING/${CMAKE_BUILD_TYPE})
 
 # We could run the BLACS TESTING the following way
 # But BLACS TESTING are TESTING anormal exit so even if they pass,

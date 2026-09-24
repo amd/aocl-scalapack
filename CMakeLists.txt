@@ -73,7 +73,12 @@ if (WIN32 AND CMAKE_Fortran_COMPILER_ID MATCHES "Intel")
 endif()
 
 set(CMAKE_ICC_FLAGS " ")
-set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -cpp" )
+# ifx in MSVC-compatible mode turns -cpp into /cpp, which it does not recognise
+if (WIN32 AND CMAKE_Fortran_COMPILER_ID MATCHES "Intel")
+  set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -fpp" )
+else ()
+  set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -cpp" )
+endif ()
 
 # set compile flags to enable address sanitizer (ASAN) tests
 if(ENABLE_ASAN_TESTS)
@@ -159,6 +164,28 @@ if (MPI_FOUND)
    endif()
    if (MPI_Fortran_LIBRARIES)
      list(APPEND MPI_LIBRARY ${MPI_Fortran_LIBRARIES})
+   endif()
+
+   # find_package(MPI) reports only impi.lib, the LP64 interface. An ILP64 build
+   # also needs libmpi_ilp64.lib, and it has to come first.
+   if (ENABLE_ILP64)
+     find_library(MPI_ILP64_LIBRARY
+       NAMES mpi_ilp64 libmpi_ilp64
+       HINTS "${MPI_BASE_DIR}" ENV I_MPI_ROOT
+       PATH_SUFFIXES lib lib/release
+       NO_DEFAULT_PATH)
+
+     if (NOT MPI_ILP64_LIBRARY)
+       message(FATAL_ERROR
+         "ENABLE_ILP64 needs Intel MPI's libmpi_ilp64 library, which was not "
+         "found. Point MPI_BASE_DIR or I_MPI_ROOT at the Intel MPI installation.")
+     endif()
+
+     list(PREPEND MPI_LIBRARY "${MPI_ILP64_LIBRARY}")
+     # REMOVE_DUPLICATES keeps the first occurrence of each entry, which is what
+     # keeps libmpi_ilp64.lib in front of impi.lib.
+     list(REMOVE_DUPLICATES MPI_LIBRARY)
+     message(STATUS "--> Windows ILP64 MPI library: ${MPI_ILP64_LIBRARY}")
    endif()
 
    message(STATUS "--> Windows: native compilers + MPI import libs: ${MPI_LIBRARY}")
@@ -300,7 +327,9 @@ if(ENABLE_ILP64)
       set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -fdefault-integer-8")
     endif()
   else(UNIX)
-   add_definitions("-DInt=__int64" "-DENABLE_ILP64" "-DUInt=unsigned __int64" "-i8")
+   add_definitions("-DInt=__int64" "-DENABLE_ILP64" "-DUInt=unsigned __int64")
+   # -i8 is Fortran-only; add_definitions() would also hand it to clang-cl.
+   set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -i8")
   endif()
 else(ENABLE_ILP64)
    add_definitions("-DUInt=unsigned int " "-DInt=int" )
