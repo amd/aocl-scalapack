@@ -109,7 +109,7 @@ if (UNIX)
    endif ()
    if ("${CMAKE_Fortran_COMPILER_ID}" STREQUAL "Intel")
       set( CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -fltconsistency -fp-port -no-vec" )
-   elseif ("${CMAKE_Fortran_COMPILER}" MATCHES "ifort" )
+   elseif ("${CMAKE_Fortran_COMPILER}" STREQUAL "ifort" )
       set( CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -fltconsistency -fp-port -no-vec" )
    endif ()
 
