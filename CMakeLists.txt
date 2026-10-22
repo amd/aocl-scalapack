@@ -720,6 +720,25 @@ if(ENABLE_WRAPPERS AND TARGET scalapack)
   endif()
 endif()
 
+# Embed a relocatable DT_RUNPATH so the installed shared libscalapack resolves its
+# runtime dependencies (libflame/liblapack, libblis/blas, libaoclutils) from its own
+# install directory, where they are co-located. This avoids requiring the user to set
+# LD_LIBRARY_PATH, and avoids baking absolute build-machine paths into the library:
+# forcing INSTALL_RPATH_USE_LINK_PATH OFF on the target overrides any global/cache
+# default that would otherwise copy every full-path link directory into the RUNPATH.
+if(UNIX AND BUILD_SHARED_LIBS AND TARGET scalapack)
+  get_target_property(_sl_imported scalapack IMPORTED)
+  if(NOT _sl_imported)
+    set_target_properties(scalapack PROPERTIES
+      INSTALL_RPATH "$ORIGIN"
+      INSTALL_RPATH_USE_LINK_PATH OFF
+      BUILD_WITH_INSTALL_RPATH OFF)
+    # Emit DT_RUNPATH (new dtags) rather than legacy DT_RPATH, so a user's
+    # LD_LIBRARY_PATH can still take precedence when they need to override.
+    target_link_options(scalapack PRIVATE "-Wl,--enable-new-dtags")
+  endif()
+endif()
+
 if(${SCALAPACK_BUILD_TESTS})
   add_subdirectory(TESTING)
 endif()
